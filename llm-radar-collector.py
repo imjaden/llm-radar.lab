@@ -356,12 +356,10 @@ hotspots 数组中每个元素格式：
 
     def _try_fix_truncated_json(self, text):
         """修复截断的 JSON：补齐缺失的结束括号"""
-        # 提取最外层的 { }
         start = text.find('{')
         if start == -1:
             return None
         text = text[start:]
-        # 逐字符扫描，平衡大括号和中括号
         stack = []
         i = 0
         in_string = False
@@ -389,21 +387,29 @@ hotspots 数组中每个元素格式：
             elif ch == '}':
                 if stack and stack[-1] == '{':
                     stack.pop()
-                    if not stack:
-                        last_good_end = i + 1
+                    last_good_end = i + 1
                 else:
                     break
             elif ch == ']':
                 if stack and stack[-1] == '[':
                     stack.pop()
-                    if not stack:
-                        last_good_end = i + 1
+                    last_good_end = i + 1
                 else:
                     break
             i += 1
+        # 如果没有任何闭合括号，尝试从字符串边界截断
         if not last_good_end:
-            return None
-        candidate = text[:last_good_end]
+            # 找到最后一个完整键值对的位置，截断未闭合的字符串
+            i = len(text) - 1
+            while i >= 0 and text[i] != '"':
+                i -= 1
+            if i > 0:
+                candidate = text[:i]  # 去掉未闭合的字符串内容
+                candidate += '"'      # 闭合字符串
+            else:
+                candidate = text
+        else:
+            candidate = text[:last_good_end]
         # 补齐 stack 中缺失的结束符
         for ch in reversed(stack):
             candidate += '}' if ch == '{' else ']'
