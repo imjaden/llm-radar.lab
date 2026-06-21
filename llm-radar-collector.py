@@ -168,15 +168,24 @@ class LLMRadarCollector:
         try:
             subprocess.run(['git', 'add', '-A'], cwd=self.project_root, check=True, capture_output=True)
             msg = f'auto-push@llm-radar: update data ({count} changes)'
-            subprocess.run(['git', 'commit', '-m', msg], cwd=self.project_root, capture_output=True)
-            subprocess.run(['git', 'push'], cwd=self.project_root, capture_output=True)
+            r = subprocess.run(['git', 'commit', '-m', msg], cwd=self.project_root, capture_output=True, text=True)
+            if r.returncode != 0:
+                err = r.stderr.strip()
+                if 'nothing to commit' in err:
+                    self._print_info('无变更需要提交')
+                    return
+                if 'please tell me who you are' in err.lower() or 'user.name' in err:
+                    self._print_err('git 未配置 user 信息，请执行:')
+                    self._print_err('  git config user.name "admin"')
+                    self._print_err('  git config user.email "admin@llm-radar"')
+                    return
+                self._print_warn(f'commit 失败: {err[:200]}')
+                return
+            subprocess.run(['git', 'push'], cwd=self.project_root, check=True, capture_output=True)
             self._print_ok(f'auto-push 完成: {msg}')
         except subprocess.CalledProcessError as e:
             stderr = e.stderr.decode() if e.stderr else ''
-            if 'nothing to commit' in stderr or 'no changes' in stderr:
-                self._print_info('无变更需要提交')
-            else:
-                self._print_warn(f'auto-push 跳过: {stderr[:200]}')
+            self._print_warn(f'auto-push 跳过: {stderr[:200]}')
 
     # ===== Fetch =====
     def fetch_source(self, source_key):
