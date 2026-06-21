@@ -755,7 +755,7 @@ def main():
             print('Usage: crontab --add|--remove|--list|--update|--status [schedule]')
 
     elif command == 'commit':
-        msg = ' '.join(args) if args else 'manual@llm-radar: update data'
+        msg = ' '.join(args) if args else f'manual@llm-radar: update data ({datetime.now().strftime("%Y-%m-%d %H:%M")})'
         try:
             subprocess.run(['git', 'add', '-A'], cwd=PROJECT_ROOT, check=True, capture_output=True)
             r = subprocess.run(['git', 'commit', '-m', msg], cwd=PROJECT_ROOT, capture_output=True, text=True)
@@ -769,7 +769,7 @@ def main():
     elif command == 'auto-push':
         try:
             subprocess.run(['git', 'add', '-A'], cwd=PROJECT_ROOT, check=True, capture_output=True)
-            msg = 'manual@llm-radar: auto push'
+            msg = f'manual@llm-radar: auto push ({datetime.now().strftime("%Y-%m-%d %H:%M")})'
             subprocess.run(['git', 'commit', '-m', msg], cwd=PROJECT_ROOT, capture_output=True)
             subprocess.run(['git', 'push'], cwd=PROJECT_ROOT, check=True, capture_output=True)
             print('✅ auto-push 完成')
