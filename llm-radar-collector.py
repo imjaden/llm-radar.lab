@@ -33,8 +33,9 @@ Environments:
 - Python >= 3.11
 
 Dependency
-- requests >= 2.31.0
-- beautifulsoup4 >= 4.12.0
+- openai >= 1.0.0（DeepSeek API 调用）
+- requests >= 2.31.0（新闻源抓取）
+- beautifulsoup4 >= 4.12.0（HTML 解析）
 """
 
 import os

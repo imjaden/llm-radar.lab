@@ -2,6 +2,8 @@
 
 LLM 行业情报仪表盘。6 个数据源，5 维度（工具 / 大模型 / 厂商 / 人物 / 热点），热度排序，跨页签联动，中国/海外筛选。
 
+线上地址：https://llm-radar.lab.jaden.tech
+
 ## 结构
 
 ```
@@ -25,9 +27,13 @@ python3 -m http.server 8080
 open http://localhost:8080
 
 # 数据采集
-python3 llm-radar-collector.py run              # 全量采集
+python3 llm-radar-collector.py run              # 全量采集（含 auto-push）
 python3 llm-radar-collector.py run qbitai       # 指定源
 python3 llm-radar-collector.py sources          # 查看源列表
+
+# 手动推送
+python3 llm-radar-collector.py commit [message] # 仅 commit
+python3 llm-radar-collector.py auto-push        # commit + push
 
 # 定时任务
 python3 llm-radar-collector.py crontab --add          # 每天9:00、21:00采集
@@ -39,6 +45,21 @@ python3 llm-radar-collector.py crontab --remove       # 移除
 
 量子位 · 机器之心 · InfoQ · 36氪 · TechCrunch · GitHub Trending · HuggingFace Papers
 
+## 环境要求
+
+| 依赖 | 版本 |
+|:---|:---|
+| Python | ≥ 3.7.1（openai 包要求） |
+| openai | ≥ 1.0.0 |
+| requests | ≥ 2.31.0 |
+| beautifulsoup4 | ≥ 4.12.0 |
+| DEEPSEEK_API_KEY | 环境变量或 secret-manager |
+
+```bash
+export DEEPSEEK_API_KEY="sk-xxx"
+pip3 install openai requests beautifulsoup4
+```
+
 ## 数据留存
 
 - 每维度最多 100 条，超过则保留最近 15 天数据
@@ -48,5 +69,5 @@ python3 llm-radar-collector.py crontab --remove       # 移除
 ## 技术栈
 
 前端：HTML + Vanilla JS + Tailwind CSS CDN
-数据：Python + requests + BeautifulSoup4 + llm-manager
+数据：Python + DeepSeek API + requests + BeautifulSoup4
 部署：GitHub Pages → https://llm-radar.lab.jaden.tech
