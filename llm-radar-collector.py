@@ -619,7 +619,8 @@ hotspots 数组中每个元素格式：
 
 
 CRON_TAG = '# llm-radar-collector'
-CRON_CMD = f'cd {PROJECT_ROOT} && python3 llm-radar-collector.py run >> {DATA_DIR}/collector.log 2>&1'
+RUN_SCRIPT = PROJECT_ROOT / 'llm-radar-run.sh'
+CRON_CMD = f'{RUN_SCRIPT} >> {DATA_DIR}/collector.log 2>&1'
 CRON_SCHEDULE = '0 9,21 * * *'  # 每天 9:00、21:00
 
 CRON_HELP = f'crontab --add [schedule] - 添加定时任务（默认 {CRON_SCHEDULE}）'
@@ -637,6 +638,14 @@ def crontab_add(schedule=None):
     if any(CRON_TAG in line for line in lines):
         print(f'⚠️ 定时任务已存在，使用 crontab --update 更新')
         return
+    # 添加注释说明
+    if not any(CRON_TAG in line for line in lines):
+        lines.append('')
+        lines.append('# === LLM Radar 定时采集任务 ===')
+        lines.append(f'# 项目目录: {PROJECT_ROOT}')
+        lines.append(f'# 依赖: DEEPSEEK_API_KEY 环境变量需在 crontab 文件头设置')
+        lines.append(f'# 依赖: conda 环境 llm-radar (Linux) 或 python3 (macOS)')
+        lines.append('#')
     lines.append(entry)
     proc = subprocess.run(['crontab', '-'], input='\n'.join(lines) + '\n', text=True)
     if proc.returncode == 0:
