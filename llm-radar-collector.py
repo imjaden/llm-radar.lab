@@ -260,8 +260,8 @@ class LLMRadarCollector:
     # ===== Extract =====
     def extract_entities(self, fetch_results):
         """使用 LLM 从新闻中提取实体"""
-        if not self._llm_manager:
-            self._print_err('llm-manager 未加载，无法提取实体')
+        if not self.api_key:
+            self._print_err('API key 未配置，无法提取实体')
             return None
 
         # 合并所有源的内容
