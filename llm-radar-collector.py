@@ -49,7 +49,7 @@ from datetime import datetime, timedelta
 from openai import OpenAI
 
 # ===== Constants =====
-PROJECT_ROOT = Path.home() / 'CodeSpace' / 'llm-radar.jaden.tech'
+PROJECT_ROOT = Path(__file__).resolve().parent
 DATA_DIR = PROJECT_ROOT / 'data'
 SNAPSHOT_PATH = DATA_DIR / 'snapshot.json'
 FETCH_CACHE_PATH = DATA_DIR / 'fetch-cache.json'
