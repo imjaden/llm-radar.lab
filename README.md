@@ -49,4 +49,4 @@ python3 llm-radar-collector.py crontab --remove       # 移除
 
 前端：HTML + Vanilla JS + Tailwind CSS CDN
 数据：Python + requests + BeautifulSoup4 + llm-manager
-部署：GitHub Pages → llm-radar.lab.jaden.tech
+部署：GitHub Pages → https://llm-radar.lab.jaden.tech

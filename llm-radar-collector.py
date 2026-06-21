@@ -38,19 +38,20 @@ Dependency
 """
 
 import os
-import sys
+import re
 import json
+import sys
 import time
-import importlib.util
+import subprocess
 from pathlib import Path
 from datetime import datetime, timedelta
+from openai import OpenAI
 
 # ===== Constants =====
 PROJECT_ROOT = Path.home() / 'CodeSpace' / 'llm-radar.jaden.tech'
 DATA_DIR = PROJECT_ROOT / 'data'
 SNAPSHOT_PATH = DATA_DIR / 'snapshot.json'
 FETCH_CACHE_PATH = DATA_DIR / 'fetch-cache.json'
-SCRIPT_MINER_ROOT = Path.home() / 'CodeSpace' / 'script-miner'
 
 # ===== News Sources =====
 SOURCES = {
@@ -107,20 +108,29 @@ class LLMRadarCollector:
         self.data_dir = DATA_DIR
         self.snapshot_path = SNAPSHOT_PATH
         self.fetch_cache_path = FETCH_CACHE_PATH
-        self._llm_manager = None
-        self._load_llm_manager()
+        self.api_key = self._load_api_key()
+        self.base_url = "https://api.deepseek.com/v1"
 
-    def _load_llm_manager(self):
-        """加载 llm-manager 模块"""
+    def _load_api_key(self):
+        """从环境变量或 secret-manager 加载 DeepSeek API key"""
+        key = os.environ.get('DEEPSEEK_API_KEY', '')
+        if key:
+            self._print_ok('DeepSeek API key 已从环境变量加载')
+            return key
         try:
-            llm_manager_path = SCRIPT_MINER_ROOT / 'llm-manager' / 'llm-manager.py'
-            spec = importlib.util.spec_from_file_location('llm_manager', llm_manager_path)
-            module = importlib.util.module_from_spec(spec)
-            spec.loader.exec_module(module)
-            self._llm_manager = module.LLMManager()
-            self._print_ok('llm-manager 加载成功')
-        except Exception as e:
-            self._print_err(f'lllm-manager 加载失败: {e}')
+            sm_path = Path.home() / 'CodeSpace' / 'script-miner' / 'efficiency' / 'secret_manager.py'
+            if sm_path.exists():
+                sys.path.insert(0, str(sm_path.parent))
+                from secret_manager import SecretManager
+                sm = SecretManager()
+                key = sm._secrets.get('DEEPSEEK_API_KEY', {}).get('secret', '')
+        except Exception:
+            pass
+        if key:
+            self._print_ok('DeepSeek API key 已从 secret-manager 加载')
+        else:
+            self._print_err('DEEPSEEK_API_KEY 未配置，请在环境变量中设置')
+        return key
 
     def _print_ok(self, msg):
         print(f'✅ {msg}')
@@ -133,6 +143,51 @@ class LLMRadarCollector:
 
     def _print_warn(self, msg):
         print(f'⚠️ {msg}')
+
+    def _call_deepseek(self, system_content, user_content, model="deepseek-v4-flash"):
+        """调用 DeepSeek API"""
+        if not self.api_key:
+            self._print_err('API key 未配置')
+            return None
+        try:
+            client = OpenAI(api_key=self.api_key, base_url=self.base_url)
+            resp = client.chat.completions.create(
+                model=model,
+                messages=[
+                    {"role": "system", "content": system_content},
+                    {"role": "user", "content": user_content},
+                ],
+                max_tokens=8000,
+                temperature=0.1,
+            )
+            msg = resp.choices[0].message
+            return {"content": msg.content, "prompt_tokens": resp.usage.prompt_tokens, "completion_tokens": resp.usage.completion_tokens} if resp.usage else {"content": msg.content}
+        except Exception as e:
+            self._print_err(f'DeepSeek API 调用失败: {e}')
+            return None
+
+    def _auto_push(self, changelog):
+        """有数据更新时自动 commit + push"""
+        if not changelog:
+            self._print_info('无数据更新，跳过 auto-push')
+            return
+        count = sum(1 for c in changelog if c.get('type') in ('new', 'update'))
+        if count == 0:
+            self._print_info('无新增/更新实体，跳过 auto-push')
+            return
+        self._print_info(f'检测到 {count} 条变更，执行 auto-push...')
+        try:
+            subprocess.run(['git', 'add', '-A'], cwd=self.project_root, check=True, capture_output=True)
+            msg = f'auto-push@llm-radar: update data ({count} changes)'
+            subprocess.run(['git', 'commit', '-m', msg], cwd=self.project_root, capture_output=True)
+            subprocess.run(['git', 'push'], cwd=self.project_root, capture_output=True)
+            self._print_ok(f'auto-push 完成: {msg}')
+        except subprocess.CalledProcessError as e:
+            stderr = e.stderr.decode() if e.stderr else ''
+            if 'nothing to commit' in stderr or 'no changes' in stderr:
+                self._print_info('无变更需要提交')
+            else:
+                self._print_warn(f'auto-push 跳过: {stderr[:200]}')
 
     # ===== Fetch =====
     def fetch_source(self, source_key):
@@ -251,22 +306,8 @@ hotspots 数组中每个元素格式：
         self._print_info('调用 LLM 提取实体...')
         start_time = time.time()
 
-        # 设置内容并调用（使用 model_priority 列表，支持自动故障切换）
-        self._llm_manager.system_content = system_prompt
-        self._llm_manager.user_content = user_prompt
-        model_keys = ['deepseek', 'xiaomi', 'kimi', 'minimax', 'bigmodel', 'doubao']
-        result = None
-        for model_key in model_keys:
-            try:
-                self._print_info(f'尝试模型 [{model_key}]...')
-                result = self._llm_manager._run_model(model_key, verbose=False)
-                if result and not result.get('error'):
-                    break
-                self._print_warn(f'模型 [{model_key}] 失败: {result.get("error") if result else "未知"}')
-                result = None
-            except Exception as e:
-                self._print_warn(f'模型 [{model_key}] 异常: {e}')
-                result = None
+        # 直接调用 DeepSeek API
+        result = self._call_deepseek(system_prompt, user_prompt)
 
         duration = round(time.time() - start_time, 1)
 
@@ -414,6 +455,9 @@ hotspots 数组中每个元素格式：
 
         # 生成 changelog.html
         self._write_changelog_html(snapshot.get('changelog', []))
+
+        # auto-push
+        self._auto_push(changelog)
 
         return snapshot
 
@@ -703,25 +747,50 @@ def main():
         else:
             print('Usage: crontab --add|--remove|--list|--update|--status [schedule]')
 
+    elif command == 'commit':
+        msg = ' '.join(args) if args else 'manual@llm-radar: update data'
+        try:
+            subprocess.run(['git', 'add', '-A'], cwd=PROJECT_ROOT, check=True, capture_output=True)
+            r = subprocess.run(['git', 'commit', '-m', msg], cwd=PROJECT_ROOT, capture_output=True, text=True)
+            if r.returncode == 0:
+                print(f'✅ commit 完成: {msg}')
+            else:
+                print(f'ℹ️  {r.stderr.strip()}')
+        except Exception as e:
+            print(f'❌ commit 失败: {e}')
+
+    elif command == 'auto-push':
+        try:
+            subprocess.run(['git', 'add', '-A'], cwd=PROJECT_ROOT, check=True, capture_output=True)
+            msg = 'manual@llm-radar: auto push'
+            subprocess.run(['git', 'commit', '-m', msg], cwd=PROJECT_ROOT, capture_output=True)
+            subprocess.run(['git', 'push'], cwd=PROJECT_ROOT, check=True, capture_output=True)
+            print('✅ auto-push 完成')
+        except subprocess.CalledProcessError as e:
+            print(f'ℹ️  auto-push 跳过: {e.stderr.decode()[:200] if e.stderr else str(e)}')
+
     elif command == 'help':
         print('\n📖 LLM Radar 数据采集脚本\n')
         print('Usage: python3 llm-radar-collector.py <command> [args]\n')
         print('Commands:')
         print('  fetch [source]           - 抓取新闻并提取实体（默认全部源）')
         print('  merge                    - 将 fetch 结果合并到 snapshot.json')
-        print('  run [source]             - fetch + merge 一步完成')
+        print('  run [source]             - fetch + merge 一步完成（含 auto-push）')
         print('  sources                  - 列出所有新闻源')
         print(f'  {CRON_HELP}')
         print('  crontab --remove         - 移除定时任务')
         print('  crontab --list           - 列出定时任务')
         print('  crontab --update [sched] - 更新定时任务')
         print('  crontab --status         - 查看定时任务状态')
+        print('  commit [message]         - git add + commit（默认 message: manual@llm-radar）')
+        print('  auto-push                - git add + commit + push')
         print('  help                     - 显示帮助信息\n')
         print('Examples:')
-        print('  python3 llm-radar-collector.py run                    # 全量采集')
+        print('  python3 llm-radar-collector.py run                    # 全量采集+推送')
         print('  python3 llm-radar-collector.py run qbitai             # 只采集量子位')
+        print('  python3 llm-radar-collector.py commit                 # 仅 commit')
+        print('  python3 llm-radar-collector.py auto-push              # 手动推送')
         print('  python3 llm-radar-collector.py crontab --add          # 每天9:00、21:00采集')
-        print('  python3 llm-radar-collector.py crontab --add "*/30 8-22 * * *"  # 每30分钟')
 
     else:
         collector._print_err(f'未知命令: {command}')
