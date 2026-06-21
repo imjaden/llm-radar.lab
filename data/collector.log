@@ -1,0 +1,2277 @@
+✅ llm-manager 加载成功
+ℹ️ === LLM Radar 数据采集 ===
+ℹ️ 时间: 2026-06-12 11:00:01
+ℹ️ 数据目录: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data
+
+ℹ️ [1/3] 抓取新闻源...
+ℹ️ 抓取 量子位 (https://www.qbitai.com)
+✅ 量子位 抓取成功，1808 字符
+ℹ️ 抓取 机器之心 (https://www.jiqizhixin.com)
+✅ 机器之心 抓取成功，238 字符
+ℹ️ 抓取 TechCrunch AI (https://techcrunch.com/category/artificial-intelligence/)
+✅ TechCrunch AI 抓取成功，4345 字符
+ℹ️ 抓取 GitHub Trending (https://github.com/trending?since=weekly)
+✅ GitHub Trending 抓取成功，5000 字符
+ℹ️ 抓取 HuggingFace Papers (https://huggingface.co/papers)
+❌ HuggingFace Papers 抓取失败: ('Connection aborted.', ConnectionResetError(54, 'Connection reset by peer'))
+✅ 抓取完成，4/5 个源成功
+
+ℹ️ [2/3] LLM 提取实体...
+ℹ️ 调用 LLM 提取实体...
+ℹ️ 尝试模型 [deepseek]...
+✅ 实体提取完成，耗时 78.7s，共 27 个实体
+
+ℹ️ [3/3] 合并到快照...
+✅ 快照已保存: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data/snapshot.json
+✅ 合并完成：新增 15，更新 17
+ℹ️ 历史快照已归档: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data/history/2026-W23.json
+
+✅ 完成！当前数据: 37 厂商 / 23 人物 / 43 工具 / 40 模型 / 16 热点
+✅ llm-manager 加载成功
+ℹ️ === LLM Radar 数据采集 ===
+ℹ️ 时间: 2026-06-12 12:00:01
+ℹ️ 数据目录: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data
+
+ℹ️ [1/3] 抓取新闻源...
+ℹ️ 抓取 量子位 (https://www.qbitai.com)
+✅ 量子位 抓取成功，1808 字符
+ℹ️ 抓取 机器之心 (https://www.jiqizhixin.com)
+✅ 机器之心 抓取成功，238 字符
+ℹ️ 抓取 TechCrunch AI (https://techcrunch.com/category/artificial-intelligence/)
+✅ TechCrunch AI 抓取成功，4348 字符
+ℹ️ 抓取 GitHub Trending (https://github.com/trending?since=weekly)
+✅ GitHub Trending 抓取成功，5000 字符
+ℹ️ 抓取 HuggingFace Papers (https://huggingface.co/papers)
+❌ HuggingFace Papers 抓取失败: HTTPSConnectionPool(host='huggingface.co', port=443): Max retries exceeded with url: /papers (Caused by ConnectTimeoutError(<HTTPSConnection(host='huggingface.co', port=443) at 0x108d7b110>, 'Connection to huggingface.co timed out. (connect timeout=30)'))
+✅ 抓取完成，4/5 个源成功
+
+ℹ️ [2/3] LLM 提取实体...
+ℹ️ 调用 LLM 提取实体...
+ℹ️ 尝试模型 [deepseek]...
+✅ 实体提取完成，耗时 53.0s，共 29 个实体
+
+ℹ️ [3/3] 合并到快照...
+✅ 快照已保存: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data/snapshot.json
+✅ 合并完成：新增 10，更新 24
+ℹ️ 历史快照已归档: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data/history/2026-W23.json
+
+✅ 完成！当前数据: 38 厂商 / 25 人物 / 45 工具 / 41 模型 / 20 热点
+✅ llm-manager 加载成功
+ℹ️ === LLM Radar 数据采集 ===
+ℹ️ 时间: 2026-06-12 16:00:00
+ℹ️ 数据目录: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data
+
+ℹ️ [1/3] 抓取新闻源...
+ℹ️ 抓取 量子位 (https://www.qbitai.com)
+✅ 量子位 抓取成功，1803 字符
+ℹ️ 抓取 机器之心 (https://www.jiqizhixin.com)
+✅ 机器之心 抓取成功，238 字符
+ℹ️ 抓取 TechCrunch AI (https://techcrunch.com/category/artificial-intelligence/)
+✅ TechCrunch AI 抓取成功，4344 字符
+ℹ️ 抓取 GitHub Trending (https://github.com/trending?since=weekly)
+✅ GitHub Trending 抓取成功，5000 字符
+ℹ️ 抓取 HuggingFace Papers (https://huggingface.co/papers)
+❌ HuggingFace Papers 抓取失败: HTTPSConnectionPool(host='huggingface.co', port=443): Max retries exceeded with url: /papers (Caused by ConnectTimeoutError(<HTTPSConnection(host='huggingface.co', port=443) at 0x10a6f6710>, 'Connection to huggingface.co timed out. (connect timeout=30)'))
+✅ 抓取完成，4/5 个源成功
+
+ℹ️ [2/3] LLM 提取实体...
+ℹ️ 调用 LLM 提取实体...
+ℹ️ 尝试模型 [deepseek]...
+✅ 实体提取完成，耗时 56.1s，共 21 个实体
+
+ℹ️ [3/3] 合并到快照...
+✅ 快照已保存: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data/snapshot.json
+✅ 合并完成：新增 6，更新 20
+ℹ️ 历史快照已归档: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data/history/2026-W23.json
+
+✅ 完成！当前数据: 40 厂商 / 25 人物 / 45 工具 / 41 模型 / 24 热点
+✅ llm-manager 加载成功
+ℹ️ === LLM Radar 数据采集 ===
+ℹ️ 时间: 2026-06-12 18:00:00
+ℹ️ 数据目录: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data
+
+ℹ️ [1/3] 抓取新闻源...
+ℹ️ 抓取 量子位 (https://www.qbitai.com)
+✅ 量子位 抓取成功，1794 字符
+ℹ️ 抓取 机器之心 (https://www.jiqizhixin.com)
+✅ 机器之心 抓取成功，238 字符
+ℹ️ 抓取 TechCrunch AI (https://techcrunch.com/category/artificial-intelligence/)
+✅ TechCrunch AI 抓取成功，4345 字符
+ℹ️ 抓取 GitHub Trending (https://github.com/trending?since=weekly)
+❌ GitHub Trending 抓取失败: HTTPSConnectionPool(host='github.com', port=443): Read timed out. (read timeout=30)
+ℹ️ 抓取 HuggingFace Papers (https://huggingface.co/papers)
+❌ HuggingFace Papers 抓取失败: HTTPSConnectionPool(host='huggingface.co', port=443): Max retries exceeded with url: /papers (Caused by ConnectTimeoutError(<HTTPSConnection(host='huggingface.co', port=443) at 0x107492d50>, 'Connection to huggingface.co timed out. (connect timeout=30)'))
+✅ 抓取完成，3/5 个源成功
+
+ℹ️ [2/3] LLM 提取实体...
+ℹ️ 调用 LLM 提取实体...
+ℹ️ 尝试模型 [deepseek]...
+✅ 实体提取完成，耗时 68.5s，共 24 个实体
+
+ℹ️ [3/3] 合并到快照...
+✅ 快照已保存: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data/snapshot.json
+✅ 合并完成：新增 12，更新 16
+ℹ️ 历史快照已归档: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data/history/2026-W23.json
+
+✅ 完成！当前数据: 41 厂商 / 25 人物 / 49 工具 / 43 模型 / 29 热点
+✅ llm-manager 加载成功
+ℹ️ === LLM Radar 数据采集 ===
+ℹ️ 时间: 2026-06-12 19:00:00
+ℹ️ 数据目录: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data
+
+ℹ️ [1/3] 抓取新闻源...
+ℹ️ 抓取 量子位 (https://www.qbitai.com)
+✅ 量子位 抓取成功，1794 字符
+ℹ️ 抓取 机器之心 (https://www.jiqizhixin.com)
+✅ 机器之心 抓取成功，238 字符
+ℹ️ 抓取 TechCrunch AI (https://techcrunch.com/category/artificial-intelligence/)
+✅ TechCrunch AI 抓取成功，4347 字符
+ℹ️ 抓取 GitHub Trending (https://github.com/trending?since=weekly)
+❌ GitHub Trending 抓取失败: HTTPSConnectionPool(host='github.com', port=443): Read timed out. (read timeout=30)
+ℹ️ 抓取 HuggingFace Papers (https://huggingface.co/papers)
+❌ HuggingFace Papers 抓取失败: HTTPSConnectionPool(host='huggingface.co', port=443): Max retries exceeded with url: /papers (Caused by NewConnectionError("HTTPSConnection(host='huggingface.co', port=443): Failed to establish a new connection: [Errno 61] Connection refused"))
+✅ 抓取完成，3/5 个源成功
+
+ℹ️ [2/3] LLM 提取实体...
+ℹ️ 调用 LLM 提取实体...
+ℹ️ 尝试模型 [deepseek]...
+✅ 实体提取完成，耗时 79.4s，共 33 个实体
+
+ℹ️ [3/3] 合并到快照...
+✅ 快照已保存: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data/snapshot.json
+✅ 合并完成：新增 14，更新 24
+ℹ️ 历史快照已归档: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data/history/2026-W23.json
+
+✅ 完成！当前数据: 43 厂商 / 26 人物 / 55 工具 / 44 模型 / 33 热点
+✅ llm-manager 加载成功
+ℹ️ === LLM Radar 数据采集 ===
+ℹ️ 时间: 2026-06-12 20:00:00
+ℹ️ 数据目录: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data
+
+ℹ️ [1/3] 抓取新闻源...
+ℹ️ 抓取 量子位 (https://www.qbitai.com)
+✅ 量子位 抓取成功，1794 字符
+ℹ️ 抓取 机器之心 (https://www.jiqizhixin.com)
+✅ 机器之心 抓取成功，238 字符
+ℹ️ 抓取 TechCrunch AI (https://techcrunch.com/category/artificial-intelligence/)
+✅ TechCrunch AI 抓取成功，4348 字符
+ℹ️ 抓取 GitHub Trending (https://github.com/trending?since=weekly)
+❌ GitHub Trending 抓取失败: HTTPSConnectionPool(host='github.com', port=443): Max retries exceeded with url: /trending?since=weekly (Caused by ConnectTimeoutError(<HTTPSConnection(host='github.com', port=443) at 0x108b32710>, 'Connection to github.com timed out. (connect timeout=30)'))
+ℹ️ 抓取 HuggingFace Papers (https://huggingface.co/papers)
+❌ HuggingFace Papers 抓取失败: HTTPSConnectionPool(host='huggingface.co', port=443): Max retries exceeded with url: /papers (Caused by ConnectTimeoutError(<HTTPSConnection(host='huggingface.co', port=443) at 0x108b33c50>, 'Connection to huggingface.co timed out. (connect timeout=30)'))
+✅ 抓取完成，3/5 个源成功
+
+ℹ️ [2/3] LLM 提取实体...
+ℹ️ 调用 LLM 提取实体...
+ℹ️ 尝试模型 [deepseek]...
+✅ 实体提取完成，耗时 67.0s，共 31 个实体
+
+ℹ️ [3/3] 合并到快照...
+✅ 快照已保存: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data/snapshot.json
+✅ 合并完成：新增 11，更新 25
+ℹ️ 历史快照已归档: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data/history/2026-W23.json
+
+✅ 完成！当前数据: 45 厂商 / 26 人物 / 58 工具 / 47 模型 / 36 热点
+✅ llm-manager 加载成功
+ℹ️ === LLM Radar 数据采集 ===
+ℹ️ 时间: 2026-06-13 00:00:01
+ℹ️ 数据目录: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data
+
+ℹ️ [1/3] 抓取新闻源...
+ℹ️ 抓取 量子位 (https://www.qbitai.com)
+✅ 量子位 抓取成功，1810 字符
+ℹ️ 抓取 机器之心 (https://www.jiqizhixin.com)
+✅ 机器之心 抓取成功，231 字符
+ℹ️ 抓取 TechCrunch AI (https://techcrunch.com/category/artificial-intelligence/)
+✅ TechCrunch AI 抓取成功，4432 字符
+ℹ️ 抓取 GitHub Trending (https://github.com/trending?since=weekly)
+✅ GitHub Trending 抓取成功，5000 字符
+ℹ️ 抓取 HuggingFace Papers (https://huggingface.co/papers)
+❌ HuggingFace Papers 抓取失败: HTTPSConnectionPool(host='huggingface.co', port=443): Max retries exceeded with url: /papers (Caused by ConnectTimeoutError(<HTTPSConnection(host='huggingface.co', port=443) at 0x10688a710>, 'Connection to huggingface.co timed out. (connect timeout=30)'))
+✅ 抓取完成，4/5 个源成功
+
+ℹ️ [2/3] LLM 提取实体...
+ℹ️ 调用 LLM 提取实体...
+ℹ️ 尝试模型 [deepseek]...
+✅ 实体提取完成，耗时 89.9s，共 25 个实体
+
+ℹ️ [3/3] 合并到快照...
+✅ 快照已保存: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data/snapshot.json
+✅ 合并完成：新增 6，更新 24
+ℹ️ 历史快照已归档: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data/history/2026-W23.json
+
+✅ 完成！当前数据: 46 厂商 / 26 人物 / 60 工具 / 47 模型 / 39 热点
+✅ llm-manager 加载成功
+ℹ️ === LLM Radar 数据采集 ===
+ℹ️ 时间: 2026-06-13 01:00:00
+ℹ️ 数据目录: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data
+
+ℹ️ [1/3] 抓取新闻源...
+ℹ️ 抓取 量子位 (https://www.qbitai.com)
+✅ 量子位 抓取成功，1784 字符
+ℹ️ 抓取 机器之心 (https://www.jiqizhixin.com)
+✅ 机器之心 抓取成功，222 字符
+ℹ️ 抓取 TechCrunch AI (https://techcrunch.com/category/artificial-intelligence/)
+✅ TechCrunch AI 抓取成功，4416 字符
+ℹ️ 抓取 GitHub Trending (https://github.com/trending?since=weekly)
+❌ GitHub Trending 抓取失败: HTTPSConnectionPool(host='github.com', port=443): Read timed out. (read timeout=30)
+ℹ️ 抓取 HuggingFace Papers (https://huggingface.co/papers)
+❌ HuggingFace Papers 抓取失败: HTTPSConnectionPool(host='huggingface.co', port=443): Max retries exceeded with url: /papers (Caused by ConnectTimeoutError(<HTTPSConnection(host='huggingface.co', port=443) at 0x10689e990>, 'Connection to huggingface.co timed out. (connect timeout=30)'))
+✅ 抓取完成，3/5 个源成功
+
+ℹ️ [2/3] LLM 提取实体...
+ℹ️ 调用 LLM 提取实体...
+ℹ️ 尝试模型 [deepseek]...
+✅ 实体提取完成，耗时 61.3s，共 29 个实体
+
+ℹ️ [3/3] 合并到快照...
+✅ 快照已保存: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data/snapshot.json
+✅ 合并完成：新增 16，更新 18
+ℹ️ 历史快照已归档: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data/history/2026-W23.json
+
+✅ 完成！当前数据: 49 厂商 / 27 人物 / 64 工具 / 51 模型 / 43 热点
+✅ llm-manager 加载成功
+ℹ️ === LLM Radar 数据采集 ===
+ℹ️ 时间: 2026-06-13 15:00:00
+ℹ️ 数据目录: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data
+
+ℹ️ [1/3] 抓取新闻源...
+ℹ️ 抓取 量子位 (https://www.qbitai.com)
+✅ 量子位 抓取成功，1784 字符
+ℹ️ 抓取 机器之心 (https://www.jiqizhixin.com)
+✅ 机器之心 抓取成功，222 字符
+ℹ️ 抓取 TechCrunch AI (https://techcrunch.com/category/artificial-intelligence/)
+✅ TechCrunch AI 抓取成功，4542 字符
+ℹ️ 抓取 GitHub Trending (https://github.com/trending?since=weekly)
+✅ GitHub Trending 抓取成功，5000 字符
+ℹ️ 抓取 HuggingFace Papers (https://huggingface.co/papers)
+✅ HuggingFace Papers 抓取成功，5000 字符
+✅ 抓取完成，5/5 个源成功
+
+ℹ️ [2/3] LLM 提取实体...
+ℹ️ 调用 LLM 提取实体...
+ℹ️ 尝试模型 [deepseek]...
+✅ 实体提取完成，耗时 92.4s，共 26 个实体
+
+ℹ️ [3/3] 合并到快照...
+✅ 快照已保存: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data/snapshot.json
+✅ 合并完成：新增 5，更新 26
+ℹ️ 历史快照已归档: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data/history/2026-W23.json
+
+✅ 完成！当前数据: 50 厂商 / 27 人物 / 64 工具 / 51 模型 / 47 热点
+✅ llm-manager 加载成功
+ℹ️ === LLM Radar 数据采集 ===
+ℹ️ 时间: 2026-06-13 17:00:01
+ℹ️ 数据目录: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data
+
+ℹ️ [1/3] 抓取新闻源...
+ℹ️ 抓取 量子位 (https://www.qbitai.com)
+✅ 量子位 抓取成功，1791 字符
+ℹ️ 抓取 机器之心 (https://www.jiqizhixin.com)
+✅ 机器之心 抓取成功，222 字符
+ℹ️ 抓取 TechCrunch AI (https://techcrunch.com/category/artificial-intelligence/)
+✅ TechCrunch AI 抓取成功，4545 字符
+ℹ️ 抓取 GitHub Trending (https://github.com/trending?since=weekly)
+✅ GitHub Trending 抓取成功，5000 字符
+ℹ️ 抓取 HuggingFace Papers (https://huggingface.co/papers)
+✅ HuggingFace Papers 抓取成功，5000 字符
+✅ 抓取完成，5/5 个源成功
+
+ℹ️ [2/3] LLM 提取实体...
+ℹ️ 调用 LLM 提取实体...
+ℹ️ 尝试模型 [deepseek]...
+✅ 实体提取完成，耗时 77.2s，共 38 个实体
+
+ℹ️ [3/3] 合并到快照...
+✅ 快照已保存: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data/snapshot.json
+✅ 合并完成：新增 12，更新 31
+ℹ️ 历史快照已归档: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data/history/2026-W23.json
+
+✅ 完成！当前数据: 54 厂商 / 29 人物 / 68 工具 / 51 模型 / 49 热点
+✅ llm-manager 加载成功
+ℹ️ === LLM Radar 数据采集 ===
+ℹ️ 时间: 2026-06-13 18:00:00
+ℹ️ 数据目录: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data
+
+ℹ️ [1/3] 抓取新闻源...
+ℹ️ 抓取 量子位 (https://www.qbitai.com)
+✅ 量子位 抓取成功，1794 字符
+ℹ️ 抓取 机器之心 (https://www.jiqizhixin.com)
+✅ 机器之心 抓取成功，222 字符
+ℹ️ 抓取 TechCrunch AI (https://techcrunch.com/category/artificial-intelligence/)
+✅ TechCrunch AI 抓取成功，4546 字符
+ℹ️ 抓取 GitHub Trending (https://github.com/trending?since=weekly)
+✅ GitHub Trending 抓取成功，5000 字符
+ℹ️ 抓取 HuggingFace Papers (https://huggingface.co/papers)
+✅ HuggingFace Papers 抓取成功，5000 字符
+✅ 抓取完成，5/5 个源成功
+
+ℹ️ [2/3] LLM 提取实体...
+ℹ️ 调用 LLM 提取实体...
+ℹ️ 尝试模型 [deepseek]...
+✅ 实体提取完成，耗时 65.0s，共 31 个实体
+
+ℹ️ [3/3] 合并到快照...
+✅ 快照已保存: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data/snapshot.json
+✅ 合并完成：新增 7，更新 29
+ℹ️ 历史快照已归档: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data/history/2026-W23.json
+
+✅ 完成！当前数据: 56 厂商 / 29 人物 / 69 工具 / 52 模型 / 52 热点
+✅ llm-manager 加载成功
+ℹ️ === LLM Radar 数据采集 ===
+ℹ️ 时间: 2026-06-13 19:00:00
+ℹ️ 数据目录: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data
+
+ℹ️ [1/3] 抓取新闻源...
+ℹ️ 抓取 量子位 (https://www.qbitai.com)
+✅ 量子位 抓取成功，1800 字符
+ℹ️ 抓取 机器之心 (https://www.jiqizhixin.com)
+✅ 机器之心 抓取成功，222 字符
+ℹ️ 抓取 TechCrunch AI (https://techcrunch.com/category/artificial-intelligence/)
+✅ TechCrunch AI 抓取成功，4546 字符
+ℹ️ 抓取 GitHub Trending (https://github.com/trending?since=weekly)
+✅ GitHub Trending 抓取成功，5000 字符
+ℹ️ 抓取 HuggingFace Papers (https://huggingface.co/papers)
+✅ HuggingFace Papers 抓取成功，5000 字符
+✅ 抓取完成，5/5 个源成功
+
+ℹ️ [2/3] LLM 提取实体...
+ℹ️ 调用 LLM 提取实体...
+ℹ️ 尝试模型 [deepseek]...
+✅ 实体提取完成，耗时 56.9s，共 27 个实体
+
+ℹ️ [3/3] 合并到快照...
+✅ 快照已保存: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data/snapshot.json
+✅ 合并完成：新增 7，更新 24
+ℹ️ 历史快照已归档: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data/history/2026-W23.json
+
+✅ 完成！当前数据: 58 厂商 / 29 人物 / 70 工具 / 52 模型 / 56 热点
+✅ llm-manager 加载成功
+ℹ️ === LLM Radar 数据采集 ===
+ℹ️ 时间: 2026-06-13 20:00:00
+ℹ️ 数据目录: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data
+
+ℹ️ [1/3] 抓取新闻源...
+ℹ️ 抓取 量子位 (https://www.qbitai.com)
+✅ 量子位 抓取成功，1804 字符
+ℹ️ 抓取 机器之心 (https://www.jiqizhixin.com)
+✅ 机器之心 抓取成功，222 字符
+ℹ️ 抓取 TechCrunch AI (https://techcrunch.com/category/artificial-intelligence/)
+✅ TechCrunch AI 抓取成功，4546 字符
+ℹ️ 抓取 GitHub Trending (https://github.com/trending?since=weekly)
+✅ GitHub Trending 抓取成功，5000 字符
+ℹ️ 抓取 HuggingFace Papers (https://huggingface.co/papers)
+✅ HuggingFace Papers 抓取成功，5000 字符
+✅ 抓取完成，5/5 个源成功
+
+ℹ️ [2/3] LLM 提取实体...
+ℹ️ 调用 LLM 提取实体...
+ℹ️ 尝试模型 [deepseek]...
+✅ 实体提取完成，耗时 104.5s，共 39 个实体
+
+ℹ️ [3/3] 合并到快照...
+✅ 快照已保存: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data/snapshot.json
+✅ 合并完成：新增 10，更新 34
+ℹ️ 历史快照已归档: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data/history/2026-W23.json
+
+✅ 完成！当前数据: 65 厂商 / 29 人物 / 70 工具 / 53 模型 / 58 热点
+✅ llm-manager 加载成功
+ℹ️ === LLM Radar 数据采集 ===
+ℹ️ 时间: 2026-06-13 21:00:00
+ℹ️ 数据目录: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data
+
+ℹ️ [1/3] 抓取新闻源...
+ℹ️ 抓取 量子位 (https://www.qbitai.com)
+✅ 量子位 抓取成功，1834 字符
+ℹ️ 抓取 机器之心 (https://www.jiqizhixin.com)
+✅ 机器之心 抓取成功，222 字符
+ℹ️ 抓取 TechCrunch AI (https://techcrunch.com/category/artificial-intelligence/)
+✅ TechCrunch AI 抓取成功，4547 字符
+ℹ️ 抓取 GitHub Trending (https://github.com/trending?since=weekly)
+✅ GitHub Trending 抓取成功，5000 字符
+ℹ️ 抓取 HuggingFace Papers (https://huggingface.co/papers)
+✅ HuggingFace Papers 抓取成功，5000 字符
+✅ 抓取完成，5/5 个源成功
+
+ℹ️ [2/3] LLM 提取实体...
+ℹ️ 调用 LLM 提取实体...
+ℹ️ 尝试模型 [deepseek]...
+✅ 实体提取完成，耗时 101.1s，共 44 个实体
+
+ℹ️ [3/3] 合并到快照...
+✅ 快照已保存: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data/snapshot.json
+✅ 合并完成：新增 7，更新 42
+ℹ️ 历史快照已归档: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data/history/2026-W23.json
+
+✅ 完成！当前数据: 69 厂商 / 29 人物 / 70 工具 / 53 模型 / 61 热点
+✅ llm-manager 加载成功
+ℹ️ === LLM Radar 数据采集 ===
+ℹ️ 时间: 2026-06-13 22:00:01
+ℹ️ 数据目录: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data
+
+ℹ️ [1/3] 抓取新闻源...
+ℹ️ 抓取 量子位 (https://www.qbitai.com)
+✅ 量子位 抓取成功，1834 字符
+ℹ️ 抓取 机器之心 (https://www.jiqizhixin.com)
+✅ 机器之心 抓取成功，222 字符
+ℹ️ 抓取 TechCrunch AI (https://techcrunch.com/category/artificial-intelligence/)
+✅ TechCrunch AI 抓取成功，4548 字符
+ℹ️ 抓取 GitHub Trending (https://github.com/trending?since=weekly)
+✅ GitHub Trending 抓取成功，5000 字符
+ℹ️ 抓取 HuggingFace Papers (https://huggingface.co/papers)
+✅ HuggingFace Papers 抓取成功，5000 字符
+✅ 抓取完成，5/5 个源成功
+
+ℹ️ [2/3] LLM 提取实体...
+ℹ️ 调用 LLM 提取实体...
+ℹ️ 尝试模型 [deepseek]...
+✅ 实体提取完成，耗时 72.7s，共 36 个实体
+
+ℹ️ [3/3] 合并到快照...
+✅ 快照已保存: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data/snapshot.json
+✅ 合并完成：新增 9，更新 32
+ℹ️ 历史快照已归档: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data/history/2026-W23.json
+
+✅ 完成！当前数据: 71 厂商 / 30 人物 / 71 工具 / 55 模型 / 64 热点
+✅ llm-manager 加载成功
+ℹ️ === LLM Radar 数据采集 ===
+ℹ️ 时间: 2026-06-14 00:00:01
+ℹ️ 数据目录: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data
+
+ℹ️ [1/3] 抓取新闻源...
+ℹ️ 抓取 量子位 (https://www.qbitai.com)
+✅ 量子位 抓取成功，1836 字符
+ℹ️ 抓取 机器之心 (https://www.jiqizhixin.com)
+✅ 机器之心 抓取成功，222 字符
+ℹ️ 抓取 TechCrunch AI (https://techcrunch.com/category/artificial-intelligence/)
+✅ TechCrunch AI 抓取成功，4550 字符
+ℹ️ 抓取 GitHub Trending (https://github.com/trending?since=weekly)
+✅ GitHub Trending 抓取成功，5000 字符
+ℹ️ 抓取 HuggingFace Papers (https://huggingface.co/papers)
+✅ HuggingFace Papers 抓取成功，5000 字符
+✅ 抓取完成，5/5 个源成功
+
+ℹ️ [2/3] LLM 提取实体...
+ℹ️ 调用 LLM 提取实体...
+ℹ️ 尝试模型 [deepseek]...
+✅ 实体提取完成，耗时 169.1s，共 33 个实体
+
+ℹ️ [3/3] 合并到快照...
+✅ 快照已保存: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data/snapshot.json
+✅ 合并完成：新增 5，更新 33
+ℹ️ 历史快照已归档: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data/history/2026-W23.json
+
+✅ 完成！当前数据: 71 厂商 / 30 人物 / 72 工具 / 56 模型 / 67 热点
+✅ llm-manager 加载成功
+ℹ️ === LLM Radar 数据采集 ===
+ℹ️ 时间: 2026-06-14 01:00:00
+ℹ️ 数据目录: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data
+
+ℹ️ [1/3] 抓取新闻源...
+ℹ️ 抓取 量子位 (https://www.qbitai.com)
+✅ 量子位 抓取成功，1839 字符
+ℹ️ 抓取 机器之心 (https://www.jiqizhixin.com)
+✅ 机器之心 抓取成功，222 字符
+ℹ️ 抓取 TechCrunch AI (https://techcrunch.com/category/artificial-intelligence/)
+✅ TechCrunch AI 抓取成功，4523 字符
+ℹ️ 抓取 GitHub Trending (https://github.com/trending?since=weekly)
+✅ GitHub Trending 抓取成功，5000 字符
+ℹ️ 抓取 HuggingFace Papers (https://huggingface.co/papers)
+✅ HuggingFace Papers 抓取成功，5000 字符
+✅ 抓取完成，5/5 个源成功
+
+ℹ️ [2/3] LLM 提取实体...
+ℹ️ 调用 LLM 提取实体...
+ℹ️ 尝试模型 [deepseek]...
+✅ 实体提取完成，耗时 60.0s，共 36 个实体
+
+ℹ️ [3/3] 合并到快照...
+✅ 快照已保存: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data/snapshot.json
+✅ 合并完成：新增 7，更新 34
+ℹ️ 历史快照已归档: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data/history/2026-W23.json
+
+✅ 完成！当前数据: 73 厂商 / 31 人物 / 74 工具 / 56 模型 / 69 热点
+✅ llm-manager 加载成功
+ℹ️ === LLM Radar 数据采集 ===
+ℹ️ 时间: 2026-06-14 02:00:00
+ℹ️ 数据目录: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data
+
+ℹ️ [1/3] 抓取新闻源...
+ℹ️ 抓取 量子位 (https://www.qbitai.com)
+✅ 量子位 抓取成功，1839 字符
+ℹ️ 抓取 机器之心 (https://www.jiqizhixin.com)
+✅ 机器之心 抓取成功，222 字符
+ℹ️ 抓取 TechCrunch AI (https://techcrunch.com/category/artificial-intelligence/)
+✅ TechCrunch AI 抓取成功，4516 字符
+ℹ️ 抓取 GitHub Trending (https://github.com/trending?since=weekly)
+✅ GitHub Trending 抓取成功，5000 字符
+ℹ️ 抓取 HuggingFace Papers (https://huggingface.co/papers)
+✅ HuggingFace Papers 抓取成功，5000 字符
+✅ 抓取完成，5/5 个源成功
+
+ℹ️ [2/3] LLM 提取实体...
+ℹ️ 调用 LLM 提取实体...
+ℹ️ 尝试模型 [deepseek]...
+✅ 实体提取完成，耗时 73.1s，共 34 个实体
+
+ℹ️ [3/3] 合并到快照...
+✅ 快照已保存: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data/snapshot.json
+✅ 合并完成：新增 6，更新 33
+ℹ️ 历史快照已归档: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data/history/2026-W23.json
+
+✅ 完成！当前数据: 74 厂商 / 32 人物 / 75 工具 / 57 模型 / 71 热点
+✅ llm-manager 加载成功
+ℹ️ === LLM Radar 数据采集 ===
+ℹ️ 时间: 2026-06-14 03:00:00
+ℹ️ 数据目录: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data
+
+ℹ️ [1/3] 抓取新闻源...
+ℹ️ 抓取 量子位 (https://www.qbitai.com)
+✅ 量子位 抓取成功，1839 字符
+ℹ️ 抓取 机器之心 (https://www.jiqizhixin.com)
+✅ 机器之心 抓取成功，222 字符
+ℹ️ 抓取 TechCrunch AI (https://techcrunch.com/category/artificial-intelligence/)
+✅ TechCrunch AI 抓取成功，4517 字符
+ℹ️ 抓取 GitHub Trending (https://github.com/trending?since=weekly)
+✅ GitHub Trending 抓取成功，5000 字符
+ℹ️ 抓取 HuggingFace Papers (https://huggingface.co/papers)
+✅ HuggingFace Papers 抓取成功，5000 字符
+✅ 抓取完成，5/5 个源成功
+
+ℹ️ [2/3] LLM 提取实体...
+ℹ️ 调用 LLM 提取实体...
+ℹ️ 尝试模型 [deepseek]...
+✅ 实体提取完成，耗时 100.2s，共 26 个实体
+
+ℹ️ [3/3] 合并到快照...
+✅ 快照已保存: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data/snapshot.json
+✅ 合并完成：新增 5，更新 26
+ℹ️ 历史快照已归档: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data/history/2026-W23.json
+
+✅ 完成！当前数据: 75 厂商 / 32 人物 / 75 工具 / 57 模型 / 75 热点
+✅ llm-manager 加载成功
+ℹ️ === LLM Radar 数据采集 ===
+ℹ️ 时间: 2026-06-14 04:00:01
+ℹ️ 数据目录: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data
+
+ℹ️ [1/3] 抓取新闻源...
+ℹ️ 抓取 量子位 (https://www.qbitai.com)
+✅ 量子位 抓取成功，1839 字符
+ℹ️ 抓取 机器之心 (https://www.jiqizhixin.com)
+✅ 机器之心 抓取成功，222 字符
+ℹ️ 抓取 TechCrunch AI (https://techcrunch.com/category/artificial-intelligence/)
+✅ TechCrunch AI 抓取成功，4546 字符
+ℹ️ 抓取 GitHub Trending (https://github.com/trending?since=weekly)
+✅ GitHub Trending 抓取成功，5000 字符
+ℹ️ 抓取 HuggingFace Papers (https://huggingface.co/papers)
+✅ HuggingFace Papers 抓取成功，5000 字符
+✅ 抓取完成，5/5 个源成功
+
+ℹ️ [2/3] LLM 提取实体...
+ℹ️ 调用 LLM 提取实体...
+ℹ️ 尝试模型 [deepseek]...
+✅ 实体提取完成，耗时 107.0s，共 36 个实体
+
+ℹ️ [3/3] 合并到快照...
+✅ 快照已保存: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data/snapshot.json
+✅ 合并完成：新增 5，更新 36
+ℹ️ 历史快照已归档: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data/history/2026-W23.json
+
+✅ 完成！当前数据: 76 厂商 / 32 人物 / 77 工具 / 58 模型 / 76 热点
+✅ llm-manager 加载成功
+ℹ️ === LLM Radar 数据采集 ===
+ℹ️ 时间: 2026-06-14 05:00:00
+ℹ️ 数据目录: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data
+
+ℹ️ [1/3] 抓取新闻源...
+ℹ️ 抓取 量子位 (https://www.qbitai.com)
+✅ 量子位 抓取成功，1839 字符
+ℹ️ 抓取 机器之心 (https://www.jiqizhixin.com)
+✅ 机器之心 抓取成功，222 字符
+ℹ️ 抓取 TechCrunch AI (https://techcrunch.com/category/artificial-intelligence/)
+✅ TechCrunch AI 抓取成功，4517 字符
+ℹ️ 抓取 GitHub Trending (https://github.com/trending?since=weekly)
+✅ GitHub Trending 抓取成功，5000 字符
+ℹ️ 抓取 HuggingFace Papers (https://huggingface.co/papers)
+✅ HuggingFace Papers 抓取成功，5000 字符
+✅ 抓取完成，5/5 个源成功
+
+ℹ️ [2/3] LLM 提取实体...
+ℹ️ 调用 LLM 提取实体...
+ℹ️ 尝试模型 [deepseek]...
+✅ 实体提取完成，耗时 103.5s，共 35 个实体
+
+ℹ️ [3/3] 合并到快照...
+✅ 快照已保存: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data/snapshot.json
+✅ 合并完成：新增 6，更新 34
+ℹ️ 历史快照已归档: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data/history/2026-W23.json
+
+✅ 完成！当前数据: 76 厂商 / 32 人物 / 79 工具 / 59 模型 / 79 热点
+✅ llm-manager 加载成功
+ℹ️ === LLM Radar 数据采集 ===
+ℹ️ 时间: 2026-06-14 06:00:01
+ℹ️ 数据目录: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data
+
+ℹ️ [1/3] 抓取新闻源...
+ℹ️ 抓取 量子位 (https://www.qbitai.com)
+✅ 量子位 抓取成功，1839 字符
+ℹ️ 抓取 机器之心 (https://www.jiqizhixin.com)
+✅ 机器之心 抓取成功，222 字符
+ℹ️ 抓取 TechCrunch AI (https://techcrunch.com/category/artificial-intelligence/)
+✅ TechCrunch AI 抓取成功，4513 字符
+ℹ️ 抓取 GitHub Trending (https://github.com/trending?since=weekly)
+✅ GitHub Trending 抓取成功，5000 字符
+ℹ️ 抓取 HuggingFace Papers (https://huggingface.co/papers)
+✅ HuggingFace Papers 抓取成功，5000 字符
+✅ 抓取完成，5/5 个源成功
+
+ℹ️ [2/3] LLM 提取实体...
+ℹ️ 调用 LLM 提取实体...
+ℹ️ 尝试模型 [deepseek]...
+✅ 实体提取完成，耗时 91.8s，共 35 个实体
+
+ℹ️ [3/3] 合并到快照...
+✅ 快照已保存: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data/snapshot.json
+✅ 合并完成：新增 3，更新 37
+ℹ️ 历史快照已归档: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data/history/2026-W23.json
+
+✅ 完成！当前数据: 77 厂商 / 33 人物 / 79 工具 / 59 模型 / 80 热点
+✅ llm-manager 加载成功
+ℹ️ === LLM Radar 数据采集 ===
+ℹ️ 时间: 2026-06-14 07:00:00
+ℹ️ 数据目录: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data
+
+ℹ️ [1/3] 抓取新闻源...
+ℹ️ 抓取 量子位 (https://www.qbitai.com)
+✅ 量子位 抓取成功，1839 字符
+ℹ️ 抓取 机器之心 (https://www.jiqizhixin.com)
+✅ 机器之心 抓取成功，222 字符
+ℹ️ 抓取 TechCrunch AI (https://techcrunch.com/category/artificial-intelligence/)
+✅ TechCrunch AI 抓取成功，4514 字符
+ℹ️ 抓取 GitHub Trending (https://github.com/trending?since=weekly)
+✅ GitHub Trending 抓取成功，5000 字符
+ℹ️ 抓取 HuggingFace Papers (https://huggingface.co/papers)
+✅ HuggingFace Papers 抓取成功，5000 字符
+✅ 抓取完成，5/5 个源成功
+
+ℹ️ [2/3] LLM 提取实体...
+ℹ️ 调用 LLM 提取实体...
+ℹ️ 尝试模型 [deepseek]...
+✅ 实体提取完成，耗时 105.0s，共 55 个实体
+
+ℹ️ [3/3] 合并到快照...
+✅ 快照已保存: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data/snapshot.json
+✅ 合并完成：新增 9，更新 51
+ℹ️ 历史快照已归档: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data/history/2026-W23.json
+
+✅ 完成！当前数据: 80 厂商 / 33 人物 / 81 工具 / 61 模型 / 82 热点
+✅ llm-manager 加载成功
+ℹ️ === LLM Radar 数据采集 ===
+ℹ️ 时间: 2026-06-14 08:00:00
+ℹ️ 数据目录: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data
+
+ℹ️ [1/3] 抓取新闻源...
+ℹ️ 抓取 量子位 (https://www.qbitai.com)
+✅ 量子位 抓取成功，1839 字符
+ℹ️ 抓取 机器之心 (https://www.jiqizhixin.com)
+✅ 机器之心 抓取成功，222 字符
+ℹ️ 抓取 TechCrunch AI (https://techcrunch.com/category/artificial-intelligence/)
+✅ TechCrunch AI 抓取成功，4508 字符
+ℹ️ 抓取 GitHub Trending (https://github.com/trending?since=weekly)
+✅ GitHub Trending 抓取成功，5000 字符
+ℹ️ 抓取 HuggingFace Papers (https://huggingface.co/papers)
+✅ HuggingFace Papers 抓取成功，5000 字符
+✅ 抓取完成，5/5 个源成功
+
+ℹ️ [2/3] LLM 提取实体...
+ℹ️ 调用 LLM 提取实体...
+ℹ️ 尝试模型 [deepseek]...
+✅ 实体提取完成，耗时 93.6s，共 26 个实体
+
+ℹ️ [3/3] 合并到快照...
+✅ 快照已保存: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data/snapshot.json
+✅ 合并完成：新增 4，更新 27
+ℹ️ 历史快照已归档: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data/history/2026-W23.json
+
+✅ 完成！当前数据: 82 厂商 / 34 人物 / 81 工具 / 61 模型 / 83 热点
+✅ llm-manager 加载成功
+ℹ️ === LLM Radar 数据采集 ===
+ℹ️ 时间: 2026-06-14 12:00:00
+ℹ️ 数据目录: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data
+
+ℹ️ [1/3] 抓取新闻源...
+ℹ️ 抓取 量子位 (https://www.qbitai.com)
+✅ 量子位 抓取成功，1860 字符
+ℹ️ 抓取 机器之心 (https://www.jiqizhixin.com)
+✅ 机器之心 抓取成功，222 字符
+ℹ️ 抓取 TechCrunch AI (https://techcrunch.com/category/artificial-intelligence/)
+✅ TechCrunch AI 抓取成功，4530 字符
+ℹ️ 抓取 GitHub Trending (https://github.com/trending?since=weekly)
+✅ GitHub Trending 抓取成功，5000 字符
+ℹ️ 抓取 HuggingFace Papers (https://huggingface.co/papers)
+✅ HuggingFace Papers 抓取成功，5000 字符
+✅ 抓取完成，5/5 个源成功
+
+ℹ️ [2/3] LLM 提取实体...
+ℹ️ 调用 LLM 提取实体...
+ℹ️ 尝试模型 [deepseek]...
+✅ 实体提取完成，耗时 81.7s，共 27 个实体
+
+ℹ️ [3/3] 合并到快照...
+✅ 快照已保存: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data/snapshot.json
+✅ 合并完成：新增 3，更新 29
+ℹ️ 历史快照已归档: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data/history/2026-W23.json
+
+✅ 完成！当前数据: 82 厂商 / 34 人物 / 81 工具 / 62 模型 / 85 热点
+✅ llm-manager 加载成功
+ℹ️ === LLM Radar 数据采集 ===
+ℹ️ 时间: 2026-06-14 13:00:00
+ℹ️ 数据目录: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data
+
+ℹ️ [1/3] 抓取新闻源...
+ℹ️ 抓取 量子位 (https://www.qbitai.com)
+✅ 量子位 抓取成功，1869 字符
+ℹ️ 抓取 机器之心 (https://www.jiqizhixin.com)
+✅ 机器之心 抓取成功，222 字符
+ℹ️ 抓取 TechCrunch AI (https://techcrunch.com/category/artificial-intelligence/)
+✅ TechCrunch AI 抓取成功，4526 字符
+ℹ️ 抓取 GitHub Trending (https://github.com/trending?since=weekly)
+✅ GitHub Trending 抓取成功，5000 字符
+ℹ️ 抓取 HuggingFace Papers (https://huggingface.co/papers)
+✅ HuggingFace Papers 抓取成功，5000 字符
+✅ 抓取完成，5/5 个源成功
+
+ℹ️ [2/3] LLM 提取实体...
+ℹ️ 调用 LLM 提取实体...
+ℹ️ 尝试模型 [deepseek]...
+✅ 实体提取完成，耗时 37.6s，共 26 个实体
+
+ℹ️ [3/3] 合并到快照...
+✅ 快照已保存: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data/snapshot.json
+✅ 合并完成：新增 6，更新 24
+ℹ️ 历史快照已归档: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data/history/2026-W23.json
+
+✅ 完成！当前数据: 83 厂商 / 34 人物 / 83 工具 / 62 模型 / 88 热点
+✅ llm-manager 加载成功
+ℹ️ === LLM Radar 数据采集 ===
+ℹ️ 时间: 2026-06-14 14:00:00
+ℹ️ 数据目录: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data
+
+ℹ️ [1/3] 抓取新闻源...
+ℹ️ 抓取 量子位 (https://www.qbitai.com)
+✅ 量子位 抓取成功，1872 字符
+ℹ️ 抓取 机器之心 (https://www.jiqizhixin.com)
+✅ 机器之心 抓取成功，222 字符
+ℹ️ 抓取 TechCrunch AI (https://techcrunch.com/category/artificial-intelligence/)
+✅ TechCrunch AI 抓取成功，4527 字符
+ℹ️ 抓取 GitHub Trending (https://github.com/trending?since=weekly)
+✅ GitHub Trending 抓取成功，5000 字符
+ℹ️ 抓取 HuggingFace Papers (https://huggingface.co/papers)
+✅ HuggingFace Papers 抓取成功，5000 字符
+✅ 抓取完成，5/5 个源成功
+
+ℹ️ [2/3] LLM 提取实体...
+ℹ️ 调用 LLM 提取实体...
+ℹ️ 尝试模型 [deepseek]...
+✅ 实体提取完成，耗时 109.5s，共 35 个实体
+
+ℹ️ [3/3] 合并到快照...
+✅ 快照已保存: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data/snapshot.json
+✅ 合并完成：新增 6，更新 34
+ℹ️ 历史快照已归档: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data/history/2026-W23.json
+
+✅ 完成！当前数据: 85 厂商 / 34 人物 / 84 工具 / 62 模型 / 91 热点
+✅ llm-manager 加载成功
+ℹ️ === LLM Radar 数据采集 ===
+ℹ️ 时间: 2026-06-14 15:00:00
+ℹ️ 数据目录: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data
+
+ℹ️ [1/3] 抓取新闻源...
+ℹ️ 抓取 量子位 (https://www.qbitai.com)
+✅ 量子位 抓取成功，1872 字符
+ℹ️ 抓取 机器之心 (https://www.jiqizhixin.com)
+✅ 机器之心 抓取成功，222 字符
+ℹ️ 抓取 TechCrunch AI (https://techcrunch.com/category/artificial-intelligence/)
+✅ TechCrunch AI 抓取成功，4529 字符
+ℹ️ 抓取 GitHub Trending (https://github.com/trending?since=weekly)
+✅ GitHub Trending 抓取成功，5000 字符
+ℹ️ 抓取 HuggingFace Papers (https://huggingface.co/papers)
+✅ HuggingFace Papers 抓取成功，5000 字符
+✅ 抓取完成，5/5 个源成功
+
+ℹ️ [2/3] LLM 提取实体...
+ℹ️ 调用 LLM 提取实体...
+ℹ️ 尝试模型 [deepseek]...
+✅ 实体提取完成，耗时 86.4s，共 39 个实体
+
+ℹ️ [3/3] 合并到快照...
+✅ 快照已保存: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data/snapshot.json
+✅ 合并完成：新增 4，更新 40
+ℹ️ 历史快照已归档: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data/history/2026-W23.json
+
+✅ 完成！当前数据: 87 厂商 / 34 人物 / 84 工具 / 63 模型 / 92 热点
+✅ llm-manager 加载成功
+ℹ️ === LLM Radar 数据采集 ===
+ℹ️ 时间: 2026-06-14 16:00:00
+ℹ️ 数据目录: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data
+
+ℹ️ [1/3] 抓取新闻源...
+ℹ️ 抓取 量子位 (https://www.qbitai.com)
+✅ 量子位 抓取成功，1874 字符
+ℹ️ 抓取 机器之心 (https://www.jiqizhixin.com)
+✅ 机器之心 抓取成功，222 字符
+ℹ️ 抓取 TechCrunch AI (https://techcrunch.com/category/artificial-intelligence/)
+✅ TechCrunch AI 抓取成功，4529 字符
+ℹ️ 抓取 GitHub Trending (https://github.com/trending?since=weekly)
+✅ GitHub Trending 抓取成功，5000 字符
+ℹ️ 抓取 HuggingFace Papers (https://huggingface.co/papers)
+✅ HuggingFace Papers 抓取成功，5000 字符
+✅ 抓取完成，5/5 个源成功
+
+ℹ️ [2/3] LLM 提取实体...
+ℹ️ 调用 LLM 提取实体...
+ℹ️ 尝试模型 [deepseek]...
+✅ 实体提取完成，耗时 72.0s，共 40 个实体
+
+ℹ️ [3/3] 合并到快照...
+✅ 快照已保存: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data/snapshot.json
+✅ 合并完成：新增 7，更新 38
+ℹ️ 历史快照已归档: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data/history/2026-W23.json
+
+✅ 完成！当前数据: 90 厂商 / 34 人物 / 85 工具 / 64 模型 / 94 热点
+✅ llm-manager 加载成功
+ℹ️ === LLM Radar 数据采集 ===
+ℹ️ 时间: 2026-06-14 18:00:01
+ℹ️ 数据目录: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data
+
+ℹ️ [1/3] 抓取新闻源...
+ℹ️ 抓取 量子位 (https://www.qbitai.com)
+✅ 量子位 抓取成功，1876 字符
+ℹ️ 抓取 机器之心 (https://www.jiqizhixin.com)
+✅ 机器之心 抓取成功，222 字符
+ℹ️ 抓取 TechCrunch AI (https://techcrunch.com/category/artificial-intelligence/)
+✅ TechCrunch AI 抓取成功，4531 字符
+ℹ️ 抓取 GitHub Trending (https://github.com/trending?since=weekly)
+✅ GitHub Trending 抓取成功，5000 字符
+ℹ️ 抓取 HuggingFace Papers (https://huggingface.co/papers)
+✅ HuggingFace Papers 抓取成功，5000 字符
+✅ 抓取完成，5/5 个源成功
+
+ℹ️ [2/3] LLM 提取实体...
+ℹ️ 调用 LLM 提取实体...
+ℹ️ 尝试模型 [deepseek]...
+✅ 实体提取完成，耗时 52.9s，共 51 个实体
+
+ℹ️ [3/3] 合并到快照...
+✅ 快照已保存: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data/snapshot.json
+✅ 合并完成：新增 7，更新 48
+ℹ️ 历史快照已归档: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data/history/2026-W23.json
+
+✅ 完成！当前数据: 91 厂商 / 34 人物 / 87 工具 / 66 模型 / 96 热点
+✅ llm-manager 加载成功
+ℹ️ === LLM Radar 数据采集 ===
+ℹ️ 时间: 2026-06-14 19:00:00
+ℹ️ 数据目录: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data
+
+ℹ️ [1/3] 抓取新闻源...
+ℹ️ 抓取 量子位 (https://www.qbitai.com)
+✅ 量子位 抓取成功，1876 字符
+ℹ️ 抓取 机器之心 (https://www.jiqizhixin.com)
+✅ 机器之心 抓取成功，222 字符
+ℹ️ 抓取 TechCrunch AI (https://techcrunch.com/category/artificial-intelligence/)
+✅ TechCrunch AI 抓取成功，4531 字符
+ℹ️ 抓取 GitHub Trending (https://github.com/trending?since=weekly)
+✅ GitHub Trending 抓取成功，5000 字符
+ℹ️ 抓取 HuggingFace Papers (https://huggingface.co/papers)
+✅ HuggingFace Papers 抓取成功，5000 字符
+✅ 抓取完成，5/5 个源成功
+
+ℹ️ [2/3] LLM 提取实体...
+ℹ️ 调用 LLM 提取实体...
+ℹ️ 尝试模型 [deepseek]...
+✅ 实体提取完成，耗时 52.7s，共 22 个实体
+
+ℹ️ [3/3] 合并到快照...
+✅ 快照已保存: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data/snapshot.json
+✅ 合并完成：新增 2，更新 25
+ℹ️ 历史快照已归档: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data/history/2026-W23.json
+
+✅ 完成！当前数据: 91 厂商 / 34 人物 / 87 工具 / 66 模型 / 98 热点
+✅ llm-manager 加载成功
+ℹ️ === LLM Radar 数据采集 ===
+ℹ️ 时间: 2026-06-14 20:00:00
+ℹ️ 数据目录: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data
+
+ℹ️ [1/3] 抓取新闻源...
+ℹ️ 抓取 量子位 (https://www.qbitai.com)
+✅ 量子位 抓取成功，1876 字符
+ℹ️ 抓取 机器之心 (https://www.jiqizhixin.com)
+✅ 机器之心 抓取成功，222 字符
+ℹ️ 抓取 TechCrunch AI (https://techcrunch.com/category/artificial-intelligence/)
+✅ TechCrunch AI 抓取成功，4533 字符
+ℹ️ 抓取 GitHub Trending (https://github.com/trending?since=weekly)
+✅ GitHub Trending 抓取成功，5000 字符
+ℹ️ 抓取 HuggingFace Papers (https://huggingface.co/papers)
+✅ HuggingFace Papers 抓取成功，5000 字符
+✅ 抓取完成，5/5 个源成功
+
+ℹ️ [2/3] LLM 提取实体...
+ℹ️ 调用 LLM 提取实体...
+ℹ️ 尝试模型 [deepseek]...
+✅ 实体提取完成，耗时 104.6s，共 44 个实体
+
+ℹ️ [3/3] 合并到快照...
+✅ 快照已保存: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data/snapshot.json
+✅ 合并完成：新增 3，更新 46
+ℹ️ 历史快照已归档: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data/history/2026-W23.json
+
+✅ 完成！当前数据: 93 厂商 / 34 人物 / 87 工具 / 66 模型 / 99 热点
+✅ llm-manager 加载成功
+ℹ️ === LLM Radar 数据采集 ===
+ℹ️ 时间: 2026-06-14 21:00:00
+ℹ️ 数据目录: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data
+
+ℹ️ [1/3] 抓取新闻源...
+ℹ️ 抓取 量子位 (https://www.qbitai.com)
+✅ 量子位 抓取成功，1906 字符
+ℹ️ 抓取 机器之心 (https://www.jiqizhixin.com)
+✅ 机器之心 抓取成功，222 字符
+ℹ️ 抓取 TechCrunch AI (https://techcrunch.com/category/artificial-intelligence/)
+✅ TechCrunch AI 抓取成功，4533 字符
+ℹ️ 抓取 GitHub Trending (https://github.com/trending?since=weekly)
+✅ GitHub Trending 抓取成功，5000 字符
+ℹ️ 抓取 HuggingFace Papers (https://huggingface.co/papers)
+✅ HuggingFace Papers 抓取成功，5000 字符
+✅ 抓取完成，5/5 个源成功
+
+ℹ️ [2/3] LLM 提取实体...
+ℹ️ 调用 LLM 提取实体...
+ℹ️ 尝试模型 [deepseek]...
+✅ 实体提取完成，耗时 65.3s，共 32 个实体
+
+ℹ️ [3/3] 合并到快照...
+✅ 快照已保存: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data/snapshot.json
+✅ 合并完成：新增 2，更新 35
+ℹ️ 历史快照已归档: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data/history/2026-W23.json
+
+✅ 完成！当前数据: 93 厂商 / 34 人物 / 88 工具 / 67 模型 / 99 热点
+✅ llm-manager 加载成功
+ℹ️ === LLM Radar 数据采集 ===
+ℹ️ 时间: 2026-06-14 23:00:00
+ℹ️ 数据目录: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data
+
+ℹ️ [1/3] 抓取新闻源...
+ℹ️ 抓取 量子位 (https://www.qbitai.com)
+✅ 量子位 抓取成功，1906 字符
+ℹ️ 抓取 机器之心 (https://www.jiqizhixin.com)
+✅ 机器之心 抓取成功，222 字符
+ℹ️ 抓取 TechCrunch AI (https://techcrunch.com/category/artificial-intelligence/)
+✅ TechCrunch AI 抓取成功，4534 字符
+ℹ️ 抓取 GitHub Trending (https://github.com/trending?since=weekly)
+✅ GitHub Trending 抓取成功，5000 字符
+ℹ️ 抓取 HuggingFace Papers (https://huggingface.co/papers)
+✅ HuggingFace Papers 抓取成功，5000 字符
+✅ 抓取完成，5/5 个源成功
+
+ℹ️ [2/3] LLM 提取实体...
+ℹ️ 调用 LLM 提取实体...
+ℹ️ 尝试模型 [deepseek]...
+✅ 实体提取完成，耗时 86.8s，共 53 个实体
+
+ℹ️ [3/3] 合并到快照...
+✅ 快照已保存: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data/snapshot.json
+✅ 合并完成：新增 12，更新 46
+ℹ️ 历史快照已归档: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data/history/2026-W23.json
+
+✅ 完成！当前数据: 98 厂商 / 34 人物 / 91 工具 / 67 模型 / 103 热点
+✅ llm-manager 加载成功
+ℹ️ === LLM Radar 数据采集 ===
+ℹ️ 时间: 2026-06-15 00:00:00
+ℹ️ 数据目录: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data
+
+ℹ️ [1/3] 抓取新闻源...
+ℹ️ 抓取 量子位 (https://www.qbitai.com)
+✅ 量子位 抓取成功，1906 字符
+ℹ️ 抓取 机器之心 (https://www.jiqizhixin.com)
+✅ 机器之心 抓取成功，222 字符
+ℹ️ 抓取 TechCrunch AI (https://techcrunch.com/category/artificial-intelligence/)
+✅ TechCrunch AI 抓取成功，4534 字符
+ℹ️ 抓取 GitHub Trending (https://github.com/trending?since=weekly)
+✅ GitHub Trending 抓取成功，5000 字符
+ℹ️ 抓取 HuggingFace Papers (https://huggingface.co/papers)
+✅ HuggingFace Papers 抓取成功，5000 字符
+✅ 抓取完成，5/5 个源成功
+
+ℹ️ [2/3] LLM 提取实体...
+ℹ️ 调用 LLM 提取实体...
+ℹ️ 尝试模型 [deepseek]...
+✅ 实体提取完成，耗时 136.4s，共 38 个实体
+
+ℹ️ [3/3] 合并到快照...
+✅ 快照已保存: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data/snapshot.json
+✅ 合并完成：新增 1，更新 42
+ℹ️ 历史快照已归档: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data/history/2026-W24.json
+
+✅ 完成！当前数据: 98 厂商 / 34 人物 / 91 工具 / 67 模型 / 104 热点
+✅ llm-manager 加载成功
+ℹ️ === LLM Radar 数据采集 ===
+ℹ️ 时间: 2026-06-15 01:00:01
+ℹ️ 数据目录: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data
+
+ℹ️ [1/3] 抓取新闻源...
+ℹ️ 抓取 量子位 (https://www.qbitai.com)
+✅ 量子位 抓取成功，1906 字符
+ℹ️ 抓取 机器之心 (https://www.jiqizhixin.com)
+✅ 机器之心 抓取成功，222 字符
+ℹ️ 抓取 TechCrunch AI (https://techcrunch.com/category/artificial-intelligence/)
+✅ TechCrunch AI 抓取成功，4539 字符
+ℹ️ 抓取 GitHub Trending (https://github.com/trending?since=weekly)
+✅ GitHub Trending 抓取成功，5000 字符
+ℹ️ 抓取 HuggingFace Papers (https://huggingface.co/papers)
+✅ HuggingFace Papers 抓取成功，5000 字符
+✅ 抓取完成，5/5 个源成功
+
+ℹ️ [2/3] LLM 提取实体...
+ℹ️ 调用 LLM 提取实体...
+ℹ️ 尝试模型 [deepseek]...
+✅ 实体提取完成，耗时 95.5s，共 29 个实体
+
+ℹ️ [3/3] 合并到快照...
+✅ 快照已保存: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data/snapshot.json
+✅ 合并完成：新增 5，更新 28
+ℹ️ 历史快照已归档: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data/history/2026-W24.json
+
+✅ 完成！当前数据: 99 厂商 / 34 人物 / 92 工具 / 67 模型 / 107 热点
+✅ llm-manager 加载成功
+ℹ️ === LLM Radar 数据采集 ===
+ℹ️ 时间: 2026-06-15 10:00:00
+ℹ️ 数据目录: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data
+
+ℹ️ [1/3] 抓取新闻源...
+ℹ️ 抓取 量子位 (https://www.qbitai.com)
+✅ 量子位 抓取成功，1908 字符
+ℹ️ 抓取 机器之心 (https://www.jiqizhixin.com)
+✅ 机器之心 抓取成功，222 字符
+ℹ️ 抓取 TechCrunch AI (https://techcrunch.com/category/artificial-intelligence/)
+✅ TechCrunch AI 抓取成功，4518 字符
+ℹ️ 抓取 GitHub Trending (https://github.com/trending?since=weekly)
+✅ GitHub Trending 抓取成功，5000 字符
+ℹ️ 抓取 HuggingFace Papers (https://huggingface.co/papers)
+❌ HuggingFace Papers 抓取失败: HTTPSConnectionPool(host='huggingface.co', port=443): Max retries exceeded with url: /papers (Caused by ConnectTimeoutError(<HTTPSConnection(host='huggingface.co', port=443) at 0x10aa32710>, 'Connection to huggingface.co timed out. (connect timeout=30)'))
+✅ 抓取完成，4/5 个源成功
+
+ℹ️ [2/3] LLM 提取实体...
+ℹ️ 调用 LLM 提取实体...
+ℹ️ 尝试模型 [deepseek]...
+✅ 实体提取完成，耗时 80.9s，共 32 个实体
+
+ℹ️ [3/3] 合并到快照...
+✅ 快照已保存: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data/snapshot.json
+✅ 合并完成：新增 4，更新 33
+ℹ️ 历史快照已归档: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data/history/2026-W24.json
+
+✅ 完成！当前数据: 100 厂商 / 34 人物 / 92 工具 / 67 模型 / 110 热点
+✅ llm-manager 加载成功
+ℹ️ === LLM Radar 数据采集 ===
+ℹ️ 时间: 2026-06-15 11:00:00
+ℹ️ 数据目录: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data
+
+ℹ️ [1/3] 抓取新闻源...
+ℹ️ 抓取 量子位 (https://www.qbitai.com)
+✅ 量子位 抓取成功，1908 字符
+ℹ️ 抓取 机器之心 (https://www.jiqizhixin.com)
+✅ 机器之心 抓取成功，222 字符
+ℹ️ 抓取 TechCrunch AI (https://techcrunch.com/category/artificial-intelligence/)
+✅ TechCrunch AI 抓取成功，4519 字符
+ℹ️ 抓取 GitHub Trending (https://github.com/trending?since=weekly)
+❌ GitHub Trending 抓取失败: HTTPSConnectionPool(host='github.com', port=443): Read timed out. (read timeout=30)
+ℹ️ 抓取 HuggingFace Papers (https://huggingface.co/papers)
+❌ HuggingFace Papers 抓取失败: HTTPSConnectionPool(host='huggingface.co', port=443): Max retries exceeded with url: /papers (Caused by ConnectTimeoutError(<HTTPSConnection(host='huggingface.co', port=443) at 0x10ab6ed50>, 'Connection to huggingface.co timed out. (connect timeout=30)'))
+✅ 抓取完成，3/5 个源成功
+
+ℹ️ [2/3] LLM 提取实体...
+ℹ️ 调用 LLM 提取实体...
+ℹ️ 尝试模型 [deepseek]...
+✅ 实体提取完成，耗时 96.7s，共 40 个实体
+
+ℹ️ [3/3] 合并到快照...
+✅ 快照已保存: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data/snapshot.json
+✅ 合并完成：新增 4，更新 41
+ℹ️ 历史快照已归档: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data/history/2026-W24.json
+
+✅ 完成！当前数据: 101 厂商 / 34 人物 / 92 工具 / 67 模型 / 113 热点
+✅ llm-manager 加载成功
+ℹ️ === LLM Radar 数据采集 ===
+ℹ️ 时间: 2026-06-15 12:00:00
+ℹ️ 数据目录: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data
+
+ℹ️ [1/3] 抓取新闻源...
+ℹ️ 抓取 量子位 (https://www.qbitai.com)
+✅ 量子位 抓取成功，1866 字符
+ℹ️ 抓取 机器之心 (https://www.jiqizhixin.com)
+✅ 机器之心 抓取成功，222 字符
+ℹ️ 抓取 TechCrunch AI (https://techcrunch.com/category/artificial-intelligence/)
+✅ TechCrunch AI 抓取成功，4516 字符
+ℹ️ 抓取 GitHub Trending (https://github.com/trending?since=weekly)
+✅ GitHub Trending 抓取成功，5000 字符
+ℹ️ 抓取 HuggingFace Papers (https://huggingface.co/papers)
+❌ HuggingFace Papers 抓取失败: HTTPSConnectionPool(host='huggingface.co', port=443): Max retries exceeded with url: /papers (Caused by ConnectTimeoutError(<HTTPSConnection(host='huggingface.co', port=443) at 0x108f4e710>, 'Connection to huggingface.co timed out. (connect timeout=30)'))
+✅ 抓取完成，4/5 个源成功
+
+ℹ️ [2/3] LLM 提取实体...
+ℹ️ 调用 LLM 提取实体...
+ℹ️ 尝试模型 [deepseek]...
+⚠️ 模型 [deepseek] 失败: ReadError: [Errno 54] Connection reset by peer
+ℹ️ 尝试模型 [xiaomi]...
+⚠️ 模型 [xiaomi] 异常: 未知模型: xiaomi
+ℹ️ 尝试模型 [kimi]...
+⚠️ 模型 [kimi] 失败: ReadError: [Errno 54] Connection reset by peer
+ℹ️ 尝试模型 [minimax]...
+⚠️ 模型 [minimax] 失败: 网络错误: 401 Client Error: Unauthorized for url: https://api.minimax.chat/v1/chat/completions
+ℹ️ 尝试模型 [bigmodel]...
+⚠️ 模型 [bigmodel] 失败: 缺少 zhipuai 库，请运行: pip install zhipuai
+ℹ️ 尝试模型 [doubao]...
+⚠️ 模型 [doubao] 失败: ReadTimeout: The read operation timed out
+❌ LLM 调用失败: 未知错误
+❌ 实体提取失败
+✅ llm-manager 加载成功
+ℹ️ === LLM Radar 数据采集 ===
+ℹ️ 时间: 2026-06-15 13:00:01
+ℹ️ 数据目录: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data
+
+ℹ️ [1/3] 抓取新闻源...
+ℹ️ 抓取 量子位 (https://www.qbitai.com)
+✅ 量子位 抓取成功，1869 字符
+ℹ️ 抓取 机器之心 (https://www.jiqizhixin.com)
+✅ 机器之心 抓取成功，222 字符
+ℹ️ 抓取 TechCrunch AI (https://techcrunch.com/category/artificial-intelligence/)
+✅ TechCrunch AI 抓取成功，4516 字符
+ℹ️ 抓取 GitHub Trending (https://github.com/trending?since=weekly)
+✅ GitHub Trending 抓取成功，5000 字符
+ℹ️ 抓取 HuggingFace Papers (https://huggingface.co/papers)
+❌ HuggingFace Papers 抓取失败: HTTPSConnectionPool(host='huggingface.co', port=443): Max retries exceeded with url: /papers (Caused by ConnectTimeoutError(<HTTPSConnection(host='huggingface.co', port=443) at 0x10b3c6710>, 'Connection to huggingface.co timed out. (connect timeout=30)'))
+✅ 抓取完成，4/5 个源成功
+
+ℹ️ [2/3] LLM 提取实体...
+ℹ️ 调用 LLM 提取实体...
+ℹ️ 尝试模型 [deepseek]...
+✅ 实体提取完成，耗时 83.4s，共 24 个实体
+
+ℹ️ [3/3] 合并到快照...
+✅ 快照已保存: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data/snapshot.json
+✅ 合并完成：新增 7，更新 22
+ℹ️ 历史快照已归档: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data/history/2026-W24.json
+
+✅ 完成！当前数据: 102 厂商 / 34 人物 / 94 工具 / 68 模型 / 116 热点
+✅ llm-manager 加载成功
+ℹ️ === LLM Radar 数据采集 ===
+ℹ️ 时间: 2026-06-15 14:00:00
+ℹ️ 数据目录: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data
+
+ℹ️ [1/3] 抓取新闻源...
+ℹ️ 抓取 量子位 (https://www.qbitai.com)
+✅ 量子位 抓取成功，1898 字符
+ℹ️ 抓取 机器之心 (https://www.jiqizhixin.com)
+✅ 机器之心 抓取成功，222 字符
+ℹ️ 抓取 TechCrunch AI (https://techcrunch.com/category/artificial-intelligence/)
+✅ TechCrunch AI 抓取成功，4517 字符
+ℹ️ 抓取 GitHub Trending (https://github.com/trending?since=weekly)
+✅ GitHub Trending 抓取成功，5000 字符
+ℹ️ 抓取 HuggingFace Papers (https://huggingface.co/papers)
+❌ HuggingFace Papers 抓取失败: HTTPSConnectionPool(host='huggingface.co', port=443): Max retries exceeded with url: /papers (Caused by ConnectTimeoutError(<HTTPSConnection(host='huggingface.co', port=443) at 0x1072fa710>, 'Connection to huggingface.co timed out. (connect timeout=30)'))
+✅ 抓取完成，4/5 个源成功
+
+ℹ️ [2/3] LLM 提取实体...
+ℹ️ 调用 LLM 提取实体...
+ℹ️ 尝试模型 [deepseek]...
+✅ 实体提取完成，耗时 68.5s，共 23 个实体
+
+ℹ️ [3/3] 合并到快照...
+✅ 快照已保存: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data/snapshot.json
+✅ 合并完成：新增 6，更新 22
+ℹ️ 历史快照已归档: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data/history/2026-W24.json
+
+✅ 完成！当前数据: 103 厂商 / 34 人物 / 95 工具 / 69 模型 / 119 热点
+✅ llm-manager 加载成功
+ℹ️ === LLM Radar 数据采集 ===
+ℹ️ 时间: 2026-06-15 15:00:00
+ℹ️ 数据目录: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data
+
+ℹ️ [1/3] 抓取新闻源...
+ℹ️ 抓取 量子位 (https://www.qbitai.com)
+✅ 量子位 抓取成功，1886 字符
+ℹ️ 抓取 机器之心 (https://www.jiqizhixin.com)
+✅ 机器之心 抓取成功，222 字符
+ℹ️ 抓取 TechCrunch AI (https://techcrunch.com/category/artificial-intelligence/)
+✅ TechCrunch AI 抓取成功，4517 字符
+ℹ️ 抓取 GitHub Trending (https://github.com/trending?since=weekly)
+❌ GitHub Trending 抓取失败: HTTPSConnectionPool(host='github.com', port=443): Read timed out. (read timeout=30)
+ℹ️ 抓取 HuggingFace Papers (https://huggingface.co/papers)
+❌ HuggingFace Papers 抓取失败: HTTPSConnectionPool(host='huggingface.co', port=443): Max retries exceeded with url: /papers (Caused by ConnectTimeoutError(<HTTPSConnection(host='huggingface.co', port=443) at 0x108b3ad50>, 'Connection to huggingface.co timed out. (connect timeout=30)'))
+✅ 抓取完成，3/5 个源成功
+
+ℹ️ [2/3] LLM 提取实体...
+ℹ️ 调用 LLM 提取实体...
+ℹ️ 尝试模型 [deepseek]...
+✅ 实体提取完成，耗时 106.8s，共 31 个实体
+
+ℹ️ [3/3] 合并到快照...
+✅ 快照已保存: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data/snapshot.json
+✅ 合并完成：新增 4，更新 32
+ℹ️ 历史快照已归档: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data/history/2026-W24.json
+
+✅ 完成！当前数据: 103 厂商 / 34 人物 / 96 工具 / 69 模型 / 122 热点
+✅ llm-manager 加载成功
+ℹ️ === LLM Radar 数据采集 ===
+ℹ️ 时间: 2026-06-15 16:00:00
+ℹ️ 数据目录: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data
+
+ℹ️ [1/3] 抓取新闻源...
+ℹ️ 抓取 量子位 (https://www.qbitai.com)
+✅ 量子位 抓取成功，1908 字符
+ℹ️ 抓取 机器之心 (https://www.jiqizhixin.com)
+✅ 机器之心 抓取成功，222 字符
+ℹ️ 抓取 TechCrunch AI (https://techcrunch.com/category/artificial-intelligence/)
+✅ TechCrunch AI 抓取成功，4479 字符
+ℹ️ 抓取 GitHub Trending (https://github.com/trending?since=weekly)
+✅ GitHub Trending 抓取成功，5000 字符
+ℹ️ 抓取 HuggingFace Papers (https://huggingface.co/papers)
+✅ HuggingFace Papers 抓取成功，3549 字符
+✅ 抓取完成，5/5 个源成功
+
+ℹ️ [2/3] LLM 提取实体...
+ℹ️ 调用 LLM 提取实体...
+ℹ️ 尝试模型 [deepseek]...
+✅ 实体提取完成，耗时 84.0s，共 37 个实体
+
+ℹ️ [3/3] 合并到快照...
+✅ 快照已保存: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data/snapshot.json
+✅ 合并完成：新增 4，更新 38
+ℹ️ 历史快照已归档: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data/history/2026-W24.json
+
+✅ 完成！当前数据: 104 厂商 / 35 人物 / 97 工具 / 70 模型 / 122 热点
+✅ llm-manager 加载成功
+ℹ️ === LLM Radar 数据采集 ===
+ℹ️ 时间: 2026-06-15 17:00:00
+ℹ️ 数据目录: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data
+
+ℹ️ [1/3] 抓取新闻源...
+ℹ️ 抓取 量子位 (https://www.qbitai.com)
+✅ 量子位 抓取成功，1907 字符
+ℹ️ 抓取 机器之心 (https://www.jiqizhixin.com)
+✅ 机器之心 抓取成功，222 字符
+ℹ️ 抓取 TechCrunch AI (https://techcrunch.com/category/artificial-intelligence/)
+✅ TechCrunch AI 抓取成功，4479 字符
+ℹ️ 抓取 GitHub Trending (https://github.com/trending?since=weekly)
+✅ GitHub Trending 抓取成功，5000 字符
+ℹ️ 抓取 HuggingFace Papers (https://huggingface.co/papers)
+✅ HuggingFace Papers 抓取成功，3677 字符
+✅ 抓取完成，5/5 个源成功
+
+ℹ️ [2/3] LLM 提取实体...
+ℹ️ 调用 LLM 提取实体...
+ℹ️ 尝试模型 [deepseek]...
+✅ 实体提取完成，耗时 59.3s，共 19 个实体
+
+ℹ️ [3/3] 合并到快照...
+✅ 快照已保存: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data/snapshot.json
+✅ 合并完成：新增 1，更新 23
+ℹ️ 历史快照已归档: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data/history/2026-W24.json
+
+✅ 完成！当前数据: 104 厂商 / 35 人物 / 97 工具 / 70 模型 / 123 热点
+✅ llm-manager 加载成功
+ℹ️ === LLM Radar 数据采集 ===
+ℹ️ 时间: 2026-06-15 18:00:00
+ℹ️ 数据目录: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data
+
+ℹ️ [1/3] 抓取新闻源...
+ℹ️ 抓取 量子位 (https://www.qbitai.com)
+✅ 量子位 抓取成功，1843 字符
+ℹ️ 抓取 机器之心 (https://www.jiqizhixin.com)
+✅ 机器之心 抓取成功，222 字符
+ℹ️ 抓取 TechCrunch AI (https://techcrunch.com/category/artificial-intelligence/)
+✅ TechCrunch AI 抓取成功，4481 字符
+ℹ️ 抓取 GitHub Trending (https://github.com/trending?since=weekly)
+✅ GitHub Trending 抓取成功，5000 字符
+ℹ️ 抓取 HuggingFace Papers (https://huggingface.co/papers)
+✅ HuggingFace Papers 抓取成功，3677 字符
+✅ 抓取完成，5/5 个源成功
+
+ℹ️ [2/3] LLM 提取实体...
+ℹ️ 调用 LLM 提取实体...
+ℹ️ 尝试模型 [deepseek]...
+✅ 实体提取完成，耗时 104.6s，共 38 个实体
+
+ℹ️ [3/3] 合并到快照...
+✅ 快照已保存: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data/snapshot.json
+✅ 合并完成：新增 7，更新 36
+ℹ️ 历史快照已归档: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data/history/2026-W24.json
+
+✅ 完成！当前数据: 105 厂商 / 35 人物 / 99 工具 / 71 模型 / 126 热点
+✅ llm-manager 加载成功
+ℹ️ === LLM Radar 数据采集 ===
+ℹ️ 时间: 2026-06-15 19:00:00
+ℹ️ 数据目录: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data
+
+ℹ️ [1/3] 抓取新闻源...
+ℹ️ 抓取 量子位 (https://www.qbitai.com)
+✅ 量子位 抓取成功，1842 字符
+ℹ️ 抓取 机器之心 (https://www.jiqizhixin.com)
+✅ 机器之心 抓取成功，222 字符
+ℹ️ 抓取 TechCrunch AI (https://techcrunch.com/category/artificial-intelligence/)
+✅ TechCrunch AI 抓取成功，4483 字符
+ℹ️ 抓取 GitHub Trending (https://github.com/trending?since=weekly)
+✅ GitHub Trending 抓取成功，5000 字符
+ℹ️ 抓取 HuggingFace Papers (https://huggingface.co/papers)
+✅ HuggingFace Papers 抓取成功，3782 字符
+✅ 抓取完成，5/5 个源成功
+
+ℹ️ [2/3] LLM 提取实体...
+ℹ️ 调用 LLM 提取实体...
+ℹ️ 尝试模型 [deepseek]...
+✅ 实体提取完成，耗时 85.1s，共 35 个实体
+
+ℹ️ [3/3] 合并到快照...
+✅ 快照已保存: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data/snapshot.json
+✅ 合并完成：新增 3，更新 37
+ℹ️ 历史快照已归档: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data/history/2026-W24.json
+
+✅ 完成！当前数据: 105 厂商 / 35 人物 / 99 工具 / 72 模型 / 128 热点
+✅ llm-manager 加载成功
+ℹ️ === LLM Radar 数据采集 ===
+ℹ️ 时间: 2026-06-15 20:00:00
+ℹ️ 数据目录: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data
+
+ℹ️ [1/3] 抓取新闻源...
+ℹ️ 抓取 量子位 (https://www.qbitai.com)
+✅ 量子位 抓取成功，1842 字符
+ℹ️ 抓取 机器之心 (https://www.jiqizhixin.com)
+✅ 机器之心 抓取成功，222 字符
+ℹ️ 抓取 TechCrunch AI (https://techcrunch.com/category/artificial-intelligence/)
+✅ TechCrunch AI 抓取成功，4483 字符
+ℹ️ 抓取 GitHub Trending (https://github.com/trending?since=weekly)
+✅ GitHub Trending 抓取成功，5000 字符
+ℹ️ 抓取 HuggingFace Papers (https://huggingface.co/papers)
+✅ HuggingFace Papers 抓取成功，3901 字符
+✅ 抓取完成，5/5 个源成功
+
+ℹ️ [2/3] LLM 提取实体...
+ℹ️ 调用 LLM 提取实体...
+ℹ️ 尝试模型 [deepseek]...
+✅ 实体提取完成，耗时 82.2s，共 37 个实体
+
+ℹ️ [3/3] 合并到快照...
+✅ 快照已保存: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data/snapshot.json
+✅ 合并完成：新增 6，更新 36
+ℹ️ 历史快照已归档: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data/history/2026-W24.json
+
+✅ 完成！当前数据: 105 厂商 / 36 人物 / 100 工具 / 72 模型 / 132 热点
+✅ llm-manager 加载成功
+ℹ️ === LLM Radar 数据采集 ===
+ℹ️ 时间: 2026-06-15 21:00:00
+ℹ️ 数据目录: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data
+
+ℹ️ [1/3] 抓取新闻源...
+ℹ️ 抓取 量子位 (https://www.qbitai.com)
+✅ 量子位 抓取成功，1842 字符
+ℹ️ 抓取 机器之心 (https://www.jiqizhixin.com)
+✅ 机器之心 抓取成功，222 字符
+ℹ️ 抓取 TechCrunch AI (https://techcrunch.com/category/artificial-intelligence/)
+✅ TechCrunch AI 抓取成功，4458 字符
+ℹ️ 抓取 GitHub Trending (https://github.com/trending?since=weekly)
+✅ GitHub Trending 抓取成功，5000 字符
+ℹ️ 抓取 HuggingFace Papers (https://huggingface.co/papers)
+✅ HuggingFace Papers 抓取成功，4052 字符
+✅ 抓取完成，5/5 个源成功
+
+ℹ️ [2/3] LLM 提取实体...
+ℹ️ 调用 LLM 提取实体...
+ℹ️ 尝试模型 [deepseek]...
+⚠️ 模型 [deepseek] 失败: RemoteProtocolError: peer closed connection without sending complete message body (incomplete chunked read)
+ℹ️ 尝试模型 [xiaomi]...
+⚠️ 模型 [xiaomi] 异常: 未知模型: xiaomi
+ℹ️ 尝试模型 [kimi]...
+✅ 实体提取完成，耗时 2843.1s，共 29 个实体
+
+ℹ️ [3/3] 合并到快照...
+✅ 快照已保存: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data/snapshot.json
+✅ 合并完成：新增 4，更新 30
+ℹ️ 历史快照已归档: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data/history/2026-W24.json
+
+✅ 完成！当前数据: 105 厂商 / 36 人物 / 100 工具 / 72 模型 / 136 热点
+✅ llm-manager 加载成功
+ℹ️ === LLM Radar 数据采集 ===
+ℹ️ 时间: 2026-06-15 22:00:00
+ℹ️ 数据目录: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data
+
+ℹ️ [1/3] 抓取新闻源...
+ℹ️ 抓取 量子位 (https://www.qbitai.com)
+✅ 量子位 抓取成功，1832 字符
+ℹ️ 抓取 机器之心 (https://www.jiqizhixin.com)
+✅ 机器之心 抓取成功，222 字符
+ℹ️ 抓取 TechCrunch AI (https://techcrunch.com/category/artificial-intelligence/)
+✅ TechCrunch AI 抓取成功，4518 字符
+ℹ️ 抓取 GitHub Trending (https://github.com/trending?since=weekly)
+✅ GitHub Trending 抓取成功，5000 字符
+ℹ️ 抓取 HuggingFace Papers (https://huggingface.co/papers)
+✅ HuggingFace Papers 抓取成功，4320 字符
+✅ 抓取完成，5/5 个源成功
+
+ℹ️ [2/3] LLM 提取实体...
+ℹ️ 调用 LLM 提取实体...
+ℹ️ 尝试模型 [deepseek]...
+✅ 实体提取完成，耗时 87.2s，共 37 个实体
+
+ℹ️ [3/3] 合并到快照...
+✅ 快照已保存: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data/snapshot.json
+✅ 合并完成：新增 4，更新 38
+ℹ️ 历史快照已归档: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data/history/2026-W24.json
+
+✅ 完成！当前数据: 109 厂商 / 36 人物 / 100 工具 / 72 模型 / 136 热点
+✅ llm-manager 加载成功
+ℹ️ === LLM Radar 数据采集 ===
+ℹ️ 时间: 2026-06-16 00:00:01
+ℹ️ 数据目录: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data
+
+ℹ️ [1/3] 抓取新闻源...
+ℹ️ 抓取 量子位 (https://www.qbitai.com)
+✅ 量子位 抓取成功，1832 字符
+ℹ️ 抓取 机器之心 (https://www.jiqizhixin.com)
+✅ 机器之心 抓取成功，222 字符
+ℹ️ 抓取 TechCrunch AI (https://techcrunch.com/category/artificial-intelligence/)
+✅ TechCrunch AI 抓取成功，4548 字符
+ℹ️ 抓取 GitHub Trending (https://github.com/trending?since=weekly)
+✅ GitHub Trending 抓取成功，5000 字符
+ℹ️ 抓取 HuggingFace Papers (https://huggingface.co/papers)
+✅ HuggingFace Papers 抓取成功，4917 字符
+✅ 抓取完成，5/5 个源成功
+
+ℹ️ [2/3] LLM 提取实体...
+ℹ️ 调用 LLM 提取实体...
+ℹ️ 尝试模型 [deepseek]...
+❌ JSON 解析失败: Expecting ',' delimiter: line 627 column 85 (char 18351)
+ℹ️ LLM 输出前 500 字符: {
+  "providers": [
+    {
+      "id": "huawei-cloud",
+      "name": "华为云",
+      "country": "中国",
+      "hot_score": 60,
+      "hot_level": "温热",
+      "last_event": "提出Agent时代重新造地基",
+      "last_event_date": "2026-06-13",
+      "last_event_url": "https://www.qbitai.com",
+      "flagship_models": [],
+      "key_people": [],
+      "focus_areas": ["云计算", "AI Agent"],
+      "confidence": "low"
+    },
+    {
+      "id": "meshy",
+      "name": "Meshy",
+      "country": "未知",
+      "hot_score": 80,
+    
+❌ 实体提取失败
+✅ llm-manager 加载成功
+ℹ️ === LLM Radar 数据采集 ===
+ℹ️ 时间: 2026-06-16 01:00:01
+ℹ️ 数据目录: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data
+
+ℹ️ [1/3] 抓取新闻源...
+ℹ️ 抓取 量子位 (https://www.qbitai.com)
+✅ 量子位 抓取成功，1835 字符
+ℹ️ 抓取 机器之心 (https://www.jiqizhixin.com)
+✅ 机器之心 抓取成功，222 字符
+ℹ️ 抓取 TechCrunch AI (https://techcrunch.com/category/artificial-intelligence/)
+✅ TechCrunch AI 抓取成功，4542 字符
+ℹ️ 抓取 GitHub Trending (https://github.com/trending?since=weekly)
+✅ GitHub Trending 抓取成功，5000 字符
+ℹ️ 抓取 HuggingFace Papers (https://huggingface.co/papers)
+✅ HuggingFace Papers 抓取成功，5000 字符
+✅ 抓取完成，5/5 个源成功
+
+ℹ️ [2/3] LLM 提取实体...
+ℹ️ 调用 LLM 提取实体...
+ℹ️ 尝试模型 [deepseek]...
+✅ 实体提取完成，耗时 115.0s，共 29 个实体
+
+ℹ️ [3/3] 合并到快照...
+✅ 快照已保存: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data/snapshot.json
+✅ 合并完成：新增 5，更新 29
+ℹ️ 历史快照已归档: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data/history/2026-W24.json
+
+✅ 完成！当前数据: 110 厂商 / 36 人物 / 101 工具 / 72 模型 / 139 热点
+✅ llm-manager 加载成功
+ℹ️ === LLM Radar 数据采集 ===
+ℹ️ 时间: 2026-06-16 02:00:00
+ℹ️ 数据目录: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data
+
+ℹ️ [1/3] 抓取新闻源...
+ℹ️ 抓取 量子位 (https://www.qbitai.com)
+✅ 量子位 抓取成功，1837 字符
+ℹ️ 抓取 机器之心 (https://www.jiqizhixin.com)
+✅ 机器之心 抓取成功，222 字符
+ℹ️ 抓取 TechCrunch AI (https://techcrunch.com/category/artificial-intelligence/)
+✅ TechCrunch AI 抓取成功，4544 字符
+ℹ️ 抓取 GitHub Trending (https://github.com/trending?since=weekly)
+✅ GitHub Trending 抓取成功，5000 字符
+ℹ️ 抓取 HuggingFace Papers (https://huggingface.co/papers)
+✅ HuggingFace Papers 抓取成功，5000 字符
+✅ 抓取完成，5/5 个源成功
+
+ℹ️ [2/3] LLM 提取实体...
+ℹ️ 调用 LLM 提取实体...
+ℹ️ 尝试模型 [deepseek]...
+✅ 实体提取完成，耗时 67.3s，共 28 个实体
+
+ℹ️ [3/3] 合并到快照...
+✅ 快照已保存: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data/snapshot.json
+✅ 合并完成：新增 5，更新 28
+ℹ️ 历史快照已归档: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data/history/2026-W24.json
+
+✅ 完成！当前数据: 112 厂商 / 36 人物 / 103 工具 / 72 模型 / 140 热点
+✅ llm-manager 加载成功
+ℹ️ === LLM Radar 数据采集 ===
+ℹ️ 时间: 2026-06-16 15:00:00
+ℹ️ 数据目录: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data
+
+ℹ️ [1/3] 抓取新闻源...
+ℹ️ 抓取 量子位 (https://www.qbitai.com)
+✅ 量子位 抓取成功，1869 字符
+ℹ️ 抓取 机器之心 (https://www.jiqizhixin.com)
+✅ 机器之心 抓取成功，222 字符
+ℹ️ 抓取 TechCrunch AI (https://techcrunch.com/category/artificial-intelligence/)
+✅ TechCrunch AI 抓取成功，4567 字符
+ℹ️ 抓取 GitHub Trending (https://github.com/trending?since=weekly)
+✅ GitHub Trending 抓取成功，5000 字符
+ℹ️ 抓取 HuggingFace Papers (https://huggingface.co/papers)
+✅ HuggingFace Papers 抓取成功，3205 字符
+✅ 抓取完成，5/5 个源成功
+
+ℹ️ [2/3] LLM 提取实体...
+ℹ️ 调用 LLM 提取实体...
+ℹ️ 尝试模型 [deepseek]...
+✅ 实体提取完成，耗时 85.8s，共 32 个实体
+
+ℹ️ [3/3] 合并到快照...
+✅ 快照已保存: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data/snapshot.json
+✅ 合并完成：新增 13，更新 24
+ℹ️ 历史快照已归档: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data/history/2026-W24.json
+
+✅ 完成！当前数据: 115 厂商 / 37 人物 / 106 工具 / 75 模型 / 143 热点
+✅ llm-manager 加载成功
+ℹ️ === LLM Radar 数据采集 ===
+ℹ️ 时间: 2026-06-16 16:00:01
+ℹ️ 数据目录: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data
+
+ℹ️ [1/3] 抓取新闻源...
+ℹ️ 抓取 量子位 (https://www.qbitai.com)
+✅ 量子位 抓取成功，1875 字符
+ℹ️ 抓取 机器之心 (https://www.jiqizhixin.com)
+✅ 机器之心 抓取成功，222 字符
+ℹ️ 抓取 TechCrunch AI (https://techcrunch.com/category/artificial-intelligence/)
+✅ TechCrunch AI 抓取成功，4591 字符
+ℹ️ 抓取 GitHub Trending (https://github.com/trending?since=weekly)
+✅ GitHub Trending 抓取成功，5000 字符
+ℹ️ 抓取 HuggingFace Papers (https://huggingface.co/papers)
+✅ HuggingFace Papers 抓取成功，3608 字符
+✅ 抓取完成，5/5 个源成功
+
+ℹ️ [2/3] LLM 提取实体...
+ℹ️ 调用 LLM 提取实体...
+ℹ️ 尝试模型 [deepseek]...
+✅ 实体提取完成，耗时 81.9s，共 42 个实体
+
+ℹ️ [3/3] 合并到快照...
+✅ 快照已保存: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data/snapshot.json
+✅ 合并完成：新增 12，更新 35
+ℹ️ 历史快照已归档: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data/history/2026-W24.json
+
+✅ 完成！当前数据: 119 厂商 / 38 人物 / 110 工具 / 77 模型 / 144 热点
+✅ llm-manager 加载成功
+ℹ️ === LLM Radar 数据采集 ===
+ℹ️ 时间: 2026-06-16 17:00:00
+ℹ️ 数据目录: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data
+
+ℹ️ [1/3] 抓取新闻源...
+ℹ️ 抓取 量子位 (https://www.qbitai.com)
+✅ 量子位 抓取成功，1875 字符
+ℹ️ 抓取 机器之心 (https://www.jiqizhixin.com)
+✅ 机器之心 抓取成功，222 字符
+ℹ️ 抓取 TechCrunch AI (https://techcrunch.com/category/artificial-intelligence/)
+✅ TechCrunch AI 抓取成功，4588 字符
+ℹ️ 抓取 GitHub Trending (https://github.com/trending?since=weekly)
+✅ GitHub Trending 抓取成功，5000 字符
+ℹ️ 抓取 HuggingFace Papers (https://huggingface.co/papers)
+✅ HuggingFace Papers 抓取成功，3936 字符
+✅ 抓取完成，5/5 个源成功
+
+ℹ️ [2/3] LLM 提取实体...
+ℹ️ 调用 LLM 提取实体...
+ℹ️ 尝试模型 [deepseek]...
+✅ 实体提取完成，耗时 69.3s，共 39 个实体
+
+ℹ️ [3/3] 合并到快照...
+✅ 快照已保存: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data/snapshot.json
+✅ 合并完成：新增 7，更新 37
+ℹ️ 历史快照已归档: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data/history/2026-W24.json
+
+✅ 完成！当前数据: 121 厂商 / 38 人物 / 111 工具 / 77 模型 / 148 热点
+✅ llm-manager 加载成功
+ℹ️ === LLM Radar 数据采集 ===
+ℹ️ 时间: 2026-06-16 18:00:00
+ℹ️ 数据目录: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data
+
+ℹ️ [1/3] 抓取新闻源...
+ℹ️ 抓取 量子位 (https://www.qbitai.com)
+✅ 量子位 抓取成功，1865 字符
+ℹ️ 抓取 机器之心 (https://www.jiqizhixin.com)
+✅ 机器之心 抓取成功，222 字符
+ℹ️ 抓取 TechCrunch AI (https://techcrunch.com/category/artificial-intelligence/)
+✅ TechCrunch AI 抓取成功，4634 字符
+ℹ️ 抓取 GitHub Trending (https://github.com/trending?since=weekly)
+✅ GitHub Trending 抓取成功，5000 字符
+ℹ️ 抓取 HuggingFace Papers (https://huggingface.co/papers)
+✅ HuggingFace Papers 抓取成功，3941 字符
+✅ 抓取完成，5/5 个源成功
+
+ℹ️ [2/3] LLM 提取实体...
+ℹ️ 调用 LLM 提取实体...
+ℹ️ 尝试模型 [deepseek]...
+✅ 实体提取完成，耗时 64.7s，共 25 个实体
+
+ℹ️ [3/3] 合并到快照...
+✅ 快照已保存: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data/snapshot.json
+✅ 合并完成：新增 4，更新 23
+ℹ️ 历史快照已归档: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data/history/2026-W24.json
+
+✅ 完成！当前数据: 121 厂商 / 39 人物 / 111 工具 / 79 模型 / 149 热点
+✅ llm-manager 加载成功
+ℹ️ === LLM Radar 数据采集 ===
+ℹ️ 时间: 2026-06-16 19:00:00
+ℹ️ 数据目录: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data
+
+ℹ️ [1/3] 抓取新闻源...
+ℹ️ 抓取 量子位 (https://www.qbitai.com)
+✅ 量子位 抓取成功，1891 字符
+ℹ️ 抓取 机器之心 (https://www.jiqizhixin.com)
+✅ 机器之心 抓取成功，222 字符
+ℹ️ 抓取 TechCrunch AI (https://techcrunch.com/category/artificial-intelligence/)
+✅ TechCrunch AI 抓取成功，4636 字符
+ℹ️ 抓取 GitHub Trending (https://github.com/trending?since=weekly)
+✅ GitHub Trending 抓取成功，5000 字符
+ℹ️ 抓取 HuggingFace Papers (https://huggingface.co/papers)
+✅ HuggingFace Papers 抓取成功，4079 字符
+✅ 抓取完成，5/5 个源成功
+
+ℹ️ [2/3] LLM 提取实体...
+ℹ️ 调用 LLM 提取实体...
+ℹ️ 尝试模型 [deepseek]...
+✅ 实体提取完成，耗时 117.1s，共 34 个实体
+
+ℹ️ [3/3] 合并到快照...
+✅ 快照已保存: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data/snapshot.json
+✅ 合并完成：新增 5，更新 32
+ℹ️ 历史快照已归档: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data/history/2026-W24.json
+
+✅ 完成！当前数据: 121 厂商 / 40 人物 / 111 工具 / 81 模型 / 151 热点
+✅ llm-manager 加载成功
+ℹ️ === LLM Radar 数据采集 ===
+ℹ️ 时间: 2026-06-16 22:00:01
+ℹ️ 数据目录: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data
+
+ℹ️ [1/3] 抓取新闻源...
+ℹ️ 抓取 量子位 (https://www.qbitai.com)
+✅ 量子位 抓取成功，1842 字符
+ℹ️ 抓取 机器之心 (https://www.jiqizhixin.com)
+✅ 机器之心 抓取成功，222 字符
+ℹ️ 抓取 TechCrunch AI (https://techcrunch.com/category/artificial-intelligence/)
+✅ TechCrunch AI 抓取成功，4573 字符
+ℹ️ 抓取 GitHub Trending (https://github.com/trending?since=weekly)
+✅ GitHub Trending 抓取成功，5000 字符
+ℹ️ 抓取 HuggingFace Papers (https://huggingface.co/papers)
+✅ HuggingFace Papers 抓取成功，4850 字符
+✅ 抓取完成，5/5 个源成功
+
+ℹ️ [2/3] LLM 提取实体...
+ℹ️ 调用 LLM 提取实体...
+ℹ️ 尝试模型 [deepseek]...
+✅ 实体提取完成，耗时 107.2s，共 40 个实体
+
+ℹ️ [3/3] 合并到快照...
+✅ 快照已保存: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data/snapshot.json
+✅ 合并完成：新增 11，更新 34
+ℹ️ 历史快照已归档: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data/history/2026-W24.json
+
+✅ 完成！当前数据: 124 厂商 / 40 人物 / 116 工具 / 81 模型 / 154 热点
+✅ llm-manager 加载成功
+ℹ️ === LLM Radar 数据采集 ===
+ℹ️ 时间: 2026-06-17 01:00:00
+ℹ️ 数据目录: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data
+
+ℹ️ [1/3] 抓取新闻源...
+ℹ️ 抓取 量子位 (https://www.qbitai.com)
+✅ 量子位 抓取成功，1843 字符
+ℹ️ 抓取 机器之心 (https://www.jiqizhixin.com)
+✅ 机器之心 抓取成功，222 字符
+ℹ️ 抓取 TechCrunch AI (https://techcrunch.com/category/artificial-intelligence/)
+✅ TechCrunch AI 抓取成功，4563 字符
+ℹ️ 抓取 GitHub Trending (https://github.com/trending?since=weekly)
+✅ GitHub Trending 抓取成功，5000 字符
+ℹ️ 抓取 HuggingFace Papers (https://huggingface.co/papers)
+✅ HuggingFace Papers 抓取成功，5000 字符
+✅ 抓取完成，5/5 个源成功
+
+ℹ️ [2/3] LLM 提取实体...
+ℹ️ 调用 LLM 提取实体...
+ℹ️ 尝试模型 [deepseek]...
+⚠️ 模型 [deepseek] 失败: OpenAIError: Missing credentials. Please pass an `api_key`, `workload_identity`, `admin_api_key`, or set the `OPENAI_API_KEY` or `OPENAI_ADMIN_KEY` environment variable.
+ℹ️ 尝试模型 [xiaomi]...
+⚠️ 模型 [xiaomi] 异常: 未知模型: xiaomi
+ℹ️ 尝试模型 [kimi]...
+⚠️ 模型 [kimi] 失败: OpenAIError: Missing credentials. Please pass an `api_key`, `workload_identity`, `admin_api_key`, or set the `OPENAI_API_KEY` or `OPENAI_ADMIN_KEY` environment variable.
+ℹ️ 尝试模型 [minimax]...
+⚠️ 模型 [minimax] 失败: 未配置 API Key
+ℹ️ 尝试模型 [bigmodel]...
+⚠️ 模型 [bigmodel] 失败: 缺少 zhipuai 库，请运行: pip install zhipuai
+ℹ️ 尝试模型 [doubao]...
+⚠️ 模型 [doubao] 失败: OpenAIError: Missing credentials. Please pass an `api_key`, `workload_identity`, `admin_api_key`, or set the `OPENAI_API_KEY` or `OPENAI_ADMIN_KEY` environment variable.
+❌ LLM 调用失败: 未知错误
+❌ 实体提取失败
+✅ llm-manager 加载成功
+ℹ️ === LLM Radar 数据采集 ===
+ℹ️ 时间: 2026-06-17 10:00:00
+ℹ️ 数据目录: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data
+
+ℹ️ [1/3] 抓取新闻源...
+ℹ️ 抓取 量子位 (https://www.qbitai.com)
+✅ 量子位 抓取成功，1848 字符
+ℹ️ 抓取 机器之心 (https://www.jiqizhixin.com)
+✅ 机器之心 抓取成功，222 字符
+ℹ️ 抓取 TechCrunch AI (https://techcrunch.com/category/artificial-intelligence/)
+✅ TechCrunch AI 抓取成功，4535 字符
+ℹ️ 抓取 GitHub Trending (https://github.com/trending?since=weekly)
+✅ GitHub Trending 抓取成功，5000 字符
+ℹ️ 抓取 HuggingFace Papers (https://huggingface.co/papers)
+✅ HuggingFace Papers 抓取成功，1050 字符
+✅ 抓取完成，5/5 个源成功
+
+ℹ️ [2/3] LLM 提取实体...
+ℹ️ 调用 LLM 提取实体...
+ℹ️ 尝试模型 [deepseek]...
+⚠️ 模型 [deepseek] 失败: RemoteProtocolError: peer closed connection without sending complete message body (incomplete chunked read)
+ℹ️ 尝试模型 [xiaomi]...
+⚠️ 模型 [xiaomi] 异常: 未知模型: xiaomi
+ℹ️ 尝试模型 [kimi]...
+⚠️ 模型 [kimi] 失败: RemoteProtocolError: peer closed connection without sending complete message body (incomplete chunked read)
+ℹ️ 尝试模型 [minimax]...
+⚠️ 模型 [minimax] 失败: 网络错误: 401 Client Error: Unauthorized for url: https://api.minimax.chat/v1/chat/completions
+ℹ️ 尝试模型 [bigmodel]...
+⚠️ 模型 [bigmodel] 失败: 缺少 zhipuai 库，请运行: pip install zhipuai
+ℹ️ 尝试模型 [doubao]...
+❌ JSON 解析失败: Expecting value: line 1 column 1 (char 0)
+ℹ️ LLM 输出前 500 字符: ```json
+{
+  "providers": [
+    {"id": "anthropic", "name": "Anthropic", "country": "美国", "hot_score": 92, "hot_level": "爆热", "last_event": "发布Claude Fable 5、Mythos 5旗舰模型，后续遭美国政府限制使用引发行业争议", "last_event_date": "2026-06-17", "last_event_url": "", "flagship_models": ["Claude Fable 5", "Mythos 5"], "key_people": ["Dario"], "focus_areas": ["大语言模型研发", "AI安全"], "confidence": "high"},
+    {"id": "spacex", "name": "SpaceX", "country": "美国", "hot_score": 88, "hot_level": "高热", "last_event": "上市后估值升至2.6万亿美
+❌ 实体提取失败
+✅ llm-manager 加载成功
+ℹ️ === LLM Radar 数据采集 ===
+ℹ️ 时间: 2026-06-17 11:00:00
+ℹ️ 数据目录: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data
+
+ℹ️ [1/3] 抓取新闻源...
+ℹ️ 抓取 量子位 (https://www.qbitai.com)
+✅ 量子位 抓取成功，1858 字符
+ℹ️ 抓取 机器之心 (https://www.jiqizhixin.com)
+✅ 机器之心 抓取成功，222 字符
+ℹ️ 抓取 TechCrunch AI (https://techcrunch.com/category/artificial-intelligence/)
+✅ TechCrunch AI 抓取成功，4538 字符
+ℹ️ 抓取 GitHub Trending (https://github.com/trending?since=weekly)
+❌ GitHub Trending 抓取失败: HTTPSConnectionPool(host='github.com', port=443): Read timed out.
+ℹ️ 抓取 HuggingFace Papers (https://huggingface.co/papers)
+❌ HuggingFace Papers 抓取失败: ('Connection aborted.', ConnectionResetError(54, 'Connection reset by peer'))
+✅ 抓取完成，3/5 个源成功
+
+ℹ️ [2/3] LLM 提取实体...
+ℹ️ 调用 LLM 提取实体...
+ℹ️ 尝试模型 [deepseek]...
+✅ 实体提取完成，耗时 75.2s，共 31 个实体
+
+ℹ️ [3/3] 合并到快照...
+✅ 快照已保存: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data/snapshot.json
+✅ 合并完成：新增 11，更新 24
+ℹ️ 历史快照已归档: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data/history/2026-W24.json
+
+✅ 完成！当前数据: 127 厂商 / 41 人物 / 118 工具 / 82 模型 / 158 热点
+✅ llm-manager 加载成功
+ℹ️ === LLM Radar 数据采集 ===
+ℹ️ 时间: 2026-06-17 12:00:00
+ℹ️ 数据目录: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data
+
+ℹ️ [1/3] 抓取新闻源...
+ℹ️ 抓取 量子位 (https://www.qbitai.com)
+✅ 量子位 抓取成功，1892 字符
+ℹ️ 抓取 机器之心 (https://www.jiqizhixin.com)
+✅ 机器之心 抓取成功，222 字符
+ℹ️ 抓取 TechCrunch AI (https://techcrunch.com/category/artificial-intelligence/)
+✅ TechCrunch AI 抓取成功，4540 字符
+ℹ️ 抓取 GitHub Trending (https://github.com/trending?since=weekly)
+✅ GitHub Trending 抓取成功，5000 字符
+ℹ️ 抓取 HuggingFace Papers (https://huggingface.co/papers)
+❌ HuggingFace Papers 抓取失败: HTTPSConnectionPool(host='huggingface.co', port=443): Max retries exceeded with url: /papers (Caused by ConnectTimeoutError(<HTTPSConnection(host='huggingface.co', port=443) at 0x1093a6710>, 'Connection to huggingface.co timed out. (connect timeout=30)'))
+✅ 抓取完成，4/5 个源成功
+
+ℹ️ [2/3] LLM 提取实体...
+ℹ️ 调用 LLM 提取实体...
+ℹ️ 尝试模型 [deepseek]...
+✅ 实体提取完成，耗时 76.2s，共 24 个实体
+
+ℹ️ [3/3] 合并到快照...
+✅ 快照已保存: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data/snapshot.json
+✅ 合并完成：新增 7，更新 22
+ℹ️ 历史快照已归档: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data/history/2026-W24.json
+
+✅ 完成！当前数据: 128 厂商 / 41 人物 / 119 工具 / 83 模型 / 162 热点
+✅ llm-manager 加载成功
+ℹ️ === LLM Radar 数据采集 ===
+ℹ️ 时间: 2026-06-17 16:00:01
+ℹ️ 数据目录: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data
+
+ℹ️ [1/3] 抓取新闻源...
+ℹ️ 抓取 量子位 (https://www.qbitai.com)
+✅ 量子位 抓取成功，1957 字符
+ℹ️ 抓取 机器之心 (https://www.jiqizhixin.com)
+✅ 机器之心 抓取成功，222 字符
+ℹ️ 抓取 TechCrunch AI (https://techcrunch.com/category/artificial-intelligence/)
+❌ TechCrunch AI 抓取失败: HTTPSConnectionPool(host='techcrunch.com', port=443): Max retries exceeded with url: /category/artificial-intelligence/ (Caused by SSLError(SSLEOFError(8, '[SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1081)')))
+ℹ️ 抓取 GitHub Trending (https://github.com/trending?since=weekly)
+✅ GitHub Trending 抓取成功，5000 字符
+ℹ️ 抓取 HuggingFace Papers (https://huggingface.co/papers)
+✅ HuggingFace Papers 抓取成功，2510 字符
+✅ 抓取完成，4/5 个源成功
+
+ℹ️ [2/3] LLM 提取实体...
+ℹ️ 调用 LLM 提取实体...
+ℹ️ 尝试模型 [deepseek]...
+✅ 实体提取完成，耗时 84.8s，共 35 个实体
+
+ℹ️ [3/3] 合并到快照...
+✅ 快照已保存: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data/snapshot.json
+✅ 合并完成：新增 16，更新 23
+ℹ️ 历史快照已归档: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data/history/2026-W24.json
+
+✅ 完成！当前数据: 135 厂商 / 44 人物 / 120 工具 / 85 模型 / 165 热点
+✅ llm-manager 加载成功
+ℹ️ === LLM Radar 数据采集 ===
+ℹ️ 时间: 2026-06-17 18:00:01
+ℹ️ 数据目录: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data
+
+ℹ️ [1/3] 抓取新闻源...
+ℹ️ 抓取 量子位 (https://www.qbitai.com)
+✅ 量子位 抓取成功，1913 字符
+ℹ️ 抓取 机器之心 (https://www.jiqizhixin.com)
+✅ 机器之心 抓取成功，222 字符
+ℹ️ 抓取 TechCrunch AI (https://techcrunch.com/category/artificial-intelligence/)
+✅ TechCrunch AI 抓取成功，4517 字符
+ℹ️ 抓取 GitHub Trending (https://github.com/trending?since=weekly)
+✅ GitHub Trending 抓取成功，5000 字符
+ℹ️ 抓取 HuggingFace Papers (https://huggingface.co/papers)
+✅ HuggingFace Papers 抓取成功，2588 字符
+✅ 抓取完成，5/5 个源成功
+
+ℹ️ [2/3] LLM 提取实体...
+ℹ️ 调用 LLM 提取实体...
+ℹ️ 尝试模型 [deepseek]...
+✅ 实体提取完成，耗时 106.3s，共 51 个实体
+
+ℹ️ [3/3] 合并到快照...
+✅ 快照已保存: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data/snapshot.json
+✅ 合并完成：新增 16，更新 40
+ℹ️ 历史快照已归档: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data/history/2026-W24.json
+
+✅ 完成！当前数据: 138 厂商 / 47 人物 / 125 工具 / 86 模型 / 169 热点
+✅ llm-manager 加载成功
+ℹ️ === LLM Radar 数据采集 ===
+ℹ️ 时间: 2026-06-17 19:00:00
+ℹ️ 数据目录: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data
+
+ℹ️ [1/3] 抓取新闻源...
+ℹ️ 抓取 量子位 (https://www.qbitai.com)
+✅ 量子位 抓取成功，1899 字符
+ℹ️ 抓取 机器之心 (https://www.jiqizhixin.com)
+✅ 机器之心 抓取成功，222 字符
+ℹ️ 抓取 TechCrunch AI (https://techcrunch.com/category/artificial-intelligence/)
+✅ TechCrunch AI 抓取成功，4515 字符
+ℹ️ 抓取 GitHub Trending (https://github.com/trending?since=weekly)
+✅ GitHub Trending 抓取成功，5000 字符
+ℹ️ 抓取 HuggingFace Papers (https://huggingface.co/papers)
+✅ HuggingFace Papers 抓取成功，2702 字符
+✅ 抓取完成，5/5 个源成功
+
+ℹ️ [2/3] LLM 提取实体...
+ℹ️ 调用 LLM 提取实体...
+ℹ️ 尝试模型 [deepseek]...
+✅ 实体提取完成，耗时 103.8s，共 46 个实体
+
+ℹ️ [3/3] 合并到快照...
+✅ 快照已保存: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data/snapshot.json
+✅ 合并完成：新增 10，更新 41
+ℹ️ 历史快照已归档: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data/history/2026-W24.json
+
+✅ 完成！当前数据: 139 厂商 / 47 人物 / 129 工具 / 86 模型 / 174 热点
+✅ llm-manager 加载成功
+ℹ️ === LLM Radar 数据采集 ===
+ℹ️ 时间: 2026-06-17 20:00:01
+ℹ️ 数据目录: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data
+
+ℹ️ [1/3] 抓取新闻源...
+ℹ️ 抓取 量子位 (https://www.qbitai.com)
+✅ 量子位 抓取成功，1894 字符
+ℹ️ 抓取 机器之心 (https://www.jiqizhixin.com)
+✅ 机器之心 抓取成功，222 字符
+ℹ️ 抓取 TechCrunch AI (https://techcrunch.com/category/artificial-intelligence/)
+✅ TechCrunch AI 抓取成功，4502 字符
+ℹ️ 抓取 GitHub Trending (https://github.com/trending?since=weekly)
+✅ GitHub Trending 抓取成功，5000 字符
+ℹ️ 抓取 HuggingFace Papers (https://huggingface.co/papers)
+✅ HuggingFace Papers 抓取成功，3172 字符
+✅ 抓取完成，5/5 个源成功
+
+ℹ️ [2/3] LLM 提取实体...
+ℹ️ 调用 LLM 提取实体...
+ℹ️ 尝试模型 [deepseek]...
+✅ 实体提取完成，耗时 84.5s，共 33 个实体
+
+ℹ️ [3/3] 合并到快照...
+✅ 快照已保存: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data/snapshot.json
+✅ 合并完成：新增 8，更新 30
+ℹ️ 历史快照已归档: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data/history/2026-W24.json
+
+✅ 完成！当前数据: 141 厂商 / 48 人物 / 131 工具 / 86 模型 / 177 热点
+✅ llm-manager 加载成功
+ℹ️ === LLM Radar 数据采集 ===
+ℹ️ 时间: 2026-06-17 21:00:00
+ℹ️ 数据目录: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data
+
+ℹ️ [1/3] 抓取新闻源...
+ℹ️ 抓取 量子位 (https://www.qbitai.com)
+✅ 量子位 抓取成功，1874 字符
+ℹ️ 抓取 机器之心 (https://www.jiqizhixin.com)
+✅ 机器之心 抓取成功，222 字符
+ℹ️ 抓取 TechCrunch AI (https://techcrunch.com/category/artificial-intelligence/)
+✅ TechCrunch AI 抓取成功，4453 字符
+ℹ️ 抓取 GitHub Trending (https://github.com/trending?since=weekly)
+✅ GitHub Trending 抓取成功，5000 字符
+ℹ️ 抓取 HuggingFace Papers (https://huggingface.co/papers)
+✅ HuggingFace Papers 抓取成功，3267 字符
+✅ 抓取完成，5/5 个源成功
+
+ℹ️ [2/3] LLM 提取实体...
+ℹ️ 调用 LLM 提取实体...
+ℹ️ 尝试模型 [deepseek]...
+✅ 实体提取完成，耗时 73.1s，共 45 个实体
+
+ℹ️ [3/3] 合并到快照...
+✅ 快照已保存: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data/snapshot.json
+✅ 合并完成：新增 12，更新 38
+ℹ️ 历史快照已归档: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data/history/2026-W24.json
+
+✅ 完成！当前数据: 146 厂商 / 48 人物 / 131 工具 / 88 模型 / 182 热点
+✅ llm-manager 加载成功
+ℹ️ === LLM Radar 数据采集 ===
+ℹ️ 时间: 2026-06-17 22:00:00
+ℹ️ 数据目录: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data
+
+ℹ️ [1/3] 抓取新闻源...
+ℹ️ 抓取 量子位 (https://www.qbitai.com)
+✅ 量子位 抓取成功，1925 字符
+ℹ️ 抓取 机器之心 (https://www.jiqizhixin.com)
+✅ 机器之心 抓取成功，222 字符
+ℹ️ 抓取 TechCrunch AI (https://techcrunch.com/category/artificial-intelligence/)
+✅ TechCrunch AI 抓取成功，4445 字符
+ℹ️ 抓取 GitHub Trending (https://github.com/trending?since=weekly)
+✅ GitHub Trending 抓取成功，5000 字符
+ℹ️ 抓取 HuggingFace Papers (https://huggingface.co/papers)
+✅ HuggingFace Papers 抓取成功，3269 字符
+✅ 抓取完成，5/5 个源成功
+
+ℹ️ [2/3] LLM 提取实体...
+ℹ️ 调用 LLM 提取实体...
+ℹ️ 尝试模型 [deepseek]...
+✅ 实体提取完成，耗时 80.9s，共 52 个实体
+
+ℹ️ [3/3] 合并到快照...
+✅ 快照已保存: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data/snapshot.json
+✅ 合并完成：新增 11，更新 46
+ℹ️ 历史快照已归档: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data/history/2026-W24.json
+
+✅ 完成！当前数据: 152 厂商 / 48 人物 / 133 工具 / 88 模型 / 185 热点
+✅ llm-manager 加载成功
+ℹ️ === LLM Radar 数据采集 ===
+ℹ️ 时间: 2026-06-17 23:00:01
+ℹ️ 数据目录: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data
+
+ℹ️ [1/3] 抓取新闻源...
+ℹ️ 抓取 量子位 (https://www.qbitai.com)
+✅ 量子位 抓取成功，1927 字符
+ℹ️ 抓取 机器之心 (https://www.jiqizhixin.com)
+✅ 机器之心 抓取成功，222 字符
+ℹ️ 抓取 TechCrunch AI (https://techcrunch.com/category/artificial-intelligence/)
+✅ TechCrunch AI 抓取成功，4492 字符
+ℹ️ 抓取 GitHub Trending (https://github.com/trending?since=weekly)
+✅ GitHub Trending 抓取成功，5000 字符
+ℹ️ 抓取 HuggingFace Papers (https://huggingface.co/papers)
+✅ HuggingFace Papers 抓取成功，3271 字符
+✅ 抓取完成，5/5 个源成功
+
+ℹ️ [2/3] LLM 提取实体...
+ℹ️ 调用 LLM 提取实体...
+ℹ️ 尝试模型 [deepseek]...
+✅ 实体提取完成，耗时 87.3s，共 53 个实体
+
+ℹ️ [3/3] 合并到快照...
+✅ 快照已保存: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data/snapshot.json
+✅ 合并完成：新增 15，更新 41
+ℹ️ 历史快照已归档: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data/history/2026-W24.json
+
+✅ 完成！当前数据: 158 厂商 / 52 人物 / 134 工具 / 88 模型 / 189 热点
+✅ llm-manager 加载成功
+ℹ️ === LLM Radar 数据采集 ===
+ℹ️ 时间: 2026-06-18 00:00:00
+ℹ️ 数据目录: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data
+
+ℹ️ [1/3] 抓取新闻源...
+ℹ️ 抓取 量子位 (https://www.qbitai.com)
+✅ 量子位 抓取成功，1927 字符
+ℹ️ 抓取 机器之心 (https://www.jiqizhixin.com)
+✅ 机器之心 抓取成功，222 字符
+ℹ️ 抓取 TechCrunch AI (https://techcrunch.com/category/artificial-intelligence/)
+✅ TechCrunch AI 抓取成功，4543 字符
+ℹ️ 抓取 GitHub Trending (https://github.com/trending?since=weekly)
+✅ GitHub Trending 抓取成功，5000 字符
+ℹ️ 抓取 HuggingFace Papers (https://huggingface.co/papers)
+✅ HuggingFace Papers 抓取成功，3271 字符
+✅ 抓取完成，5/5 个源成功
+
+ℹ️ [2/3] LLM 提取实体...
+ℹ️ 调用 LLM 提取实体...
+ℹ️ 尝试模型 [deepseek]...
+✅ 实体提取完成，耗时 109.9s，共 53 个实体
+
+ℹ️ [3/3] 合并到快照...
+✅ 快照已保存: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data/snapshot.json
+✅ 合并完成：新增 10，更新 48
+ℹ️ 历史快照已归档: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data/history/2026-W24.json
+
+✅ 完成！当前数据: 163 厂商 / 52 人物 / 135 工具 / 88 模型 / 193 热点
+✅ llm-manager 加载成功
+ℹ️ === LLM Radar 数据采集 ===
+ℹ️ 时间: 2026-06-18 01:00:00
+ℹ️ 数据目录: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data
+
+ℹ️ [1/3] 抓取新闻源...
+ℹ️ 抓取 量子位 (https://www.qbitai.com)
+✅ 量子位 抓取成功，1930 字符
+ℹ️ 抓取 机器之心 (https://www.jiqizhixin.com)
+✅ 机器之心 抓取成功，222 字符
+ℹ️ 抓取 TechCrunch AI (https://techcrunch.com/category/artificial-intelligence/)
+✅ TechCrunch AI 抓取成功，4515 字符
+ℹ️ 抓取 GitHub Trending (https://github.com/trending?since=weekly)
+✅ GitHub Trending 抓取成功，5000 字符
+ℹ️ 抓取 HuggingFace Papers (https://huggingface.co/papers)
+✅ HuggingFace Papers 抓取成功，3512 字符
+✅ 抓取完成，5/5 个源成功
+
+ℹ️ [2/3] LLM 提取实体...
+ℹ️ 调用 LLM 提取实体...
+ℹ️ 尝试模型 [deepseek]...
+✅ 实体提取完成，耗时 72.6s，共 31 个实体
+
+ℹ️ [3/3] 合并到快照...
+✅ 快照已保存: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data/snapshot.json
+✅ 合并完成：新增 7，更新 29
+ℹ️ 历史快照已归档: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data/history/2026-W24.json
+
+✅ 完成！当前数据: 165 厂商 / 52 人物 / 135 工具 / 88 模型 / 198 热点
+✅ llm-manager 加载成功
+ℹ️ === LLM Radar 数据采集 ===
+ℹ️ 时间: 2026-06-20 00:00:00
+ℹ️ 数据目录: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data
+
+ℹ️ [1/3] 抓取新闻源...
+ℹ️ 抓取 量子位 (https://www.qbitai.com)
+✅ 量子位 抓取成功，1831 字符
+ℹ️ 抓取 机器之心 (https://www.jiqizhixin.com)
+✅ 机器之心 抓取成功，231 字符
+ℹ️ 抓取 TechCrunch AI (https://techcrunch.com/category/artificial-intelligence/)
+✅ TechCrunch AI 抓取成功，4439 字符
+ℹ️ 抓取 GitHub Trending (https://github.com/trending?since=weekly)
+✅ GitHub Trending 抓取成功，5000 字符
+ℹ️ 抓取 HuggingFace Papers (https://huggingface.co/papers)
+✅ HuggingFace Papers 抓取成功，4089 字符
+✅ 抓取完成，5/5 个源成功
+
+ℹ️ [2/3] LLM 提取实体...
+ℹ️ 调用 LLM 提取实体...
+ℹ️ 尝试模型 [deepseek]...
+✅ 实体提取完成，耗时 82.5s，共 15 个实体
+
+ℹ️ [3/3] 合并到快照...
+✅ 快照已保存: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data/snapshot.json
+✅ 合并完成：新增 10，更新 10
+ℹ️ 历史快照已归档: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data/history/2026-W24.json
+
+✅ 完成！当前数据: 166 厂商 / 54 人物 / 137 工具 / 89 模型 / 202 热点
+✅ llm-manager 加载成功
+ℹ️ === LLM Radar 数据采集 ===
+ℹ️ 时间: 2026-06-20 01:00:01
+ℹ️ 数据目录: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data
+
+ℹ️ [1/3] 抓取新闻源...
+ℹ️ 抓取 量子位 (https://www.qbitai.com)
+✅ 量子位 抓取成功，1858 字符
+ℹ️ 抓取 机器之心 (https://www.jiqizhixin.com)
+✅ 机器之心 抓取成功，231 字符
+ℹ️ 抓取 TechCrunch AI (https://techcrunch.com/category/artificial-intelligence/)
+✅ TechCrunch AI 抓取成功，4472 字符
+ℹ️ 抓取 GitHub Trending (https://github.com/trending?since=weekly)
+✅ GitHub Trending 抓取成功，5000 字符
+ℹ️ 抓取 HuggingFace Papers (https://huggingface.co/papers)
+✅ HuggingFace Papers 抓取成功，4094 字符
+✅ 抓取完成，5/5 个源成功
+
+ℹ️ [2/3] LLM 提取实体...
+ℹ️ 调用 LLM 提取实体...
+ℹ️ 尝试模型 [deepseek]...
+✅ 实体提取完成，耗时 80.4s，共 39 个实体
+
+ℹ️ [3/3] 合并到快照...
+✅ 快照已保存: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data/snapshot.json
+✅ 合并完成：新增 26，更新 18
+ℹ️ 历史快照已归档: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data/history/2026-W24.json
+
+✅ 完成！当前数据: 180 厂商 / 56 人物 / 143 工具 / 90 模型 / 205 热点
+✅ llm-manager 加载成功
+ℹ️ === LLM Radar 数据采集 ===
+ℹ️ 时间: 2026-06-20 02:00:00
+ℹ️ 数据目录: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data
+
+ℹ️ [1/3] 抓取新闻源...
+ℹ️ 抓取 量子位 (https://www.qbitai.com)
+✅ 量子位 抓取成功，1858 字符
+ℹ️ 抓取 机器之心 (https://www.jiqizhixin.com)
+✅ 机器之心 抓取成功，231 字符
+ℹ️ 抓取 TechCrunch AI (https://techcrunch.com/category/artificial-intelligence/)
+✅ TechCrunch AI 抓取成功，4462 字符
+ℹ️ 抓取 GitHub Trending (https://github.com/trending?since=weekly)
+✅ GitHub Trending 抓取成功，5000 字符
+ℹ️ 抓取 HuggingFace Papers (https://huggingface.co/papers)
+✅ HuggingFace Papers 抓取成功，4094 字符
+✅ 抓取完成，5/5 个源成功
+
+ℹ️ [2/3] LLM 提取实体...
+ℹ️ 调用 LLM 提取实体...
+ℹ️ 尝试模型 [deepseek]...
+✅ 实体提取完成，耗时 65.2s，共 37 个实体
+
+ℹ️ [3/3] 合并到快照...
+✅ 快照已保存: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data/snapshot.json
+✅ 合并完成：新增 16，更新 25
+ℹ️ 历史快照已归档: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data/history/2026-W24.json
+
+✅ 完成！当前数据: 185 厂商 / 56 人物 / 148 工具 / 93 模型 / 208 热点
+✅ llm-manager 加载成功
+ℹ️ === LLM Radar 数据采集 ===
+ℹ️ 时间: 2026-06-21 10:03:55
+ℹ️ 数据目录: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data
+
+ℹ️ [1/3] 抓取新闻源...
+ℹ️ 抓取 量子位 (https://www.qbitai.com)
+✅ 量子位 抓取成功，1838 字符
+ℹ️ 抓取 机器之心 (https://www.jiqizhixin.com)
+✅ 机器之心 抓取成功，231 字符
+ℹ️ 抓取 TechCrunch AI (https://techcrunch.com/category/artificial-intelligence/)
+✅ TechCrunch AI 抓取成功，4355 字符
+ℹ️ 抓取 GitHub Trending (https://github.com/trending?since=weekly)
+✅ GitHub Trending 抓取成功，5000 字符
+ℹ️ 抓取 HuggingFace Papers (https://huggingface.co/papers)
+✅ HuggingFace Papers 抓取成功，4245 字符
+✅ 抓取完成，5/5 个源成功
+
+ℹ️ [2/3] LLM 提取实体...
+ℹ️ 调用 LLM 提取实体...
+ℹ️ 尝试模型 [deepseek]...
+⚠️ 模型 [deepseek] 失败: RemoteProtocolError: peer closed connection without sending complete message body (incomplete chunked read)
+ℹ️ 尝试模型 [xiaomi]...
+⚠️ 模型 [xiaomi] 异常: 未知模型: xiaomi
+ℹ️ 尝试模型 [kimi]...
+⚠️ 模型 [kimi] 失败: RemoteProtocolError: peer closed connection without sending complete message body (incomplete chunked read)
+ℹ️ 尝试模型 [minimax]...
+⚠️ 模型 [minimax] 失败: 网络错误: 401 Client Error: Unauthorized for url: https://api.minimax.chat/v1/chat/completions
+ℹ️ 尝试模型 [bigmodel]...
+⚠️ 模型 [bigmodel] 失败: 缺少 zhipuai 库，请运行: pip install zhipuai
+ℹ️ 尝试模型 [doubao]...
+⚠️ 模型 [doubao] 失败: RemoteProtocolError: peer closed connection without sending complete message body (incomplete chunked read)
+❌ LLM 调用失败: 未知错误
+❌ 实体提取失败
+✅ llm-manager 加载成功
+ℹ️ === LLM Radar 数据采集 ===
+ℹ️ 时间: 2026-06-21 18:00:00
+ℹ️ 数据目录: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data
+
+ℹ️ [1/3] 抓取新闻源...
+ℹ️ 抓取 量子位 (https://www.qbitai.com)
+✅ 量子位 抓取成功，1868 字符
+ℹ️ 抓取 机器之心 (https://www.jiqizhixin.com)
+✅ 机器之心 抓取成功，231 字符
+ℹ️ 抓取 TechCrunch AI (https://techcrunch.com/category/artificial-intelligence/)
+✅ TechCrunch AI 抓取成功，4361 字符
+ℹ️ 抓取 GitHub Trending (https://github.com/trending?since=weekly)
+✅ GitHub Trending 抓取成功，5000 字符
+ℹ️ 抓取 HuggingFace Papers (https://huggingface.co/papers)
+✅ HuggingFace Papers 抓取成功，4246 字符
+✅ 抓取完成，5/5 个源成功
+
+ℹ️ [2/3] LLM 提取实体...
+ℹ️ 调用 LLM 提取实体...
+ℹ️ 尝试模型 [deepseek]...
+✅ 实体提取完成，耗时 76.6s，共 32 个实体
+
+ℹ️ [3/3] 合并到快照...
+✅ 快照已保存: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data/snapshot.json
+✅ 合并完成：新增 13，更新 22
+ℹ️ 历史快照已归档: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data/history/2026-W24.json
+
+✅ 完成！当前数据: 188 厂商 / 58 人物 / 150 工具 / 94 模型 / 213 热点
+✅ llm-manager 加载成功
+ℹ️ === LLM Radar 数据采集 ===
+ℹ️ 时间: 2026-06-21 19:00:01
+ℹ️ 数据目录: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data
+
+ℹ️ [1/3] 抓取新闻源...
+ℹ️ 抓取 量子位 (https://www.qbitai.com)
+✅ 量子位 抓取成功，1872 字符
+ℹ️ 抓取 机器之心 (https://www.jiqizhixin.com)
+✅ 机器之心 抓取成功，231 字符
+ℹ️ 抓取 TechCrunch AI (https://techcrunch.com/category/artificial-intelligence/)
+✅ TechCrunch AI 抓取成功，4361 字符
+ℹ️ 抓取 GitHub Trending (https://github.com/trending?since=weekly)
+✅ GitHub Trending 抓取成功，5000 字符
+ℹ️ 抓取 HuggingFace Papers (https://huggingface.co/papers)
+✅ HuggingFace Papers 抓取成功，4246 字符
+✅ 抓取完成，5/5 个源成功
+
+ℹ️ [2/3] LLM 提取实体...
+ℹ️ 调用 LLM 提取实体...
+ℹ️ 尝试模型 [deepseek]...
+✅ 实体提取完成，耗时 106.6s，共 30 个实体
+
+ℹ️ [3/3] 合并到快照...
+✅ 快照已保存: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data/snapshot.json
+✅ 合并完成：新增 9，更新 24
+ℹ️ 历史快照已归档: /Users/jadenli/CodeSpace/llm-radar.jaden.tech/data/history/2026-W24.json
+
+✅ 完成！当前数据: 190 厂商 / 60 人物 / 152 工具 / 94 模型 / 216 热点

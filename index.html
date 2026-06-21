@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LLM Radar — 行业情报仪表盘</title>
+  <link rel="icon" href="https://jaden.tech/static/img/favicon.png">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            cobalt: { 50:'#eef2ff',100:'#e0e7ff',400:'#818cf8',500:'#6366f1',600:'#4f46e5',700:'#4338ca',800:'#3730a3',900:'#312e81',950:'#1e1b4b' },
+            accent: { 400:'#facc15',500:'#eab308',600:'#ca8a04' },
+            surface: { 800:'#1e1e2e',850:'#181825',900:'#11111b',950:'#0a0a14' }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+    body { font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif; background:#0a0a14; color:#e0e0e0; }
+    .font-mono { font-family:'JetBrains Mono',monospace; }
+
+    /* Tab */
+    .tab-active { border-bottom:2px solid #facc15; color:#facc15; }
+
+    /* Table */
+    .data-table { width:100%; border-collapse:collapse; table-layout:fixed; }
+    .data-table th {
+      position:sticky; top:0; z-index:10;
+      background:#11111b; border-bottom:1px solid #2a2a3e;
+      padding:8px 10px; text-align:left; font-size:0.7rem; font-weight:600;
+      color:#9ca3af; text-transform:uppercase; letter-spacing:0.05em;
+      white-space:nowrap; cursor:pointer; user-select:none;
+    }
+    .data-table th:hover { color:#facc15; }
+    .data-table th .sort-arrow { font-size:0.6rem; margin-left:2px; opacity:0.4; }
+    .data-table th.sorted .sort-arrow { opacity:1; color:#facc15; }
+    .data-table td {
+      padding:8px 10px; border-bottom:1px solid #1a1a2e;
+      font-size:0.8rem; vertical-align:middle;
+      white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+    }
+    .data-table tr { transition:background 0.15s; }
+    .data-table tbody tr:hover { background:rgba(79,70,229,0.08); }
+
+    /* Hot score */
+    .hot-score { display:inline-flex; align-items:center; gap:4px; font-family:'JetBrains Mono',monospace; font-size:0.8rem; font-weight:600; }
+    .hot-score[data-level="5"] { color:#ef4444; }
+    .hot-score[data-level="4"] { color:#f97316; }
+    .hot-score[data-level="3"] { color:#eab308; }
+    .hot-score[data-level="2"] { color:#22d3ee; }
+    .hot-score[data-level="1"] { color:#6b7280; }
+
+    /* Filter chips */
+    .filter-chip { padding:2px 10px; border-radius:9999px; font-size:0.7rem; font-weight:500; cursor:pointer; transition:all 0.15s; border:1px solid #2a2a3e; color:#9ca3af; background:transparent; }
+    .filter-chip:hover { border-color:#4f46e5; color:#e0e0e0; }
+    .filter-chip.active { border-color:#facc15; color:#facc15; background:rgba(250,204,21,0.08); }
+
+    /* Highlight */
+    @keyframes hl { 0%{background:rgba(250,204,21,0.25)} 100%{background:transparent} }
+    .row-highlight { animation:hl 2s ease-out; }
+
+    /* Entity card (hotspots) */
+    .entity-card { background:#1e1e2e; border:1px solid #2a2a3e; border-radius:12px; transition:border-color 0.2s,box-shadow 0.2s; }
+    .entity-card:hover { border-color:#4f46e5; box-shadow:0 0 20px rgba(79,70,229,0.15); }
+
+    /* Floating hotspot panel */
+    .hotspot-fab { position:fixed; bottom:24px; right:24px; z-index:60; }
+    .hotspot-fab-btn { width:48px; height:48px; border-radius:9999px; background:linear-gradient(135deg,#4f46e5,#f97316); color:#fff; font-size:1.2rem; cursor:pointer; border:none; box-shadow:0 4px 16px rgba(0,0,0,0.4); transition:transform 0.2s; display:flex; align-items:center; justify-content:center; }
+    .hotspot-fab-btn:hover { transform:scale(1.1); }
+    .hotspot-fab-btn .badge-count { position:absolute; top:-4px; right:-4px; background:#ef4444; color:#fff; font-size:0.6rem; font-weight:700; width:18px; height:18px; border-radius:9999px; display:flex; align-items:center; justify-content:center; }
+    .hotspot-panel { position:fixed; bottom:80px; right:24px; z-index:60; width:360px; max-height:400px; background:#1e1e2e; border:1px solid #2a2a3e; border-radius:12px; box-shadow:0 8px 32px rgba(0,0,0,0.5); overflow:hidden; display:none; }
+    .hotspot-panel.show { display:block; }
+    .hotspot-panel-header { padding:10px 14px; border-bottom:1px solid #2a2a3e; display:flex; align-items:center; justify-content:between; }
+    .hotspot-panel-body { overflow-y:auto; max-height:340px; padding:8px; }
+    .hotspot-item { padding:8px 10px; border-radius:8px; cursor:pointer; transition:background 0.15s; }
+    .hotspot-item:hover { background:rgba(79,70,229,0.12); }
+    .hotspot-item-title { font-size:0.8rem; font-weight:600; color:#e0e0e0; margin-bottom:2px; }
+    .hotspot-item-time { font-size:0.65rem; color:#9ca3af; font-family:'JetBrains Mono',monospace; }
+
+    /* Chips */
+    .chip {
+      display:inline-flex; align-items:center; padding:1px 7px; border-radius:9999px;
+      font-size:0.65rem; font-weight:500; cursor:pointer; transition:all 0.15s;
+      border:1px solid transparent; white-space:nowrap; max-width:120px; overflow:hidden; text-overflow:ellipsis;
+    }
+    .chip:hover { border-color:#facc15; }
+    .chip-provider { background:rgba(99,102,241,0.12); color:#a5b4fc; }
+    .chip-person { background:rgba(236,72,153,0.12); color:#f9a8d4; }
+    .chip-tool { background:rgba(34,211,238,0.12); color:#67e8f9; }
+    .chip-llm { background:rgba(250,204,21,0.12); color:#fde047; }
+
+    /* Badges */
+    .badge { display:inline-block; padding:1px 6px; border-radius:4px; font-size:0.6rem; font-weight:600; white-space:nowrap; }
+    .badge-tier { background:rgba(99,102,241,0.2); color:#a5b4fc; }
+    .badge-open { background:rgba(34,197,94,0.12); color:#86efac; }
+    .badge-closed { background:rgba(107,114,128,0.15); color:#9ca3af; }
+    .badge-maturity { background:rgba(250,204,21,0.12); color:#fde047; }
+    .badge-status { background:rgba(34,197,94,0.12); color:#86efac; }
+
+    /* Event text */
+    .event-text { white-space:normal; line-height:1.4; max-width:320px; }
+    .event-text a { color:#818cf8; text-decoration:none; }
+    .event-text a:hover { color:#facc15; }
+
+    /* Influence colors */
+    .infl-leader { color:#facc15; }
+    .infl-core { color:#818cf8; }
+    .infl-active { color:#22d3ee; }
+    .infl-rising { color:#86efac; }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width:6px; height:6px; }
+    ::-webkit-scrollbar-track { background:#0a0a14; }
+    ::-webkit-scrollbar-thumb { background:#2a2a3e; border-radius:3px; }
+    ::-webkit-scrollbar-thumb:hover { background:#4f46e5; }
+
+    /* Loading */
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.5} }
+    .loading-pulse { animation:pulse 2s cubic-bezier(.4,0,.6,1) infinite; }
+
+    /* Responsive: hide columns on small screens */
+    @media (max-width:768px) {
+      .hide-mobile { display:none !important; }
+      .data-table td, .data-table th { padding:6px 6px; font-size:0.7rem; }
+    }
+  </style>
+</head>
+<body class="min-h-screen">
+
+  <!-- Header -->
+  <header class="border-b border-gray-800 bg-surface-900/80 backdrop-blur-sm sticky top-0 z-50">
+    <div class="max-w-[1400px] mx-auto px-4 sm:px-6 py-2">
+      <div class="flex items-center gap-2 text-xs">
+        <div class="flex items-center gap-2">
+          <img src="https://jaden.tech/static/img/favicon.png" class="w-5 h-5 rounded" alt="R">
+          <span class="font-bold text-white text-sm">LLM Radar</span>
+        </div>
+        <span class="text-gray-600">|</span>
+        <span class="text-gray-500">数据源:</span>
+        <span id="data-sources" class="text-gray-400"></span>
+        <div class="ml-auto flex items-center gap-2">
+          <span id="updated-at" class="font-mono text-gray-400"></span>
+          <span id="ago-label" class="cursor-default font-mono px-1.5 py-0.5 rounded text-xs"></span>
+          <label class="flex items-center gap-1 cursor-pointer select-none" title="开启后每10分钟自动刷新">
+            <span class="text-gray-500 text-xs">自动刷新</span>
+            <span id="auto-toggle" class="relative inline-block w-7 h-4 rounded-full bg-gray-700 transition-colors" onclick="toggleAutoRefresh()">
+              <span id="auto-knob" class="absolute top-0.5 left-0.5 w-3 h-3 rounded-full bg-gray-400 transition-all"></span>
+            </span>
+          </label>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Tabs -->
+  <nav class="border-b border-gray-800 bg-surface-900/50 sticky top-[45px] z-40">
+    <div class="max-w-[1400px] mx-auto px-4 sm:px-6">
+      <div class="flex items-center gap-0 overflow-x-auto" id="tab-bar">
+        <button class="tab-btn px-4 py-2.5 text-sm font-medium whitespace-nowrap transition-colors hover:text-white" data-tab="tools">🔧 工具 <span class="ml-1 text-xs opacity-60" id="tc-tools">0</span></button>
+        <button class="tab-btn px-4 py-2.5 text-sm font-medium whitespace-nowrap transition-colors hover:text-white" data-tab="llms">🤖 大模型 <span class="ml-1 text-xs opacity-60" id="tc-llms">0</span></button>
+        <button class="tab-btn px-4 py-2.5 text-sm font-medium whitespace-nowrap transition-colors hover:text-white" data-tab="providers">🏢 厂商 <span class="ml-1 text-xs opacity-60" id="tc-providers">0</span></button>
+        <button class="tab-btn px-4 py-2.5 text-sm font-medium whitespace-nowrap transition-colors hover:text-white" data-tab="people">👤 人物 <span class="ml-1 text-xs opacity-60" id="tc-people">0</span></button>
+        <button class="tab-btn px-4 py-2.5 text-sm font-medium whitespace-nowrap transition-colors hover:text-white" data-tab="hotspots">🔥 热点 <span class="ml-1 text-xs opacity-60" id="tc-hotspots">0</span></button>
+        <div class="flex items-center gap-1.5 ml-auto pl-4">
+          <button class="filter-chip active" data-filter="all" onclick="setFilter('all')">全部</button>
+          <button class="filter-chip" data-filter="cn" onclick="setFilter('cn')">🇨🇳 中国</button>
+          <button class="filter-chip" data-filter="global" onclick="setFilter('global')">🌍 海外</button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main -->
+  <main class="max-w-[1400px] mx-auto px-4 sm:px-6 py-4">
+    <div id="loading" class="flex items-center justify-center py-20">
+      <div class="text-center">
+        <div class="w-10 h-10 border-2 border-cobalt-500 border-t-transparent rounded-full animate-spin mx-auto mb-3"></div>
+        <p class="text-gray-500 text-sm">加载情报数据...</p>
+      </div>
+    </div>
+    <div id="error-state" class="hidden text-center py-20">
+      <p class="text-gray-500 text-lg mb-2">暂无数据</p>
+      <p class="text-gray-600 text-sm">请确保 <code class="font-mono bg-gray-800 px-2 py-0.5 rounded">data/snapshot.json</code> 存在</p>
+    </div>
+    <div id="panel-hotspots" class="tab-panel hidden"></div>
+    <div id="panel-providers" class="tab-panel hidden"></div>
+    <div id="panel-people" class="tab-panel hidden"></div>
+    <div id="panel-tools" class="tab-panel hidden"></div>
+    <div id="panel-llms" class="tab-panel hidden"></div>
+  </main>
+
+  <!-- Floating Hotspot Panel -->
+  <div class="hotspot-fab" id="hotspot-fab" style="display:none">
+    <button class="hotspot-fab-btn relative" onclick="toggleHotspotPanel()" title="最近热点">
+      🔥
+      <span class="badge-count" id="hotspot-badge" style="display:none">0</span>
+    </button>
+  </div>
+  <div class="hotspot-panel" id="hotspot-panel">
+    <div class="hotspot-panel-header">
+      <span class="text-sm font-semibold text-white">🔥 最近热点</span>
+      <button class="text-gray-400 hover:text-white text-xs ml-auto" onclick="toggleHotspotPanel()">✕</button>
+    </div>
+    <div class="hotspot-panel-body" id="hotspot-panel-body"></div>
+  </div>
+
+  <footer class="border-t border-gray-800 mt-8 py-4 text-center text-xs text-gray-600">
+    LLM Radar · Industry Intelligence Dashboard · v1.0
+  </footer>
+
+<script>
+/* ========================================================================
+ * LLM Radar — Table Layout
+ * Version: 1.0(2026-06-11)
+ * Karpathy: 简单 → 表格 > 卡片，信息密度优先
+ * ======================================================================== */
+
+let DATA = null;
+const TABS = ['tools','llms','providers','people','hotspots'];
+let activeTab = 'llms';
+let sortState = {}; // { tab: { col, dir } }
+let filterMode = 'all'; // 'all' | 'cn' | 'global'
+
+// ===== CN Filter =====
+const CN_KEYWORDS = ['中国','百度','阿里','腾讯','华为','字节','智谱','百川','零一','月之暗面','MiniMax','阶跃','商汤','昆仑','讯飞','深度求索','面壁','米哈游','360','京东','小米','快手','DeepSeek','deepseek','Kimi','kimi','Qwen','qwen','GLM','glm','ERNIE','ernie','豆包','doubao','HunYuan','hunyuan','Pangu','pangu','Spark','spark','Baichuan','baichuan','Yi','Step','ABAB','MiMo','mimo','MiniCPM','minicpm','Hailuo','hailuo','baidu','alibaba','tencent','huawei','bytedance','zhipu','01ai','moonshot','minimax','stepfun','sensetime','kunlun','iflytek','facewall','mihoyo','jd','xiaomi'];
+function isCN(entity) {
+  const check = (entity.country||'') + (entity.name||'') + (entity.name_en||'') + (entity.provider_id||'') + (entity.employer_id||'') + (entity.maintainer_id||'') + (entity.id||'');
+  return CN_KEYWORDS.some(k => check.includes(k));
+}
+function filterItems(arr) {
+  if (filterMode === 'all') return arr;
+  if (filterMode === 'cn') return arr.filter(isCN);
+  return arr.filter(e => !isCN(e));
+}
+function setFilter(mode) {
+  filterMode = mode;
+  document.querySelectorAll('.filter-chip').forEach(b => b.classList.toggle('active', b.dataset.filter === mode));
+  renderTab(activeTab);
+}
+
+// ===== Auto Refresh =====
+let autoRefreshTimer = null;
+let autoRefreshEnabled = false;
+
+function toggleAutoRefresh() {
+  autoRefreshEnabled = !autoRefreshEnabled;
+  const toggle = document.getElementById('auto-toggle');
+  const knob = document.getElementById('auto-knob');
+  if (autoRefreshEnabled) {
+    toggle.style.background = '#4f46e5';
+    knob.style.left = '14px';
+    knob.style.background = '#fff';
+    startAutoRefresh();
+  } else {
+    toggle.style.background = '#374151';
+    knob.style.left = '2px';
+    knob.style.background = '#9ca3af';
+    stopAutoRefresh();
+  }
+  localStorage.setItem('llm-radar-auto-refresh', autoRefreshEnabled ? '1' : '0');
+}
+
+function startAutoRefresh() {
+  stopAutoRefresh();
+  autoRefreshTimer = setInterval(() => { refreshData(); }, 10 * 60 * 1000);
+}
+
+function stopAutoRefresh() {
+  if (autoRefreshTimer) { clearInterval(autoRefreshTimer); autoRefreshTimer = null; }
+}
+
+async function refreshData() {
+  saveState();
+  try {
+    const r = await fetch('data/snapshot.json?t=' + Date.now());
+    if (r.ok) { DATA = await r.json(); }
+  } catch(e) {}
+  restoreState();
+  renderTab(activeTab);
+  updateStats();
+  checkRecentHotspots();
+}
+
+function saveState() {
+  const scrollY = window.scrollY;
+  const panel = document.getElementById(`panel-${activeTab}`);
+  const scrollTable = panel ? panel.scrollTop : 0;
+  localStorage.setItem('llm-radar-state', JSON.stringify({
+    tab: activeTab, filter: filterMode,
+    sort: sortState[activeTab] || null,
+    scrollY, scrollTable
+  }));
+}
+
+function restoreState() {
+  try {
+    const raw = localStorage.getItem('llm-radar-state');
+    if (!raw) return;
+    const st = JSON.parse(raw);
+    if (st.tab && TABS.includes(st.tab)) activeTab = st.tab;
+    if (st.filter) { filterMode = st.filter; document.querySelectorAll('.filter-chip').forEach(b => b.classList.toggle('active', b.dataset.filter === filterMode)); }
+    if (st.sort) sortState[activeTab] = st.sort;
+    if (st.scrollY) requestAnimationFrame(() => window.scrollTo(0, st.scrollY));
+  } catch(e) {}
+}
+
+// ===== Helpers =====
+function hl(s) { return s>=80?5:s>=60?4:s>=40?3:s>=20?2:1; }
+function he(l) { return {5:'🔥',4:'🟠',3:'🟡',2:'🔵',1:'⚪'}[l]||'⚪'; }
+function findEntity(id) {
+  if(!DATA) return null;
+  for(const d of ['providers','people','tools','llms']) {
+    const f=DATA[d].find(e=>e.id===id);
+    if(f) return {entity:f,dim:d};
+  }
+  return null;
+}
+function chip(id,dim) {
+  const r=findEntity(id); if(!r) return '';
+  const cls={providers:'chip-provider',people:'chip-person',tools:'chip-tool',llms:'chip-llm'}[dim]||'chip-llm';
+  const label=r.entity.name||r.entity.name_en||id;
+  return `<span class="chip ${cls}" onclick="nav('${dim}','${id}')" title="${label}">${label}</span>`;
+}
+function chips(arr,dim,max) {
+  if(!arr||!arr.length) return '<span class="text-gray-600">—</span>';
+  const shown=arr.slice(0,max||3);
+  let html=shown.map(id=>chip(id,dim)).join(' ');
+  if(arr.length>(max||3)) html+=` <span class="text-gray-500 text-xs">+${arr.length-(max||3)}</span>`;
+  return html;
+}
+function hotScore(s) {
+  const l=hl(s);
+  return `<span class="hot-score" data-level="${l}">${he(l)} ${s}</span>`;
+}
+function dateAgo(d) {
+  if(!d) return '';
+  const diff=Math.floor((Date.now()-new Date(d))/86400000);
+  return diff===0?'<span class="text-accent-400">今天</span>':diff===1?'<span class="text-gray-400">昨天</span>':`<span class="text-gray-500">${diff}天前</span>`;
+}
+function eventCell(text,url,date) {
+  if(!text) return '<span class="text-gray-600">—</span>';
+  let h=`<div class="event-text">${text}`;
+  if(url) h+=` <a href="${url}" target="_blank" rel="noopener">↗</a>`;
+  if(date) h+=` <span class="text-gray-500 text-xs ml-1">${dateAgo(date)}</span>`;
+  return h+'</div>';
+}
+function num(v) { return v!=null?v:'—'; }
+
+// ===== Sort =====
+function sortData(arr,tab,col,dir) {
+  const sorted=[...arr];
+  sorted.sort((a,b)=>{
+    let va=a[col], vb=b[col];
+    if(typeof va==='string') return dir==='asc'?va.localeCompare(vb):vb.localeCompare(va);
+    if(typeof va==='number') return dir==='asc'?va-vb:vb-va;
+    return 0;
+  });
+  return sorted;
+}
+function toggleSort(tab,col) {
+  const s=sortState[tab];
+  if(s&&s.col===col) { s.dir=s.dir==='desc'?'asc':'desc'; }
+  else { sortState[tab]={col,dir:'desc'}; }
+  renderTab(tab);
+}
+
+// ===== Render: Hotspots =====
+function renderHotspots() {
+  const items = (DATA.hotspots||[]).slice().sort((a,b) => (b.date||'').localeCompare(a.date||''));
+  if (!items.length) return '<div class="text-center text-gray-500 py-12">暂无热点数据</div>';
+  return items.map(h => {
+    const providers = (h.related_providers||[]).map(id => chip(id,'providers')).join(' ');
+    const people = (h.related_people||[]).map(id => chip(id,'people')).join(' ');
+    const tools = (h.related_tools||[]).map(id => chip(id,'tools')).join(' ');
+    const llms = (h.related_llms||[]).map(id => chip(id,'llms')).join(' ');
+    const related = [providers,people,tools,llms].filter(Boolean).join(' ');
+    return `
+    <div class="entity-card p-4 mb-3" id="entity-${h.id}">
+      <div class="flex items-start justify-between mb-2">
+        <div class="min-w-0 flex-1">
+          <div class="flex items-center gap-2 mb-1">
+            <span class="font-mono text-xs text-gray-500">${h.date||''}</span>
+            ${h.source?`<span class="badge bg-gray-800 text-gray-400">${h.source}</span>`:''}
+          </div>
+          <h3 class="font-semibold text-white text-sm mb-1">${h.title||''}</h3>
+          <p class="text-sm text-gray-400 leading-relaxed">${h.summary||''}</p>
+        </div>
+      </div>
+      ${related?`<div class="flex flex-wrap gap-1.5 mt-2 pt-2 border-t border-gray-800">${related}</div>`:''}
+      ${h.url?`<a href="${h.url}" target="_blank" rel="noopener" class="text-xs text-cobalt-400 hover:text-cobalt-300 mt-2 inline-block">阅读原文 ↗</a>`:''}
+    </div>`;
+  }).join('');
+}
+
+// ===== Render: Providers =====
+function renderProviders() {
+  const s=sortState.providers||{col:'hot_score',dir:'desc'};
+  const items=sortData(filterItems(DATA.providers),'providers',s.col,s.dir);
+  const th=(col,label,w,cls)=>`<th class="${cls||''} ${s.col===col?'sorted':''}" style="${w?'width:'+w:''}" onclick="toggleSort('providers','${col}')">${label}<span class="sort-arrow">${s.col===col?(s.dir==='desc'?'▼':'▲'):'↕'}</span></th>`;
+  return `<table class="data-table"><thead><tr>
+    ${th('name','厂商','270px')}
+    ${th('hot_score','热度','110px')}
+    ${th('last_event','最新事件','','hide-mobile')}
+    ${th('_models','旗舰模型','180px','hide-mobile')}
+    ${th('_people','核心人物','150px','hide-mobile')}
+    ${th('_tech','技术栈','140px','hide-mobile')}
+    ${th('_fund','估值/融资','100px','hide-mobile')}
+  </tr></thead><tbody>${items.map(p=>{
+    const ref=p.ref||{};
+    return `<tr id="entity-${p.id}" data-id="${p.id}">
+      <td><div class="flex items-center gap-2"><div class="w-7 h-7 rounded bg-cobalt-900/50 border border-cobalt-800 flex items-center justify-center text-xs font-bold text-cobalt-400 flex-shrink-0">${p.name.charAt(0)}</div><div class="min-w-0"><div class="font-semibold text-white text-sm truncate">${p.name}</div><div class="text-xs text-gray-500 truncate">${p.country||''}</div></div></div></td>
+      <td>${hotScore(p.hot_score)}</td>
+      <td class="hide-mobile">${eventCell(p.last_event,p.last_event_url,p.last_event_date)}</td>
+      <td class="hide-mobile">${chips(p.flagship_models,'llms',3)}</td>
+      <td class="hide-mobile">${chips(p.key_people,'people',3)}</td>
+      <td class="hide-mobile"><div class="flex flex-wrap gap-1">${(ref.tech_stack||[]).map(t=>`<span class="text-xs bg-gray-800 text-gray-400 px-1.5 py-0.5 rounded">${t}</span>`).join('')||'<span class="text-gray-600">—</span>'}</div></td>
+      <td class="hide-mobile"><span class="font-mono text-xs text-accent-400">${ref.valuation||'—'}</span></td>
+    </tr>`;
+  }).join('')}</tbody></table>`;
+}
+
+// ===== Render: People =====
+function renderPeople() {
+  const s=sortState.people||{col:'hot_score',dir:'desc'};
+  const items=sortData(filterItems(DATA.people),'people',s.col,s.dir);
+  const infl={行业领袖:'infl-leader',核心人物:'infl-core',活跃人物:'infl-active',新锐:'infl-rising'};
+  const th=(col,label,w,cls)=>`<th class="${cls||''} ${s.col===col?'sorted':''}" style="${w?'width:'+w:''}" onclick="toggleSort('people','${col}')">${label}<span class="sort-arrow">${s.col===col?(s.dir==='desc'?'▼':'▲'):'↕'}</span></th>`;
+  return `<table class="data-table"><thead><tr>
+    ${th('name','人物','150px')}
+    ${th('influence_level','影响力','80px')}
+    ${th('hot_score','热度','110px')}
+    ${th('title','当前头衔','180px')}
+    ${th('recent_activity','最近动态','','hide-mobile')}
+    ${th('_known','代表性成就','200px','hide-mobile')}
+    ${th('_models','关联模型','180px','hide-mobile')}
+  </tr></thead><tbody>${items.map(p=>{
+    const employer=chip(p.employer_id,'providers');
+    return `<tr id="entity-${p.id}" data-id="${p.id}">
+      <td><div class="flex items-center gap-2"><div class="w-7 h-7 rounded-full bg-pink-900/30 border border-pink-800/50 flex items-center justify-center text-xs flex-shrink-0">${p.name.charAt(0)}</div><div class="min-w-0"><div class="font-semibold text-white text-sm truncate">${p.name}</div>${p.name_en&&p.name_en!==p.name?`<div class="text-xs text-gray-500 truncate">${p.name_en}</div>`:''}</div></div></td>
+      <td><span class="badge text-xs ${infl[p.influence_level]||''} bg-transparent border border-current/20">${p.influence_level||'—'}</span></td>
+      <td>${hotScore(p.hot_score)}</td>
+      <td><div class="truncate text-sm">${p.title||'—'}</div><div class="mt-0.5">${employer}</div></td>
+      <td class="hide-mobile">${eventCell(p.recent_activity,p.recent_activity_url,p.recent_activity_date)}</td>
+      <td class="hide-mobile"><div class="flex flex-wrap gap-1">${(p.known_for||[]).slice(0,2).map(k=>`<span class="text-xs bg-gray-800 text-gray-400 px-1.5 py-0.5 rounded">${k}</span>`).join('')||'<span class="text-gray-600">—</span>'}</div></td>
+      <td class="hide-mobile">${chips(p.related_llms,'llms',3)}</td>
+    </tr>`;
+  }).join('')}</tbody></table>`;
+}
+
+// ===== Render: Tools =====
+function renderTools() {
+  const s=sortState.tools||{col:'hot_score',dir:'desc'};
+  const items=sortData(filterItems(DATA.tools),'tools',s.col,s.dir);
+  const catColors={'推理框架':'bg-purple-500/12 text-purple-400','Agent 框架':'bg-blue-500/12 text-blue-400','RAG 工具':'bg-green-500/12 text-green-400','微调工具':'bg-orange-500/12 text-orange-400','评测平台':'bg-red-500/12 text-red-400','API 网关':'bg-cyan-500/12 text-cyan-400','模型服务':'bg-teal-500/12 text-teal-400','Prompt 工程':'bg-pink-500/12 text-pink-400','向量数据库':'bg-amber-500/12 text-amber-400','可观测性':'bg-indigo-500/12 text-indigo-400'};
+  const th=(col,label,w,cls)=>`<th class="${cls||''} ${s.col===col?'sorted':''}" style="${w?'width:'+w:''}" onclick="toggleSort('tools','${col}')">${label}<span class="sort-arrow">${s.col===col?(s.dir==='desc'?'▼':'▲'):'↕'}</span></th>`;
+  return `<table class="data-table"><thead><tr>
+    ${th('name','工具','160px')}
+    ${th('category','分类','90px')}
+    ${th('hot_score','热度','110px')}
+    ${th('_stars','Stars','90px','hide-mobile')}
+    ${th('maturity','成熟度','70px','hide-mobile')}
+    ${th('last_update','最近更新','','hide-mobile')}
+    ${th('pricing_model','定价','80px','hide-mobile')}
+    ${th('_related','适配模型','180px','hide-mobile')}
+  </tr></thead><tbody>${items.map(t=>{
+    const ref=t.ref||{};
+    return `<tr id="entity-${t.id}" data-id="${t.id}">
+      <td><div class="min-w-0"><div class="font-semibold text-white text-sm truncate">${t.website?`<a href="${t.website}" target="_blank" rel="noopener" class="hover:text-accent-400">${t.name}</a>`:t.name}</div><div class="text-xs text-gray-500 truncate">${t.description||''}</div></div></td>
+      <td><span class="badge ${catColors[t.category]||'bg-gray-700 text-gray-300'}">${t.category||''}</span></td>
+      <td>${hotScore(t.hot_score)}</td>
+      <td class="hide-mobile">${ref.stars?`<span class="font-mono text-xs">⭐${(ref.stars/1000).toFixed(1)}k</span>${ref.stars_weekly_delta?` <span class="text-green-400 text-xs">+${ref.stars_weekly_delta}</span>`:''}`:'<span class="text-gray-600">—</span>'}</td>
+      <td class="hide-mobile"><span class="badge badge-maturity">${t.maturity||'—'}</span></td>
+      <td class="hide-mobile">${eventCell(t.last_update,t.last_update_url,t.last_update_date)}</td>
+      <td class="hide-mobile"><span class="badge ${t.pricing_model==='开源免费'?'badge-open':'badge-closed'}">${t.pricing_model||'—'}</span></td>
+      <td class="hide-mobile">${chips(t.related_llms,'llms',3)}</td>
+    </tr>`;
+  }).join('')}</tbody></table>`;
+}
+
+// ===== Render: LLMs =====
+function renderLLMs() {
+  const s=sortState.llms||{col:'hot_score',dir:'desc'};
+  const items=sortData(filterItems(DATA.llms),'llms',s.col,s.dir);
+  const tierColors={旗舰:'text-accent-400',主力:'text-cobalt-400',轻量:'text-cyan-400',专用:'text-gray-400'};
+  const th=(col,label,w,cls)=>`<th class="${cls||''} ${s.col===col?'sorted':''}" style="${w?'width:'+w:''}" onclick="toggleSort('llms','${col}')">${label}<span class="sort-arrow">${s.col===col?(s.dir==='desc'?'▼':'▲'):'↕'}</span></th>`;
+  return `<table class="data-table"><thead><tr>
+    ${th('name','大模型','170px')}
+    ${th('_provider','厂商','100px')}
+    ${th('hot_score','热度','110px')}
+    ${th('tier','定位','60px')}
+    ${th('_price','定价(In/Out)','100px','hide-mobile')}
+    ${th('_ctx','上下文','70px','hide-mobile')}
+    ${th('type','类型','80px','hide-mobile')}
+    ${th('_caps','能力标签','200px','hide-mobile')}
+    ${th('last_event','最新事件','','hide-mobile')}
+    ${th('open_weights','开源','50px','hide-mobile')}
+  </tr></thead><tbody>${items.map(m=>{
+    const ref=m.ref||{};
+    const pName=getProviderName(m.provider_id);
+    const tierCls=tierColors[m.tier]||'';
+    const price=ref.pricing_input!=null?`$${ref.pricing_input}/$${ref.pricing_output}`:'—';
+    const ctx=ref.context_window?(ref.context_window>=1000000?(ref.context_window/1000000)+'M':ref.context_window>=1024?Math.round(ref.context_window/1024)+'K':ref.context_window):'—';
+    const mods=(ref.modalities_input||[]).map(x=>({text:'📝',image:'🖼️',audio:'🎵',video:'🎬',pdf:'📄'}[x]||x)).join('');
+    return `<tr id="entity-${m.id}" data-id="${m.id}">
+      <td><div class="min-w-0"><div class="font-semibold text-white text-sm truncate">${m.name}</div><div class="text-xs text-gray-500 truncate">${m.family||''} ${m.version||ref.version||''}</div></div></td>
+      <td>${chip(m.provider_id,'providers')}</td>
+      <td>${hotScore(m.hot_score)}</td>
+      <td><span class="badge badge-tier ${tierCls}">${m.tier||'—'}</span></td>
+      <td class="hide-mobile"><span class="font-mono text-xs">${price}</span></td>
+      <td class="hide-mobile"><span class="font-mono text-xs">${ctx}</span></td>
+      <td class="hide-mobile"><span class="text-xs text-gray-400">${m.type||'—'}</span></td>
+      <td class="hide-mobile"><div class="flex flex-wrap gap-1">${(m.capabilities||[]).slice(0,4).map(c=>`<span class="text-xs bg-gray-800 text-gray-400 px-1.5 py-0.5 rounded">${c}</span>`).join('')||'—'}${mods?`<span class="text-xs ml-1">${mods}</span>`:''}</div></td>
+      <td class="hide-mobile">${eventCell(m.last_event,m.last_event_url,m.last_event_date)}</td>
+      <td class="hide-mobile">${m.open_weights?'<span class="badge badge-open">开源</span>':'<span class="badge badge-closed">闭源</span>'}</td>
+    </tr>`;
+  }).join('')}</tbody></table>`;
+}
+
+function getProviderName(id) {
+  const r=findEntity(id);
+  return r&&r.dim==='providers'?r.entity.name:id;
+}
+
+// ===== Tab Navigation =====
+function renderTab(tab) {
+  const renderers={hotspots:renderHotspots,providers:renderProviders,people:renderPeople,tools:renderTools,llms:renderLLMs};
+  const panel=document.getElementById(`panel-${tab}`);
+  panel.innerHTML=renderers[tab]();
+  // Update tab counts with filter
+  document.getElementById('tc-providers').textContent=filterItems(DATA.providers).length;
+  document.getElementById('tc-people').textContent=filterItems(DATA.people).length;
+  document.getElementById('tc-tools').textContent=filterItems(DATA.tools).length;
+  document.getElementById('tc-llms').textContent=filterItems(DATA.llms).length;
+}
+
+function switchTab(tab,focusId) {
+  if(!TABS.includes(tab)) return;
+  activeTab=tab;
+  document.querySelectorAll('.tab-btn').forEach(b=>{
+    b.classList.toggle('tab-active',b.dataset.tab===tab);
+    b.classList.toggle('text-gray-400',b.dataset.tab!==tab);
+  });
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.add('hidden'));
+  const panel=document.getElementById(`panel-${tab}`);
+  panel.classList.remove('hidden');
+  renderTab(tab);
+  if(focusId) {
+    requestAnimationFrame(()=>{
+      const el=document.getElementById(`entity-${focusId}`);
+      if(el) {
+        el.scrollIntoView({behavior:'smooth',block:'center'});
+        el.classList.add('row-highlight');
+        el.addEventListener('animationend',()=>el.classList.remove('row-highlight'),{once:true});
+      }
+    });
+  }
+  updateHash(tab,focusId);
+}
+
+function nav(tab,id) { switchTab(tab,id); }
+
+// ===== Hash =====
+function updateHash(tab,focus) {
+  let h=`tab=${tab}`;
+  if(focus) h+=`&focus=${focus}`;
+  history.replaceState(null,'','#'+h);
+}
+function parseHash() {
+  const h=window.location.hash.slice(1);
+  if(!h) return {tab:'llms',focus:null};
+  const p=new URLSearchParams(h);
+  return {tab:p.get('tab')||'llms',focus:p.get('focus')||null};
+}
+
+// ===== Floating Hotspot Panel =====
+function checkRecentHotspots() {
+  if (!DATA || !DATA.hotspots) return;
+  const now = Date.now();
+  const cutoff = now - 3 * 60 * 60 * 1000; // 3 hours
+  const recent = DATA.hotspots.filter(h => {
+    if (!h.date) return false;
+    const d = new Date(h.date + 'T00:00:00+08:00');
+    return d.getTime() >= cutoff;
+  });
+  if (recent.length > 0) {
+    document.getElementById('hotspot-fab').style.display = 'block';
+    const badge = document.getElementById('hotspot-badge');
+    badge.textContent = recent.length;
+    badge.style.display = 'flex';
+    renderHotspotPanel(recent);
+  }
+}
+
+function renderHotspotPanel(items) {
+  const body = document.getElementById('hotspot-panel-body');
+  body.innerHTML = items.map(h => `
+    <div class="hotspot-item" onclick="jumpToHotspot('${h.id}')">
+      <div class="hotspot-item-title">${h.title || ''}</div>
+      <div class="hotspot-item-time">${h.date || ''} · ${h.source || ''}</div>
+    </div>
+  `).join('');
+}
+
+function toggleHotspotPanel() {
+  const panel = document.getElementById('hotspot-panel');
+  panel.classList.toggle('show');
+}
+
+function jumpToHotspot(id) {
+  toggleHotspotPanel(); // close panel
+  switchTab('hotspots');
+  requestAnimationFrame(() => {
+    const el = document.getElementById(`entity-${id}`);
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      el.classList.add('row-highlight');
+      el.addEventListener('animationend', () => el.classList.remove('row-highlight'), { once: true });
+    }
+  });
+}
+
+// ===== Stats =====
+function updateStats() {
+  document.getElementById('tc-hotspots').textContent=(DATA.hotspots||[]).length;
+  document.getElementById('tc-providers').textContent=DATA.providers.length;
+  document.getElementById('tc-people').textContent=DATA.people.length;
+  document.getElementById('tc-tools').textContent=DATA.tools.length;
+  document.getElementById('tc-llms').textContent=DATA.llms.length;
+
+  // Update time + ago label
+  const ua = document.getElementById('updated-at');
+  const ago = document.getElementById('ago-label');
+  if (DATA.generated_at) {
+    const d = new Date(DATA.generated_at);
+    const mins = Math.floor((Date.now() - d.getTime()) / 60000);
+    ua.textContent = d.toLocaleString('zh-CN');
+    const h = Math.floor(mins / 60);
+    const label = mins < 60 ? `${mins}分钟前` : h < 24 ? `${h}小时前` : `${Math.floor(h/24)}天前`;
+    ago.textContent = label;
+    // Color: <24h normal, 1-5d warning, >5d danger
+    if (h < 24) { ago.style.background='rgba(34,197,94,0.12)'; ago.style.color='#86efac'; }
+    else if (h <= 120) { ago.style.background='rgba(250,204,21,0.12)'; ago.style.color='#facc15'; }
+    else { ago.style.background='rgba(239,68,68,0.12)'; ago.style.color='#ef4444'; }
+    // Click to copy on localhost
+    const host = window.location.host;
+    if (host.includes('127.0.0.1') || host.includes('localhost')) {
+      ago.style.cursor = 'pointer';
+      ago.title = '点击复制采集命令';
+      ago.onclick = () => {
+        navigator.clipboard.writeText('cd ~/CodeSpace/llm-radar.jaden.tech && python3 llm-radar-collector.py run').then(() => {
+          ago.textContent = '已复制 ✓';
+          setTimeout(() => { ago.textContent = label; }, 1500);
+        });
+      };
+    }
+  }
+
+  // Data sources as tags
+  const srcs = [
+    {name:'量子位', url:'https://www.qbitai.com'},
+    {name:'机器之心', url:'https://www.jiqizhixin.com'},
+    {name:'TechCrunch', url:'https://techcrunch.com/category/artificial-intelligence/'},
+    {name:'GitHub', url:'https://github.com/trending'},
+  ];
+  document.getElementById('data-sources').innerHTML = srcs.map(s =>
+    `<a href="${s.url}" target="_blank" class="inline-block px-1.5 py-0.5 rounded bg-gray-800 text-gray-400 hover:text-cobalt-400 hover:bg-gray-700 text-xs">${s.name}</a>`
+  ).join(' ');
+}
+
+// ===== Init =====
+async function init() {
+  try {
+    const r=await fetch('data/snapshot.json?t='+Date.now());
+    if(!r.ok) throw new Error('Not found');
+    DATA=await r.json();
+  } catch(e) {
+    document.getElementById('loading').classList.add('hidden');
+    document.getElementById('error-state').classList.remove('hidden');
+    return;
+  }
+  document.getElementById('loading').classList.add('hidden');
+  updateStats();
+  checkRecentHotspots();
+  // Restore auto-refresh preference
+  if (localStorage.getItem('llm-radar-auto-refresh') === '1') { toggleAutoRefresh(); }
+  // Restore state or parse hash
+  const saved = localStorage.getItem('llm-radar-state');
+  if (saved) { restoreState(); switchTab(activeTab); }
+  else { const {tab,focus}=parseHash(); switchTab(tab,focus); }
+  document.querySelectorAll('.tab-btn').forEach(b=>b.addEventListener('click',()=>switchTab(b.dataset.tab)));
+  window.addEventListener('hashchange',()=>{
+    const {tab,focus}=parseHash();
+    if(tab!==activeTab||focus) switchTab(tab,focus);
+  });
+}
+
+document.addEventListener('DOMContentLoaded',init);
+</script>
+</body>
+</html>

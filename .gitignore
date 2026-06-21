@@ -1,0 +1,7 @@
+data/fetch-cache.json
+data/history/
+.DS_Store
+__pycache__/
+*.pyc
+*.md
+!README.md
