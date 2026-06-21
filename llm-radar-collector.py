@@ -315,23 +315,101 @@ hotspots 数组中每个元素格式：
 
         # 解析 JSON 输出
         content = result.get('content', '')
-        try:
-            # 尝试提取 JSON 块
-            import re
-            json_match = re.search(r'```json\s*(.*?)\s*```', content, re.DOTALL)
-            if json_match:
-                entities = json.loads(json_match.group(1))
-            else:
-                # 尝试直接解析
-                entities = json.loads(content)
-
+        entities = self._parse_json_output(content)
+        if entities:
             total = sum(len(entities.get(k, [])) for k in ['providers', 'people', 'tools', 'llms'])
             self._print_ok(f'实体提取完成，耗时 {duration}s，共 {total} 个实体')
             return entities
-
-        except json.JSONDecodeError as e:
-            self._print_err(f'JSON 解析失败: {e}')
+        else:
+            self._print_err(f'实体提取失败')
             self._print_info(f'LLM 输出前 500 字符: {content[:500]}')
+            return None
+
+    def _parse_json_output(self, content):
+        """尝试多种方式解析 LLM 输出的 JSON，支持截断修复"""
+        import re
+        if not content:
+            return None
+        # 1. 提取 ```json ... ``` 块
+        json_match = re.search(r'```json\s*([\s\S]*?)\s*```', content)
+        if json_match:
+            text = json_match.group(1).strip()
+            result = self._try_parse_json(text)
+            if result:
+                return result
+        # 2. 尝试直接解析全文
+        result = self._try_parse_json(content.strip())
+        if result:
+            return result
+        # 3. 尝试修复截断的 JSON
+        result = self._try_fix_truncated_json(content)
+        if result:
+            return result
+        return None
+
+    def _try_parse_json(self, text):
+        """尝试解析 JSON，成功返回对象，失败返回 None"""
+        try:
+            return json.loads(text)
+        except json.JSONDecodeError:
+            return None
+
+    def _try_fix_truncated_json(self, text):
+        """修复截断的 JSON：补齐缺失的结束括号"""
+        # 提取最外层的 { }
+        start = text.find('{')
+        if start == -1:
+            return None
+        text = text[start:]
+        # 逐字符扫描，平衡大括号和中括号
+        stack = []
+        i = 0
+        in_string = False
+        escape = False
+        last_good_end = 0
+        while i < len(text):
+            ch = text[i]
+            if escape:
+                escape = False
+                i += 1
+                continue
+            if ch == '\\' and in_string:
+                escape = True
+                i += 1
+                continue
+            if ch == '"' and not escape:
+                in_string = not in_string
+                i += 1
+                continue
+            if in_string:
+                i += 1
+                continue
+            if ch in '{[':
+                stack.append(ch)
+            elif ch == '}':
+                if stack and stack[-1] == '{':
+                    stack.pop()
+                    if not stack:
+                        last_good_end = i + 1
+                else:
+                    break
+            elif ch == ']':
+                if stack and stack[-1] == '[':
+                    stack.pop()
+                    if not stack:
+                        last_good_end = i + 1
+                else:
+                    break
+            i += 1
+        if not last_good_end:
+            return None
+        candidate = text[:last_good_end]
+        # 补齐 stack 中缺失的结束符
+        for ch in reversed(stack):
+            candidate += '}' if ch == '{' else ']'
+        try:
+            return json.loads(candidate)
+        except json.JSONDecodeError:
             return None
 
     # ===== Merge =====

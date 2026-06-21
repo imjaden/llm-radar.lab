@@ -68,6 +68,6 @@ pip3 install openai requests beautifulsoup4
 
 ## 技术栈
 
-前端：HTML + Vanilla JS + Tailwind CSS CDN
-数据：Python + DeepSeek API + requests + BeautifulSoup4
-部署：GitHub Pages → https://llm-radar.lab.jaden.tech
+- 前端：HTML + Vanilla JS + Tailwind CSS CDN
+- 数据采集：Python + DeepSeek API + requests + BeautifulSoup4
+- 部署：GitHub Pages → https://llm-radar.lab.jaden.tech
