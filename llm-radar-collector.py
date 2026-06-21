@@ -113,24 +113,12 @@ class LLMRadarCollector:
         self.base_url = "https://api.deepseek.com/v1"
 
     def _load_api_key(self):
-        """从环境变量或 secret-manager 加载 DeepSeek API key"""
+        """从环境变量加载 DeepSeek API key"""
         key = os.environ.get('DEEPSEEK_API_KEY', '')
         if key:
             self._print_ok('DeepSeek API key 已从环境变量加载')
-            return key
-        try:
-            sm_path = Path.home() / 'CodeSpace' / 'script-miner' / 'efficiency' / 'secret_manager.py'
-            if sm_path.exists():
-                sys.path.insert(0, str(sm_path.parent))
-                from secret_manager import SecretManager
-                sm = SecretManager()
-                key = sm._secrets.get('DEEPSEEK_API_KEY', {}).get('secret', '')
-        except Exception:
-            pass
-        if key:
-            self._print_ok('DeepSeek API key 已从 secret-manager 加载')
         else:
-            self._print_err('DEEPSEEK_API_KEY 未配置，请在环境变量中设置')
+            self._print_err('DEEPSEEK_API_KEY 未配置，请在 .env 文件或环境变量中设置')
         return key
 
     def _print_ok(self, msg):
