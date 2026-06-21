@@ -1,7 +1,10 @@
 data/fetch-cache.json
 data/history/
+data/archive/
 .DS_Store
 __pycache__/
 *.pyc
+data/collector.log
 *.md
 !README.md
+!llm-news-prompt.md

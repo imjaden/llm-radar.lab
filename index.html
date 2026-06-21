@@ -4,16 +4,15 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>LLM Radar — 行业情报仪表盘</title>
-  <link rel="icon" href="https://jaden.tech/static/img/favicon.png">
+  <link rel="icon" href="static/favicon.png">
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
       theme: {
         extend: {
           colors: {
-            cobalt: { 50:'#eef2ff',100:'#e0e7ff',400:'#818cf8',500:'#6366f1',600:'#4f46e5',700:'#4338ca',800:'#3730a3',900:'#312e81',950:'#1e1b4b' },
-            accent: { 400:'#facc15',500:'#eab308',600:'#ca8a04' },
-            surface: { 800:'#1e1e2e',850:'#181825',900:'#11111b',950:'#0a0a14' }
+            cobalt: { 400:'#818cf8', 500:'#6366f1' },
+            accent: { 400:'#facc15', 500:'#eab308' },
           }
         }
       }
@@ -137,7 +136,7 @@
     <div class="max-w-[1400px] mx-auto px-4 sm:px-6 py-2">
       <div class="flex items-center gap-2 text-xs">
         <div class="flex items-center gap-2">
-          <img src="https://jaden.tech/static/img/favicon.png" class="w-5 h-5 rounded" alt="R">
+          <img src="static/favicon.png" class="w-5 h-5 rounded" alt="R">
           <span class="font-bold text-white text-sm">LLM Radar</span>
         </div>
         <span class="text-gray-600">|</span>
@@ -220,6 +219,17 @@
  * Karpathy: 简单 → 表格 > 卡片，信息密度优先
  * ======================================================================== */
 
+// Timestamp refresh — cache bust
+(function(){
+  var p = new URLSearchParams(window.location.search);
+  var t = p.get('t');
+  var oneHour = 60 * 60 * 1000;
+  if (!t || (Date.now() - parseInt(t)) > oneHour) {
+    p.set('t', Date.now());
+    window.location.replace(window.location.pathname + (window.location.search ? '&' : '?') + p.toString() + (window.location.hash||''));
+  }
+})();
+
 let DATA = null;
 const TABS = ['tools','llms','providers','people','hotspots'];
 let activeTab = 'llms';
@@ -227,10 +237,10 @@ let sortState = {}; // { tab: { col, dir } }
 let filterMode = 'all'; // 'all' | 'cn' | 'global'
 
 // ===== CN Filter =====
-const CN_KEYWORDS = ['中国','百度','阿里','腾讯','华为','字节','智谱','百川','零一','月之暗面','MiniMax','阶跃','商汤','昆仑','讯飞','深度求索','面壁','米哈游','360','京东','小米','快手','DeepSeek','deepseek','Kimi','kimi','Qwen','qwen','GLM','glm','ERNIE','ernie','豆包','doubao','HunYuan','hunyuan','Pangu','pangu','Spark','spark','Baichuan','baichuan','Yi','Step','ABAB','MiMo','mimo','MiniCPM','minicpm','Hailuo','hailuo','baidu','alibaba','tencent','huawei','bytedance','zhipu','01ai','moonshot','minimax','stepfun','sensetime','kunlun','iflytek','facewall','mihoyo','jd','xiaomi'];
 function isCN(entity) {
-  const check = (entity.country||'') + (entity.name||'') + (entity.name_en||'') + (entity.provider_id||'') + (entity.employer_id||'') + (entity.maintainer_id||'') + (entity.id||'');
-  return CN_KEYWORDS.some(k => check.includes(k));
+  if (entity.country === '中国') return true;
+  const name = (entity.name||'') + (entity.name_en||'') + (entity.id||'');
+  return /\p{Script=Han}/u.test(name);
 }
 function filterItems(arr) {
   if (filterMode === 'all') return arr;
@@ -646,17 +656,19 @@ function updateStats() {
     if (h < 24) { ago.style.background='rgba(34,197,94,0.12)'; ago.style.color='#86efac'; }
     else if (h <= 120) { ago.style.background='rgba(250,204,21,0.12)'; ago.style.color='#facc15'; }
     else { ago.style.background='rgba(239,68,68,0.12)'; ago.style.color='#ef4444'; }
-    // Click to copy on localhost
+    // Click: localhost → copy command, otherwise → changelog
     const host = window.location.host;
     if (host.includes('127.0.0.1') || host.includes('localhost')) {
-      ago.style.cursor = 'pointer';
-      ago.title = '点击复制采集命令';
+      ago.style.cursor = 'pointer'; ago.title = '点击复制采集命令';
       ago.onclick = () => {
         navigator.clipboard.writeText('cd ~/CodeSpace/llm-radar.jaden.tech && python3 llm-radar-collector.py run').then(() => {
           ago.textContent = '已复制 ✓';
           setTimeout(() => { ago.textContent = label; }, 1500);
         });
       };
+    } else {
+      ago.style.cursor = 'pointer'; ago.title = '查看更新日志';
+      ago.onclick = () => { window.location.href = 'changelog.html'; };
     }
   }
 

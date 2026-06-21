@@ -66,6 +66,18 @@ SOURCES = {
         'category': '中文媒体',
         'search_queries': ['大模型', 'AI', 'LLM', '深度学习'],
     },
+    'infoq': {
+        'name': 'InfoQ',
+        'url': 'https://www.infoq.cn/topic/AI',
+        'category': '中文技术媒体',
+        'search_queries': ['大模型', 'AI', 'LLM', 'AI 工程化'],
+    },
+    '36kr': {
+        'name': '36氪',
+        'url': 'https://36kr.com/search/articles/大模型',
+        'category': '中文科技媒体',
+        'search_queries': ['大模型', 'AI融资', 'LLM'],
+    },
     'techcrunch': {
         'name': 'TechCrunch AI',
         'url': 'https://techcrunch.com/category/artificial-intelligence/',
@@ -337,6 +349,39 @@ hotspots 数组中每个元素格式：
 
             snapshot[dimension] = list(existing.values())
 
+        # ---- 数据留存: 最多 100 条 + 最近 15 天滑动窗口 ----
+        retention_dims = ['providers', 'people', 'tools', 'llms', 'hotspots']
+        archive_count = 0
+        for dim in retention_dims:
+            items = snapshot.get(dim, [])
+            if len(items) <= 100:
+                continue
+            # 转成 (item, 日期) 列表，日期取 last_event_date / recent_activity / last_update / date / updated_at
+            _cutoff = (datetime.now() - timedelta(days=15)).strftime('%Y-%m-%d')
+            kept = []
+            removed = []
+            for item in items:
+                d = item.get('last_event_date') or item.get('recent_activity_date') or item.get('last_update_date') or item.get('date') or item.get('updated_at', '')
+                d_str = d[:10] if d and len(d) >= 10 else ''
+                if d_str >= _cutoff:
+                    kept.append(item)
+                else:
+                    removed.append(item)
+            # 如果 15 天内数据仍超 100，按时间倒序取最新 100 条
+            if len(kept) > 100:
+                kept.sort(key=lambda x: (
+                    x.get('last_event_date') or x.get('recent_activity_date') or
+                    x.get('last_update_date') or x.get('date') or x.get('updated_at', '')
+                ) or '', reverse=True)
+                kept = kept[:100]
+            # 归档移除的数据
+            if removed:
+                archive_count += len(removed)
+                self._archive_items(dim, removed)
+            snapshot[dim] = kept
+
+        self._print_info(f'数据留存: {archive_count} 条过期数据已归档')
+
         # 更新 changelog（保留最近 100 条）
         existing_changelog = snapshot.get('changelog', [])
         existing_changelog.extend(changelog)
@@ -366,6 +411,9 @@ hotspots 数组中每个元素格式：
 
         # 归档历史快照
         self._archive_snapshot(snapshot)
+
+        # 生成 changelog.html
+        self._write_changelog_html(snapshot.get('changelog', []))
 
         return snapshot
 
@@ -424,6 +472,62 @@ hotspots 数组中每个元素格式：
             json.dump(snapshot, f, ensure_ascii=False, indent=2)
         self._print_info(f'历史快照已归档: {archive_path}')
 
+    def _archive_items(self, dimension, items):
+        """归档过期的实体数据到 archive/ 目录"""
+        archive_dir = self.data_dir / 'archive'
+        archive_dir.mkdir(parents=True, exist_ok=True)
+        archive_path = archive_dir / f'{dimension}.json'
+        # 追加到已有归档文件
+        existing = []
+        if archive_path.exists():
+            with open(archive_path, 'r', encoding='utf-8') as f:
+                existing = json.load(f)
+        existing.extend(items)
+        # 去重（按 id）
+        seen = {}
+        for item in existing:
+            seen[item.get('id', '')] = item
+        with open(archive_path, 'w', encoding='utf-8') as f:
+            json.dump(list(seen.values()), f, ensure_ascii=False, indent=2)
+        self._print_info(f'{dimension} 归档: {len(items)} 条 → {archive_path}')
+
+    def _write_changelog_html(self, changelog):
+        """从 changelog 数组生成 changelog.html"""
+        now = datetime.now().strftime('%Y-%m-%d %H:%M')
+        rows = ''.join(
+            f'<tr><td class="p-2 border-b border-gray-800 text-xs text-gray-500">{c.get("date","")}</td>'
+            f'<td class="p-2 border-b border-gray-800"><span class="badge {"bg-green-600" if c["type"]=="new" else "bg-blue-600" if c["type"]=="update" else "bg-red-600"} text-white text-xs">{c["type"]}</span></td>'
+            f'<td class="p-2 border-b border-gray-800 text-xs text-gray-400">{c.get("dimension","")}</td>'
+            f'<td class="p-2 border-b border-gray-800 text-xs text-white">{c.get("summary","")}</td></tr>\n'
+            for c in reversed(changelog[-50:])
+        )
+        html = f'''<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>LLM Radar — 更新日志</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>var p=new URLSearchParams(window.location.search),t=p.get('t'),oh=3600000;(!t||Date.now()-parseInt(t)>oh)&&(p.set('t',Date.now()),window.location.replace(window.location.pathname+(window.location.search?'&':'?')+p.toString()+(window.location.hash||'')))</script>
+<style>body{{font-family:Inter,sans-serif;background:#0a0a14;color:#e0e0e0}}
+.badge{{display:inline-block;padding:1px 6px;border-radius:4px;font-size:0.6rem;font-weight:600}}
+</style></head>
+<body class="min-h-screen p-6">
+<div class="max-w-4xl mx-auto">
+<div class="flex items-center justify-between mb-6">
+<h1 class="text-lg font-bold text-white">📋 更新日志</h1>
+<a href="./" class="text-xs text-cobalt-400 hover:text-cobalt-300">← 返回仪表盘</a>
+</div>
+<p class="text-xs text-gray-500 mb-4">数据更新时间: {now} · 共 {len(changelog)} 条记录</p>
+<div class="overflow-x-auto">
+<table class="w-full"><thead><tr class="text-xs text-gray-500 uppercase">
+<th class="p-2 text-left">日期</th><th class="p-2 text-left">类型</th><th class="p-2 text-left">维度</th><th class="p-2 text-left">摘要</th>
+</tr></thead><tbody>{rows}</tbody></table>
+</div>
+</div>
+</body></html>'''
+        changelog_path = self.project_root / 'changelog.html'
+        with open(changelog_path, 'w', encoding='utf-8') as f:
+            f.write(html)
+        self._print_ok(f'changelog.html 已生成: {changelog_path}')
+
     # ===== Run =====
     def run(self, source_keys=None):
         """完整流程：fetch → extract → merge"""
@@ -471,7 +575,9 @@ hotspots 数组中每个元素格式：
 
 CRON_TAG = '# llm-radar-collector'
 CRON_CMD = f'cd {PROJECT_ROOT} && python3 llm-radar-collector.py run >> {DATA_DIR}/collector.log 2>&1'
-CRON_SCHEDULE = '0 * * * *'  # 每 60 分钟
+CRON_SCHEDULE = '0 9,21 * * *'  # 每天 9:00、21:00
+
+CRON_HELP = f'crontab --add [schedule] - 添加定时任务（默认 {CRON_SCHEDULE}）'
 
 
 def crontab_add(schedule=None):
@@ -605,7 +711,7 @@ def main():
         print('  merge                    - 将 fetch 结果合并到 snapshot.json')
         print('  run [source]             - fetch + merge 一步完成')
         print('  sources                  - 列出所有新闻源')
-        print('  crontab --add [schedule] - 添加定时任务（默认每 60 分钟）')
+        print(f'  {CRON_HELP}')
         print('  crontab --remove         - 移除定时任务')
         print('  crontab --list           - 列出定时任务')
         print('  crontab --update [sched] - 更新定时任务')
@@ -614,7 +720,7 @@ def main():
         print('Examples:')
         print('  python3 llm-radar-collector.py run                    # 全量采集')
         print('  python3 llm-radar-collector.py run qbitai             # 只采集量子位')
-        print('  python3 llm-radar-collector.py crontab --add          # 添加每天9点任务')
+        print('  python3 llm-radar-collector.py crontab --add          # 每天9:00、21:00采集')
         print('  python3 llm-radar-collector.py crontab --add "*/30 8-22 * * *"  # 每30分钟')
 
     else:
