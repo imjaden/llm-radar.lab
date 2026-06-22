@@ -4,23 +4,6 @@ LLM 行业情报仪表盘。7 个数据源，5 维度（工具 / 大模型 / 厂
 
 线上地址：https://llm-radar.lab.jaden.tech
 
-## 结构
-
-```
-├── index.html                 # 单体前端（表格布局，Vanilla JS）
-├── changelog.html             # 更新日志（静态模板，JS 动态加载渲染）
-├── llm-radar-collector.py     # 数据采集脚本
-├── llm-radar-run.sh           # 跨平台执行器（自动识别 Mac/Linux）
-├── llm-news-prompt.md         # 数据规范文档
-├── features.md                # 功能清单
-└── data/
-    ├── snapshot.json           # 当前快照
-    ├── fetch-cache.json        # 抓取缓存
-    ├── archive/                # 过期数据归档
-    ├── history/                # 按周归档
-    └── collector.log           # 采集日志
-```
-
 ## 快速开始
 
 ```bash
@@ -63,11 +46,30 @@ echo 'DEEPSEEK_API_KEY="sk-xxx"' >> .env
 pip3 install openai requests beautifulsoup4 prettytable
 ```
 
-## 数据留存
+## 功能清单
 
-- 每维度最多 100 条，超过则保留最近 15 天数据
-- 过期数据归档至 `data/archive/`
-- changelog.html 为静态模板，JS 从 snapshot.json 动态渲染
+各文件详细功能清单见 [features.md](features.md)。涵盖：
+
+- **llm-radar-collector.py** — 数据采集、LLM 交互、数据管理、Git 集成、定时任务、JSON 截断修复
+- **index.html** — 5 维度表格展示、筛选/排序/联动、自动刷新、热点悬浮框、搜索按钮
+- **changelog.html** — 静态模板动态渲染、外链图标、缓存刷新
+
+## 结构
+
+```
+├── index.html                 # 单体前端（表格布局，Vanilla JS）
+├── changelog.html             # 更新日志（静态模板，JS 动态加载渲染）
+├── llm-radar-collector.py     # 数据采集脚本
+├── llm-radar-run.sh           # 跨平台执行器（自动识别 Mac/Linux）
+├── llm-news-prompt.md         # 数据规范文档
+├── features.md                # 功能清单
+└── data/
+    ├── snapshot.json           # 当前快照
+    ├── fetch-cache.json        # 抓取缓存
+    ├── archive/                # 过期数据归档
+    ├── history/                # 按周归档
+    └── collector.log           # 采集日志
+```
 
 ## 技术栈
 

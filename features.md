@@ -11,7 +11,8 @@
   - `_load_api_key` — 从环境变量或 .env 加载
 - 数据管理
   - 增量合并（按 id 匹配，同名实体合并去重）
-  - 数据留存（最多 100 条 + 15 天滑动窗口）
+  - 数据留存：每维度最多 100 条，超过则保留最近 15 天数据
+  - 过期数据归档至 `data/archive/`
   - `sources` — prettytable 表格输出新闻源
 - Git 集成
   - `commit [message]` — git add + commit（默认带时间戳）
@@ -41,7 +42,7 @@
 
 ## changelog.html
 
-- 静态模板，JS 动态加载 data/snapshot.json 渲染
+- 静态模板，JS 动态加载 data/snapshot.json 渲染（非采集时生成）
 - 最新 50 条变更记录（时间倒序）
 - 日期展示 `YYYY-MM-DD HH:mm:ss`（whitespace-nowrap）
 - 摘要可点击跳转至对应页签 + 外链 ↗ 图标（过滤 xxx/xxxx 占位符）
