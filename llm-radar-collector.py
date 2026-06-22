@@ -201,7 +201,7 @@ class LLMRadarCollector:
             import requests
             from bs4 import BeautifulSoup
 
-            resp = requests.get(source['url'], timeout=30, headers={
+            resp = requests.get(source['url'], timeout=15, headers={
                 'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36'
             })
             resp.raise_for_status()

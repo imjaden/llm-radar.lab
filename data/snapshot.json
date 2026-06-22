@@ -1,7 +1,7 @@
 {
   "version": "1.0",
-  "generated_at": "2026-06-21T22:14:20.405816",
-  "period": "2026-06-14 ~ 2026-06-21",
+  "generated_at": "2026-06-22T10:02:25.544379",
+  "period": "2026-06-15 ~ 2026-06-22",
   "execution_mode": "semi-auto",
   "providers": [
     {
@@ -178,57 +178,58 @@
       "id": "taichu-yuanqi",
       "name": "太初元碁",
       "country": "中国",
-      "hot_score": 55,
+      "hot_score": 30,
       "hot_level": "平稳",
-      "last_event": "分享国产 AI 算力实践，助力 Token 服务",
+      "last_event": "AIEC 2026 | 太初元碁分享国产AI算力实践，助力Token服务落地生根",
       "last_event_date": "2026-06-18",
-      "last_event_url": "https://www.qbitai.com/2026/06/18/taichu-yuanqi-ai-ec/",
+      "last_event_url": "https://www.qbitai.com",
       "flagship_models": [],
       "key_people": [],
       "focus_areas": [
-        "国产算力"
+        "国产算力",
+        "AI基础设施"
       ],
       "confidence": "low",
-      "updated_at": "2026-06-21T20:01:27.528962"
+      "updated_at": "2026-06-22T10:02:25.544379"
     },
     {
       "id": "meitu",
-      "name": "美图公司",
+      "name": "美图",
       "country": "中国",
-      "hot_score": 55,
-      "hot_level": "温热",
-      "last_event": "推出八款AI产品，降低AI使用门槛",
+      "hot_score": 30,
+      "hot_level": "平稳",
+      "last_event": "18年前不让你苦修PS的美图，这次不让你苦修AI了，用八款产品讲变化",
       "last_event_date": "2026-06-18",
-      "last_event_url": "https://www.qbitai.com/2026/06/xxx/",
+      "last_event_url": "https://www.qbitai.com",
       "flagship_models": [],
       "key_people": [],
       "focus_areas": [
-        "AI图像处理",
-        "消费级AI"
+        "AI图像",
+        "产品矩阵"
       ],
-      "confidence": "high",
-      "updated_at": "2026-06-21T22:14:20.405816"
+      "confidence": "low",
+      "updated_at": "2026-06-22T10:02:25.544379"
     },
     {
       "id": "openai",
       "name": "OpenAI",
       "country": "美国",
       "flagship_models": [
-        "gpt-5"
+        "GPT-4系列"
       ],
       "key_people": [
         "noam-shazeer"
       ],
       "focus_areas": [
-        "大语言模型",
-        "通用人工智能"
+        "基础模型",
+        "AGI"
       ],
       "hot_score": 90,
       "hot_level": "爆热",
-      "last_event": "Transformer作者Noam Shazeer加入，Q1烧250亿财报泄露，筹备IPO",
+      "last_event": "Q1狂烧250亿！财报泄露全网炸锅",
       "last_event_date": "2026-06-18",
-      "last_event_url": "https://techcrunch.com/2026/06/18/openai-is-bringing-on-some-big-guns-in-the-lead-up-to-its-ipo/",
-      "confidence": "high",
+      "last_event_url": "https://www.qbitai.com",
+      "confidence": "medium",
       "ref": {
         "founded": "2015",
         "valuation": "$300B",
@@ -239,7 +240,7 @@
           "DPO"
         ]
       },
-      "updated_at": "2026-06-21T22:14:20.405816"
+      "updated_at": "2026-06-22T10:02:25.544379"
     },
     {
       "id": "anthropic",
@@ -253,14 +254,14 @@
       ],
       "focus_areas": [
         "AI安全",
-        "大语言模型"
+        "基础模型"
       ],
-      "hot_score": 95,
-      "hot_level": "爆热",
-      "last_event": "诺奖得主John Jumper加入，美国禁止其Fable 5模型发布",
+      "hot_score": 85,
+      "hot_level": "高热",
+      "last_event": "诺奖得主、AlphaFold之父投奔Anthropic，谷歌48小时连跑俩大将",
       "last_event_date": "2026-06-18",
-      "last_event_url": "https://techcrunch.com/2026/06/18/nobel-laureate-john-jumper-is-leaving-deepmind-for-rival-anthropic/",
-      "confidence": "high",
+      "last_event_url": "https://www.qbitai.com",
+      "confidence": "medium",
       "ref": {
         "founded": "2021",
         "valuation": "$61.5B",
@@ -270,7 +271,7 @@
           "Constitutional AI"
         ]
       },
-      "updated_at": "2026-06-21T22:14:20.405816"
+      "updated_at": "2026-06-22T10:02:25.544379"
     },
     {
       "id": "google-deepmind",
@@ -467,11 +468,11 @@
       "id": "ppio",
       "name": "PPIO",
       "country": "中国",
-      "hot_score": 50,
-      "hot_level": "平稳",
-      "last_event": "香港财政司司长陈茂波到访",
+      "hot_score": 25,
+      "hot_level": "冷淡",
+      "last_event": "香港特区政府财政司司长陈茂波一行到访PPIO",
       "last_event_date": "2026-06-18",
-      "last_event_url": "https://www.qbitai.com/2026/06/18/ppio-chen-maobo-visit/",
+      "last_event_url": "https://www.qbitai.com",
       "flagship_models": [],
       "key_people": [
         "陈茂波"
@@ -481,7 +482,7 @@
         "云服务"
       ],
       "confidence": "low",
-      "updated_at": "2026-06-21T20:01:27.528962"
+      "updated_at": "2026-06-22T10:02:25.544379"
     },
     {
       "id": "deductive-ai",
@@ -650,19 +651,21 @@
       "id": "galaxy-general",
       "name": "银河通用",
       "country": "中国",
-      "hot_score": 60,
+      "hot_score": 75,
       "hot_level": "温热",
-      "last_event": "发布全球首个人形机器人通用小脑",
+      "last_event": "全球首个人形机器人通用小脑来了，全球最大规模2万小时人类动作数据",
       "last_event_date": "2026-06-18",
-      "last_event_url": "https://www.qbitai.com/...",
-      "flagship_models": [],
+      "last_event_url": "https://www.qbitai.com",
+      "flagship_models": [
+        "通用小脑"
+      ],
       "key_people": [],
       "focus_areas": [
         "人形机器人",
-        "通用小脑"
+        "具身智能"
       ],
-      "confidence": "high",
-      "updated_at": "2026-06-21T21:01:11.894709"
+      "confidence": "medium",
+      "updated_at": "2026-06-22T10:02:25.544379"
     },
     {
       "id": "milky-way-robot",
@@ -685,19 +688,19 @@
       "id": "magic-atom",
       "name": "魔法原子",
       "country": "中国",
-      "hot_score": 50,
-      "hot_level": "温热",
-      "last_event": "牵手万机易租，全栈产品入驻租赁平台",
+      "hot_score": 40,
+      "hot_level": "平稳",
+      "last_event": "魔法原子牵手万机易租，全栈产品入驻2.0平台共建租赁生态",
       "last_event_date": "2026-06-18",
-      "last_event_url": "https://www.qbitai.com/2026/06/16/magic-atom-rental/",
+      "last_event_url": "https://www.qbitai.com",
       "flagship_models": [],
       "key_people": [],
       "focus_areas": [
         "具身智能",
         "机器人租赁"
       ],
-      "confidence": "high",
-      "updated_at": "2026-06-21T22:01:16.665936"
+      "confidence": "low",
+      "updated_at": "2026-06-22T10:02:25.544379"
     },
     {
       "id": "ma-shang-fei",
@@ -722,19 +725,18 @@
       "name": "英伟达",
       "country": "美国",
       "hot_score": 70,
-      "hot_level": "高热",
-      "last_event": "开始投资机器人研究",
+      "hot_level": "温热",
+      "last_event": "英伟达开始搞机器人自己研究机器人那套了，为了烧token卷到机器人身上",
       "last_event_date": "2026-06-18",
-      "last_event_url": "https://www.qbitai.com/2026/06/xxx/",
+      "last_event_url": "https://www.qbitai.com",
       "flagship_models": [],
       "key_people": [],
       "focus_areas": [
-        "GPU",
         "机器人",
-        "AI芯片"
+        "AI算力"
       ],
-      "confidence": "high",
-      "updated_at": "2026-06-21T22:14:20.405816"
+      "confidence": "low",
+      "updated_at": "2026-06-22T10:02:25.544379"
     },
     {
       "id": "meta",
@@ -747,15 +749,15 @@
         "Mark Zuckerberg"
       ],
       "focus_areas": [
-        "社交网络",
-        "AI"
+        "AI",
+        "社交"
       ],
-      "hot_score": 65,
+      "hot_score": 75,
       "hot_level": "温热",
-      "last_event": "员工士气跌至20年谷底，内部直播开骂，CTO承认AI重组糟糕",
+      "last_event": "员工士气跌至20年谷底，内部直播当众开骂，CTO承认AI重组糟糕透顶",
       "last_event_date": "2026-06-18",
-      "last_event_url": "https://www.qbitai.com/2026/06/xxx/",
-      "confidence": "high",
+      "last_event_url": "https://www.qbitai.com",
+      "confidence": "medium",
       "ref": {
         "founded": "2004",
         "valuation": "",
@@ -765,7 +767,129 @@
           "MoE"
         ]
       },
+      "updated_at": "2026-06-22T10:02:25.544379"
+    },
+    {
+      "id": "yinhe-tongyong",
+      "name": "银河通用",
+      "country": "中国",
+      "hot_score": 75,
+      "hot_level": "高热",
+      "last_event": "发布全球首个人形机器人通用小脑，基于2万小时人类动作数据",
+      "last_event_date": "2026-06-18",
+      "last_event_url": "https://www.qbitai.com/2026/06/xxx/",
+      "flagship_models": [],
+      "key_people": [],
+      "focus_areas": [
+        "人形机器人",
+        "具身智能"
+      ],
+      "confidence": "high",
       "updated_at": "2026-06-21T22:14:20.405816"
+    },
+    {
+      "id": "baseten",
+      "name": "Baseten",
+      "country": "美国",
+      "hot_score": 75,
+      "hot_level": "高热",
+      "last_event": "据报道正在以15亿美元估值融资",
+      "last_event_date": "2026-06-18",
+      "last_event_url": "https://techcrunch.com/2026/06/18/ai-inference-startup-baseten-reportedly-raising-1-5b/",
+      "flagship_models": [],
+      "key_people": [],
+      "focus_areas": [
+        "AI推理部署"
+      ],
+      "confidence": "medium",
+      "updated_at": "2026-06-21T22:14:20.405816"
+    },
+    {
+      "id": "tencent",
+      "name": "腾讯",
+      "country": "中国",
+      "flagship_models": [
+        "hunyuan"
+      ],
+      "key_people": [
+        "ponyma"
+      ],
+      "focus_areas": [
+        "AI Coding",
+        "生态"
+      ],
+      "hot_score": 50,
+      "hot_level": "温热",
+      "last_event": "腾讯老兵+大厂00后新锐，码上飞想做的不只是AI Coding，已接入华为鸿蒙生态",
+      "last_event_date": "2026-06-18",
+      "last_event_url": "https://www.qbitai.com",
+      "confidence": "low",
+      "ref": {
+        "founded": "1998",
+        "valuation": "",
+        "funding_round": "",
+        "tech_stack": [
+          "Transformer",
+          "MoE"
+        ]
+      },
+      "updated_at": "2026-06-22T10:02:25.544379"
+    },
+    {
+      "id": "deepseek",
+      "name": "DeepSeek",
+      "country": "中国",
+      "hot_score": 65,
+      "hot_level": "温热",
+      "last_event": "2026年，1800个DeepSeek跟我一起守护艾泽拉斯",
+      "last_event_date": "2026-06-18",
+      "last_event_url": "https://www.qbitai.com",
+      "flagship_models": [
+        "DeepSeek系列"
+      ],
+      "key_people": [],
+      "focus_areas": [
+        "大语言模型",
+        "游戏"
+      ],
+      "confidence": "low",
+      "updated_at": "2026-06-22T10:02:25.544379"
+    },
+    {
+      "id": "huawei",
+      "name": "华为",
+      "country": "中国",
+      "hot_score": 45,
+      "hot_level": "平稳",
+      "last_event": "码上飞接入华为鸿蒙生态",
+      "last_event_date": "2026-06-18",
+      "last_event_url": "https://www.qbitai.com",
+      "flagship_models": [],
+      "key_people": [],
+      "focus_areas": [
+        "鸿蒙生态",
+        "AI"
+      ],
+      "confidence": "low",
+      "updated_at": "2026-06-22T10:02:25.544379"
+    },
+    {
+      "id": "amap",
+      "name": "高德地图",
+      "country": "中国",
+      "hot_score": 20,
+      "hot_level": "冷淡",
+      "last_event": "高德地图出现在ABot-Earth0.5相关报道中",
+      "last_event_date": "2026-06-18",
+      "last_event_url": "https://www.qbitai.com",
+      "flagship_models": [],
+      "key_people": [],
+      "focus_areas": [
+        "地图",
+        "AI"
+      ],
+      "confidence": "low",
+      "updated_at": "2026-06-22T10:02:25.544379"
     },
     {
       "id": "suanmiao",
@@ -933,24 +1057,6 @@
       "updated_at": "2026-06-21T22:01:16.665936"
     },
     {
-      "id": "yinhe-tongyong",
-      "name": "银河通用",
-      "country": "中国",
-      "hot_score": 75,
-      "hot_level": "高热",
-      "last_event": "发布全球首个人形机器人通用小脑，基于2万小时人类动作数据",
-      "last_event_date": "2026-06-18",
-      "last_event_url": "https://www.qbitai.com/2026/06/xxx/",
-      "flagship_models": [],
-      "key_people": [],
-      "focus_areas": [
-        "人形机器人",
-        "具身智能"
-      ],
-      "confidence": "high",
-      "updated_at": "2026-06-21T22:14:20.405816"
-    },
-    {
       "id": "九章云极",
       "name": "九章云极",
       "country": "中国",
@@ -1008,19 +1114,19 @@
       "id": "jiuzhang-cloud",
       "name": "九章云极",
       "country": "中国",
-      "hot_score": 60,
+      "hot_score": 70,
       "hot_level": "温热",
-      "last_event": "发布AI工厂战略，目标10万P算力日产10万亿Token",
+      "last_event": "九章云极发布“AI工厂”战略，定义智能规模化新基建",
       "last_event_date": "2026-06-17",
-      "last_event_url": "https://www.qbitai.com/2026/06/17/beijing-ai-factory/",
+      "last_event_url": "https://www.qbitai.com",
       "flagship_models": [],
       "key_people": [],
       "focus_areas": [
-        "AI算力",
-        "Token工厂"
+        "AI工厂",
+        "算力基础设施"
       ],
-      "confidence": "high",
-      "updated_at": "2026-06-21T22:01:16.665936"
+      "confidence": "medium",
+      "updated_at": "2026-06-22T10:02:25.544379"
     },
     {
       "id": "xinghai-tu",
@@ -1079,21 +1185,42 @@
       "updated_at": "2026-06-21T22:01:16.665936"
     },
     {
-      "id": "baseten",
-      "name": "Baseten",
-      "country": "美国",
-      "hot_score": 75,
-      "hot_level": "高热",
-      "last_event": "据报道正在以15亿美元估值融资",
-      "last_event_date": "2026-06-18",
-      "last_event_url": "https://techcrunch.com/2026/06/18/ai-inference-startup-baseten-reportedly-raising-1-5b/",
+      "id": "suan-miao-tech",
+      "name": "算苗科技",
+      "country": "中国",
+      "hot_score": 40,
+      "hot_level": "平稳",
+      "last_event": "算苗3D TokenPU正式流片，引领国产AI云端大算力芯片再升级",
+      "last_event_date": "2026-06-17",
+      "last_event_url": "https://www.qbitai.com",
       "flagship_models": [],
       "key_people": [],
       "focus_areas": [
-        "AI推理部署"
+        "AI算力芯片",
+        "TokenPU"
+      ],
+      "confidence": "low",
+      "updated_at": "2026-06-22T10:02:25.544379"
+    },
+    {
+      "id": "xinghaitug",
+      "name": "星海图",
+      "country": "中国",
+      "hot_score": 55,
+      "hot_level": "温热",
+      "last_event": "星海图创始人高继扬：具身智能三层技术路线，没有捷径可走",
+      "last_event_date": "2026-06-17",
+      "last_event_url": "https://www.qbitai.com",
+      "flagship_models": [],
+      "key_people": [
+        "高继扬"
+      ],
+      "focus_areas": [
+        "具身智能",
+        "机器人"
       ],
       "confidence": "medium",
-      "updated_at": "2026-06-21T22:14:20.405816"
+      "updated_at": "2026-06-22T10:02:25.544379"
     },
     {
       "id": "dotmo",
@@ -1154,21 +1281,21 @@
       "id": "alibaba-cloud",
       "name": "阿里云",
       "country": "中国",
-      "hot_score": 85,
-      "hot_level": "爆热",
-      "last_event": "发布首个具身大模型Qwen-Robot系列",
+      "hot_score": 80,
+      "hot_level": "高热",
+      "last_event": "阿里发布首个具身大模型Qwen-Robot系列",
       "last_event_date": "2026-06-16",
-      "last_event_url": "https://www.qbitai.com/...",
+      "last_event_url": "https://www.qbitai.com",
       "flagship_models": [
-        "qwen-robot"
+        "Qwen-Robot"
       ],
       "key_people": [],
       "focus_areas": [
-        "云计算",
-        "具身智能"
+        "具身智能",
+        "云服务"
       ],
-      "confidence": "high",
-      "updated_at": "2026-06-21T22:01:16.665936"
+      "confidence": "medium",
+      "updated_at": "2026-06-22T10:02:25.544379"
     },
     {
       "id": "fanwei-tech",
@@ -1318,6 +1445,26 @@
       "updated_at": "2026-06-21T20:01:25.573756"
     },
     {
+      "id": "baai",
+      "name": "智源",
+      "country": "中国",
+      "hot_score": 60,
+      "hot_level": "温热",
+      "last_event": "智源大会 | 天工AI重新定义世界模型，公布Matrix-Game 3.5最新技术突破",
+      "last_event_date": "2026-06-15",
+      "last_event_url": "https://www.qbitai.com",
+      "flagship_models": [
+        "Matrix-Game 3.5"
+      ],
+      "key_people": [],
+      "focus_areas": [
+        "世界模型",
+        "AI研究"
+      ],
+      "confidence": "medium",
+      "updated_at": "2026-06-22T10:02:25.544379"
+    },
+    {
       "id": "kunlun-wanwei",
       "name": "昆仑万维",
       "country": "中国",
@@ -1442,26 +1589,6 @@
         "自动化"
       ],
       "confidence": "medium",
-      "updated_at": "2026-06-16T22:02:06.974607"
-    },
-    {
-      "id": "baai",
-      "name": "智源研究院",
-      "country": "中国",
-      "hot_score": 75,
-      "hot_level": "高热",
-      "last_event": "2026智源大会开幕，推动AI、物理世界和生命科学三体互动",
-      "last_event_date": "2026-06-13",
-      "last_event_url": "https://www.qbitai.com",
-      "flagship_models": [
-        "悟道"
-      ],
-      "key_people": [],
-      "focus_areas": [
-        "人工智能研究",
-        "学术交流"
-      ],
-      "confidence": "high",
       "updated_at": "2026-06-16T22:02:06.974607"
     },
     {
@@ -1660,37 +1787,6 @@
         ]
       },
       "updated_at": "2026-06-18T01:01:29.882884"
-    },
-    {
-      "id": "tencent",
-      "name": "腾讯",
-      "country": "中国",
-      "flagship_models": [
-        "hunyuan"
-      ],
-      "key_people": [
-        "ponyma"
-      ],
-      "focus_areas": [
-        "AI支付",
-        "智能助手"
-      ],
-      "hot_score": 72,
-      "hot_level": "温热",
-      "last_event": "微信支付发布AI专属卡，WorkBuddy率先接入",
-      "last_event_date": "2026-06-12",
-      "last_event_url": "https://www.qbitai.com/2026/06/wechat-pay-ai-card/",
-      "confidence": "medium",
-      "ref": {
-        "founded": "1998",
-        "valuation": "",
-        "funding_round": "",
-        "tech_stack": [
-          "Transformer",
-          "MoE"
-        ]
-      },
-      "updated_at": "2026-06-18T00:02:07.105684"
     },
     {
       "id": "bytedance",
@@ -1899,100 +1995,6 @@
       ],
       "confidence": "low",
       "updated_at": "2026-06-15T11:02:50.388340"
-    },
-    {
-      "id": "bengio-team",
-      "name": "Bengio团队",
-      "country": "加拿大",
-      "hot_score": 50,
-      "hot_level": "温热",
-      "last_event": "押注1500美元训出的HRM模型",
-      "last_event_date": "2026-06-12",
-      "last_event_url": "https://www.qbitai.com",
-      "flagship_models": [],
-      "key_people": [
-        "yoshua-bengio"
-      ],
-      "focus_areas": [
-        "AI安全",
-        "基础模型"
-      ],
-      "confidence": "low",
-      "updated_at": "2026-06-14T16:01:28.993146"
-    },
-    {
-      "id": "beijing-ai-academy",
-      "name": "智源研究院",
-      "country": "中国",
-      "hot_score": 40,
-      "hot_level": "温热",
-      "last_event": "2026智源大会开幕",
-      "last_event_date": "2026-06-12",
-      "last_event_url": "",
-      "flagship_models": [],
-      "key_people": [],
-      "focus_areas": [
-        "人工智能",
-        "生命科学"
-      ],
-      "confidence": "medium",
-      "updated_at": "2026-06-15T11:02:50.388340"
-    },
-    {
-      "id": "kunlun-tech",
-      "name": "昆仑万维",
-      "country": "中国",
-      "hot_score": 75,
-      "hot_level": "高热",
-      "last_event": "天工3.1重磅发布，上线Skywork Design与Dynamic Workflows，超级智能体收入三倍增长",
-      "last_event_date": "2026-06-12",
-      "last_event_url": "https://www.qbitai.com/2026/06/tiangong-3-1-release/",
-      "flagship_models": [
-        "天工3.1"
-      ],
-      "key_people": [],
-      "focus_areas": [
-        "大模型",
-        "超级智能体"
-      ],
-      "confidence": "medium",
-      "updated_at": "2026-06-18T00:02:07.105684"
-    },
-    {
-      "id": "kuawei",
-      "name": "跨维",
-      "country": "中国",
-      "hot_score": 55,
-      "hot_level": "温热",
-      "last_event": "BEV杀入具身智能，把机器人数据带上Scaling快车道",
-      "last_event_date": "2026-06-12",
-      "last_event_url": "https://www.qbitai.com",
-      "flagship_models": [],
-      "key_people": [],
-      "focus_areas": [
-        "具身智能",
-        "BEV感知"
-      ],
-      "confidence": "low",
-      "updated_at": "2026-06-15T22:01:46.142742"
-    },
-    {
-      "id": "sarvam",
-      "name": "Sarvam",
-      "country": "印度",
-      "hot_score": 70,
-      "hot_level": "温热",
-      "last_event": "成为印度最新AI独角兽，获HCLTech领投2.34亿美元",
-      "last_event_date": "2026-06-12",
-      "last_event_url": "https://techcrunch.com/2026/06/sarvam-unicorn-funding/",
-      "flagship_models": [],
-      "key_people": [],
-      "focus_areas": [
-        "大语言模型",
-        "印度AI"
-      ],
-      "confidence": "high",
-      "updated_at": "2026-06-18T00:02:07.105684"
     }
   ],
   "people": [
@@ -3135,22 +3137,23 @@
       "name": "高继扬",
       "name_en": "Gao Jiyang",
       "title": "星海图创始人",
-      "employer_id": "xinghaitu",
+      "employer_id": "xinghaitug",
       "influence_level": "核心人物",
       "hot_score": 55,
       "hot_level": "温热",
-      "recent_activity": "阐述具身智能三层技术路线",
+      "recent_activity": "发表具身智能三层技术路线观点",
       "recent_activity_date": "2026-06-17",
-      "recent_activity_url": "https://www.qbitai.com/2026/06/xinghaitu-gaojiyang/",
+      "recent_activity_url": "https://www.qbitai.com",
       "known_for": [
-        "具身智能"
+        "具身智能",
+        "机器人"
       ],
       "related_providers": [
-        "xinghaitu"
+        "xinghaitug"
       ],
       "related_llms": [],
-      "confidence": "high",
-      "updated_at": "2026-06-21T22:01:16.665936"
+      "confidence": "medium",
+      "updated_at": "2026-06-22T10:02:25.544379"
     },
     {
       "id": "gaojiyang",
@@ -3273,25 +3276,24 @@
       "id": "he-kaiming",
       "name": "何恺明",
       "name_en": "He Kaiming",
-      "title": "AI研究员（前FAIR，现MIT？）",
+      "title": "研究者",
       "employer_id": "",
       "influence_level": "行业领袖",
-      "hot_score": 80,
+      "hot_score": 75,
       "hot_level": "高热",
-      "recent_activity": "组新作文生图模型，258M参数即高效",
+      "recent_activity": "组新作文生图，258M参数就够了，整篇论文六位作者，除何恺明外其余五位本科生",
       "recent_activity_date": "2026-06-18",
-      "recent_activity_url": "https://www.qbitai.com/2026/06/he-kaiming-258m/",
+      "recent_activity_url": "https://www.qbitai.com",
       "known_for": [
-        "ResNet",
-        "Mask R-CNN",
-        "MoCo"
+        "计算机视觉",
+        "AI研究"
       ],
       "related_providers": [],
       "related_llms": [
         "he-kaiming-image-gen"
       ],
-      "confidence": "high",
-      "updated_at": "2026-06-21T21:37:19.221429"
+      "confidence": "medium",
+      "updated_at": "2026-06-22T10:02:25.544379"
     },
     {
       "id": "andy-jassy",
@@ -3318,14 +3320,14 @@
       "id": "chen-baoquan",
       "name": "陈宝权",
       "name_en": "Chen Baoquan",
-      "title": "教授",
+      "title": "国际图形学权威",
       "employer_id": "",
       "influence_level": "核心人物",
-      "hot_score": 40,
+      "hot_score": 30,
       "hot_level": "平稳",
-      "recent_activity": "对ABot-Earth0.5给予好评",
-      "recent_activity_date": "2026-06-19",
-      "recent_activity_url": "",
+      "recent_activity": "好评ABot-Earth0.5论文",
+      "recent_activity_date": "2026-06-18",
+      "recent_activity_url": "https://www.qbitai.com",
       "known_for": [
         "计算机图形学"
       ],
@@ -3334,7 +3336,7 @@
         "abot-earth0.5"
       ],
       "confidence": "low",
-      "updated_at": "2026-06-20T02:01:22.472708"
+      "updated_at": "2026-06-22T10:02:25.544379"
     },
     {
       "id": "john-jumper",
@@ -3367,20 +3369,20 @@
       "title": "香港特区政府财政司司长",
       "employer_id": "",
       "influence_level": "活跃人物",
-      "hot_score": 45,
-      "hot_level": "平稳",
-      "recent_activity": "到访 PPIO",
+      "hot_score": 20,
+      "hot_level": "冷淡",
+      "recent_activity": "一行到访PPIO",
       "recent_activity_date": "2026-06-18",
-      "recent_activity_url": "https://www.qbitai.com/2026/06/18/ppio-chen-maobo-visit/",
+      "recent_activity_url": "https://www.qbitai.com",
       "known_for": [
-        "香港财政政策"
+        "政府官员"
       ],
       "related_providers": [
         "ppio"
       ],
       "related_llms": [],
-      "confidence": "low",
-      "updated_at": "2026-06-21T20:01:27.528962"
+      "confidence": "medium",
+      "updated_at": "2026-06-22T10:02:25.544379"
     },
     {
       "id": "meredith-whittaker",
@@ -3509,6 +3511,27 @@
       "related_llms": [],
       "confidence": "medium",
       "updated_at": "2026-06-21T22:01:16.665936"
+    },
+    {
+      "id": "terence-tao",
+      "name": "陶哲轩",
+      "name_en": "Terence Tao",
+      "title": "数学家",
+      "employer_id": "",
+      "influence_level": "行业领袖",
+      "hot_score": 50,
+      "hot_level": "温热",
+      "recent_activity": "12年前的预言被AI兑现",
+      "recent_activity_date": "2026-06-18",
+      "recent_activity_url": "https://www.qbitai.com",
+      "known_for": [
+        "数学",
+        "AI预言"
+      ],
+      "related_providers": [],
+      "related_llms": [],
+      "confidence": "low",
+      "updated_at": "2026-06-22T10:02:25.544379"
     }
   ],
   "tools": [
@@ -3531,48 +3554,6 @@
       ],
       "related_llms": [],
       "confidence": "high",
-      "updated_at": "2026-06-20T02:01:22.472708"
-    },
-    {
-      "id": "abot-earth",
-      "name": "ABot-Earth0.5",
-      "category": "3D世界模型/生成工具",
-      "website": "",
-      "github": "",
-      "description": "能够导入Unity、Unreal Engine等主流引擎，登顶Hugging Face论文三榜第一",
-      "pricing_model": "开源免费",
-      "maturity": "可用",
-      "hot_score": 78,
-      "hot_level": "高热",
-      "last_update": "登顶Hugging Face论文三榜第一，获陈宝权好评",
-      "last_update_date": "2026-06-18",
-      "last_update_url": "https://www.qbitai.com/2026/06/xxx/",
-      "related_providers": [],
-      "related_llms": [
-        "abot-earth0.5"
-      ],
-      "confidence": "high",
-      "updated_at": "2026-06-21T22:14:20.405816"
-    },
-    {
-      "id": "suan-miao-3d-tokenpu",
-      "name": "算苗3D TokenPU",
-      "category": "AI芯片",
-      "website": "",
-      "github": "",
-      "description": "国产AI云端大算力芯片，已正式流片",
-      "pricing_model": "商业",
-      "maturity": "生产就绪",
-      "hot_score": 50,
-      "hot_level": "温热",
-      "last_update": "正式流片",
-      "last_update_date": "2026-06-19",
-      "last_update_url": "",
-      "related_providers": [
-        "suan-miao"
-      ],
-      "related_llms": [],
-      "confidence": "medium",
       "updated_at": "2026-06-20T02:01:22.472708"
     },
     {
@@ -3616,6 +3597,27 @@
       "related_llms": [],
       "confidence": "low",
       "updated_at": "2026-06-20T02:01:22.472708"
+    },
+    {
+      "id": "abot-earth",
+      "name": "ABot-Earth0.5",
+      "category": "3D世界模型/生成工具",
+      "website": "",
+      "github": "",
+      "description": "能够导入Unity、Unreal Engine等主流引擎，登顶Hugging Face论文三榜第一",
+      "pricing_model": "开源免费",
+      "maturity": "可用",
+      "hot_score": 78,
+      "hot_level": "高热",
+      "last_update": "登顶Hugging Face论文三榜第一，获陈宝权好评",
+      "last_update_date": "2026-06-18",
+      "last_update_url": "https://www.qbitai.com/2026/06/xxx/",
+      "related_providers": [],
+      "related_llms": [
+        "abot-earth0.5"
+      ],
+      "confidence": "high",
+      "updated_at": "2026-06-21T22:14:20.405816"
     },
     {
       "id": "deezer-ai-id",
@@ -3723,21 +3725,21 @@
     {
       "id": "abot-earth0.5",
       "name": "ABot-Earth0.5",
-      "category": "3D世界模型/生成工具",
+      "category": "AI模型/3D环境",
       "website": "",
       "github": "https://huggingface.co/abot-earth0.5",
-      "description": "登顶Hugging Face论文三榜第一，可导入Unity、Unreal Engine交互",
+      "description": "登顶Hugging Face论文三榜第一，能够直接导入Unity、Unreal Engine等主流引擎进行交互开发",
       "pricing_model": "开源免费",
       "maturity": "可用",
       "hot_score": 65,
       "hot_level": "温热",
-      "last_update": "论文登顶Hugging Face榜首",
+      "last_update": "登顶Hugging Face论文三榜第一",
       "last_update_date": "2026-06-18",
-      "last_update_url": "https://www.qbitai.com/2026/06/abot-earth0.5-huggingface/",
+      "last_update_url": "https://www.qbitai.com",
       "related_providers": [],
       "related_llms": [],
-      "confidence": "medium",
-      "updated_at": "2026-06-21T20:01:25.573756"
+      "confidence": "low",
+      "updated_at": "2026-06-22T10:02:25.544379"
     },
     {
       "id": "码上飞",
@@ -3925,23 +3927,24 @@
     {
       "id": "ma-shang-fei",
       "name": "码上飞",
-      "category": "AI编码工具",
+      "category": "AI Coding工具",
       "website": "",
       "github": "",
-      "description": "腾讯老兵与00后新锐共创，已接入华为鸿蒙生态",
+      "description": "腾讯老兵+大厂00后新锐打造，已接入华为鸿蒙生态，想做的不只是AI Coding",
       "pricing_model": "Freemium",
       "maturity": "可用",
-      "hot_score": 60,
+      "hot_score": 50,
       "hot_level": "温热",
-      "last_update": "宣布接入华为鸿蒙生态",
+      "last_update": "接入华为鸿蒙生态",
       "last_update_date": "2026-06-18",
-      "last_update_url": "https://www.qbitai.com/2026/06/xxx/",
+      "last_update_url": "https://www.qbitai.com",
       "related_providers": [
-        "ma-shang-fei"
+        "tencent",
+        "huawei"
       ],
       "related_llms": [],
-      "confidence": "medium",
-      "updated_at": "2026-06-21T22:14:20.405816",
+      "confidence": "low",
+      "updated_at": "2026-06-22T10:02:25.544379",
       "country": "中国"
     },
     {
@@ -3962,6 +3965,48 @@
       "related_llms": [],
       "confidence": "medium",
       "updated_at": "2026-06-21T22:01:16.665936"
+    },
+    {
+      "id": "baseten-platform",
+      "name": "Baseten",
+      "category": "AI推理部署平台",
+      "website": "https://baseten.co",
+      "github": "",
+      "description": "AI推理服务商，据报道正在以15亿美元估值融资",
+      "pricing_model": "商业",
+      "maturity": "生产就绪",
+      "hot_score": 75,
+      "hot_level": "高热",
+      "last_update": "融资传闻",
+      "last_update_date": "2026-06-18",
+      "last_update_url": "https://techcrunch.com/2026/06/18/ai-inference-startup-baseten-reportedly-raising-1-5b/",
+      "related_providers": [
+        "baseten"
+      ],
+      "related_llms": [],
+      "confidence": "medium",
+      "updated_at": "2026-06-21T22:14:20.405816"
+    },
+    {
+      "id": "suan-miao-3d-tokenpu",
+      "name": "算苗3D TokenPU",
+      "category": "AI芯片",
+      "website": "",
+      "github": "",
+      "description": "正式流片，引领国产AI云端大算力芯片再升级",
+      "pricing_model": "商业",
+      "maturity": "实验",
+      "hot_score": 40,
+      "hot_level": "平稳",
+      "last_update": "正式流片",
+      "last_update_date": "2026-06-17",
+      "last_update_url": "https://www.qbitai.com",
+      "related_providers": [
+        "suan-miao-tech"
+      ],
+      "related_llms": [],
+      "confidence": "low",
+      "updated_at": "2026-06-22T10:02:25.544379"
     },
     {
       "id": "jedify-agent-context",
@@ -4063,27 +4108,6 @@
       "related_llms": [],
       "confidence": "low",
       "updated_at": "2026-06-21T19:02:03.229093"
-    },
-    {
-      "id": "baseten-platform",
-      "name": "Baseten",
-      "category": "AI推理部署平台",
-      "website": "https://baseten.co",
-      "github": "",
-      "description": "AI推理服务商，据报道正在以15亿美元估值融资",
-      "pricing_model": "商业",
-      "maturity": "生产就绪",
-      "hot_score": 75,
-      "hot_level": "高热",
-      "last_update": "融资传闻",
-      "last_update_date": "2026-06-18",
-      "last_update_url": "https://techcrunch.com/2026/06/18/ai-inference-startup-baseten-reportedly-raising-1-5b/",
-      "related_providers": [
-        "baseten"
-      ],
-      "related_llms": [],
-      "confidence": "medium",
-      "updated_at": "2026-06-21T22:14:20.405816"
     },
     {
       "id": "tokenpu",
@@ -4208,6 +4232,29 @@
       "related_llms": [],
       "confidence": "medium",
       "updated_at": "2026-06-21T22:01:16.665936"
+    },
+    {
+      "id": "tiangong-ai",
+      "name": "天工AI",
+      "category": "世界模型平台",
+      "website": "",
+      "github": "",
+      "description": "重新定义世界模型，公布Matrix-Game 3.5最新技术突破",
+      "pricing_model": "Freemium",
+      "maturity": "生产就绪",
+      "hot_score": 70,
+      "hot_level": "温热",
+      "last_update": "公布Matrix-Game 3.5技术突破",
+      "last_update_date": "2026-06-15",
+      "last_update_url": "https://www.qbitai.com",
+      "related_providers": [
+        "baai"
+      ],
+      "related_llms": [
+        "matrix-game-3.5"
+      ],
+      "confidence": "medium",
+      "updated_at": "2026-06-22T10:02:25.544379"
     },
     {
       "id": "orcarouter",
@@ -5605,39 +5652,6 @@
       "related_llms": [],
       "confidence": "medium",
       "updated_at": "2026-06-17T23:01:45.825545"
-    },
-    {
-      "id": "ollama",
-      "name": "Ollama",
-      "category": "模型服务",
-      "website": "https://ollama.com",
-      "github": "https://github.com/ollama/ollama",
-      "description": "本地运行大模型的轻量级工具",
-      "maintainer_id": "ollama-inc",
-      "pricing_model": "开源免费",
-      "maturity": "生产就绪",
-      "hot_score": 72,
-      "hot_level": "高热",
-      "last_update": "支持 DeepSeek-R2 预览版一键部署",
-      "last_update_date": "2026-06-10",
-      "related_providers": [
-        "deepseek",
-        "meta"
-      ],
-      "related_llms": [
-        "deepseek-r1",
-        "llama-4-scout"
-      ],
-      "confidence": "high",
-      "ref": {
-        "stars": 125000,
-        "stars_weekly_delta": 2100,
-        "tech_stack": [
-          "Go",
-          "C++"
-        ]
-      },
-      "updated_at": "2026-06-11T19:40:11+08:00"
     }
   ],
   "llms": [
@@ -6907,22 +6921,21 @@
       "family": "DeepSeek",
       "type": "大语言模型",
       "open_weights": true,
-      "tier": "旗舰",
+      "tier": "主力",
       "capabilities": [
         "文本生成",
-        "推理",
-        "代码"
+        "推理"
       ],
       "status": "发布",
-      "hot_score": 55,
+      "hot_score": 65,
       "hot_level": "温热",
-      "hot_reason": "自建GW级数据中心，招聘土木工程师",
-      "last_event": "开始自建数据中心",
-      "last_event_date": "2026-06-09",
-      "last_event_url": "https://www.qbitai.com/2026/06/09/deepseek-data-center/",
+      "hot_reason": "与魔兽世界联动，1800个DeepSeek守护艾泽拉斯",
+      "last_event": "在魔兽世界场景中部署",
+      "last_event_date": "2026-06-18",
+      "last_event_url": "https://www.qbitai.com",
       "related_people": [],
-      "confidence": "high",
-      "updated_at": "2026-06-13T22:01:28.977957"
+      "confidence": "low",
+      "updated_at": "2026-06-22T10:02:25.544379"
     },
     {
       "id": "google-mythos",
@@ -7229,25 +7242,25 @@
     {
       "id": "matrix-game-3.5",
       "name": "Matrix-Game 3.5",
-      "provider_id": "天工ai",
-      "family": "天工AI",
+      "provider_id": "baai",
+      "family": "Matrix-Game",
       "type": "世界模型",
       "open_weights": true,
       "tier": "旗舰",
       "capabilities": [
         "世界模拟",
-        "交互游戏"
+        "游戏生成"
       ],
       "status": "预览",
-      "hot_score": 50,
+      "hot_score": 70,
       "hot_level": "温热",
-      "hot_reason": "技术突破",
-      "last_event": "天工AI公布Matrix-Game 3.5技术突破",
+      "hot_reason": "天工AI世界模型突破",
+      "last_event": "公布最新技术突破",
       "last_event_date": "2026-06-15",
-      "last_event_url": "https://www.qbitai.com/2026/06/天工ai-world-model/",
+      "last_event_url": "https://www.qbitai.com",
       "related_people": [],
       "confidence": "medium",
-      "updated_at": "2026-06-21T22:01:16.665936"
+      "updated_at": "2026-06-22T10:02:25.544379"
     },
     {
       "id": "matrix-game-3-5",
@@ -7369,26 +7382,26 @@
     {
       "id": "qwen-robot",
       "name": "Qwen-Robot",
-      "provider_id": "aliyun",
+      "provider_id": "alibaba-cloud",
       "family": "Qwen",
-      "type": "具身智能大模型",
+      "type": "具身大模型",
       "open_weights": false,
       "tier": "旗舰",
       "capabilities": [
-        "具身智能",
-        "机器人控制",
-        "视觉语言导航"
+        "视觉",
+        "语言",
+        "机器人控制"
       ],
       "status": "发布",
-      "hot_score": 88,
+      "hot_score": 80,
       "hot_level": "高热",
-      "hot_reason": "阿里云首个具身大模型系列，三连发覆盖多种应用场景",
-      "last_event": "阿里云发布Qwen-Robot系列具身大模型",
+      "hot_reason": "阿里首个具身大模型系列发布",
+      "last_event": "阿里发布首个具身大模型Qwen-Robot系列",
       "last_event_date": "2026-06-16",
-      "last_event_url": "https://www.qbitai.com/2026/06/xxx/",
+      "last_event_url": "https://www.qbitai.com",
       "related_people": [],
-      "confidence": "high",
-      "updated_at": "2026-06-21T22:14:20.405816"
+      "confidence": "medium",
+      "updated_at": "2026-06-22T10:02:25.544379"
     },
     {
       "id": "noiz-audio-1",
@@ -8030,268 +8043,55 @@
       "related_people": [],
       "confidence": "high",
       "updated_at": "2026-06-21T22:14:20.405816"
+    },
+    {
+      "id": "gpt5.4",
+      "name": "GPT5.4",
+      "provider_id": "openai",
+      "family": "GPT",
+      "type": "大语言模型",
+      "open_weights": false,
+      "tier": "旗舰",
+      "capabilities": [
+        "文本生成",
+        "药物研发"
+      ],
+      "status": "发布",
+      "hot_score": 85,
+      "hot_level": "高热",
+      "hot_reason": "据称实现AI药物全自动研发",
+      "last_event": "AI药物全自动研发新成果",
+      "last_event_date": "2026-06-18",
+      "last_event_url": "https://www.qbitai.com",
+      "related_people": [],
+      "confidence": "low",
+      "updated_at": "2026-06-22T10:02:25.544379"
+    },
+    {
+      "id": "general-cerebellum",
+      "name": "通用小脑",
+      "provider_id": "galaxy-general",
+      "family": "银河通用",
+      "type": "具身智能模型",
+      "open_weights": false,
+      "tier": "旗舰",
+      "capabilities": [
+        "人类动作模仿",
+        "零样本泛化"
+      ],
+      "status": "发布",
+      "hot_score": 75,
+      "hot_level": "温热",
+      "hot_reason": "全球首个人形机器人通用小脑，基于2万小时人类动作数据",
+      "last_event": "全球首个人形机器人通用小脑发布",
+      "last_event_date": "2026-06-18",
+      "last_event_url": "https://www.qbitai.com",
+      "related_people": [],
+      "confidence": "medium",
+      "updated_at": "2026-06-22T10:02:25.544379"
     }
   ],
   "changelog": [
-    {
-      "type": "new",
-      "dimension": "hotspots",
-      "id": "openai-leaked-financials-ipo",
-      "summary": "新实体",
-      "date": "2026-06-21"
-    },
-    {
-      "type": "new",
-      "dimension": "hotspots",
-      "id": "us-government-bans-anthropic-fable-5",
-      "summary": "新实体",
-      "date": "2026-06-21"
-    },
-    {
-      "type": "update",
-      "dimension": "providers",
-      "id": "anthropic",
-      "summary": "hot_score: 90 → 95; last_event: 诺奖得主 John Jumper 从 DeepMind 加入 Anthropic；美国政府禁止发布 Fable 5 → 诺贝尔奖得主、AlphaFold之父John Jumper加入；美国政府禁止Fable 5发布但热度不减；加入Frontier碳去除联盟",
-      "date": "2026-06-21"
-    },
-    {
-      "type": "update",
-      "dimension": "providers",
-      "id": "openai",
-      "summary": "hot_score: 90 → 88; last_event: Q1 烧 250 亿美元财报泄露，筹备 IPO；Noam Shazeer 加盟 → Q1财报显示亏损250亿美元；筹备IPO；引进多位重量级人物（包括Noam Shazeer）",
-      "date": "2026-06-21"
-    },
-    {
-      "type": "update",
-      "dimension": "providers",
-      "id": "deepmind",
-      "summary": "last_event: 诺奖得主 John Jumper 及另一大将离职 → AlphaFold之父John Jumper离职加入Anthropic",
-      "date": "2026-06-21"
-    },
-    {
-      "type": "update",
-      "dimension": "providers",
-      "id": "spacex",
-      "summary": "hot_score: 70 → 92; hot_level: 高热 → 爆热; last_event: 以 600 亿美元股票收购 Cursor → 以600亿美元收购AI编码工具Cursor",
-      "date": "2026-06-21"
-    },
-    {
-      "type": "update",
-      "dimension": "providers",
-      "id": "alibaba",
-      "summary": "hot_score: 80 → 75",
-      "date": "2026-06-21"
-    },
-    {
-      "type": "update",
-      "dimension": "providers",
-      "id": "meta",
-      "summary": "hot_score: 70 → 60; hot_level: 高热 → 温热; last_event: 员工士气跌至 20 年谷底，CTO 承认 AI 重组糟糕 → 员工士气跌至20年谷底，CTO承认AI重组糟糕透顶",
-      "date": "2026-06-21"
-    },
-    {
-      "type": "update",
-      "dimension": "providers",
-      "id": "jiuzhang-yunji",
-      "summary": "hot_score: 60 → 65; last_event: 发布“AI 工厂”战略，定义智能规模化新基建 → 发布AI工厂战略，定义智能规模化新基建",
-      "date": "2026-06-21"
-    },
-    {
-      "type": "update",
-      "dimension": "providers",
-      "id": "suanmiao-tech",
-      "summary": "hot_score: 60 → 55; last_event: 3D TokenPU芯片正式流片 → 算苗3D TokenPU正式流片",
-      "date": "2026-06-21"
-    },
-    {
-      "type": "new",
-      "dimension": "providers",
-      "id": "stardust-atlas",
-      "summary": "创始人高继扬阐述具身智能三层技术路线",
-      "date": "2026-06-21"
-    },
-    {
-      "type": "new",
-      "dimension": "providers",
-      "id": "milky-way-robot",
-      "summary": "发布全球首个人形机器人通用小脑，零样本泛化",
-      "date": "2026-06-21"
-    },
-    {
-      "type": "update",
-      "dimension": "providers",
-      "id": "odyssey",
-      "summary": "hot_score: 73 → 70; hot_level: 温热 → 高热; last_event: 世界模型公司获 14.5 亿美元估值，亚马逊等投资 → 世界模型公司获得14.5亿美元估值融资，亚马逊等支持",
-      "date": "2026-06-21"
-    },
-    {
-      "type": "update",
-      "dimension": "providers",
-      "id": "baseten",
-      "summary": "hot_score: 72 → 55; last_event: AI 推理初创公司传闻融资 15 亿美元 → 传闻融资15亿美元",
-      "date": "2026-06-21"
-    },
-    {
-      "type": "update",
-      "dimension": "people",
-      "id": "john-jumper",
-      "summary": "name: 约翰·詹珀 → 约翰·江珀; title: AlphaFold 之父 → 诺贝尔化学奖得主、AlphaFold之父; recent_activity: 离开 DeepMind 加入 Anthropic → 离开DeepMind加入Anthropic",
-      "date": "2026-06-21"
-    },
-    {
-      "type": "update",
-      "dimension": "people",
-      "id": "noam-shazeer",
-      "summary": "title: Transformer 作者 → Transformer论文作者之一; hot_score: 85 → 90; recent_activity: 离职谷歌加盟 OpenAI → 从谷歌离职加盟OpenAI",
-      "date": "2026-06-21"
-    },
-    {
-      "type": "update",
-      "dimension": "people",
-      "id": "he-kaiming",
-      "summary": "title: AI科学家 → AI研究员（前FAIR，现MIT？）; recent_activity: 组新作文生图模型，仅258M参数 → 组新作文生图模型，258M参数即高效",
-      "date": "2026-06-21"
-    },
-    {
-      "type": "update",
-      "dimension": "people",
-      "id": "gao-jiyang",
-      "summary": "hot_score: 50 → 55; recent_activity: 阐述具身智能三层技术路线 → 在WDC上阐述具身智能三层技术路线",
-      "date": "2026-06-21"
-    },
-    {
-      "type": "update",
-      "dimension": "tools",
-      "id": "cursor",
-      "summary": "hot_score: 85 → 95; hot_level: 高热 → 爆热; last_update: 被 SpaceX 以 600 亿美元股票收购 → 被SpaceX收购",
-      "date": "2026-06-21"
-    },
-    {
-      "type": "new",
-      "dimension": "tools",
-      "id": "ma-shang-fei",
-      "summary": "接入华为鸿蒙生态",
-      "date": "2026-06-21"
-    },
-    {
-      "type": "update",
-      "dimension": "tools",
-      "id": "abot-earth-0-5",
-      "summary": "hot_score: 65 → 60; hot_level: 高热 → 温热; last_update: 登顶 Hugging Face 论文三榜 → 登顶Hugging Face榜单",
-      "date": "2026-06-21"
-    },
-    {
-      "type": "update",
-      "dimension": "llms",
-      "id": "qwen-robot",
-      "summary": "hot_score: 70 → 75; last_event: 阿里发布首个具身大模型系列 → 发布Qwen-Robot系列",
-      "date": "2026-06-21"
-    },
-    {
-      "type": "update",
-      "dimension": "hotspots",
-      "id": "john-jumper-joins-anthropic",
-      "summary": "title: 诺奖得主 John Jumper 离开 DeepMind 加入 Anthropic → 诺奖得主John Jumper离开DeepMind加入Anthropic",
-      "date": "2026-06-21"
-    },
-    {
-      "type": "update",
-      "dimension": "hotspots",
-      "id": "spacex-acquires-cursor",
-      "summary": "title: SpaceX 以 600 亿美元收购 AI 编程工具 Cursor → SpaceX以600亿美元收购AI编码工具Cursor",
-      "date": "2026-06-21"
-    },
-    {
-      "type": "update",
-      "dimension": "hotspots",
-      "id": "openai-q1-loss-25b",
-      "summary": "title: OpenAI Q1狂烧250亿美元，财报泄露引热议 → OpenAI Q1亏损250亿美元，筹备IPO",
-      "date": "2026-06-21"
-    },
-    {
-      "type": "update",
-      "dimension": "hotspots",
-      "id": "alibaba-qwen-robot",
-      "summary": "title: 阿里发布首个具身大模型系列 Qwen-Robot → 阿里巴巴发布首个具身大模型Qwen-Robot系列",
-      "date": "2026-06-21"
-    },
-    {
-      "type": "new",
-      "dimension": "hotspots",
-      "id": "noam-shazeer-joins-openai",
-      "summary": "新实体",
-      "date": "2026-06-21"
-    },
-    {
-      "type": "update",
-      "dimension": "providers",
-      "id": "anthropic",
-      "summary": "hot_score: 95 → 90; last_event: 诺贝尔奖得主、AlphaFold之父John Jumper加入；美国政府禁止Fable 5发布但热度不减；加入Frontier碳去除联盟 → 诺奖得主John Jumper加入，US政府模型禁令引发关注",
-      "date": "2026-06-21"
-    },
-    {
-      "type": "update",
-      "dimension": "providers",
-      "id": "openai",
-      "summary": "hot_score: 88 → 95; last_event: Q1财报显示亏损250亿美元；筹备IPO；引进多位重量级人物（包括Noam Shazeer） → Q1烧钱250亿财报泄露，为IPO引入多位高管",
-      "date": "2026-06-21"
-    },
-    {
-      "type": "update",
-      "dimension": "providers",
-      "id": "google-deepmind",
-      "summary": "name: 谷歌 DeepMind → Google DeepMind; hot_score: 85 → 80; last_event: AlphaFold之父 John Jumper 离职加入 Anthropic → AlphaFold之父John Jumper离职投奔Anthropic",
-      "date": "2026-06-21"
-    },
-    {
-      "type": "update",
-      "dimension": "providers",
-      "id": "google",
-      "summary": "name: Google → 谷歌; hot_score: 60 → 70; hot_level: 温热 → 高热",
-      "date": "2026-06-21"
-    },
-    {
-      "type": "update",
-      "dimension": "providers",
-      "id": "meta",
-      "summary": "hot_score: 60 → 75; hot_level: 温热 → 高热; last_event: 员工士气跌至20年谷底，CTO承认AI重组糟糕透顶 → 员工士气跌至20年谷底，CTO承认AI重组糟糕",
-      "date": "2026-06-21"
-    },
-    {
-      "type": "update",
-      "dimension": "providers",
-      "id": "alibaba-cloud",
-      "summary": "hot_score: 65 → 85; hot_level: 高热 → 爆热; last_event: 发布首个具身大模型 Qwen-Robot 系列 → 发布首个具身大模型Qwen-Robot系列",
-      "date": "2026-06-21"
-    },
-    {
-      "type": "update",
-      "dimension": "providers",
-      "id": "nvidia",
-      "summary": "hot_score: 75 → 70; last_event: 进军机器人研究，推动 token 消费 → 开始研究机器人以消耗更多Token",
-      "date": "2026-06-21"
-    },
-    {
-      "type": "update",
-      "dimension": "providers",
-      "id": "galaxy-universal",
-      "summary": "hot_level: 高热 → 温热; last_event: 发布全球首个人形机器人通用小脑，基于2万小时人类动作数据实现零样本泛化 → 发布全球首个人形机器人通用小脑，基于2万小时人类数据",
-      "date": "2026-06-21"
-    },
-    {
-      "type": "update",
-      "dimension": "providers",
-      "id": "magic-atom",
-      "summary": "hot_score: 55 → 50; hot_level: 平稳 → 温热; last_event: 与万机易租合作，全栈产品入驻租赁平台 → 牵手万机易租，全栈产品入驻租赁平台",
-      "date": "2026-06-21"
-    },
-    {
-      "type": "update",
-      "dimension": "providers",
-      "id": "xinghaitu",
-      "summary": "last_event: 创始人高继扬探讨具身智能技术路线 → 创始人高继扬阐述具身智能三层技术路线",
-      "date": "2026-06-21"
-    },
     {
       "type": "update",
       "dimension": "providers",
@@ -8732,16 +8532,275 @@
       "id": "us-bans-anthropic-fable5",
       "summary": "title: 美国政府禁止 Anthropic 模型 Fable 5 发布 → 美国政府禁止Anthropic发布Fable 5模型引发争议",
       "date": "2026-06-21"
+    },
+    {
+      "type": "update",
+      "dimension": "providers",
+      "id": "anthropic",
+      "summary": "hot_score: 95 → 85; hot_level: 爆热 → 高热; last_event: 诺奖得主John Jumper加入，美国禁止其Fable 5模型发布 → 诺奖得主、AlphaFold之父投奔Anthropic，谷歌48小时连跑俩大将",
+      "date": "2026-06-22"
+    },
+    {
+      "type": "update",
+      "dimension": "providers",
+      "id": "nvidia",
+      "summary": "hot_level: 高热 → 温热; last_event: 开始投资机器人研究 → 英伟达开始搞机器人自己研究机器人那套了，为了烧token卷到机器人身上",
+      "date": "2026-06-22"
+    },
+    {
+      "type": "update",
+      "dimension": "providers",
+      "id": "meta",
+      "summary": "hot_score: 65 → 75; last_event: 员工士气跌至20年谷底，内部直播开骂，CTO承认AI重组糟糕 → 员工士气跌至20年谷底，内部直播当众开骂，CTO承认AI重组糟糕透顶",
+      "date": "2026-06-22"
+    },
+    {
+      "type": "update",
+      "dimension": "providers",
+      "id": "alibaba-cloud",
+      "summary": "hot_score: 85 → 80; hot_level: 爆热 → 高热; last_event: 发布首个具身大模型Qwen-Robot系列 → 阿里发布首个具身大模型Qwen-Robot系列",
+      "date": "2026-06-22"
+    },
+    {
+      "type": "update",
+      "dimension": "providers",
+      "id": "openai",
+      "summary": "last_event: Transformer作者Noam Shazeer加入，Q1烧250亿财报泄露，筹备IPO → Q1狂烧250亿！财报泄露全网炸锅",
+      "date": "2026-06-22"
+    },
+    {
+      "type": "new",
+      "dimension": "providers",
+      "id": "deepseek",
+      "summary": "2026年，1800个DeepSeek跟我一起守护艾泽拉斯",
+      "date": "2026-06-22"
+    },
+    {
+      "type": "update",
+      "dimension": "providers",
+      "id": "galaxy-general",
+      "summary": "hot_score: 60 → 75; last_event: 发布全球首个人形机器人通用小脑 → 全球首个人形机器人通用小脑来了，全球最大规模2万小时人类动作数据",
+      "date": "2026-06-22"
+    },
+    {
+      "type": "update",
+      "dimension": "providers",
+      "id": "magic-atom",
+      "summary": "hot_score: 50 → 40; hot_level: 温热 → 平稳; last_event: 牵手万机易租，全栈产品入驻租赁平台 → 魔法原子牵手万机易租，全栈产品入驻2.0平台共建租赁生态",
+      "date": "2026-06-22"
+    },
+    {
+      "type": "update",
+      "dimension": "providers",
+      "id": "taichu-yuanqi",
+      "summary": "hot_score: 55 → 30; last_event: 分享国产 AI 算力实践，助力 Token 服务 → AIEC 2026 | 太初元碁分享国产AI算力实践，助力Token服务落地生根",
+      "date": "2026-06-22"
+    },
+    {
+      "type": "update",
+      "dimension": "providers",
+      "id": "tencent",
+      "summary": "hot_score: 72 → 50; last_event: 微信支付发布AI专属卡，WorkBuddy率先接入 → 腾讯老兵+大厂00后新锐，码上飞想做的不只是AI Coding，已接入华为鸿蒙生态",
+      "date": "2026-06-22"
+    },
+    {
+      "type": "new",
+      "dimension": "providers",
+      "id": "huawei",
+      "summary": "码上飞接入华为鸿蒙生态",
+      "date": "2026-06-22"
+    },
+    {
+      "type": "new",
+      "dimension": "providers",
+      "id": "amap",
+      "summary": "高德地图出现在ABot-Earth0.5相关报道中",
+      "date": "2026-06-22"
+    },
+    {
+      "type": "update",
+      "dimension": "providers",
+      "id": "meitu",
+      "summary": "name: 美图公司 → 美图; hot_score: 55 → 30; hot_level: 温热 → 平稳",
+      "date": "2026-06-22"
+    },
+    {
+      "type": "update",
+      "dimension": "providers",
+      "id": "jiuzhang-cloud",
+      "summary": "hot_score: 60 → 70; last_event: 发布AI工厂战略，目标10万P算力日产10万亿Token → 九章云极发布“AI工厂”战略，定义智能规模化新基建",
+      "date": "2026-06-22"
+    },
+    {
+      "type": "new",
+      "dimension": "providers",
+      "id": "suan-miao-tech",
+      "summary": "算苗3D TokenPU正式流片，引领国产AI云端大算力芯片再升级",
+      "date": "2026-06-22"
+    },
+    {
+      "type": "new",
+      "dimension": "providers",
+      "id": "xinghaitug",
+      "summary": "星海图创始人高继扬：具身智能三层技术路线，没有捷径可走",
+      "date": "2026-06-22"
+    },
+    {
+      "type": "update",
+      "dimension": "providers",
+      "id": "baai",
+      "summary": "name: 智源研究院 → 智源; hot_score: 75 → 60; hot_level: 高热 → 温热",
+      "date": "2026-06-22"
+    },
+    {
+      "type": "update",
+      "dimension": "providers",
+      "id": "ppio",
+      "summary": "hot_score: 50 → 25; hot_level: 平稳 → 冷淡; last_event: 香港财政司司长陈茂波到访 → 香港特区政府财政司司长陈茂波一行到访PPIO",
+      "date": "2026-06-22"
+    },
+    {
+      "type": "new",
+      "dimension": "people",
+      "id": "terence-tao",
+      "summary": "12年前的预言被AI兑现",
+      "date": "2026-06-22"
+    },
+    {
+      "type": "update",
+      "dimension": "people",
+      "id": "he-kaiming",
+      "summary": "title: AI研究员（前FAIR，现MIT？） → 研究者; hot_score: 80 → 75; recent_activity: 组新作文生图模型，258M参数即高效 → 组新作文生图，258M参数就够了，整篇论文六位作者，除何恺明外其余五位本科生",
+      "date": "2026-06-22"
+    },
+    {
+      "type": "update",
+      "dimension": "people",
+      "id": "gao-jiyang",
+      "summary": "recent_activity: 阐述具身智能三层技术路线 → 发表具身智能三层技术路线观点",
+      "date": "2026-06-22"
+    },
+    {
+      "type": "update",
+      "dimension": "people",
+      "id": "chen-baoquan",
+      "summary": "title: 教授 → 国际图形学权威; hot_score: 40 → 30; recent_activity: 对ABot-Earth0.5给予好评 → 好评ABot-Earth0.5论文",
+      "date": "2026-06-22"
+    },
+    {
+      "type": "update",
+      "dimension": "people",
+      "id": "chen-maobo",
+      "summary": "hot_score: 45 → 20; hot_level: 平稳 → 冷淡; recent_activity: 到访 PPIO → 一行到访PPIO",
+      "date": "2026-06-22"
+    },
+    {
+      "type": "update",
+      "dimension": "tools",
+      "id": "abot-earth0.5",
+      "summary": "last_update: 论文登顶Hugging Face榜首 → 登顶Hugging Face论文三榜第一",
+      "date": "2026-06-22"
+    },
+    {
+      "type": "new",
+      "dimension": "tools",
+      "id": "tiangong-ai",
+      "summary": "公布Matrix-Game 3.5技术突破",
+      "date": "2026-06-22"
+    },
+    {
+      "type": "update",
+      "dimension": "tools",
+      "id": "ma-shang-fei",
+      "summary": "hot_score: 60 → 50; last_update: 宣布接入华为鸿蒙生态 → 接入华为鸿蒙生态",
+      "date": "2026-06-22"
+    },
+    {
+      "type": "update",
+      "dimension": "tools",
+      "id": "suan-miao-3d-tokenpu",
+      "summary": "hot_score: 50 → 40; hot_level: 温热 → 平稳",
+      "date": "2026-06-22"
+    },
+    {
+      "type": "update",
+      "dimension": "llms",
+      "id": "deepseek",
+      "summary": "hot_score: 55 → 65; last_event: 开始自建数据中心 → 在魔兽世界场景中部署; tier: 旗舰 → 主力",
+      "date": "2026-06-22"
+    },
+    {
+      "type": "new",
+      "dimension": "llms",
+      "id": "gpt5.4",
+      "summary": "AI药物全自动研发新成果",
+      "date": "2026-06-22"
+    },
+    {
+      "type": "update",
+      "dimension": "llms",
+      "id": "qwen-robot",
+      "summary": "hot_score: 88 → 80; last_event: 阿里云发布Qwen-Robot系列具身大模型 → 阿里发布首个具身大模型Qwen-Robot系列",
+      "date": "2026-06-22"
+    },
+    {
+      "type": "update",
+      "dimension": "llms",
+      "id": "matrix-game-3.5",
+      "summary": "hot_score: 50 → 70; last_event: 天工AI公布Matrix-Game 3.5技术突破 → 公布最新技术突破",
+      "date": "2026-06-22"
+    },
+    {
+      "type": "new",
+      "dimension": "llms",
+      "id": "general-cerebellum",
+      "summary": "全球首个人形机器人通用小脑发布",
+      "date": "2026-06-22"
+    },
+    {
+      "type": "new",
+      "dimension": "hotspots",
+      "id": "anthropic-hires-nobel-alpha",
+      "summary": "新实体",
+      "date": "2026-06-22"
+    },
+    {
+      "type": "new",
+      "dimension": "hotspots",
+      "id": "meta-morale-crisis",
+      "summary": "新实体",
+      "date": "2026-06-22"
+    },
+    {
+      "type": "new",
+      "dimension": "hotspots",
+      "id": "openai-q1-loss",
+      "summary": "新实体",
+      "date": "2026-06-22"
+    },
+    {
+      "type": "update",
+      "dimension": "hotspots",
+      "id": "beijing-ai-factory",
+      "summary": "title: 北京建造AI工厂：目标10万P算力，日产10万亿Token → 刚刚，北京建了一座AI工厂：目标10万P算力，日产10万亿Token！",
+      "date": "2026-06-22"
+    },
+    {
+      "type": "update",
+      "dimension": "hotspots",
+      "id": "ali-qwen-robot",
+      "summary": "title: 阿里发布首个具身大模型系列 Qwen-Robot → 三连发！阿里发布首个具身大模型Qwen-Robot系列",
+      "date": "2026-06-22"
     }
   ],
   "stats": {
     "total_providers": 100,
-    "total_people": 64,
+    "total_people": 65,
     "total_tools": 100,
-    "total_llms": 87,
+    "total_llms": 89,
     "total_hotspots": 100,
-    "new_this_period": 1,
-    "updated_this_period": 30,
+    "new_this_period": 12,
+    "updated_this_period": 25,
     "removed_this_period": 0
   },
   "hotspots": [
@@ -9264,6 +9323,88 @@
       "updated_at": "2026-06-21T22:01:16.665936"
     },
     {
+      "id": "us-bans-anthropic-fable5",
+      "title": "美国政府禁止Anthropic发布Fable 5模型引发争议",
+      "summary": "美国政府以国家安全为由禁止Anthropic发布其最新大模型Fable 5，引发对AI监管和出口管制的广泛讨论。Anthropic因此获得意外关注，品牌反而得到曝光。",
+      "date": "2026-06-18",
+      "source": "TechCrunch",
+      "url": "https://techcrunch.com/2026/06/18/the-us-banned-anthropics-fable-5-release/",
+      "related_providers": [
+        "anthropic"
+      ],
+      "related_people": [],
+      "related_tools": [],
+      "related_llms": [
+        "fable-5"
+      ],
+      "updated_at": "2026-06-21T22:14:20.405816"
+    },
+    {
+      "id": "noam-shazeer-joins-openai",
+      "title": "Transformer作者Noam Shazeer从谷歌加盟OpenAI",
+      "summary": "Transformer架构的联合发明人Noam Shazeer离开谷歌，加入OpenAI。同时谷歌48小时内连失两员大将（Shazeer和Jumper），对谷歌AI团队造成重大冲击。",
+      "date": "2026-06-18",
+      "source": "TechCrunch / 量子位",
+      "url": "https://techcrunch.com/2026/06/18/openai-is-bringing-on-some-big-guns-in-the-lead-up-to-its-ipo/",
+      "related_providers": [
+        "google",
+        "openai"
+      ],
+      "related_people": [
+        "noam-shazeer"
+      ],
+      "related_tools": [],
+      "related_llms": [],
+      "updated_at": "2026-06-21T22:14:20.405816"
+    },
+    {
+      "id": "anthropic-hires-nobel-alpha",
+      "title": "诺奖得主、AlphaFold之父投奔Anthropic！谷歌48小时连跑俩大将",
+      "summary": "Anthropic从谷歌挖走重量级AI人才，包括一位诺奖得主和AlphaFold之父，凸显AI人才争夺白热化，谷歌核心团队面临流失压力。",
+      "date": "2026-06-18",
+      "source": "量子位",
+      "url": "https://www.qbitai.com",
+      "related_providers": [
+        "anthropic"
+      ],
+      "related_people": [],
+      "related_tools": [],
+      "related_llms": [],
+      "updated_at": "2026-06-22T10:02:25.544379"
+    },
+    {
+      "id": "meta-morale-crisis",
+      "title": "Meta员工士气跌至20年谷底！CTO承认AI重组糟糕透顶",
+      "summary": "Meta内部直播中员工当众开骂，CTO公开承认AI重组混乱，公司士气降至20年最低，反映出科技巨头在AI转型中的内部阵痛。",
+      "date": "2026-06-18",
+      "source": "量子位",
+      "url": "https://www.qbitai.com",
+      "related_providers": [
+        "meta"
+      ],
+      "related_people": [],
+      "related_tools": [],
+      "related_llms": [],
+      "updated_at": "2026-06-22T10:02:25.544379"
+    },
+    {
+      "id": "openai-q1-loss",
+      "title": "Q1狂烧250亿！OpenAI财报泄露全网炸锅",
+      "summary": "OpenAI 2026年第一季度财报泄露，巨额亏损震惊业界，引发对AI公司商业模式可持续性的广泛讨论。",
+      "date": "2026-06-18",
+      "source": "量子位",
+      "url": "https://www.qbitai.com",
+      "related_providers": [
+        "openai"
+      ],
+      "related_people": [],
+      "related_tools": [],
+      "related_llms": [
+        "gpt5.4"
+      ],
+      "updated_at": "2026-06-22T10:02:25.544379"
+    },
+    {
       "id": "google-diffusion-llm-release",
       "title": "谷歌发布基于扩散模型的新LLM，速度暴涨4倍",
       "summary": "谷歌推出使用扩散技术生成文字的新语言模型，速度相比传统自回归模型提升4倍，引发对下一代模型架构的关注。",
@@ -9363,20 +9504,21 @@
     },
     {
       "id": "beijing-ai-factory",
-      "title": "北京建造AI工厂：目标10万P算力，日产10万亿Token",
-      "summary": "九章云极在北京发布AI工厂战略，计划实现1000倍综合降本，构建10万P算力基础设施，日产10万亿Token，标志着国产算力进入Token标准化时代。",
+      "title": "刚刚，北京建了一座AI工厂：目标10万P算力，日产10万亿Token！",
+      "summary": "北京启动大型AI工厂建设，规划10万P算力、日产10万亿Token，计划1000倍综合降本，标志着国产算力进入Token标准化时代。",
       "date": "2026-06-17",
       "source": "量子位",
-      "url": "https://www.qbitai.com/2026/06/17/beijing-ai-factory/",
+      "url": "https://www.qbitai.com",
       "related_providers": [
-        "jiuzhang-cloud"
+        "jiuzhang-cloud",
+        "suan-miao-tech"
       ],
       "related_people": [],
       "related_tools": [
         "jiuzhang-ai-factory"
       ],
       "related_llms": [],
-      "updated_at": "2026-06-21T22:01:16.665936"
+      "updated_at": "2026-06-22T10:02:25.544379"
     },
     {
       "id": "hot-02",
@@ -9430,41 +9572,6 @@
       "updated_at": "2026-06-21T20:01:25.573756"
     },
     {
-      "id": "us-bans-anthropic-fable5",
-      "title": "美国政府禁止Anthropic发布Fable 5模型引发争议",
-      "summary": "美国政府以国家安全为由禁止Anthropic发布其最新大模型Fable 5，引发对AI监管和出口管制的广泛讨论。Anthropic因此获得意外关注，品牌反而得到曝光。",
-      "date": "2026-06-18",
-      "source": "TechCrunch",
-      "url": "https://techcrunch.com/2026/06/18/the-us-banned-anthropics-fable-5-release/",
-      "related_providers": [
-        "anthropic"
-      ],
-      "related_people": [],
-      "related_tools": [],
-      "related_llms": [
-        "fable-5"
-      ],
-      "updated_at": "2026-06-21T22:14:20.405816"
-    },
-    {
-      "id": "noam-shazeer-joins-openai",
-      "title": "Transformer作者Noam Shazeer从谷歌加盟OpenAI",
-      "summary": "Transformer架构的联合发明人Noam Shazeer离开谷歌，加入OpenAI。同时谷歌48小时内连失两员大将（Shazeer和Jumper），对谷歌AI团队造成重大冲击。",
-      "date": "2026-06-18",
-      "source": "TechCrunch / 量子位",
-      "url": "https://techcrunch.com/2026/06/18/openai-is-bringing-on-some-big-guns-in-the-lead-up-to-its-ipo/",
-      "related_providers": [
-        "google",
-        "openai"
-      ],
-      "related_people": [
-        "noam-shazeer"
-      ],
-      "related_tools": [],
-      "related_llms": [],
-      "updated_at": "2026-06-21T22:14:20.405816"
-    },
-    {
       "id": "alibaba-qwen-robot",
       "title": "阿里发布首个具身大模型Qwen-Robot系列",
       "summary": "阿里云发布Qwen-Robot系列具身大模型，这是国内首个面向机器人领域的多模态大模型，覆盖感知、决策、控制全链路，标志阿里正式入局具身智能赛道。",
@@ -9516,6 +9623,40 @@
       "updated_at": "2026-06-21T18:01:31.851076"
     },
     {
+      "id": "aliyun-qwen-robot",
+      "title": "阿里云发布首个具身大模型Qwen-Robot系列",
+      "summary": "阿里云发布Qwen-Robot系列具身大模型，这是国内首个面向机器人的多模态大模型系列，涵盖视觉语言导航、操作控制等能力，推动具身智能进入新阶段。",
+      "date": "2026-06-16",
+      "source": "量子位",
+      "url": "https://www.qbitai.com/2026/06/xxx/",
+      "related_providers": [
+        "aliyun"
+      ],
+      "related_people": [],
+      "related_tools": [],
+      "related_llms": [
+        "qwen-robot"
+      ],
+      "updated_at": "2026-06-21T22:14:20.405816"
+    },
+    {
+      "id": "ali-qwen-robot",
+      "title": "三连发！阿里发布首个具身大模型Qwen-Robot系列",
+      "summary": "阿里云发布首个具身大模型Qwen-Robot系列，标志着阿里正式进军具身智能领域，推动机器人从感知到行动能力的融合。",
+      "date": "2026-06-16",
+      "source": "量子位",
+      "url": "https://www.qbitai.com",
+      "related_providers": [
+        "alibaba-cloud"
+      ],
+      "related_people": [],
+      "related_tools": [],
+      "related_llms": [
+        "qwen-robot"
+      ],
+      "updated_at": "2026-06-22T10:02:25.544379"
+    },
+    {
       "id": "anthropic-claude-fable-5",
       "title": "Anthropic发布Claude Fable 5与Mythos 5模型",
       "summary": "Anthropic在本周发布Claude Fable 5和Mythos 5两个旗舰模型，进一步巩固其在AI模型领域的领先地位，引发行业高度关注。",
@@ -9532,23 +9673,6 @@
         "mythos-5"
       ],
       "updated_at": "2026-06-17T16:01:46.729393"
-    },
-    {
-      "id": "aliyun-qwen-robot",
-      "title": "阿里云发布首个具身大模型Qwen-Robot系列",
-      "summary": "阿里云发布Qwen-Robot系列具身大模型，这是国内首个面向机器人的多模态大模型系列，涵盖视觉语言导航、操作控制等能力，推动具身智能进入新阶段。",
-      "date": "2026-06-16",
-      "source": "量子位",
-      "url": "https://www.qbitai.com/2026/06/xxx/",
-      "related_providers": [
-        "aliyun"
-      ],
-      "related_people": [],
-      "related_tools": [],
-      "related_llms": [
-        "qwen-robot"
-      ],
-      "updated_at": "2026-06-21T22:14:20.405816"
     },
     {
       "id": "spacex-ipo-cursor-acquisition",
@@ -9640,23 +9764,6 @@
       "related_llms": [
         "glm-5-2",
         "claude-fable-5"
-      ],
-      "updated_at": "2026-06-17T12:02:00.396215"
-    },
-    {
-      "id": "ali-qwen-robot",
-      "title": "阿里发布首个具身大模型系列 Qwen-Robot",
-      "summary": "阿里云连续发布三款 Qwen-Robot 模型，整合视觉、语言与运动控制，使机器人能够边走、边看、边思考，完成精细操作任务，标志具身智能进入新阶段。",
-      "date": "2026-06-14",
-      "source": "量子位",
-      "url": "https://www.qbitai.com",
-      "related_providers": [
-        "alibaba-cloud"
-      ],
-      "related_people": [],
-      "related_tools": [],
-      "related_llms": [
-        "qwen-robot"
       ],
       "updated_at": "2026-06-17T12:02:00.396215"
     },
@@ -10440,57 +10547,6 @@
         "grok-4-3"
       ],
       "updated_at": "2026-06-17T21:01:29.681252"
-    },
-    {
-      "id": "lin-junyang-bulage-launch",
-      "title": "林俊旸新公司卜拉格亮相，首轮估值135亿",
-      "summary": "前AI科学家林俊旸创立卜拉格，首轮估值达135亿元人民币，腾讯、高榕、红杉联合投资，引发创业圈高度关注。",
-      "date": "2026-06-12",
-      "source": "量子位",
-      "url": "",
-      "related_providers": [
-        "bulage"
-      ],
-      "related_people": [
-        "lin-junyang"
-      ],
-      "related_tools": [],
-      "related_llms": [],
-      "updated_at": "2026-06-17T21:01:29.681252"
-    },
-    {
-      "id": "bulage-valuation-135b",
-      "title": "林俊旸新公司卜拉格亮相，首轮估值135亿",
-      "summary": "前字节跳动AI负责人林俊旸创立新公司卜拉格，首轮估值135亿元，由腾讯、高榕创投、红杉中国联合投资，成为AI领域又一重磅创业项目。",
-      "date": "2026-06-12",
-      "source": "量子位",
-      "url": "https://www.qbitai.com/2026/06/linjunyang-bulage-valuation/",
-      "related_providers": [
-        "bulage"
-      ],
-      "related_people": [
-        "lin-junyang"
-      ],
-      "related_tools": [],
-      "related_llms": [],
-      "updated_at": "2026-06-18T00:02:07.105684"
-    },
-    {
-      "id": "zhipu-glm5-2-open-source-ai-coding-first",
-      "title": "智谱开源GLM-5.2模型，拿下AI编程第一",
-      "summary": "智谱AI开源GLM-5.2模型，在其基准测试中击败众多对手，获得AI编程能力第一名，展示了开源大模型的强大实力。",
-      "date": "2026-06-12",
-      "source": "量子位",
-      "url": "https://www.qbitai.com/2026/06/glm-5-2-ai-coding-first/",
-      "related_providers": [
-        "zhipu-ai"
-      ],
-      "related_people": [],
-      "related_tools": [],
-      "related_llms": [
-        "glm-5-2"
-      ],
-      "updated_at": "2026-06-18T00:02:07.105684"
     }
   ]
 }
