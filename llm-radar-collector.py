@@ -643,7 +643,7 @@ hotspots 数组中每个元素格式：
             f'<tr><td class="p-2 border-b border-gray-800 text-xs text-gray-500 whitespace-nowrap">{c.get("date","")}</td>'
             f'<td class="p-2 border-b border-gray-800"><span class="badge {"bg-green-600" if c["type"]=="new" else "bg-blue-600" if c["type"]=="update" else "bg-red-600"} text-white text-xs">{c["type"]}</span></td>'
             f'<td class="p-2 border-b border-gray-800 text-xs text-gray-400">{c.get("dimension","")}</td>'
-            f'<td class="p-2 border-b border-gray-800 text-xs text-white">{c.get("summary","")}</td></tr>\n'
+            f'<td class="p-2 border-b border-gray-800 text-xs text-white"><a href="./?tab={c.get("dimension","")}" class="hover:text-cobalt-400">{c.get("summary","")}</a></td></tr>\n'
             for c in reversed(changelog[-50:])
         )
         html = f'''<!DOCTYPE html>
@@ -837,6 +837,19 @@ def main():
             collector._print_err('无 fetch 缓存，请先执行 fetch')
 
     elif command == 'run':
+        # 先检查 remote 更新
+        try:
+            r = subprocess.run(['git', 'pull', '--rebase'], cwd=PROJECT_ROOT, capture_output=True, text=True, timeout=30)
+            if r.returncode == 0:
+                out = r.stdout.strip()
+                if 'Already up to date' in out:
+                    print('ℹ️  remote 无更新')
+                else:
+                    print('✅ remote 已同步')
+            else:
+                print(f'⚠️  git pull 跳过: {r.stderr[:100]}')
+        except Exception as e:
+            print(f'⚠️  git pull 失败: {e}')
         source_keys = args if args else None
         collector.run(source_keys)
 
