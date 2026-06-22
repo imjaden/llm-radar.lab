@@ -458,6 +458,7 @@ hotspots 数组中每个元素格式：
                             'id': item_id,
                             'summary': changes,
                             'date': today,
+                            'url': item.get('last_event_url') or item.get('recent_activity_url') or item.get('last_update_url') or '',
                         })
                 else:
                     # 按 name 匹配：不同 ID 但同名的实体合并
@@ -476,7 +477,7 @@ hotspots 数组中每个元素格式：
                         existing[old['id']] = updated
                         changes = self._diff_fields(old, updated)
                         if changes:
-                            changelog.append({'type': 'update', 'dimension': dimension, 'id': old['id'], 'summary': changes, 'date': today})
+                            changelog.append({'type': 'update', 'dimension': dimension, 'id': old['id'], 'summary': changes, 'date': today, 'url': item.get('last_event_url') or item.get('recent_activity_url') or item.get('last_update_url') or ''})
                     else:
                         # 新增实体
                         item['updated_at'] = now
@@ -485,8 +486,9 @@ hotspots 数组中每个元素格式：
                             'type': 'new',
                             'dimension': dimension,
                             'id': item_id,
-                            'summary': item.get('last_event') or item.get('recent_activity') or item.get('last_update') or '新实体',
+                            'summary': item.get('last_event') or item.get('recent_activity') or item.get('last_update') or f"{item.get('name','')} ({item_id})",
                             'date': today,
+                            'url': item.get('last_event_url') or item.get('recent_activity_url') or item.get('last_update_url') or '',
                         })
 
             snapshot[dimension] = list(existing.values())
@@ -639,13 +641,21 @@ hotspots 数组中每个元素格式：
     def _write_changelog_html(self, changelog):
         """从 changelog 数组生成 changelog.html"""
         now = datetime.now().strftime('%Y-%m-%d %H:%M')
-        rows = ''.join(
-            f'<tr><td class="p-2 border-b border-gray-800 text-xs text-gray-500 whitespace-nowrap">{c.get("date","")}</td>'
-            f'<td class="p-2 border-b border-gray-800"><span class="badge {"bg-green-600" if c["type"]=="new" else "bg-blue-600" if c["type"]=="update" else "bg-red-600"} text-white text-xs">{c["type"]}</span></td>'
-            f'<td class="p-2 border-b border-gray-800 text-xs text-gray-400">{c.get("dimension","")}</td>'
-            f'<td class="p-2 border-b border-gray-800 text-xs text-white"><a href="./?tab={c.get("dimension","")}" class="hover:text-cobalt-400">{c.get("summary","")}</a></td></tr>\n'
-            for c in reversed(changelog[-50:])
-        )
+        rows = ''
+        for c in reversed(changelog[-50:]):
+            date = c.get('date', '')
+            ctype = c.get('type', '')
+            dim = c.get('dimension', '')
+            summary = c.get('summary', '')
+            url = c.get('url', '')
+            badge_bg = 'bg-green-600' if ctype == 'new' else 'bg-blue-600' if ctype == 'update' else 'bg-red-600'
+            ext = ''
+            if url and not any(x in url for x in ['xxx', 'xxxx', 'example']):
+                ext = ' <a href="' + url + '" target="_blank" rel="noopener" class="text-cobalt-400 hover:text-cobalt-300">↗</a>'
+            rows += '<tr><td class="p-2 border-b border-gray-800 text-xs text-gray-500 whitespace-nowrap">' + date + '</td>'
+            rows += '<td class="p-2 border-b border-gray-800"><span class="badge ' + badge_bg + ' text-white text-xs">' + ctype + '</span></td>'
+            rows += '<td class="p-2 border-b border-gray-800 text-xs text-gray-400">' + dim + '</td>'
+            rows += '<td class="p-2 border-b border-gray-800 text-xs text-white"><a href="./?tab=' + dim + '" class="hover:text-cobalt-400">' + summary + '</a>' + ext + '</td></tr>\n'
         html = f'''<!DOCTYPE html>
 <html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>LLM Radar — 更新日志</title>
