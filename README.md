@@ -1,16 +1,18 @@
 # LLM Radar
 
-LLM 行业情报仪表盘。6 个数据源，5 维度（工具 / 大模型 / 厂商 / 人物 / 热点），热度排序，跨页签联动，中国/海外筛选。
+LLM 行业情报仪表盘。7 个数据源，5 维度（工具 / 大模型 / 厂商 / 人物 / 热点），热度排序，跨页签联动，中国/海外筛选。
 
 线上地址：https://llm-radar.lab.jaden.tech
 
 ## 结构
 
 ```
-├── index.html                 # 单体前端
-├── changelog.html             # 更新日志（每次采集自动生成）
+├── index.html                 # 单体前端（表格布局，Vanilla JS）
+├── changelog.html             # 更新日志（静态模板，JS 动态加载渲染）
 ├── llm-radar-collector.py     # 数据采集脚本
-├── llm-news-prompt.md         # 数据规范 & System Prompt
+├── llm-radar-run.sh           # 跨平台执行器（自动识别 Mac/Linux）
+├── llm-news-prompt.md         # 数据规范文档
+├── features.md                # 功能清单
 └── data/
     ├── snapshot.json           # 当前快照
     ├── fetch-cache.json        # 抓取缓存
@@ -27,13 +29,13 @@ python3 -m http.server 8080
 open http://localhost:8080
 
 # 数据采集
+./llm-radar-run.sh                    # 自动识别环境运行
 python3 llm-radar-collector.py run              # 全量采集（含 auto-push）
-python3 llm-radar-collector.py run qbitai       # 指定源
-python3 llm-radar-collector.py sources          # 查看源列表
+python3 llm-radar-collector.py sources          # 查看源列表（prettytable）
 
 # 手动推送
-python3 llm-radar-collector.py commit [message] # 仅 commit
-python3 llm-radar-collector.py auto-push        # commit + push
+python3 llm-radar-collector.py commit [message] # git add + commit
+python3 llm-radar-collector.py auto-push        # git add + commit + push
 
 # 定时任务
 python3 llm-radar-collector.py crontab --add          # 每天9:00、21:00采集
@@ -53,21 +55,19 @@ python3 llm-radar-collector.py crontab --remove       # 移除
 | openai | ≥ 1.0.0 |
 | requests | ≥ 2.31.0 |
 | beautifulsoup4 | ≥ 4.12.0 |
-| DEEPSEEK_API_KEY | 环境变量 |
+| prettytable | ≥ 3.0.0 |
+| DEEPSEEK_API_KEY | 环境变量或 .env 文件 |
 
 ```bash
-# recommend: set in .env
 echo 'DEEPSEEK_API_KEY="sk-xxx"' >> .env
-# or set in shell
-# export DEEPSEEK_API_KEY="sk-xxx"
-pip3 install openai requests beautifulsoup4
+pip3 install openai requests beautifulsoup4 prettytable
 ```
 
 ## 数据留存
 
 - 每维度最多 100 条，超过则保留最近 15 天数据
 - 过期数据归档至 `data/archive/`
-- 每次采集自动生成 `changelog.html`
+- changelog.html 为静态模板，JS 从 snapshot.json 动态渲染
 
 ## 技术栈
 
