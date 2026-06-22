@@ -87,7 +87,7 @@
       "hot_level": "温热",
       "last_event": "算苗3D TokenPU正式流片，国产AI云端大算力芯片",
       "last_event_date": "2026-06-17",
-      "last_event_url": "https://www.qbitai.com/2026/06/xxx/",
+      "last_event_url": "",
       "flagship_models": [],
       "key_people": [],
       "focus_areas": [
@@ -158,7 +158,7 @@
       "hot_level": "高热",
       "last_event": "Transformer作者Noam Shazeer离职，48小时连跑两员大将",
       "last_event_date": "2026-06-18",
-      "last_event_url": "https://www.qbitai.com/2026/06/xxx/",
+      "last_event_url": "",
       "flagship_models": [
         "gemini"
       ],
@@ -228,7 +228,7 @@
       "hot_level": "爆热",
       "last_event": "Q1财报泄露显示烧钱250亿美元；IPO前引入多位重量级人物",
       "last_event_date": "2026-06-18",
-      "last_event_url": "https://www.qbitai.com/2026/06/xxxx.html",
+      "last_event_url": "",
       "confidence": "high",
       "ref": {
         "founded": "2015",
@@ -353,7 +353,7 @@
       "hot_level": "高热",
       "last_event": "发布AI工厂战略，目标10万P算力、日产10万亿Token",
       "last_event_date": "2026-06-17",
-      "last_event_url": "https://www.qbitai.com/2026/06/xxx/",
+      "last_event_url": "",
       "flagship_models": [],
       "key_people": [],
       "focus_areas": [
@@ -492,7 +492,7 @@
       "hot_level": "高热",
       "last_event": "AlphaFold之父John Jumper离职加入Anthropic；另一大将（未指名）同时离职",
       "last_event_date": "2026-06-18",
-      "last_event_url": "https://www.qbitai.com/2026/06/xxxx.html",
+      "last_event_url": "",
       "flagship_models": [
         "alphafold",
         "gemini"
@@ -516,7 +516,7 @@
       "hot_level": "高热",
       "last_event": "开始涉足机器人自主研发，推动机器人领域AI应用",
       "last_event_date": "2026-06-17",
-      "last_event_url": "https://www.qbitai.com/2026/06/xxxx.html",
+      "last_event_url": "",
       "flagship_models": [],
       "key_people": [],
       "focus_areas": [
@@ -728,7 +728,7 @@
       "hot_level": "温热",
       "last_event": "员工士气跌至20年谷底，CTO承认AI重组糟糕透顶",
       "last_event_date": "2026-06-17",
-      "last_event_url": "https://www.qbitai.com/2026/06/xxxx.html",
+      "last_event_url": "",
       "confidence": "medium",
       "ref": {
         "founded": "2004",
@@ -801,7 +801,7 @@
       "hot_level": "高热",
       "last_event": "发布首个具身大模型Qwen-Robot系列",
       "last_event_date": "2026-06-16",
-      "last_event_url": "https://www.qbitai.com/2026/06/xxx/",
+      "last_event_url": "",
       "flagship_models": [
         "qwen-robot"
       ],
@@ -1952,7 +1952,7 @@
       "hot_level": "高热",
       "recent_activity": "带领团队（全员本科生）发表新论文：258M参数文生图模型",
       "recent_activity_date": "2026-06-18",
-      "recent_activity_url": "https://www.qbitai.com/2026/06/xxxx.html",
+      "recent_activity_url": "",
       "known_for": [
         "ResNet",
         "Mask R-CNN",
@@ -2371,7 +2371,7 @@
       "hot_level": "爆热",
       "recent_activity": "从谷歌离职加盟OpenAI",
       "recent_activity_date": "2026-06-18",
-      "recent_activity_url": "https://techcrunch.com/2026/06/18/xxx/",
+      "recent_activity_url": "",
       "known_for": [
         "Transformer",
         "自注意力机制"
@@ -2418,7 +2418,7 @@
       "hot_level": "温热",
       "recent_activity": "好评ABot-Earth0.5模型",
       "recent_activity_date": "2026-06-18",
-      "recent_activity_url": "https://www.qbitai.com/2026/06/xxxx.html",
+      "recent_activity_url": "",
       "known_for": [
         "计算机图形学"
       ],
@@ -2638,7 +2638,7 @@
       "hot_level": "高热",
       "last_update": "登顶Hugging Face论文三榜第一，获陈宝权好评",
       "last_update_date": "2026-06-18",
-      "last_update_url": "https://www.qbitai.com/2026/06/xxx/",
+      "last_update_url": "",
       "related_providers": [],
       "related_llms": [
         "abot-earth0.5"
@@ -5141,7 +5141,7 @@
       "hot_reason": "与魔兽世界联动，被提及用于守护艾泽拉斯",
       "last_event": "2026年1800个DeepSeek用于守护艾泽拉斯（游戏场景）",
       "last_event_date": "2026-06-18",
-      "last_event_url": "https://www.qbitai.com/2026/06/xxxx.html",
+      "last_event_url": "",
       "related_people": [],
       "confidence": "medium",
       "updated_at": "2026-06-22T10:30:22.581723"
@@ -5514,7 +5514,7 @@
       "hot_reason": "阿里首个具身大模型发布",
       "last_event": "三连发，阿里发布首个具身大模型Qwen-Robot系列",
       "last_event_date": "2026-06-16",
-      "last_event_url": "https://www.qbitai.com/2026/06/xxxx.html",
+      "last_event_url": "",
       "related_people": [],
       "confidence": "high",
       "updated_at": "2026-06-22T10:30:22.581723"
@@ -5798,7 +5798,7 @@
       "hot_reason": "登顶Hugging Face三榜第一",
       "last_event": "登顶Hugging Face论文三榜第一，获陈宝权好评",
       "last_event_date": "2026-06-18",
-      "last_event_url": "https://www.qbitai.com/2026/06/xxxx.html",
+      "last_event_url": "",
       "related_people": [
         "chen-baoquan"
       ],
@@ -5939,7 +5939,7 @@
       "hot_reason": "仅258M参数实现优秀效果，全员本科生",
       "last_event": "新论文发布，258M参数文生图",
       "last_event_date": "2026-06-18",
-      "last_event_url": "https://www.qbitai.com/2026/06/xxxx.html",
+      "last_event_url": "",
       "related_people": [
         "he-kaiming"
       ],
@@ -6010,7 +6010,7 @@
       "hot_reason": "智源大会上公布最新技术突破",
       "last_event": "智源大会公布最新技术突破",
       "last_event_date": "2026-06-15",
-      "last_event_url": "https://www.qbitai.com/2026/06/xxxx.html",
+      "last_event_url": "",
       "related_people": [],
       "confidence": "medium",
       "updated_at": "2026-06-22T10:30:22.581723"
@@ -7324,7 +7324,7 @@
       "summary": "OpenAI内部财报被泄露，显示其第一季度烧钱高达250亿美元，远超预期。这一数字让业界对其商业模式可持续性产生担忧，但也显示出其在模型训练和运营上的巨大投入。",
       "date": "2026-06-18",
       "source": "量子位",
-      "url": "https://www.qbitai.com/2026/06/xxxx.html",
+      "url": "",
       "related_providers": [
         "openai"
       ],
@@ -7437,7 +7437,7 @@
       "summary": "北京建成了以九章云极等企业为核心的AI工厂，目标提供10万P算力（相当于1000倍综合降本），每天可生产10万亿Token，成为AI基础设施新标杆。",
       "date": "2026-06-17",
       "source": "量子位",
-      "url": "https://www.qbitai.com/2026/06/xxxx.html",
+      "url": "",
       "related_providers": [
         "jiuzhangyunji"
       ],
@@ -7505,7 +7505,7 @@
       "summary": "阿里云连续发布三款具身智能大模型Qwen-Robot系列，标志着具身智能进入大模型时代。该系列模型结合视觉、语言和动作，旨在赋能机器人实现更复杂的操作。",
       "date": "2026-06-16",
       "source": "量子位",
-      "url": "https://www.qbitai.com/2026/06/xxxx.html",
+      "url": "",
       "related_providers": [
         "alibaba-cloud"
       ],

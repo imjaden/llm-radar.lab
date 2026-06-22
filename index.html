@@ -355,7 +355,7 @@ function dateAgo(d) {
 function eventCell(text,url,date) {
   if(!text) return '<span class="text-gray-600">—</span>';
   let h=`<div class="event-text">${text}`;
-  if(url) h+=` <a href="${url}" target="_blank" rel="noopener">↗</a>`;
+  if(url && !/xxx|xxxx|example|localhost|0\.0\.0\.0/.test(url)) h+=` <a href="${url}" target="_blank" rel="noopener">↗</a>`;
   if(date) h+=` <span class="text-gray-500 text-xs ml-1">${dateAgo(date)}</span>`;
   return h+'</div>';
 }

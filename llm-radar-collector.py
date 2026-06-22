@@ -287,7 +287,8 @@ class LLMRadarCollector:
 3. 无法确认的信息标记 confidence: "low"
 4. ID 使用英文小写+连字符格式
 5. 日期使用 YYYY-MM-DD 格式
-6. 不要编造数据，只提取新闻中明确提到的信息"""
+6. 不要编造数据，只提取新闻中明确提到的信息
+7. URL 字段必须填写完整可访问的链接。如果不确定具体文章 URL，留空字符串('')，不要使用 xxxx/xxx/example 等占位符"""
 
         user_prompt = f"""请从以下 LLM 行业新闻中提取实体：
 
@@ -639,7 +640,7 @@ hotspots 数组中每个元素格式：
         """从 changelog 数组生成 changelog.html"""
         now = datetime.now().strftime('%Y-%m-%d %H:%M')
         rows = ''.join(
-            f'<tr><td class="p-2 border-b border-gray-800 text-xs text-gray-500">{c.get("date","")}</td>'
+            f'<tr><td class="p-2 border-b border-gray-800 text-xs text-gray-500 whitespace-nowrap">{c.get("date","")}</td>'
             f'<td class="p-2 border-b border-gray-800"><span class="badge {"bg-green-600" if c["type"]=="new" else "bg-blue-600" if c["type"]=="update" else "bg-red-600"} text-white text-xs">{c["type"]}</span></td>'
             f'<td class="p-2 border-b border-gray-800 text-xs text-gray-400">{c.get("dimension","")}</td>'
             f'<td class="p-2 border-b border-gray-800 text-xs text-white">{c.get("summary","")}</td></tr>\n'
