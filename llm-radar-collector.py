@@ -158,6 +158,9 @@ class LLMRadarCollector:
 
     def _auto_push(self, changelog):
         """有数据更新时自动 commit + push"""
+        if getattr(self, '_skip_push', False):
+            self._print_info('质量门禁未通过，跳过 auto-push')
+            return
         if not changelog:
             self._print_info('无数据更新，跳过 auto-push')
             return
@@ -187,6 +190,21 @@ class LLMRadarCollector:
         except subprocess.CalledProcessError as e:
             stderr = e.stderr.decode() if e.stderr else ''
             self._print_warn(f'auto-push 跳过: {stderr[:200]}')
+            # Dead letter: 保存推送失败数据
+            dead_path = self.data_dir / 'dead-letter.json'
+            try:
+                dead = json.loads(dead_path.read_text()) if dead_path.exists() else []
+                dead.append({
+                    'time': datetime.now().isoformat(),
+                    'changelog_count': len(changelog),
+                    'error': stderr[:500],
+                    'changelog_snapshot': changelog[:20],  # 最多保留 20 条避免失控
+                })
+                dead = dead[-10:]  # 保留最近 10 次
+                dead_path.write_text(json.dumps(dead, ensure_ascii=False, indent=2))
+                self._print_info(f'推送失败数据已存档到 dead-letter.json')
+            except Exception as dl_err:
+                self._print_warn(f'dead letter 写入失败: {dl_err}')
 
     # ===== Fetch =====
     def fetch_source(self, source_key):
@@ -232,9 +250,26 @@ class LLMRadarCollector:
             return None
 
     def fetch_all(self, source_keys=None):
-        """抓取所有新闻源"""
+        """抓取所有新闻源（跳过已降级源）"""
         if source_keys is None:
             source_keys = list(SOURCES.keys())
+
+        # 加载源健康状态
+        degraded = set()
+        metrics_path = self.data_dir / 'metrics.json'
+        if metrics_path.exists():
+            try:
+                metrics = json.loads(metrics_path.read_text())
+                source_health = metrics.get('source_health', {})
+                for key, h in source_health.items():
+                    if h.get('consecutive_fails', 0) >= 3:
+                        degraded.add(key)
+            except:
+                pass
+
+        if degraded:
+            self._print_warn(f'跳过 {len(degraded)} 个已降级源: {", ".join(degraded)}')
+            source_keys = [k for k in source_keys if k not in degraded]
 
         results = []
         for key in source_keys:
@@ -324,7 +359,17 @@ hotspots 数组中每个元素格式：
             self._print_ok(f'实体提取完成，耗时 {duration}s，共 {total} 个实体')
             return entities
         else:
-            self._print_err(f'实体提取失败')
+            # 重试 1 次：简化 prompt，只要求纯 JSON
+            self._print_warn('JSON 解析失败，重试...')
+            retry_prompt = '只输出 JSON，不要用 markdown 包裹。包含 providers、people、tools、llms、hotspots 五个数组。'
+            retry_result = self._call_deepseek(retry_prompt, combined)
+            if retry_result and not retry_result.get('error'):
+                retry_content = retry_result.get('content', '')
+                retry_entities = self._parse_json_output(retry_content)
+                if retry_entities:
+                    self._print_ok(f'重试成功，耗时 {round(time.time() - start_time, 1)}s')
+                    return retry_entities
+            self._print_err(f'实体提取失败（已重试）')
             self._print_info(f'LLM 输出前 500 字符: {content[:500]}')
             return None
 
@@ -646,19 +691,167 @@ hotspots 数组中每个元素格式：
         """changelog.html 为静态模板，JS 动态加载 snapshot.json 渲染"""
         pass
 
+    # ===== Agent Loop: Think =====
+    def _think(self):
+        """采集策略决策：检查过短间隔和连续失败"""
+        metrics_path = self.data_dir / 'metrics.json'
+        if not metrics_path.exists():
+            # 首次运行，允许
+            return True
+
+        try:
+            metrics = json.loads(metrics_path.read_text())
+        except:
+            return True
+
+        now = datetime.now()
+
+        # 1. 间隔检查：上次成功 < 6h 则跳过
+        last_success = metrics.get('last_success_time')
+        if last_success:
+            try:
+                last_dt = datetime.fromisoformat(last_success)
+                hours_since = (now - last_dt).total_seconds() / 3600
+                if hours_since < 6:
+                    self._print_info(f'距上次成功采集仅 {hours_since:.1f}h，跳过（最短间隔 6h）')
+                    return False
+            except:
+                pass
+
+        # 2. 连续失败检查
+        consec_fails = metrics.get('consecutive_fails', 0)
+        if consec_fails >= 3:
+            self._print_warn(f'连续 {consec_fails} 次失败，本次仍将继续尝试')
+
+        return True
+
+    # ===== Agent Loop: Verify =====
+    def _verify(self, entities):
+        """质量门禁：检查提取结果的新鲜度和完整性"""
+        issues = []
+        if not entities:
+            return ['实体提取为空']
+        # 1. 计算事件新鲜度
+        from statistics import median
+        ages = []
+        for dim in ['providers', 'people', 'tools', 'llms']:
+            for item in entities.get(dim, []):
+                d = item.get('last_event_date') or item.get('recent_activity_date') or item.get('last_update_date') or ''
+                if d and len(d) >= 10:
+                    try:
+                        dt = datetime.strptime(d[:10], '%Y-%m-%d')
+                        ages.append((datetime.now() - dt).total_seconds() / 3600)
+                    except:
+                        pass
+        if ages:
+            median_age = median(ages)
+            if median_age > 168:  # 7天
+                issues.append(f'事件中位数新鲜度 {median_age:.0f}h > 168h')
+        # 2. 热点数量
+        hotspots = entities.get('hotspots', [])
+        if len(hotspots) < 3:
+            issues.append(f'热点仅 {len(hotspots)} 条')
+        # 3. 去重比异常（仅当有存量数据时）
+        return issues
+
+    # ===== Agent Loop: Observe =====
+    def _observe(self, run_result, fetch_results=None, entities=None, snapshot=None):
+        """记录运行指标到 metrics.json"""
+        metrics_path = self.data_dir / 'metrics.json'
+        try:
+            metrics = json.loads(metrics_path.read_text()) if metrics_path.exists() else {}
+        except:
+            metrics = {}
+
+        now = datetime.now()
+        now_iso = now.isoformat()
+
+        # 基础指标
+        metrics['last_run_time'] = now_iso
+        metrics['total_runs'] = metrics.get('total_runs', 0) + 1
+
+        if run_result:
+            metrics['last_success_time'] = now_iso
+            metrics['consecutive_fails'] = 0
+        else:
+            metrics['consecutive_fails'] = metrics.get('consecutive_fails', 0) + 1
+
+        # 源成功率
+        if fetch_results:
+            total = len(fetch_results)
+            success_count = 0
+            source_health = metrics.get('source_health', {})
+            for key, r in fetch_results.items():
+                ok = r.get('success', False) if isinstance(r, dict) else bool(r)
+                sh = source_health.setdefault(key, {'consecutive_fails': 0, 'last_result': None})
+                if ok:
+                    sh['consecutive_fails'] = 0
+                    success_count += 1
+                else:
+                    sh['consecutive_fails'] = sh.get('consecutive_fails', 0) + 1
+                sh['last_result'] = 'ok' if ok else 'fail'
+                sh['last_time'] = now_iso
+            metrics['source_health'] = source_health
+            metrics['source_success_rate'] = round(success_count / total, 3) if total else 0
+
+        # 实体统计
+        if entities:
+            total_ents = sum(len(entities.get(k, [])) for k in ['providers', 'people', 'tools', 'llms'])
+            metrics['extracted_entities'] = total_ents
+
+        # 快照统计
+        if snapshot and 'stats' in snapshot:
+            for k, v in snapshot['stats'].items():
+                metrics[f'snapshot_{k}'] = v
+
+        # 数据新鲜度
+        if entities:
+            from statistics import median
+            ages = []
+            for dim in ['providers', 'people', 'tools', 'llms']:
+                for item in entities.get(dim, []):
+                    d = item.get('last_event_date') or item.get('recent_activity_date') or ''
+                    if d and len(d) >= 10:
+                        try:
+                            dt = datetime.strptime(d[:10], '%Y-%m-%d')
+                            ages.append((datetime.now() - dt).total_seconds() / 3600)
+                        except:
+                            pass
+            if ages:
+                metrics['median_event_age_hours'] = round(median(ages), 1)
+                metrics['min_event_age_hours'] = round(min(ages), 1)
+
+        # 保留最近 N 次运行历史
+        history = metrics.get('run_history', [])
+        history.append({
+            'time': now_iso,
+            'success': bool(run_result),
+            'entities': metrics.get('extracted_entities', 0),
+            'source_rate': metrics.get('source_success_rate', 0),
+        })
+        metrics['run_history'] = history[-30:]  # 保留最近 30 次
+
+        metrics_path.write_text(json.dumps(metrics, ensure_ascii=False, indent=2))
+        self._print_info(f'指标已记录到 metrics.json')
+
     # ===== Run =====
     def run(self, source_keys=None):
-        """完整流程：fetch → extract → merge"""
+        """完整流程：Think → Act → Observe → Verify"""
         self._print_info('=== LLM Radar 数据采集 ===')
         self._print_info(f'时间: {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}')
         self._print_info(f'数据目录: {self.data_dir}')
         print()
+
+        # [Think] 采集策略决策
+        if not self._think():
+            return False
 
         # Step 1: Fetch
         self._print_info('[1/3] 抓取新闻源...')
         fetch_results = self.fetch_all(source_keys)
         if not fetch_results:
             self._print_err('所有新闻源抓取失败')
+            self._observe(False, fetch_results={k: {'success': False} for k in (source_keys or list(SOURCES.keys()))})
             return False
         print()
 
@@ -667,7 +860,17 @@ hotspots 数组中每个元素格式：
         entities = self.extract_entities(fetch_results)
         if not entities:
             self._print_err('实体提取失败')
+            self._observe(False, fetch_results=fetch_results)
             return False
+
+        # [Verify] 质量门禁
+        issues = self._verify(entities)
+        if issues:
+            self._print_warn(f'质量门禁: {"; ".join(issues)}')
+            self._skip_push = True
+        else:
+            self._skip_push = False
+            self._print_ok('质量门禁通过')
         print()
 
         # Step 3: Merge
@@ -675,7 +878,11 @@ hotspots 数组中每个元素格式：
         snapshot = self.merge_entities(entities)
         if not snapshot:
             self._print_err('合并失败')
+            self._observe(False, fetch_results=fetch_results, entities=entities)
             return False
+
+        # [Observe] 记录本次运行指标
+        self._observe(True, fetch_results=fetch_results, entities=entities, snapshot=snapshot)
 
         print()
         stats = snapshot.get('stats', {})
