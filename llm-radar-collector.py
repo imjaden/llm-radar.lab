@@ -778,10 +778,13 @@ hotspots 数组中每个元素格式：
 
         # 源成功率
         if fetch_results:
-            total = len(fetch_results)
-            success_count = 0
             source_health = metrics.get('source_health', {})
+            success_count = 0
+            total = 0
             for key, r in fetch_results.items():
+                if key.startswith('_'):
+                    continue
+                total += 1
                 ok = r.get('success', False) if isinstance(r, dict) else bool(r)
                 sh = source_health.setdefault(key, {'consecutive_fails': 0, 'last_result': None})
                 if ok:
@@ -848,10 +851,18 @@ hotspots 数组中每个元素格式：
 
         # Step 1: Fetch
         self._print_info('[1/3] 抓取新闻源...')
+        target_keys = source_keys or list(SOURCES.keys())
         fetch_results = self.fetch_all(source_keys)
+        # 构建源级结果字典（用于指标跟踪）
+        source_results = {}
+        successful = {r['source'] for r in fetch_results} if fetch_results else set()
+        for k in target_keys:
+            source_results[k] = {'success': k in successful}
+        source_results['_source_keys'] = target_keys  # 调试信息
+
         if not fetch_results:
             self._print_err('所有新闻源抓取失败')
-            self._observe(False, fetch_results={k: {'success': False} for k in (source_keys or list(SOURCES.keys()))})
+            self._observe(False, fetch_results=source_results)
             return False
         print()
 
@@ -860,7 +871,7 @@ hotspots 数组中每个元素格式：
         entities = self.extract_entities(fetch_results)
         if not entities:
             self._print_err('实体提取失败')
-            self._observe(False, fetch_results=fetch_results)
+            self._observe(False, fetch_results=source_results)
             return False
 
         # [Verify] 质量门禁
@@ -878,11 +889,11 @@ hotspots 数组中每个元素格式：
         snapshot = self.merge_entities(entities)
         if not snapshot:
             self._print_err('合并失败')
-            self._observe(False, fetch_results=fetch_results, entities=entities)
+            self._observe(False, fetch_results=source_results, entities=entities)
             return False
 
         # [Observe] 记录本次运行指标
-        self._observe(True, fetch_results=fetch_results, entities=entities, snapshot=snapshot)
+        self._observe(True, fetch_results=source_results, entities=entities, snapshot=snapshot)
 
         print()
         stats = snapshot.get('stats', {})
