@@ -403,6 +403,7 @@ function renderHotspots() {
       </div>
       ${related?`<div class="flex flex-wrap gap-1.5 mt-2 pt-2 border-t border-gray-800">${related}</div>`:''}
       ${h.url?`<a href="${h.url}" target="_blank" rel="noopener" class="text-xs text-cobalt-400 hover:text-cobalt-300 mt-2 inline-block">阅读原文 ↗</a>`:''}
+      <a href="https://cn.bing.com/search?q=${encodeURIComponent(h.title||'')}+${(h.url?h.url.replace(/https?:\/\/(?:www\.)?([^\/]+).*/,'site:$1'):'site:'+h.source)}" target="_blank" rel="noopener" class="text-xs text-gray-500 hover:text-accent-400 mt-2 inline-block ml-3" title="搜索相关报道">🔍 搜索</a>
     </div>`;
   }).join('');
 }
