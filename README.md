@@ -53,10 +53,13 @@ python3 llm-radar-collector.py crontab --remove       # 移除
 | openai | ≥ 1.0.0 |
 | requests | ≥ 2.31.0 |
 | beautifulsoup4 | ≥ 4.12.0 |
-| DEEPSEEK_API_KEY | 环境变量或 secret-manager |
+| DEEPSEEK_API_KEY | 环境变量 |
 
 ```bash
-export DEEPSEEK_API_KEY="sk-xxx"
+# recommend: set in .env
+echo 'DEEPSEEK_API_KEY="sk-xxx"' >> .env
+# or set in shell
+# export DEEPSEEK_API_KEY="sk-xxx"
 pip3 install openai requests beautifulsoup4
 ```
 

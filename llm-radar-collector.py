@@ -297,7 +297,7 @@ class LLMRadarCollector:
 
 hotspots 数组中每个元素格式：
 ```json
-{{"id": "英文标识", "title": "中文标题", "summary": "50-100字简报", "date": "YYYY-MM-DD", "source": "来源名称", "url": "原文链接", "related_providers": ["厂商id"], "related_people": ["人物id"], "related_tools": ["工具id"], "related_llms": ["模型id"]}}
+{{"id": "英文标识", "title": "中文标题", "summary": "50-100字简报", "date": "YYYY-MM-DD", "source": "来源名称", "url": "完整原文链接(必须包含完整路径，不能只是门户首页)", "related_providers": ["厂商id"], "related_people": ["人物id"], "related_tools": ["工具id"], "related_llms": ["模型id"]}}
 ```
 热点为近期最重要/最受关注的 3-5 条行业事件。"""
 
@@ -641,7 +641,7 @@ hotspots 数组中每个元素格式：
 <h1 class="text-lg font-bold text-white">📋 更新日志</h1>
 <a href="./" class="text-xs text-cobalt-400 hover:text-cobalt-300">← 返回仪表盘</a>
 </div>
-<p class="text-xs text-gray-500 mb-4">数据更新时间: {now} · 共 {len(changelog)} 条记录</p>
+<p class="text-xs text-gray-500 mb-4">数据更新时间: {now} · 最近 {len(changelog)} 条记录</p>
 <div class="overflow-x-auto">
 <table class="w-full"><thead><tr class="text-xs text-gray-500 uppercase">
 <th class="p-2 text-left">日期</th><th class="p-2 text-left">类型</th><th class="p-2 text-left">维度</th><th class="p-2 text-left">摘要</th>
