@@ -226,7 +226,7 @@
   var oneHour = 60 * 60 * 1000;
   if (!t || (Date.now() - parseInt(t)) > oneHour) {
     p.set('t', Date.now());
-    window.location.replace(window.location.pathname + (window.location.search ? '&' : '?') + p.toString() + (window.location.hash||''));
+    window.location.replace(window.location.pathname + '?' + p.toString() + (window.location.hash||''));
   }
 })();
 

@@ -9,7 +9,7 @@
   <script>
   (function(){
     var p=new URLSearchParams(window.location.search),t=p.get('t'),oh=3600000;
-    if(!t||Date.now()-parseInt(t)>oh){p.set('t',Date.now());window.location.replace(window.location.pathname+(window.location.search?'&':'?')+p.toString()+(window.location.hash||''))}
+    if(!t||Date.now()-parseInt(t)>oh){p.set('t',Date.now());window.location.replace(window.location.pathname+'?'+p.toString()+(window.location.hash||''))}
   })();
   </script>
   <style>
@@ -56,7 +56,7 @@
         ext = ' <a href="' + url + '" target="_blank" rel="noopener" class="text-cobalt-400 hover:text-cobalt-300">↗</a>';
       }
       row = document.createElement('tr');
-      row.innerHTML = '<td class="p-2 border-b border-gray-800 text-xs text-gray-500 whitespace-nowrap">' + (log[i].date||'') + '</td>' +
+      row.innerHTML = '<td class="p-2 border-b border-gray-800 text-xs text-gray-500 whitespace-nowrap">' + (log[i].date||'') + ' ' + (log[i].time||'') + '</td>' +
         '<td class="p-2 border-b border-gray-800"><span class="badge ' + bg + ' text-white text-xs">' + ctype + '</span></td>' +
         '<td class="p-2 border-b border-gray-800 text-xs text-gray-400">' + dim + '</td>' +
         '<td class="p-2 border-b border-gray-800 text-xs text-white"><a href="./?tab=' + dim + '" class="hover:text-cobalt-400">' + summary + '</a>' + ext + '</td>';

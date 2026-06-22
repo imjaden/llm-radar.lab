@@ -36,5 +36,6 @@
 
 - 静态模板，JS 动态加载 data/snapshot.json 渲染
 - 最新 50 条变更记录（时间倒序）
-- 日期不换行 + 摘要可点击跳转至对应页签 + 外链 ↗ 图标
+- 日期调整为日期+时间，格式为 `YYYY-MM-DD HH:mm:ss`，展示不换行，摘要可点击跳转至对应页签 + 外链 ↗ 图标
+- BUG: 摘要外链接（http://jaden.local:8081/?tab=hotspots），点击后跳转至对应页签加载时间戳导致无法方法访问页面（http://jaden.local:8081/&tab=hotspots&t=1782110758751）
 - 时间戳缓存刷新（与 index.html 相同逻辑）

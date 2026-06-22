@@ -459,6 +459,7 @@ hotspots 数组中每个元素格式：
                             'id': item_id,
                             'summary': changes,
                             'date': today,
+                            'time': datetime.now().strftime('%H:%M:%S'),
                             'url': item.get('last_event_url') or item.get('recent_activity_url') or item.get('last_update_url') or '',
                         })
                 else:
@@ -478,7 +479,7 @@ hotspots 数组中每个元素格式：
                         existing[old['id']] = updated
                         changes = self._diff_fields(old, updated)
                         if changes:
-                            changelog.append({'type': 'update', 'dimension': dimension, 'id': old['id'], 'summary': changes, 'date': today, 'url': item.get('last_event_url') or item.get('recent_activity_url') or item.get('last_update_url') or ''})
+                            changelog.append({'type': 'update', 'dimension': dimension, 'id': old['id'], 'summary': changes, 'date': today, 'time': datetime.now().strftime('%H:%M:%S'), 'url': item.get('last_event_url') or item.get('recent_activity_url') or item.get('last_update_url') or ''})
                     else:
                         # 新增实体
                         item['updated_at'] = now
@@ -489,6 +490,7 @@ hotspots 数组中每个元素格式：
                             'id': item_id,
                             'summary': item.get('last_event') or item.get('recent_activity') or item.get('last_update') or f"{item.get('name','')} ({item_id})",
                             'date': today,
+                            'time': datetime.now().strftime('%H:%M:%S'),
                             'url': item.get('last_event_url') or item.get('recent_activity_url') or item.get('last_update_url') or '',
                         })
 
