@@ -442,7 +442,7 @@ hotspots 数组中每个元素格式：
                     continue
 
                 if item_id in existing:
-                    # 更新现有实体
+                    # 更新现有实体（按 id 匹配）
                     old = existing[item_id]
                     updated = self._merge_single(old, item)
                     updated['updated_at'] = now
@@ -459,16 +459,34 @@ hotspots 数组中每个元素格式：
                             'date': today,
                         })
                 else:
-                    # 新增实体
-                    item['updated_at'] = now
-                    existing[item_id] = item
-                    changelog.append({
-                        'type': 'new',
-                        'dimension': dimension,
-                        'id': item_id,
-                        'summary': item.get('last_event') or item.get('recent_activity') or item.get('last_update') or '新实体',
-                        'date': today,
-                    })
+                    # 按 name 匹配：不同 ID 但同名的实体合并
+                    item_name = item.get('name', '')
+                    matched = None
+                    if item_name:
+                        for eid, e in existing.items():
+                            if e.get('name') == item_name:
+                                matched = e
+                                break
+                    if matched:
+                        # 合并到已有实体，保留原 ID
+                        old = matched
+                        updated = self._merge_single(old, item)
+                        updated['updated_at'] = now
+                        existing[old['id']] = updated
+                        changes = self._diff_fields(old, updated)
+                        if changes:
+                            changelog.append({'type': 'update', 'dimension': dimension, 'id': old['id'], 'summary': changes, 'date': today})
+                    else:
+                        # 新增实体
+                        item['updated_at'] = now
+                        existing[item_id] = item
+                        changelog.append({
+                            'type': 'new',
+                            'dimension': dimension,
+                            'id': item_id,
+                            'summary': item.get('last_event') or item.get('recent_activity') or item.get('last_update') or '新实体',
+                            'date': today,
+                        })
 
             snapshot[dimension] = list(existing.values())
 
