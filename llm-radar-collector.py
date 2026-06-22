@@ -659,6 +659,7 @@ hotspots 数组中每个元素格式：
         html = f'''<!DOCTYPE html>
 <html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>LLM Radar — 更新日志</title>
+<link rel="icon" href="static/favicon.png">
 <script src="https://cdn.tailwindcss.com"></script>
 <script>var p=new URLSearchParams(window.location.search),t=p.get('t'),oh=3600000;(!t||Date.now()-parseInt(t)>oh)&&(p.set('t',Date.now()),window.location.replace(window.location.pathname+(window.location.search?'&':'?')+p.toString()+(window.location.hash||'')))</script>
 <style>body{{font-family:Inter,sans-serif;background:#0a0a14;color:#e0e0e0}}
