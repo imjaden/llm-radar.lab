@@ -47,6 +47,7 @@ import subprocess
 from pathlib import Path
 from datetime import datetime, timedelta
 from openai import OpenAI
+from prettytable import PrettyTable
 
 # ===== Constants =====
 PROJECT_ROOT = Path(__file__).resolve().parent
@@ -556,8 +557,8 @@ hotspots 数组中每个元素格式：
         # 归档历史快照
         self._archive_snapshot(snapshot)
 
-        # 生成 changelog.html
-        self._write_changelog_html(snapshot.get('changelog', []))
+        # changelog.html 为静态模板，数据通过 snapshot.json 加载
+        # 无需额外生成操作
 
         # auto-push
         self._auto_push(changelog)
@@ -639,50 +640,8 @@ hotspots 数组中每个元素格式：
         self._print_info(f'{dimension} 归档: {len(items)} 条 → {archive_path}')
 
     def _write_changelog_html(self, changelog):
-        """从 changelog 数组生成 changelog.html"""
-        now = datetime.now().strftime('%Y-%m-%d %H:%M')
-        rows = ''
-        for c in reversed(changelog[-50:]):
-            date = c.get('date', '')
-            ctype = c.get('type', '')
-            dim = c.get('dimension', '')
-            summary = c.get('summary', '')
-            url = c.get('url', '')
-            badge_bg = 'bg-green-600' if ctype == 'new' else 'bg-blue-600' if ctype == 'update' else 'bg-red-600'
-            ext = ''
-            if url and not any(x in url for x in ['xxx', 'xxxx', 'example']):
-                ext = ' <a href="' + url + '" target="_blank" rel="noopener" class="text-cobalt-400 hover:text-cobalt-300">↗</a>'
-            rows += '<tr><td class="p-2 border-b border-gray-800 text-xs text-gray-500 whitespace-nowrap">' + date + '</td>'
-            rows += '<td class="p-2 border-b border-gray-800"><span class="badge ' + badge_bg + ' text-white text-xs">' + ctype + '</span></td>'
-            rows += '<td class="p-2 border-b border-gray-800 text-xs text-gray-400">' + dim + '</td>'
-            rows += '<td class="p-2 border-b border-gray-800 text-xs text-white"><a href="./?tab=' + dim + '" class="hover:text-cobalt-400">' + summary + '</a>' + ext + '</td></tr>\n'
-        html = f'''<!DOCTYPE html>
-<html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>LLM Radar — 更新日志</title>
-<link rel="icon" href="static/favicon.png">
-<script src="https://cdn.tailwindcss.com"></script>
-<script>var p=new URLSearchParams(window.location.search),t=p.get('t'),oh=3600000;(!t||Date.now()-parseInt(t)>oh)&&(p.set('t',Date.now()),window.location.replace(window.location.pathname+(window.location.search?'&':'?')+p.toString()+(window.location.hash||'')))</script>
-<style>body{{font-family:Inter,sans-serif;background:#0a0a14;color:#e0e0e0}}
-.badge{{display:inline-block;padding:1px 6px;border-radius:4px;font-size:0.6rem;font-weight:600}}
-</style></head>
-<body class="min-h-screen p-6">
-<div class="max-w-4xl mx-auto">
-<div class="flex items-center justify-between mb-6">
-<h1 class="text-lg font-bold text-white">📋 更新日志</h1>
-<a href="./" class="text-xs text-cobalt-400 hover:text-cobalt-300">← 返回仪表盘</a>
-</div>
-<p class="text-xs text-gray-500 mb-4">数据更新时间: {now} · 最近 {len(changelog)} 条记录</p>
-<div class="overflow-x-auto">
-<table class="w-full"><thead><tr class="text-xs text-gray-500 uppercase">
-<th class="p-2 text-left">日期</th><th class="p-2 text-left">类型</th><th class="p-2 text-left">维度</th><th class="p-2 text-left">摘要</th>
-</tr></thead><tbody>{rows}</tbody></table>
-</div>
-</div>
-</body></html>'''
-        changelog_path = self.project_root / 'changelog.html'
-        with open(changelog_path, 'w', encoding='utf-8') as f:
-            f.write(html)
-        self._print_ok(f'changelog.html 已生成: {changelog_path}')
+        """changelog.html 为静态模板，JS 动态加载 snapshot.json 渲染"""
+        pass
 
     # ===== Run =====
     def run(self, source_keys=None):
@@ -723,10 +682,13 @@ hotspots 数组中每个元素格式：
     # ===== Sources =====
     def list_sources(self):
         """列出所有新闻源"""
-        print('\n📰 新闻源列表\n')
+        table = PrettyTable()
+        table.field_names = ["分类", "名称", "URL"]
+        table.align = "l"
         for key, src in SOURCES.items():
-            print(f'  {key:15} {src["name"]:12} {src["category"]:8} {src["url"]}')
-        print(f'\n共 {len(SOURCES)} 个新闻源')
+            table.add_row([src['category'], src['name'], src['url']])
+        print(f'\n📰 新闻源 ({len(SOURCES)} 个)\n')
+        print(table)
 
 
 CRON_TAG = '# llm-radar-collector'

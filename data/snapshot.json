@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "generated_at": "2026-06-22T12:05:40.387393",
+  "generated_at": "2026-06-22T14:34:26.887718",
   "period": "2026-06-15 ~ 2026-06-22",
   "execution_mode": "semi-auto",
   "providers": [
@@ -6821,8 +6821,8 @@
     "total_tools": 69,
     "total_llms": 73,
     "total_hotspots": 97,
-    "new_this_period": 4,
-    "updated_this_period": 22,
+    "new_this_period": 0,
+    "updated_this_period": 0,
     "removed_this_period": 0
   },
   "hotspots": [
