@@ -8,4 +8,5 @@ __pycache__/
 data/collector.log
 *.md
 !README.md
-!llm-radar-prompt.md
+!llm-news-prompt.md
+!features.md
