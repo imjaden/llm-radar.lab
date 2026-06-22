@@ -289,7 +289,8 @@ class LLMRadarCollector:
 4. ID 使用英文小写+连字符格式
 5. 日期使用 YYYY-MM-DD 格式
 6. 不要编造数据，只提取新闻中明确提到的信息
-7. URL 字段必须填写完整可访问的链接。如果不确定具体文章 URL，留空字符串('')，不要使用 xxxx/xxx/example 等占位符"""
+7. URL 字段必须填写完整可访问的链接。如果不确定具体文章 URL，留空字符串('')，不要使用 xxxx/xxx/example 等占位符
+8. **时效优先**：优先提取最近 48 小时内的最新事件。超过 7 天的旧事件除非有重大更新（如新版本发布、融资、人员变动），否则不提取"""
 
         user_prompt = f"""请从以下 LLM 行业新闻中提取实体：
 
@@ -301,7 +302,7 @@ hotspots 数组中每个元素格式：
 ```json
 {{"id": "英文标识", "title": "中文标题", "summary": "50-100字简报", "date": "YYYY-MM-DD", "source": "来源名称", "url": "完整原文链接(必须包含完整路径，不能只是门户首页)", "related_providers": ["厂商id"], "related_people": ["人物id"], "related_tools": ["工具id"], "related_llms": ["模型id"]}}
 ```
-热点为近期最重要/最受关注的 3-5 条行业事件。"""
+热点为近期最重要/最受关注的 3-5 条行业事件（优先提取最近 48 小时内的，超过 7 天的不提取）。"""
 
         self._print_info('调用 LLM 提取实体...')
         start_time = time.time()
