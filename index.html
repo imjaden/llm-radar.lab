@@ -127,6 +127,10 @@
       .hide-mobile { display:none !important; }
       .data-table td, .data-table th { padding:6px 6px; font-size:0.7rem; }
     }
+    /* Responsive: hide source chips and filter chips on mid screens */
+    @media (max-width:1200px) {
+      .hide-1200 { display:none !important; }
+    }
   </style>
 </head>
 <body class="min-h-screen">
@@ -139,9 +143,9 @@
           <img src="static/favicon.png" class="w-5 h-5 rounded" alt="R">
           <span class="font-bold text-white text-sm">LLM Radar</span>
         </div>
-        <span class="text-gray-600">|</span>
-        <span class="text-gray-500">数据源:</span>
-        <span id="data-sources" class="text-gray-400"></span>
+        <span class="hide-1200 text-gray-600">|</span>
+        <span class="hide-1200 text-gray-500">数据源:</span>
+        <span id="data-sources" class="hide-1200 text-gray-400"></span>
         <div class="ml-auto flex items-center gap-2">
           <span id="updated-at" class="font-mono text-gray-400"></span>
           <span id="ago-label" class="cursor-default font-mono px-1.5 py-0.5 rounded text-xs"></span>
@@ -165,7 +169,7 @@
         <button class="tab-btn px-4 py-2.5 text-sm font-medium whitespace-nowrap transition-colors hover:text-white" data-tab="providers">🏢 厂商 <span class="ml-1 text-xs opacity-60" id="tc-providers">0</span></button>
         <button class="tab-btn px-4 py-2.5 text-sm font-medium whitespace-nowrap transition-colors hover:text-white" data-tab="people">👤 人物 <span class="ml-1 text-xs opacity-60" id="tc-people">0</span></button>
         <button class="tab-btn px-4 py-2.5 text-sm font-medium whitespace-nowrap transition-colors hover:text-white" data-tab="hotspots">🔥 热点 <span class="ml-1 text-xs opacity-60" id="tc-hotspots">0</span></button>
-        <div class="flex items-center gap-1.5 ml-auto pl-4">
+        <div class="hide-1200 flex items-center gap-1.5 ml-auto pl-4">
           <button class="filter-chip active" data-filter="all" onclick="setFilter('all')">全部</button>
           <button class="filter-chip" data-filter="cn" onclick="setFilter('cn')">🇨🇳 中国</button>
           <button class="filter-chip" data-filter="global" onclick="setFilter('global')">🌍 海外</button>
@@ -209,7 +213,7 @@
   </div>
 
   <footer class="border-t border-gray-800 mt-8 py-4 text-center text-xs text-gray-600">
-    LLM Radar · Industry Intelligence Dashboard · v1.3
+    LLM Radar · Industry Intelligence Dashboard · v1.5
   </footer>
 
 <script>
@@ -451,7 +455,7 @@ function toggleSort(tab,col) {
 
 // ===== Render: Hotspots =====
 function renderHotspots() {
-  const items = (DATA.hotspots||[]).slice().sort((a,b) => (b.date||'').localeCompare(a.date||''));
+  const items = filterItems(DATA.hotspots||[]).slice().sort((a,b) => (b.date||'').localeCompare(a.date||''));
   if (!items.length) return '<div class="text-center text-gray-500 py-12">暂无热点数据</div>';
   return items.map(h => {
     const providers = (h.related_providers||[]).map(id => chip(id,'providers')).join(' ');
@@ -617,6 +621,7 @@ function renderTab(tab) {
   document.getElementById('tc-people').textContent=filterItems(DATA.people).length;
   document.getElementById('tc-tools').textContent=filterItems(DATA.tools).length;
   document.getElementById('tc-llms').textContent=filterItems(DATA.llms).length;
+  document.getElementById('tc-hotspots').textContent=filterItems(DATA.hotspots).length;
 }
 
 function switchTab(tab,focusId) {
