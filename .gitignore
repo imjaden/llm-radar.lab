@@ -6,8 +6,11 @@ data/archive/
 __pycache__/
 *.pyc
 data/collector.log
+data/metrics.json
+data/dead-letter.json
 *.md
 !README.md
 !llm-news-prompt.md
 !features.md
 !agent-loop-plan.md
+!AGENTS.md

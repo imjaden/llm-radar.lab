@@ -3,7 +3,7 @@
 ## llm-radar-collector.py
 
 - 数据采集
-  - `fetch` — 抓取 7 个新闻源（requests + BeautifulSoup）
+  - `fetch` — 抓取 7 个新闻源（Selenium 无头浏览器提取 `{title,url,date}`，requests+BS4 降级）
   - `merge` — 从缓存提取实体并合并到 snapshot
   - `run` — fetch + merge + auto-push，执行前先 git pull
 - LLM 交互

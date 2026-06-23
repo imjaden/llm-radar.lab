@@ -15,20 +15,6 @@ Description
 - 抓取 LLM 行业新闻 → LLM 提取实体 → 合并到 snapshot.json
 - 通过 llm-manager 统一调用大模型，支持自动故障切换
 
-【指令清单】
-| 指令 | 参数 | 功能说明 |
-|------|------|---------|
-| fetch | [source] | 抓取新闻并提取实体（默认全部源） |
-| merge | - | 将 fetch 结果合并到 snapshot.json |
-| run | [source] | fetch + merge 一步完成 |
-| sources | - | 列出所有新闻源 |
-| help | - | 显示帮助信息 |
-
-Related Paths
-- 数据目录: ~/CodeSpace/llm-radar.jaden.tech/data
-- Web2MD目录: ~/CodeSpace/script-miner/project/web2md
-- LLM Manager: ~/CodeSpace/script-miner/llm-manager
-
 Environments:
 - Python >= 3.11
 
@@ -98,6 +84,57 @@ SOURCES = {
         'url': 'https://huggingface.co/papers',
         'category': '研究',
         'search_queries': ['llm', 'language model', 'reasoning'],
+    },
+}
+
+# Selenium 无头抓取配置：每源定义 CSS 选择器（title_sel → 标题, link_sel → 链接, date_sel → 日期）
+# 选择器取不到时 fallback 到通用智能链接检测（找页面上所有有效链接）
+SCRAPERS = {
+    'qbitai': {
+        'wait_sel': 'h2 a',  # 等待此元素出现即认为页面加载完成
+        'title_sel': 'h2 a',
+        'link_sel': 'h2 a',
+        'date_sel': '.entry-date, time, .date',
+        'link_filter': lambda h: 'qbitai.com' in h,
+    },
+    'jiqizhixin': {
+        'wait_sel': 'body',
+        'title_sel': 'a.title, h3 a, h2 a',
+        'link_sel': 'a.title, h3 a, h2 a',
+        'date_sel': 'time, .date, .time',
+        'scroll': True,
+    },
+    'infoq': {
+        'wait_sel': 'body',
+        'title_sel': 'a[href*="/article/"], h3 a, h4 a',
+        'link_sel': 'a[href*="/article/"], h3 a, h4 a',
+        'date_sel': 'time, .date, span.date',
+        'scroll': True,
+    },
+    'techcrunch': {
+        'wait_sel': 'article',
+        'title_sel': 'h2 a, .post-block__title a, a[href*="/2026/"]',
+        'link_sel': 'h2 a, .post-block__title a, a[href*="/2026/"]',
+        'date_sel': 'time, .post-block__date',
+        'link_filter': lambda h: 'techcrunch.com/' in h and '/2026/' in h,
+    },
+    '36kr': {
+        'wait_sel': 'body',
+        'title_sel': 'a[href*="/article/"], h3 a, .title a',
+        'link_sel': 'a[href*="/article/"], h3 a, .title a',
+    },
+    'github-trending': {
+        'wait_sel': 'article.Box-row',
+        'title_sel': 'h2.h3 a, article.Box-row h2 a',
+        'link_sel': 'h2.h3 a, article.Box-row h2 a',
+        'date_sel': 'relative-time',
+    },
+    'huggingface': {
+        'wait_sel': 'body',
+        'title_sel': 'a[href*="/papers/"], h3 a, article h3 a',
+        'link_sel': 'a[href*="/papers/"], h3 a, article h3 a',
+        'date_sel': 'time, .date',
+        'scroll': True,
     },
 }
 
@@ -207,36 +244,180 @@ class LLMRadarCollector:
                 self._print_warn(f'dead letter 写入失败: {dl_err}')
 
     # ===== Fetch =====
+    def _init_driver(self):
+        """初始化 Selenium 无头浏览器（单例）"""
+        if hasattr(self, '_driver') and self._driver:
+            return self._driver
+        try:
+            from selenium import webdriver
+            from selenium.webdriver.chrome.options import Options
+            from selenium.webdriver.chrome.service import Service
+            from webdriver_manager.chrome import ChromeDriverManager
+
+            opts = Options()
+            opts.add_argument('--headless')
+            opts.add_argument('--no-sandbox')
+            opts.add_argument('--disable-dev-shm-usage')
+            opts.add_argument('--blink-settings=imagesEnabled=false')
+            opts.add_argument('user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36')
+            self._driver = webdriver.Chrome(
+                service=Service(ChromeDriverManager().install()),
+                options=opts
+            )
+            self._print_ok('Selenium 无头浏览器已启动')
+            return self._driver
+        except Exception as e:
+            self._print_err(f'Selenium 初始化失败: {e}')
+            self._print_warn('降级到 requests+BS4 模式')
+            return None
+
+    def _quit_driver(self):
+        """关闭浏览器"""
+        if hasattr(self, '_driver') and self._driver:
+            try:
+                self._driver.quit()
+            except:
+                pass
+            self._driver = None
+
+    def _selenium_extract(self, source_key):
+        """用 Selenium 无头浏览器提取结构化文章列表（失败自动重试+重启驱动）"""
+        import time
+        source = SOURCES.get(source_key)
+        scraper = SCRAPERS.get(source_key, {})
+        driver = self._init_driver()
+        if not driver:
+            return None
+
+        url = source['url']
+        self._print_info(f'无头浏览器抓取 {source["name"]} ({url})')
+
+        for attempt in range(2):  # 最多重试 1 次（含驱动重启）
+            try:
+                driver.get(url)
+                # 等待页面加载
+                wait_sel = scraper.get('wait_sel', 'body')
+                from selenium.webdriver.common.by import By
+                from selenium.webdriver.support.ui import WebDriverWait
+                from selenium.webdriver.support import expected_conditions as EC
+                WebDriverWait(driver, 12).until(EC.presence_of_element_located((By.CSS_SELECTOR, wait_sel)))
+                time.sleep(1)
+
+                # 对 JS 懒加载的页面，滚动到底部触发加载
+                if scraper.get('scroll'):
+                    driver.execute_script('window.scrollTo(0, document.body.scrollHeight);')
+                    time.sleep(2)
+                    driver.execute_script('window.scrollTo(0, document.body.scrollHeight / 2);')
+                    time.sleep(1)
+
+                # 提取文章列表
+                articles = []
+                seen_urls = set()
+                link_filter = scraper.get('link_filter')
+
+                # 先尝试 CSS 选择器精确提取
+                title_sel = scraper.get('title_sel')
+
+                if title_sel:
+                    title_els = driver.find_elements(By.CSS_SELECTOR, title_sel)
+                    for el in title_els:
+                        title = el.text.strip()
+                        href = el.get_attribute('href') or ''
+                        if not title or len(title) < 8 or not href:
+                            continue
+                        if href in seen_urls:
+                            continue
+                        if link_filter and not link_filter(href):
+                            continue
+                        # 尝试取日期
+                        date_text = ''
+                        date_sel = scraper.get('date_sel')
+                        if date_sel:
+                            try:
+                                parent = el.find_element(By.XPATH, '..')
+                                date_el = parent.find_element(By.CSS_SELECTOR, date_sel)
+                                date_text = date_el.text.strip() or date_el.get_attribute('datetime') or ''
+                            except:
+                                pass
+                        seen_urls.add(href)
+                        articles.append({'title': title, 'url': href, 'date': date_text})
+
+                # 如果选择器没取到，fallback 到通用检测（所有 > 15 字符的链接）
+                if len(articles) < 3:
+                    all_links = driver.find_elements(By.TAG_NAME, 'a')
+                    for el in all_links:
+                        title = el.text.strip()
+                        href = el.get_attribute('href') or ''
+                        if not title or len(title) < 12 or not href or href.startswith('javascript'):
+                            continue
+                        if href in seen_urls:
+                            continue
+                        if link_filter and not link_filter(href):
+                            continue
+                        seen_urls.add(href)
+                        articles.append({'title': title, 'url': href, 'date': ''})
+
+                # 格式化输出
+                lines = [f'# {source["name"]} — {len(articles)} 篇文章']
+                for i, a in enumerate(articles[:20], 1):
+                    date_str = f' ({a["date"]})' if a.get('date') else ''
+                    lines.append(f'{i}. [{a["title"]}]({a["url"]}){date_str}')
+                structured = '\n'.join(lines)
+
+                text_lines = [f'--- {source["name"]} ({url}) ---']
+                for a in articles[:10]:
+                    text_lines.append(a['title'])
+                text_fallback = '\n'.join(text_lines)
+
+                self._print_ok(f'{source["name"]} 抓取成功，{len(articles)} 篇文章')
+                return {
+                    'source': source_key,
+                    'name': source['name'],
+                    'url': url,
+                    'articles': articles[:20],
+                    'content': structured + '\n\n' + text_fallback,
+                    'fetched_at': datetime.now().isoformat(),
+                }
+
+            except Exception as e:
+                err_msg = str(e).split('\n')[0][:100] if str(e) else '驱动崩溃'
+                if attempt == 0:
+                    self._print_warn(f'Selenium 失败 ({err_msg})，重启驱动重试...')
+                    self._quit_driver()
+                    driver = self._init_driver()
+                    if not driver:
+                        break
+                else:
+                    self._print_err(f'Selenium 重试也失败: {err_msg}')
+                    return None
+
     def fetch_source(self, source_key):
-        """抓取单个新闻源"""
+        """抓取单个新闻源（Selenium 无头模式，失败降级到 requests）"""
         source = SOURCES.get(source_key)
         if not source:
             self._print_err(f'未知新闻源: {source_key}')
             return None
 
-        self._print_info(f'抓取 {source["name"]} ({source["url"]})')
+        # 优先 Selenium
+        result = self._selenium_extract(source_key)
+        if result:
+            return result
 
+        # 降级：requests + BS4（无头浏览器不可用时）
+        self._print_warn(f'{source["name"]} 降级到 requests 模式')
         try:
             import requests
             from bs4 import BeautifulSoup
-
             resp = requests.get(source['url'], timeout=15, headers={
                 'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36'
             })
             resp.raise_for_status()
             resp.encoding = resp.apparent_encoding or 'utf-8'
-
             soup = BeautifulSoup(resp.text, 'html.parser')
-
-            # 提取页面文本（简化处理）
             for tag in soup(['script', 'style', 'nav', 'footer', 'header']):
                 tag.decompose()
-
-            text = soup.get_text(separator='\n', strip=True)
-            # 截取前 5000 字符避免 token 超限
-            text = text[:5000]
-
-            self._print_ok(f'{source["name"]} 抓取成功，{len(text)} 字符')
+            text = soup.get_text(separator='\n', strip=True)[:5000]
+            self._print_ok(f'{source["name"]} 降级抓取成功，{len(text)} 字符')
             return {
                 'source': source_key,
                 'name': source['name'],
@@ -244,9 +425,8 @@ class LLMRadarCollector:
                 'content': text,
                 'fetched_at': datetime.now().isoformat(),
             }
-
         except Exception as e:
-            self._print_err(f'{source["name"]} 抓取失败: {e}')
+            self._print_err(f'{source["name"]} 降级抓取也失败: {e}')
             return None
 
     def fetch_all(self, source_keys=None):

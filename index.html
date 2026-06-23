@@ -209,7 +209,7 @@
   </div>
 
   <footer class="border-t border-gray-800 mt-8 py-4 text-center text-xs text-gray-600">
-    LLM Radar · Industry Intelligence Dashboard · v1.1
+    LLM Radar · Industry Intelligence Dashboard · v1.3
   </footer>
 
 <script>
@@ -235,22 +235,66 @@ const TABS = ['tools','llms','providers','people','hotspots'];
 let activeTab = 'llms';
 let sortState = {}; // { tab: { col, dir } }
 let filterMode = 'all'; // 'all' | 'cn' | 'global'
+let sourceFilter = null; // null=全部, or source name string
 
-// ===== CN Filter =====
+// Data sources
+const SOURCES = [
+  {name:'量子位', url:'https://www.qbitai.com'},
+  {name:'机器之心', url:'https://www.jiqizhixin.com'},
+  {name:'InfoQ', url:'https://www.infoq.cn/topic/AI'},
+  {name:'36氪', url:'https://36kr.com/search/articles/大模型'},
+  {name:'TechCrunch', url:'https://techcrunch.com/category/artificial-intelligence/'},
+  {name:'GitHub', url:'https://github.com/trending'},
+  {name:'HuggingFace', url:'https://huggingface.co/papers'},
+];
+
+// ===== Filters =====
 function isCN(entity) {
   if (entity.country === '中国') return true;
   const name = (entity.name||'') + (entity.name_en||'') + (entity.id||'');
   return /\p{Script=Han}/u.test(name);
 }
 function filterItems(arr) {
-  if (filterMode === 'all') return arr;
-  if (filterMode === 'cn') return arr.filter(isCN);
-  return arr.filter(e => !isCN(e));
+  let out = arr;
+  // CN/Global filter
+  if (filterMode === 'cn') out = out.filter(isCN);
+  else if (filterMode === 'global') out = out.filter(e => !isCN(e));
+  // Source filter
+  if (sourceFilter) {
+    out = out.filter(e => matchesSource(e, sourceFilter));
+  }
+  return out;
 }
 function setFilter(mode) {
   filterMode = mode;
   document.querySelectorAll('.filter-chip').forEach(b => b.classList.toggle('active', b.dataset.filter === mode));
   renderTab(activeTab);
+}
+// Source filter: check if entity's URLs or source name match a source
+function matchesSource(entity, srcName) {
+  const src = SOURCES.find(s => s.name === srcName);
+  if (!src) return true;
+  const srcDomain = src.url.replace(/^https?:\/\/(?:www\.)?([^\/]+).*/,'$1');
+  // Hotspots have a direct source field
+  if (entity.source && entity.source === srcName) return true;
+  if (entity.source && entity.source.toLowerCase().includes(srcName.toLowerCase())) return true;
+  // Check URLs
+  const urls = [entity.website, entity.official_website, entity.last_event_url, entity.recent_activity_url, entity.last_update_url];
+  for (const u of urls) {
+    if (u && u.includes(srcDomain)) return true;
+  }
+  return false;
+}
+function toggleSource(name) {
+  sourceFilter = sourceFilter === name ? null : name;
+  renderSourceChips();
+  renderTab(activeTab);
+}
+function renderSourceChips() {
+  document.getElementById('data-sources').innerHTML = SOURCES.map(s => {
+    const active = sourceFilter === s.name;
+    return `<span class="inline-flex items-center gap-0.5 bg-gray-800 rounded px-1.5 py-0.5 text-xs cursor-pointer hover:bg-gray-700 ${active?'ring-1 ring-accent-400 bg-gray-700':''}" onclick="toggleSource('${s.name}')" title="${active?'取消筛选':'筛选 ' + s.name + ' 相关实体'}">${s.name}</span>`;
+  }).join(' ');
 }
 
 // ===== Auto Refresh =====
@@ -322,6 +366,32 @@ function restoreState() {
 // ===== Helpers =====
 function hl(s) { return s>=80?5:s>=60?4:s>=40?3:s>=20?2:1; }
 function he(l) { return {5:'🔥',4:'🟠',3:'🟡',2:'🔵',1:'⚪'}[l]||'⚪'; }
+// Search icon: 基于 Bing 搜索操作符，参考 search-tips.md 的 site: 限定
+// 格式: https://cn.bing.com/search?q=keyword+site%3Adomain.com
+function searchIcon(name, site) {
+  if (!name) return '';
+  let q = name.replace(/"/g,'');
+  if (site) {
+    // 取纯域名（去掉协议和路径）
+    const d = site.replace(/^https?:\/\//, '').replace(/\/.*$/, '');
+    if (d && !/localhost|example|xxx|xxxx/.test(d)) q += '+site%3A' + d;
+  }
+  // encodeURIComponent(q) 确保特殊字符如 + 被正确编码
+  console.log(q)
+  console.log(encodeURIComponent(q).replace(/%2B/g,'+'))
+  return `<a href="https://cn.bing.com/search?q=${q}" target="_blank" rel="noopener" class="inline-block ml-1 text-gray-600 hover:text-accent-400 text-xs" title="Bing 搜索「${name}」">🔍</a>`;
+}
+// Event cell enhanced: 事件链接旁加搜索图标
+function smartEventCell(text, url, date, searchName) {
+  if(!text) return '<span class="text-gray-600">—</span>';
+  let h=`<div class="event-text">${text}`;
+  if(url && !/xxx|xxxx|example|localhost|0\.0\.0\.0/.test(url)) {
+    h+=` <a href="${url}" target="_blank" rel="noopener" class="text-cobalt-400 hover:text-accent-400">↗</a>`;
+    if(searchName) h+=searchIcon(searchName, url);
+  }
+  if(date) h+=` <span class="text-gray-500 text-xs ml-1">${dateAgo(date)}</span>`;
+  return h+'</div>';
+}
 function findEntity(id) {
   if(!DATA) return null;
   for(const d of ['providers','people','tools','llms']) {
@@ -403,7 +473,7 @@ function renderHotspots() {
       </div>
       ${related?`<div class="flex flex-wrap gap-1.5 mt-2 pt-2 border-t border-gray-800">${related}</div>`:''}
       ${h.url?`<a href="${h.url}" target="_blank" rel="noopener" class="text-xs text-cobalt-400 hover:text-cobalt-300 mt-2 inline-block">阅读原文 ↗</a>`:''}
-      <a href="https://cn.bing.com/search?q=${encodeURIComponent(h.title||'')}+${(h.url?h.url.replace(/https?:\/\/(?:www\.)?([^\/]+).*/,'site:$1'):'site:'+h.source)}" target="_blank" rel="noopener" class="text-xs text-gray-500 hover:text-accent-400 mt-2 inline-block ml-3" title="搜索相关报道">🔍 搜索</a>
+      ${searchIcon(h.title||'', h.url)}
     </div>`;
   }).join('');
 }
@@ -424,9 +494,9 @@ function renderProviders() {
   </tr></thead><tbody>${items.map(p=>{
     const ref=p.ref||{};
     return `<tr id="entity-${p.id}" data-id="${p.id}">
-      <td><div class="flex items-center gap-2"><div class="w-7 h-7 rounded bg-cobalt-900/50 border border-cobalt-800 flex items-center justify-center text-xs font-bold text-cobalt-400 flex-shrink-0">${p.name.charAt(0)}</div><div class="min-w-0" title="${p.id}"><div class="font-semibold text-white text-sm truncate">${p.name}</div><div class="text-xs text-gray-500 truncate">${p.country||''}</div></div></div></td>
+      <td><div class="flex items-center gap-2"><div class="w-7 h-7 rounded bg-cobalt-900/50 border border-cobalt-800 flex items-center justify-center text-xs font-bold text-cobalt-400 flex-shrink-0">${p.name.charAt(0)}</div><div class="min-w-0" title="${p.id}"><div class="font-semibold text-white text-sm truncate">${p.name}${searchIcon(p.name, p.official_website)}</div><div class="text-xs text-gray-500 truncate">${p.country||''}</div></div></div></td>
       <td>${hotScore(p.hot_score)}</td>
-      <td class="hide-mobile">${eventCell(p.last_event,p.last_event_url,p.last_event_date)}</td>
+      <td class="hide-mobile">${smartEventCell(p.last_event,p.last_event_url,p.last_event_date,p.name)}</td>
       <td class="hide-mobile">${chips(p.flagship_models,'llms',3)}</td>
       <td class="hide-mobile">${chips(p.key_people,'people',3)}</td>
       <td class="hide-mobile"><div class="flex flex-wrap gap-1">${(ref.tech_stack||[]).map(t=>`<span class="text-xs bg-gray-800 text-gray-400 px-1.5 py-0.5 rounded">${t}</span>`).join('')||'<span class="text-gray-600">—</span>'}</div></td>
@@ -452,11 +522,11 @@ function renderPeople() {
   </tr></thead><tbody>${items.map(p=>{
     const employer=chip(p.employer_id,'providers');
     return `<tr id="entity-${p.id}" data-id="${p.id}">
-      <td><div class="flex items-center gap-2"><div class="w-7 h-7 rounded-full bg-pink-900/30 border border-pink-800/50 flex items-center justify-center text-xs flex-shrink-0">${p.name.charAt(0)}</div><div class="min-w-0" title="${p.id}"><div class="font-semibold text-white text-sm truncate">${p.name}</div>${p.name_en&&p.name_en!==p.name?`<div class="text-xs text-gray-500 truncate">${p.name_en}</div>`:''}</div></div></td>
+      <td><div class="flex items-center gap-2"><div class="w-7 h-7 rounded-full bg-pink-900/30 border border-pink-800/50 flex items-center justify-center text-xs flex-shrink-0">${p.name.charAt(0)}</div><div class="min-w-0" title="${p.id}"><div class="font-semibold text-white text-sm truncate">${p.name}${searchIcon(p.name, '')}</div>${p.name_en&&p.name_en!==p.name?`<div class="text-xs text-gray-500 truncate">${p.name_en}</div>`:''}</div></div></td>
       <td><span class="badge text-xs ${infl[p.influence_level]||''} bg-transparent border border-current/20">${p.influence_level||'—'}</span></td>
       <td>${hotScore(p.hot_score)}</td>
       <td><div class="truncate text-sm">${p.title||'—'}</div><div class="mt-0.5">${employer}</div></td>
-      <td class="hide-mobile">${eventCell(p.recent_activity,p.recent_activity_url,p.recent_activity_date)}</td>
+      <td class="hide-mobile">${smartEventCell(p.recent_activity,p.recent_activity_url,p.recent_activity_date,p.name)}</td>
       <td class="hide-mobile"><div class="flex flex-wrap gap-1">${(p.known_for||[]).slice(0,2).map(k=>`<span class="text-xs bg-gray-800 text-gray-400 px-1.5 py-0.5 rounded">${k}</span>`).join('')||'<span class="text-gray-600">—</span>'}</div></td>
       <td class="hide-mobile">${chips(p.related_llms,'llms',3)}</td>
     </tr>`;
@@ -481,12 +551,12 @@ function renderTools() {
   </tr></thead><tbody>${items.map(t=>{
     const ref=t.ref||{};
     return `<tr id="entity-${t.id}" data-id="${t.id}">
-      <td><div class="min-w-0" title="${t.id}"><div class="font-semibold text-white text-sm truncate">${t.website?`<a href="${t.website}" target="_blank" rel="noopener" class="hover:text-accent-400">${t.name}</a>`:t.name}</div><div class="text-xs text-gray-500 truncate">${t.description||''}</div></div></td>
+      <td><div class="min-w-0" title="${t.id}"><div class="font-semibold text-white text-sm truncate">${t.website?`<a href="${t.website}" target="_blank" rel="noopener" class="hover:text-accent-400">${t.name}</a>${searchIcon(t.name, t.website)}`:t.name}</div><div class="text-xs text-gray-500 truncate">${t.description||''}</div></div></td>
       <td><span class="badge ${catColors[t.category]||'bg-gray-700 text-gray-300'}">${t.category||''}</span></td>
       <td>${hotScore(t.hot_score)}</td>
       <td class="hide-mobile">${ref.stars?`<span class="font-mono text-xs">⭐${(ref.stars/1000).toFixed(1)}k</span>${ref.stars_weekly_delta?` <span class="text-green-400 text-xs">+${ref.stars_weekly_delta}</span>`:''}`:'<span class="text-gray-600">—</span>'}</td>
       <td class="hide-mobile"><span class="badge badge-maturity">${t.maturity||'—'}</span></td>
-      <td class="hide-mobile">${eventCell(t.last_update,t.last_update_url,t.last_update_date)}</td>
+      <td class="hide-mobile">${smartEventCell(t.last_update,t.last_update_url,t.last_update_date,t.name)}</td>
       <td class="hide-mobile"><span class="badge ${t.pricing_model==='开源免费'?'badge-open':'badge-closed'}">${t.pricing_model||'—'}</span></td>
       <td class="hide-mobile">${chips(t.related_llms,'llms',3)}</td>
     </tr>`;
@@ -518,7 +588,7 @@ function renderLLMs() {
     const ctx=ref.context_window?(ref.context_window>=1000000?(ref.context_window/1000000)+'M':ref.context_window>=1024?Math.round(ref.context_window/1024)+'K':ref.context_window):'—';
     const mods=(ref.modalities_input||[]).map(x=>({text:'📝',image:'🖼️',audio:'🎵',video:'🎬',pdf:'📄'}[x]||x)).join('');
     return `<tr id="entity-${m.id}" data-id="${m.id}">
-      <td><div class="min-w-0" title="${m.id}"><div class="font-semibold text-white text-sm truncate">${m.name}</div><div class="text-xs text-gray-500 truncate">${m.family||''} ${m.version||ref.version||''}</div></div></td>
+      <td><div class="min-w-0" title="${m.id}"><div class="font-semibold text-white text-sm truncate">${m.name}${searchIcon(m.name, '')}</div><div class="text-xs text-gray-500 truncate">${m.family||''} ${m.version||ref.version||''}</div></div></td>
       <td>${chip(m.provider_id,'providers')}</td>
       <td>${hotScore(m.hot_score)}</td>
       <td><span class="badge badge-tier ${tierCls}">${m.tier||'—'}</span></td>
@@ -526,7 +596,7 @@ function renderLLMs() {
       <td class="hide-mobile"><span class="font-mono text-xs">${ctx}</span></td>
       <td class="hide-mobile"><span class="text-xs text-gray-400">${m.type||'—'}</span></td>
       <td class="hide-mobile"><div class="flex flex-wrap gap-1">${(m.capabilities||[]).slice(0,4).map(c=>`<span class="text-xs bg-gray-800 text-gray-400 px-1.5 py-0.5 rounded">${c}</span>`).join('')||'—'}${mods?`<span class="text-xs ml-1">${mods}</span>`:''}</div></td>
-      <td class="hide-mobile">${eventCell(m.last_event,m.last_event_url,m.last_event_date)}</td>
+      <td class="hide-mobile">${smartEventCell(m.last_event,m.last_event_url,m.last_event_date,m.name)}</td>
       <td class="hide-mobile">${m.open_weights?'<span class="badge badge-open">开源</span>':'<span class="badge badge-closed">闭源</span>'}</td>
     </tr>`;
   }).join('')}</tbody></table>`;
@@ -652,7 +722,7 @@ function updateStats() {
     ua.textContent = d.toLocaleString('zh-CN');
     const h = Math.floor(mins / 60);
     const label = mins < 60 ? `${mins}分钟前` : h < 24 ? `${h}小时前` : `${Math.floor(h/24)}天前`;
-    ago.textContent = label;
+    ago.innerHTML = label + ' <span class="text-gray-600 text-xs">🔗</span>';
     // Color: <24h normal, 1-5d warning, >5d danger
     if (h < 24) { ago.style.background='rgba(34,197,94,0.12)'; ago.style.color='#86efac'; }
     else if (h <= 120) { ago.style.background='rgba(250,204,21,0.12)'; ago.style.color='#facc15'; }
@@ -663,8 +733,8 @@ function updateStats() {
       ago.style.cursor = 'pointer'; ago.title = '点击复制采集命令';
       ago.onclick = () => {
         navigator.clipboard.writeText('cd ~/CodeSpace/llm-radar.jaden.tech && python3 llm-radar-collector.py run').then(() => {
-          ago.textContent = '已复制 ✓';
-          setTimeout(() => { ago.textContent = label; }, 1500);
+          ago.innerHTML = '已复制 ✓ <span class="text-gray-600 text-xs">🔗</span>';
+          setTimeout(() => { ago.innerHTML = label + ' <span class="text-gray-600 text-xs">🔗</span>'; }, 1500);
         });
       };
     } else {
@@ -673,19 +743,8 @@ function updateStats() {
     }
   }
 
-  // Data sources as tags (7 sources)
-  const srcs = [
-    {name:'量子位', url:'https://www.qbitai.com'},
-    {name:'机器之心', url:'https://www.jiqizhixin.com'},
-    {name:'InfoQ', url:'https://www.infoq.cn/topic/AI'},
-    {name:'36氪', url:'https://36kr.com/search/articles/大模型'},
-    {name:'TechCrunch', url:'https://techcrunch.com/category/artificial-intelligence/'},
-    {name:'GitHub', url:'https://github.com/trending'},
-    {name:'HuggingFace', url:'https://huggingface.co/papers'},
-  ];
-  document.getElementById('data-sources').innerHTML = srcs.map(s =>
-    `<a href="${s.url}" target="_blank" class="inline-block px-1.5 py-0.5 rounded bg-gray-800 text-gray-400 hover:text-cobalt-400 hover:bg-gray-700 text-xs">${s.name}</a>`
-  ).join(' ');
+  // Data sources as filter chips (clickable to filter)
+  renderSourceChips();
 }
 
 // ===== Init =====

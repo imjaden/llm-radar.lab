@@ -21,6 +21,10 @@
   <div class="max-w-4xl mx-auto">
     <div class="flex items-center justify-between mb-6">
       <h1 class="text-lg font-bold text-white">📋 更新日志</h1>
+      <div class="flex items-center gap-1 text-xs">
+        <span class="text-gray-500">数据源</span>
+        <div id="changelog-sources" class="flex items-center gap-1 flex-wrap"></div>
+      </div>
       <a href="./" class="text-xs text-cobalt-400 hover:text-cobalt-300">← 返回仪表盘</a>
     </div>
     <p class="text-xs text-gray-500 mb-4" id="meta">加载中...</p>
@@ -39,6 +43,21 @@
     </div>
   </div>
   <script>
+  // Data sources (mirror from index.html)
+  var SOURCES = [
+    {name:'量子位', url:'https://www.qbitai.com'},
+    {name:'机器之心', url:'https://www.jiqizhixin.com'},
+    {name:'InfoQ', url:'https://www.infoq.cn/topic/AI'},
+    {name:'36氪', url:'https://36kr.com/search/articles/大模型'},
+    {name:'TechCrunch', url:'https://techcrunch.com/category/artificial-intelligence/'},
+    {name:'GitHub', url:'https://github.com/trending'},
+    {name:'HuggingFace', url:'https://huggingface.co/papers'},
+  ];
+  // Render source chips
+  document.getElementById('changelog-sources').innerHTML = SOURCES.map(function(s) {
+    return '<a href="' + s.url + '" target="_blank" rel="noopener" class="inline-block px-1.5 py-0.5 rounded bg-gray-800 text-gray-400 hover:text-cobalt-400 hover:bg-gray-700 text-xs whitespace-nowrap">' + s.name + '</a>';
+  }).join(' ');
+
   fetch('data/snapshot.json?t='+Date.now()).then(function(r){return r.json()}).then(function(d){
     var log = d.changelog || [];
     var tbody = document.getElementById('log-body');
@@ -59,7 +78,7 @@
       row.innerHTML = '<td class="p-2 border-b border-gray-800 text-xs text-gray-500 whitespace-nowrap">' + (log[i].date||'') + ' ' + (log[i].time||'') + '</td>' +
         '<td class="p-2 border-b border-gray-800"><span class="badge ' + bg + ' text-white text-xs">' + ctype + '</span></td>' +
         '<td class="p-2 border-b border-gray-800 text-xs text-gray-400">' + dim + '</td>' +
-        '<td class="p-2 border-b border-gray-800 text-xs text-white"><a href="./?tab=' + dim + '" class="hover:text-cobalt-400">' + summary + '</a>' + ext + '</td>';
+        '<td class="p-2 border-b border-gray-800 text-xs text-white"><a href="./#tab=' + dim + '" class="hover:text-cobalt-400">' + summary + '</a>' + ext + '</td>';
       tbody.appendChild(row);
     }
     if(!log.length){

@@ -36,15 +36,31 @@ python3 llm-radar-collector.py crontab --remove       # 移除
 |:---|:---|
 | Python | ≥ 3.7.1（openai 包要求） |
 | openai | ≥ 1.0.0 |
-| requests | ≥ 2.31.0 |
-| beautifulsoup4 | ≥ 4.12.0 |
+| selenium | ≥ 4.0.0 |
+| webdriver-manager | ≥ 4.0.0 |
+| requests | ≥ 2.31.0（Selenium 降级备用） |
+| beautifulsoup4 | ≥ 4.12.0（Selenium 降级备用） |
 | prettytable | ≥ 3.0.0 |
 | DEEPSEEK_API_KEY | 环境变量或 .env 文件 |
 
 ```bash
 echo 'DEEPSEEK_API_KEY="sk-xxx"' >> .env
-pip3 install openai requests beautifulsoup4 prettytable
+pip3 install openai selenium webdriver-manager requests beautifulsoup4 prettytable
 ```
+
+## 数据采集
+
+采用 **Selenium 无头浏览器**（Chrome Headless）提取结构化文章列表 `{title, url, date}`，失败时自动降级到 requests+BeautifulSoup。
+
+```bash
+# 手动触发全量采集
+python3 llm-radar-collector.py run
+
+# 仅抓取（不合并）
+python3 llm-radar-collector.py fetch [source_key]
+```
+
+7 个源各自定义了 CSS 选择器（`SCRAPERS` 配置），精确提取文章标题、链接和发布日期后，拼接为结构化文本送入 DeepSeek API 提取实体。
 
 ## 功能清单
 
@@ -74,5 +90,6 @@ pip3 install openai requests beautifulsoup4 prettytable
 ## 技术栈
 
 - 前端：HTML + Vanilla JS + Tailwind CSS CDN
-- 数据采集：Python + DeepSeek API + requests + BeautifulSoup4
+- 数据采集：Selenium 无头浏览器（Chrome Headless）+ requests/BS4 降级
+- 实体提取：DeepSeek API（deepseek-v4-flash）
 - 部署：GitHub Pages → https://llm-radar.lab.jaden.tech
