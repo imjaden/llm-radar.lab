@@ -1043,7 +1043,7 @@ hotspots 数组中每个元素格式：
 
     # ===== Run =====
     def run(self, source_keys=None):
-        """完整流程：Think → Act → Observe → Verify"""
+        """完整流程：Think → Act → Verify → Observe"""
         self._print_info('=== LLM Radar 数据采集 ===')
         self._print_info(f'时间: {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}')
         self._print_info(f'数据目录: {self.data_dir}')

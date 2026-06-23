@@ -71,39 +71,46 @@
 ## 5. 执行流程
 
 ```
-新闻源抓取 → LLM 提取实体 → 增量合并到 snapshot.json
-                                ↓
-                      changelog.html（重新生成，最新在前）
-                      history/（按周归档快照）
-                      archive/（过期数据归档）
+Agent Loop: Think → Act → Verify → Observe
+
+[Think]   间隔检查（<6h 跳过）、连续失败告警
+[Act]     Selenium 无头浏览器抓取 7 源 → 提取 {title,url,date} + page_text
+          → DeepSeek API（max_tokens=16000）提取实体 JSON
+[Verify]  质量门禁：事件中位数新鲜度 < 7 天、热点 ≥ 3 条
+[Act]     增量合并到 snapshot.json（去重、归档）
+[Observe] 写 metrics.json（源健康、连续失败、运行历史）
+[Act]     git commit + push（质量门禁未通过则跳过）
 ```
 
-每次采集后自动生成 changelog.html，包含最近 50 条变更记录。
+每次采集后自动生成 changelog（增量记录），前端从 snapshot.json 加载渲染。
 
 ---
 
 ## 6. 数据源
 
-| 源 | 类型 | 用途 |
-|:---|:---|:---|
-| 量子位 | 中文 AI 媒体 | 国内大模型动态 |
-| 机器之心 | 中文 AI 媒体 | AI 研究与产业 |
-| InfoQ | 中文技术媒体 | AI 工程化实践 |
-| 36氪 | 中文科技媒体 | AI 融资与商业 |
-| TechCrunch | 英文 AI 媒体 | 国际大模型动态 |
-| GitHub Trending | 开发者 | 热门 AI 工具 |
-| HuggingFace Papers | 研究 | 最新论文 |
+| 源 | 类型 | 抓取方式 | 用途 |
+|:---|:---|:---|:---|
+| 量子位 | 中文 AI 媒体 | Selenium 无头 | 国内大模型动态 |
+| 机器之心 | 中文 AI 媒体 | Selenium 无头（懒加载滚动） | AI 研究与产业 |
+| InfoQ | 中文技术媒体 | Selenium 无头（懒加载滚动） | AI 工程化实践 |
+| 36氪 | 中文科技媒体 | Selenium 无头 | AI 融资与商业 |
+| TechCrunch | 英文 AI 媒体 | Selenium 无头 | 国际大模型动态 |
+| GitHub Trending | 开发者 | Selenium 无头 | 热门 AI 工具 |
+| HuggingFace Papers | 研究 | Selenium 无头（懒加载滚动） | 最新论文 |
+
+失败自动降级到 requests+BeautifulSoup（Selenium 不可用时备用）。
 
 ---
 
-## 7. 前置条件
+## 7. 环境要求
 
-- Python 3.11+
-- 需要 requests、beautifulsoup4 库
-- 需要 llm-manager 模块（位于 script-miner/llm-manager/）
+- Python ≥ 3.9
+- 依赖：`pip3 install openai selenium webdriver-manager requests beautifulsoup4 prettytable`
+- 需要 `DEEPSEEK_API_KEY` 环境变量或 `.env` 文件
+- Chrome 浏览器（Selenium 无头模式驱动）
 - Linux/macOS 系统（crontab 管理功能依赖）
 
 ---
 
-*规范版本: 2.0 | 更新: 2026-06-21*
+*规范版本: 2.1 | 更新: 2026-06-23*
 *基于 llm-radar-collector.py v1.0 实现*

@@ -64,7 +64,7 @@ python3 llm-radar-collector.py fetch [source_key]
 
 ## 功能清单
 
-各文件详细功能清单见 [features.md](features.md)。涵盖：
+各文件详细功能清单见 [features.md](documents/features.md)。涵盖：
 
 - **llm-radar-collector.py** — 数据采集、LLM 交互、数据管理、Git 集成、定时任务、JSON 截断修复
 - **index.html** — 5 维度表格展示、筛选/排序/联动、自动刷新、热点悬浮框、搜索按钮
