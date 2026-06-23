@@ -171,7 +171,7 @@ class LLMRadarCollector:
     def _print_warn(self, msg):
         print(f'⚠️ {msg}')
 
-    def _call_deepseek(self, system_content, user_content, model="deepseek-v4-flash", max_tokens=8000):
+    def _call_deepseek(self, system_content, user_content, model="deepseek-v4-flash", max_tokens=16000):
         """调用 DeepSeek API"""
         if not self.api_key:
             self._print_err('API key 未配置')
