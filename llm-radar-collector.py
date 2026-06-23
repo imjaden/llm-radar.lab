@@ -171,7 +171,7 @@ class LLMRadarCollector:
     def _print_warn(self, msg):
         print(f'⚠️ {msg}')
 
-    def _call_deepseek(self, system_content, user_content, model="deepseek-v4-flash"):
+    def _call_deepseek(self, system_content, user_content, model="deepseek-v4-flash", max_tokens=8000):
         """调用 DeepSeek API"""
         if not self.api_key:
             self._print_err('API key 未配置')
@@ -184,7 +184,7 @@ class LLMRadarCollector:
                     {"role": "system", "content": system_content},
                     {"role": "user", "content": user_content},
                 ],
-                max_tokens=8000,
+                max_tokens=max_tokens,
                 temperature=0.1,
             )
             msg = resp.choices[0].message
@@ -358,11 +358,18 @@ class LLMRadarCollector:
                         articles.append({'title': title, 'url': href, 'date': ''})
 
                 # 格式化输出
-                lines = [f'# {source["name"]} — {len(articles)} 篇文章']
+                fetched = datetime.now().strftime('%Y-%m-%d')
+                lines = [f'# {source["name"]} — {len(articles)} 篇文章（抓取时间: {fetched}）']
                 for i, a in enumerate(articles[:20], 1):
-                    date_str = f' ({a["date"]})' if a.get('date') else ''
+                    date_str = f' ({a["date"]})' if a.get('date') else f' ({fetched})'
                     lines.append(f'{i}. [{a["title"]}]({a["url"]}){date_str}')
                 structured = '\n'.join(lines)
+
+                # 同时也提取页面纯文本（给 LLM 提供正文上下文）
+                page_text = driver.find_element(By.TAG_NAME, 'body').text[:3000]
+                # 去除过短的噪音行
+                body_lines = [l.strip() for l in page_text.split('\n') if len(l.strip()) > 20]
+                page_text_clean = '\n'.join(body_lines[:80])
 
                 text_lines = [f'--- {source["name"]} ({url}) ---']
                 for a in articles[:10]:
@@ -375,7 +382,7 @@ class LLMRadarCollector:
                     'name': source['name'],
                     'url': url,
                     'articles': articles[:20],
-                    'content': structured + '\n\n' + text_fallback,
+                    'content': structured + '\n\n' + text_fallback + '\n\n' + page_text_clean,
                     'fetched_at': datetime.now().isoformat(),
                 }
 
@@ -485,7 +492,7 @@ class LLMRadarCollector:
         # 截取避免 token 超限
         combined = combined[:12000]
 
-        system_prompt = """你是一个 LLM 行业情报分析助手。从新闻内容中提取以下 4 类实体。
+        system_prompt = """你是一个 LLM 行业情报分析助手。从新闻内容中提取以下 5 类实体：厂商、人物、工具、大模型、热点。
 
 输出 JSON 格式，严格按以下结构：
 ```json
@@ -507,11 +514,13 @@ class LLMRadarCollector:
 7. URL 字段必须填写完整可访问的链接。如果不确定具体文章 URL，留空字符串('')，不要使用 xxxx/xxx/example 等占位符
 8. **时效优先**：优先提取最近 48 小时内的最新事件。超过 7 天的旧事件除非有重大更新（如新版本发布、融资、人员变动），否则不提取"""
 
-        user_prompt = f"""请从以下 LLM 行业新闻中提取实体：
+        user_prompt = f"""当前日期: {datetime.now().strftime('%Y-%m-%d')}
+
+请从以下 LLM 行业新闻中提取实体，严格使用当前日期判断时效性：
 
 {combined}
 
-请输出 JSON 格式的结果，包含 providers、people、tools、llms、hotspots 五个数组。
+请输出 JSON 格式的结果，包含 providers、people、tools、llms、hotspots 五个数组。热点事件的 date 字段必须与新闻中的日期一致。
 
 hotspots 数组中每个元素格式：
 ```json
@@ -525,6 +534,15 @@ hotspots 数组中每个元素格式：
         # 直接调用 DeepSeek API
         result = self._call_deepseek(system_prompt, user_prompt)
 
+        # 如果 LLM 回复较大，增加 max_tokens 重试保证完整性
+        content = result.get('content', '') if result else ''
+        if content and len(content) > 7000:
+            self._print_info(f'LLM 输出较大 ({len(content)} 字符)，使用高 token 限制重试...')
+            retry = self._call_deepseek(system_prompt, user_prompt, max_tokens=16000)
+            if retry and not retry.get('error'):
+                result = retry
+                content = retry.get('content', '')
+
         duration = round(time.time() - start_time, 1)
 
         if not result or result.get('error'):
@@ -532,17 +550,18 @@ hotspots 数组中每个元素格式：
             return None
 
         # 解析 JSON 输出
-        content = result.get('content', '')
+        if not content:
+            content = result.get('content', '')
         entities = self._parse_json_output(content)
         if entities:
             total = sum(len(entities.get(k, [])) for k in ['providers', 'people', 'tools', 'llms'])
             self._print_ok(f'实体提取完成，耗时 {duration}s，共 {total} 个实体')
             return entities
         else:
-            # 重试 1 次：简化 prompt，只要求纯 JSON
+            # 重试 1 次：复用完整 prompt，末尾强调纯 JSON
             self._print_warn('JSON 解析失败，重试...')
-            retry_prompt = '只输出 JSON，不要用 markdown 包裹。包含 providers、people、tools、llms、hotspots 五个数组。'
-            retry_result = self._call_deepseek(retry_prompt, combined)
+            retry_prompt = user_prompt + '\n\n只输出 JSON，不要使用 markdown 代码块包裹，不要添加任何说明文字。'
+            retry_result = self._call_deepseek(system_prompt, retry_prompt)
             if retry_result and not retry_result.get('error'):
                 retry_content = retry_result.get('content', '')
                 retry_entities = self._parse_json_output(retry_content)
@@ -579,6 +598,11 @@ hotspots 数组中每个元素格式：
         """尝试解析 JSON，成功返回对象，失败返回 None"""
         try:
             return json.loads(text)
+        except json.JSONDecodeError:
+            pass
+        # 尝试宽松模式：允许控制字符
+        try:
+            return json.loads(text, strict=False)
         except json.JSONDecodeError:
             return None
 
