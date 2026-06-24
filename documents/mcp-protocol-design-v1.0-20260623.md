@@ -8,21 +8,21 @@
 ## 1. 架构
 
 ```text
-Hermes Agent (LLM 资讯 SKILL)
+Hermes Agent (LLM News SKILL)
         │
         │  JSON-RPC 2.0 over stdio
         │
         ▼
-┌─────────────────────────────────────┐
-│         MCP Server (llm-radar-mcp-server.py)  │
-│                                     │
-│  1. 鉴权 (API Key)                  │
-│  2. 数据质量检验                     │
-│  3. 合并到 snapshot.json            │
-└─────────────────────────────────────┘
+┌───────────────────────────────────────┐
+│  MCP Server (llm-radar-mcp-server.py) │
+│                                       │
+│  1. Auth (API Key)                    │
+│  2. Data quality check                │
+│  3. Merge to snapshot.json            │
+└───────────────────────────────────────┘
         │
         ▼
-data/snapshot.json  ← 与 Agent Loop 共享同一存储
+data/snapshot.json  ← shared with Agent Loop
 ```
 
 ---
@@ -154,33 +154,33 @@ LLM 资讯 SKILL 会：
 ## 6. 数据流全景
 
 ```text
-┌──────────────────────────────────────────────────────────┐
-│                    数据入口                                │
-│                                                          │
-│  Agent Loop (定时采集)        MCP (外部写入)              │
-│  crontab 9:00/21:00          Hermes Agent SKILL          │
-│       │                            │                     │
-│       ▼                            ▼                     │
-│  fetch_all()                submit_entities()            │
-│       │                            │                     │
-│       ▼                            ▼                     │
-│  extract_entities()         数据质量检验                   │
-│  (DeepSeek API)              (confidence/date/required)  │
-│       │                            │                     │
-│       ▼                            ▼                     │
-│  _verify()                   质量门禁 → 拒绝低质量数据     │
-│       │                            │                     │
-│       └────────┬───────────────────┘                     │
-│                ▼                                         │
-│         merge_entities()                                 │
-│         (去重 / 合并 / 归档)                              │
-│                │                                         │
-│                ▼                                         │
-│         snapshot.json                                    │
-│                │                                         │
-│                ▼                                         │
-│         index.html / changelog.html                      │
-└──────────────────────────────────────────────────────────┘
+┌──────────────────────────────────────────────────────────────┐
+│                    Data Entry                                │
+│                                                              │
+│   Agent Loop (scheduled)      MCP (external write)           │
+│   crontab 9:00/21:00          Hermes Agent SKILL             │
+│        │                            │                        │
+│        ▼                            ▼                        │
+│   fetch_all()                submit_entities()               │
+│        │                            │                        │
+│        ▼                            ▼                        │
+│   extract_entities()         Quality check                   │
+│   (DeepSeek API)              (confidence/date/required)     │
+│        │                            │                        │
+│        ▼                            ▼                        │
+│   _verify()                   Quality gate → reject low      │
+│        │                            │                        │
+│        └───────────┬────────────────┘                        │
+│                    ▼                                         │
+│             merge_entities()                                 │
+│             (dedup / merge / archive)                        │
+│                    │                                         │
+│                    ▼                                         │
+│             snapshot.json                                    │
+│                    │                                         │
+│                    ▼                                         │
+│             index.html / changelog.html                      │
+└──────────────────────────────────────────────────────────────┘
 ```
 
 ---

@@ -17,44 +17,44 @@ Fetch ──→ Extract ──→ Merge ──→ Push
 
 ```
                   ┌──────────────────────────────────┐
-                  │  [Think] 采集策略决策             │
-                  │  · 距上次间隔 < 6h? 跳过          │
-                  │  · 连续失败源降级                  │
-                  │  · 优先最近 48h 事件              │
+                  │  [Think] Collection Strategy     │
+                  │  · Skip if interval < 6h?        │
+                  │  · Degrade sources with 3 fails  │
+                  │  · Prioritize last 48h events    │
                   └────────────┬─────────────────────┘
                                │
                                ▼
                   ┌──────────────────────────────────┐
-                  │  [Act]   Fetch + Extract + Merge  │
-                  │  · 7 源并行/串行抓取              │
-                  │  · LLM 提取（prompt rule 8）     │
-                  │  · 增量合并 + 去重               │
+                  │  [Act]   Fetch + Extract + Merge │
+                  │  · 7 sources fetch (parallel)    │
+                  │  · LLM extract (prompt rule 8)   │
+                  │  · Incremental merge + dedup     │
                   └────────────┬─────────────────────┘
                                │
                                ▼
-                  ┌──────────────────────────────────┐
-                  │  [Observe] 指标记录               │
-                  │  · sources: 成功/失败/超时率      │
-                  │  · llm: 解析失败率、token 消耗    │
-                  │  · data: 事件平均新鲜度、去重比   │
-                  │  · push: 是否成功、跳过原因       │
-                  └────────────┬─────────────────────┘
+                  ┌───────────────────────────────────┐
+                  │  [Observe] Metrics Recording      │
+                  │  · sources: success/fail/timeout  │
+                  │  · llm: parse fail, token usage   │
+                  │  · data: avg freshness, dedup rate│
+                  │  · push: success, skip reason     │
+                  └────────────┬──────────────────────┘
                                │
                                ▼
                   ┌──────────────────────────────────┐
-                  │  [Verify] 质量门禁                │
-                  │  · 事件新鲜度 > 7d? → 降级推送    │
-                  │  · LLM 解析失败? → 重试 1 次     │
-                  │  · 热点 < 3 条? → 标记低可信     │
-                  │  · Push 失败? → 重试 → Dead      │
+                  │  [Verify] Quality Gate           │
+                  │  · Freshness > 7d? → degraded    │
+                  │  · LLM parse fail? → retry once  │
+                  │  · Hotspots < 3? → low conf      │
+                  │  · Push fail? → retry → dead     │
                   └────────────┬─────────────────────┘
                                │
                     ┌──────────┴──────────┐
                     │                     │
                     ▼                     ▼
              ┌──────────────┐    ┌──────────────┐
-             │ ✅ 通过      │    │ ❌ 未通过    │
-             │ push 正常    │    │ 记录原因+跳过│
+             │ ✅ Pass      │    │ ❌ Fail       │
+             │ push normal  │    │ record+skip  │
              └──────────────┘    └──────────────┘
 ```
 

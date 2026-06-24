@@ -9,30 +9,30 @@
 
 ```text
 ┌─────────────────────────────────────────────────────────────────────┐
-│                     LLM-Radar 双数据管道                             │
+│                    LLM-Radar Dual Pipeline                          │
 │                                                                     │
 │  ┌─────────────────────────┐    ┌─────────────────────────────────┐ │
-│  │  Pipeline A: Agent Loop  │    │  Pipeline B: Hermes (MCP)      │ │
-│  │  (定时采集引擎)           │    │  (按需对话写入)                  │ │
+│  │  Pipeline A: Agent Loop │    │  Pipeline B: Hermes (MCP)       │ │
+│  │  (scheduled collector)  │    │  (on-demand write)              │ │
 │  │                         │    │                                 │ │
 │  │  crontab 9:00/21:00     │    │  last30days skill               │ │
-│  │       → fetch 7 源      │    │  blogwatcher RSS                │ │
-│  │       → DeepSeek 提取   │    │  tavily-search                  │ │
-│  │       → _verify 质量    │    │       │                         │ │
+│  │       → fetch 7 sources │    │  blogwatcher RSS                │ │
+│  │       → DeepSeek extract│    │  tavily-search                  │ │
+│  │       → _verify quality │    │       │                         │ │
 │  │       → merge snapshot  │    │       ▼                         │ │
-│  │       → auto-push       │    │  中间层 (整理 5 维度 JSON)       │ │
+│  │       → auto-push       │    │  Middle layer (5-dim JSON)      │ │
 │  └─────────────────────────┘    │       │                         │ │
 │                                 │       ▼                         │ │
 │                                 │  MCP Server (llm-radar-mcp-     │ │
 │                                 │  server.py)                     │ │
-│                                 │  → 鉴权 → quality gate → merge  │ │
+│                                 │  → auth → quality gate → merge  │ │
 │                                 └─────────────────────────────────┘ │
 │                                           │                         │
 │                                           ▼                         │
-│                               ┌───────────────────────┐            │
+│                               ┌────────────────────────┐            │
 │                               │  data/snapshot.json    │            │
-│                               │  (共享同一存储)         │            │
-│                               └───────────────────────┘            │
+│                               │  (shared storage)      │            │
+│                               └────────────────────────┘            │
 │                                           │                         │
 │                                           ▼                         │
 │                               index.html / changelog.html           │

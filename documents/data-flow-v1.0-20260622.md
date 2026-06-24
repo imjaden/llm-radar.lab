@@ -3,73 +3,75 @@
 > 当前数据流：Think → Fetch → Extract → Verify → Merge → Observe → Push
 
 ```text
-                  ┌────────────────────────────────────────────────┐
-                  │              CRON (9:00 / 21:00)               │
-                  │       llm-radar-run.sh → collector.py run      │
-                  └──────────────┬─────────────────────────────────┘
-                                 │
-                                 ▼
-                  ┌──────────────────────────────┐
-                  │  [Think] 采集策略决策          │
-                  │  · 距上次成功 < 6h → 跳过      │
-                  │  · 连续失败 ≥ 3 次 → 告警      │
-                  └──────────────┬─────────────────┘
-                                 │
-                                 ▼
-                  ┌──────────────────────────────┐
-                  │  [Fetch] 抓取 7 个新闻源       │
-                  │  · 跳过低质源（连续 3 次失败）  │
-                  │  · Selenium 无头浏览器          │
-                  │  · 提取结构化文章 {title,url,date}│
-                  │  · 失败自动降级 requests+BS4    │
-                  └──────────────┬─────────────────┘
-                                 │
-                                 ▼
-                  ┌──────────────────────────────┐
-                  │  [Extract] LLM 提取实体        │
-                  │  · DeepSeek API (deepseek-v4) │
-                  │  · 按 prompt 提取 JSON        │
-                  │  · JSON 解析失败 → 重试 1 次   │
-                  └──────────────┬─────────────────┘
-                                 │
-                                 ▼
-                  ┌──────────────────────────────┐
-                  │  [Verify] 质量门禁             │
-                  │  · 事件中位数新鲜度 < 7 天     │
-                  │  · 热点 ≥ 3 条                │
-                  │  · 未通过 → 跳过 auto-push    │
-                  └──────────────┬─────────────────┘
-                                 │
-                                 ▼
-                  ┌──────────────────────────────┐
-                  │  [Merge] 合并到 snapshot.json  │
-                  │  · 新增 / 更新 / 过期归档      │
-                  │  · 去重：同名合并（保留最高分） │
-                  │  · 数据留存 100+15 天滑动窗口  │
-                  │  · changelog 增量记录          │
-                  └──────────────┬─────────────────┘
-                                 │
-                                 ▼
-                  ┌──────────────────────────────┐
-                  │  [Observe] 写 metrics.json    │
-                  │  · 源成功率 / 实体数 / 新鲜度  │
-                  │  · 连续失败计数               │
-                  │  · 运行历史（最近 30 次）      │
-                  └──────────────┬─────────────────┘
-                                 │
-                                 ▼
-                  ┌──────────────────────────────┐
-                  │  [Push] git commit + push     │
-                  │  · 失败 → dead-letter.json    │
-                  │  · 质量门禁未通过 → 跳过       │
-                  └──────┬───────────────────────┘
-                         │
-                         ▼
-               GitHub Pages 部署 (gh-pages)
-                         │
-                         ▼
-               index.html / changelog.html
-               从 snapshot.json 渲染
+┌────────────────────────────────────────────────┐
+│           CRON (9:00 / 21:00)                  │
+│    llm-radar-run.sh → collector.py run         │
+└──────────────┬─────────────────────────────────┘
+               │
+               ▼
+┌────────────────────────────────────────────────┐
+│  [Think] Collection Strategy                   │
+│  · Skip if last run < 6h ago                   │
+│  · Alert if fails ≥ 3 times                    │
+└──────────────┬─────────────────────────────────┘
+               │
+               ▼
+┌────────────────────────────────────────────────┐
+│  [Fetch] Scrape 7 News Sources                 │
+│  · Skip low-quality sources                    │
+│    (3 consecutive failures)                    │
+│  · Selenium headless browser                   │
+│  · Extract {title,url,date}                    │
+│  · Fallback: requests+BS4                      │
+└──────────────┬─────────────────────────────────┘
+               │
+               ▼
+┌────────────────────────────────────────────────┐
+│  [Extract] LLM Entity Extract                  │
+│  · DeepSeek API (deepseek-v4)                  │
+│  · Extract JSON by prompt                      │
+│  · Parse fail → retry once                     │      
+└──────────────┬─────────────────────────────────┘
+               │
+               ▼
+┌────────────────────────────────────────────────┐
+│  [Verify] Quality Gate                         │
+│  · Median freshness < 7 days                   │
+│  · Hotspots ≥ 3 items                          │
+│  · Fail → skip auto-push                       │        
+└──────────────┬─────────────────────────────────┘
+               │
+               ▼
+┌────────────────────────────────────────────────┐
+│  [Merge] Merge to snapshot.json                │
+│  · Add / update / archive                      │
+│  · Dedup: merge by name                        │
+│    (keep highest score)                        │
+│  · Retention: 100+15d window                   │
+│  · changelog incremental log                   │
+└──────────────┬─────────────────────────────────┘
+               │
+               ▼
+┌────────────────────────────────────────────────┐
+│  [Observe] Write metrics.json                  │
+│  · Source success / entities                   │
+│  · Consecutive failure count                   │
+│  · Run history (last 30)                       │
+└──────────────┬─────────────────────────────────┘
+               │
+               ▼
+┌────────────────────────────────────────────────┐
+│  [Push] git commit + push                      │
+│  · Fail → dead-letter.json                     │
+│  · Quality gate fail → skip                    │
+└──────────────┬─────────────────────────────────┘
+               │
+               ▼
+        GitHub Pages deploy (gh-pages)
+               │
+               ▼
+        index.html / changelog.html
+        rendered from snapshot.json
 ```
 
 ---
@@ -234,30 +236,29 @@ data/snapshot.json
 ## 6. 部署架构
 
 ```text
-┌─────────────────────────────────────────────────┐
-│               GitHub (imjaden/llm-radar.lab)     │
-│  ┌───────────┐  ┌──────────┐  ┌───────────────┐ │
+┌──────────────────────────────────────────────────┐
+│         GitHub (imjaden/llm-radar.lab)           │
+│  ┌────────────┐  ┌──────────┐  ┌───────────────┐ │
 │  │ index.html │  │changelog │  │ snapshot.json │ │
-│  │  (前端)    │  │ (前端)   │  │  (数据文件)   │ │
-│  └───────────┘  └──────────┘  └───────────────┘ │
-└─────────────────────┬───────────────────────────┘
+│  │  (frontend)│  │(frontend)│  │  (data file)  │ │
+│  └────────────┘  └──────────┘  └───────────────┘ │
+└─────────────────────┬────────────────────────────┘
                       │ GitHub Pages
                       ▼
 ┌─────────────────────────────────────────────────┐
-│              GitHub Pages (gh-pages)             │
-│         https://llm-radar.lab.jaden.tech         │
-│         （或 lab.jaden.tech/llm-radar）            │
+│            GitHub Pages (gh-pages)              │
+│       https://llm-radar.lab.jaden.tech          │
 └─────────────────────┬───────────────────────────┘
                       │
-        采集端 (2 台机器，各自 crontab)
+        Collector (2 machines,各自 crontab)
          │
     ┌────┴────┐
     ▼         ▼
-  Mac 本地   阿里云 Linux
-  (开发调试)  (生产采集)
+  Mac local   Alibaba Cloud Linux
+  (dev/debug) (production)
          │
-  都推同一 GitHub 仓库
-  collector.py run → commit → push → GH Pages 自动更新
+  Push to same GitHub repo
+  collector.py run → commit → push → GH Pages auto-update
 ```
 
 **采集端对比：**
