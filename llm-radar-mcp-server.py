@@ -138,7 +138,8 @@ def merge_entities(new_entities):
     update_count = 0
 
     for dim in ['providers', 'people', 'tools', 'llms', 'hotspots']:
-        old_items = {e.get('name', ''): e for e in snapshot.get(dim, []) if e.get('name')}
+        name_field = 'name' if dim != 'hotspots' else 'title'
+        old_items = {e.get(name_field, ''): e for e in snapshot.get(dim, []) if e.get(name_field)}
         incoming = new_entities.get(dim, [])
         if not incoming:
             continue
