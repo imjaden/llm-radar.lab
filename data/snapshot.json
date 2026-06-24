@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "generated_at": "2026-06-25T00:23:55.860782",
+  "generated_at": "2026-06-25T01:21:23.094769",
   "period": "2026-06-16 ~ 2026-06-23",
   "execution_mode": "semi-auto",
   "providers": [
@@ -1537,6 +1537,16 @@
       "hot_level": "高热",
       "last_event": "Gemini 3.x系列发布，市值4.54万亿美元",
       "last_event_date": "2026-06-25",
+      "confidence": "high"
+    },
+    {
+      "id": "test-company",
+      "name": "测试公司",
+      "country": "中国",
+      "hot_score": 60,
+      "hot_level": "高热",
+      "last_event": "发布测试产品",
+      "last_event_date": "2026-06-23",
       "confidence": "high"
     }
   ],
@@ -8013,16 +8023,30 @@
       "id": "pentagon-grok",
       "summary": "hotspots: 五角大楼使用 Grok AI 发射2000枚导弹",
       "date": "2026-06-25"
+    },
+    {
+      "type": "new",
+      "dimension": "providers",
+      "id": "test-company",
+      "summary": "providers: 测试公司",
+      "date": "2026-06-25"
+    },
+    {
+      "type": "new",
+      "dimension": "hotspots",
+      "id": "test-event",
+      "summary": "hotspots: 测试热点事件",
+      "date": "2026-06-25"
     }
   ],
   "stats": {
-    "total_providers": 76,
+    "total_providers": 77,
     "total_people": 57,
     "total_tools": 89,
     "total_llms": 81,
-    "total_hotspots": 102,
-    "new_this_period": 21,
-    "updated_this_period": 8
+    "total_hotspots": 103,
+    "new_this_period": 2,
+    "updated_this_period": 0
   },
   "hotspots": [
     {
@@ -9761,6 +9785,15 @@
       "related_people": [
         "elon-musk"
       ],
+      "confidence": "high"
+    },
+    {
+      "id": "test-event",
+      "title": "测试热点事件",
+      "summary": "用于验证 MCP 协议的热点事件",
+      "date": "2026-06-23",
+      "source": "MCP Test",
+      "url": "",
       "confidence": "high"
     }
   ]
