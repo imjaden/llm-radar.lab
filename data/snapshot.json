@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "generated_at": "2026-06-24T17:00:18.513432",
+  "generated_at": "2026-06-25T00:00:04.973880",
   "period": "2026-06-17 ~ 2026-06-24",
   "execution_mode": "semi-auto",
   "providers": [
@@ -222,10 +222,10 @@
       "focus_areas": [
         "大模型"
       ],
-      "hot_score": 70,
-      "hot_level": "高热",
-      "last_event": "被曝一年亏损约2600亿，Gemini联合负责人出走加盟",
-      "last_event_date": "2026-06-24",
+      "hot_score": 95,
+      "hot_level": "爆热",
+      "last_event": "GPT-5.5发布，100万Token上下文；计划2026秋季IPO",
+      "last_event_date": "2026-06-23",
       "last_event_url": "https://www.infoq.cn/article/3hkmF10X9ec1ujwwIjFW",
       "confidence": "high",
       "ref": {
@@ -255,10 +255,10 @@
         "大模型",
         "AI安全"
       ],
-      "hot_score": 90,
+      "hot_score": 98,
       "hot_level": "爆热",
-      "last_event": "Claude Code大升级，Claude Fable 5遭北美监管部门勒令下线，CEO Dario Amodei开火OpenAI",
-      "last_event_date": "2026-06-24",
+      "last_event": "秘密提交IPO申请，估值9650亿美元",
+      "last_event_date": "2026-06-23",
       "last_event_url": "https://www.infoq.cn/article/UXghld6fuzYxJNuU6L47",
       "confidence": "high",
       "ref": {
@@ -720,9 +720,9 @@
         "AI训练",
         "工程文化"
       ],
-      "hot_score": 70,
+      "hot_score": 75,
       "hot_level": "高热",
-      "last_event": "紧急叫停用员工数据训练AI计划，私聊数据泄露引发内部怒骂",
+      "last_event": "Llama开源模型",
       "last_event_date": "2026-06-23",
       "last_event_url": "https://www.infoq.cn/article/puuuQ3qD8AKrP5AmBGfk",
       "confidence": "high",
@@ -840,10 +840,10 @@
       "focus_areas": [
         "视频生成"
       ],
-      "hot_score": 65,
-      "hot_level": "温热",
-      "last_event": "发布视频生成模型HappyHorse 1.1，五大维度全面升级",
-      "last_event_date": "2026-06-22",
+      "hot_score": 72,
+      "hot_level": "高热",
+      "last_event": "Qwen 3.5+开源模型持续更新",
+      "last_event_date": "2026-06-23",
       "last_event_url": "https://www.qbitai.com",
       "confidence": "medium",
       "ref": {
@@ -1020,10 +1020,10 @@
         "开源大模型",
         "欧洲AI"
       ],
-      "hot_score": 70,
+      "hot_score": 68,
       "hot_level": "高热",
-      "last_event": "传闻以200亿欧元估值融资30亿欧元",
-      "last_event_date": "2026-06-13",
+      "last_event": "发布Codestral编程专用模型",
+      "last_event_date": "2026-06-23",
       "last_event_url": "https://techcrunch.com/category/artificial-intelligence/",
       "confidence": "medium",
       "ref": {
@@ -1421,9 +1421,9 @@
       "id": "minimax",
       "name": "MiniMax",
       "country": "中国",
-      "hot_score": 55,
-      "hot_level": "温热",
-      "last_event": "被报道在智谱新高下承压，与大模型双雄命运殊途",
+      "hot_score": 82,
+      "hot_level": "高热",
+      "last_event": "发布M系列旗舰模型，MoE架构百万上下文",
       "last_event_date": "2026-06-23",
       "last_event_url": "",
       "flagship_models": [],
@@ -1647,6 +1647,26 @@
       ],
       "confidence": "medium",
       "updated_at": "2026-06-24T17:00:18.513432"
+    },
+    {
+      "id": "spacex-xai",
+      "name": "SpaceX/xAI",
+      "country": "美国",
+      "hot_score": 92,
+      "hot_level": "爆热",
+      "last_event": "合并后估值1.25万亿美元，计划750亿美元IPO",
+      "last_event_date": "2026-06-23",
+      "confidence": "high"
+    },
+    {
+      "id": "google",
+      "name": "Google",
+      "country": "美国",
+      "hot_score": 85,
+      "hot_level": "高热",
+      "last_event": "Gemini 3.x系列发布",
+      "last_event_date": "2026-06-23",
+      "confidence": "high"
     }
   ],
   "people": [
@@ -2994,6 +3014,50 @@
       "related_llms": [],
       "confidence": "high",
       "updated_at": "2026-06-24T17:00:18.513432"
+    },
+    {
+      "id": "dario-amodei",
+      "name": "Dario Amodei",
+      "title": "CEO",
+      "employer_id": "anthropic",
+      "influence_level": "行业领袖",
+      "hot_score": 95,
+      "recent_activity": "带领Anthropic秘密提交IPO",
+      "recent_activity_date": "2026-06-23",
+      "confidence": "high"
+    },
+    {
+      "id": "elon-musk",
+      "name": "Elon Musk",
+      "title": "CEO",
+      "employer_id": "spacex-xai",
+      "influence_level": "行业领袖",
+      "hot_score": 93,
+      "recent_activity": "SpaceX/xAI计划750亿美元IPO",
+      "recent_activity_date": "2026-06-23",
+      "confidence": "high"
+    },
+    {
+      "id": "sam-altman",
+      "name": "Sam Altman",
+      "title": "CEO",
+      "employer_id": "openai",
+      "influence_level": "行业领袖",
+      "hot_score": 88,
+      "recent_activity": "GPT-5.5发布，计划秋季IPO",
+      "recent_activity_date": "2026-06-23",
+      "confidence": "high"
+    },
+    {
+      "id": "greg-brockman",
+      "name": "Greg Brockman",
+      "title": "联合创始人",
+      "employer_id": "openai",
+      "influence_level": "核心人物",
+      "hot_score": 75,
+      "recent_activity": "称Agent是未来方向",
+      "recent_activity_date": "2026-06-23",
+      "confidence": "high"
     }
   ],
   "tools": [
@@ -4868,6 +4932,69 @@
       "related_llms": [],
       "confidence": "low",
       "updated_at": "2026-06-24T17:00:18.513432"
+    },
+    {
+      "id": "gpt-5-5",
+      "name": "GPT-5.5",
+      "category": "大模型",
+      "hot_score": 95,
+      "last_update": "支持100万Token上下文",
+      "last_update_date": "2026-06-23",
+      "confidence": "high"
+    },
+    {
+      "id": "gemini-3-x",
+      "name": "Gemini 3.x",
+      "category": "大模型",
+      "hot_score": 88,
+      "last_update": "多模态超长上下文",
+      "last_update_date": "2026-06-23",
+      "confidence": "high"
+    },
+    {
+      "id": "minimax-m-series",
+      "name": "MiniMax M系列",
+      "category": "大模型",
+      "hot_score": 85,
+      "last_update": "MoE架构百万上下文",
+      "last_update_date": "2026-06-23",
+      "confidence": "high"
+    },
+    {
+      "id": "codestral",
+      "name": "Codestral",
+      "category": "编程工具",
+      "hot_score": 78,
+      "last_update": "编程专用模型",
+      "last_update_date": "2026-06-23",
+      "confidence": "high"
+    },
+    {
+      "id": "qwen-3-5",
+      "name": "Qwen 3.5",
+      "category": "大模型",
+      "hot_score": 80,
+      "last_update": "开源迭代",
+      "last_update_date": "2026-06-23",
+      "confidence": "high"
+    },
+    {
+      "id": "gemma-4",
+      "name": "Gemma 4",
+      "category": "大模型",
+      "hot_score": 76,
+      "last_update": "Google开源权重",
+      "last_update_date": "2026-06-23",
+      "confidence": "high"
+    },
+    {
+      "id": "grok-4-20",
+      "name": "Grok 4.20",
+      "category": "大模型",
+      "hot_score": 82,
+      "last_update": "多智能体推理",
+      "last_update_date": "2026-06-23",
+      "confidence": "high"
     }
   ],
   "llms": [
@@ -5570,11 +5697,11 @@
         "生成"
       ],
       "status": "已下线",
-      "hot_score": 85,
+      "hot_score": 94,
       "hot_level": "爆热",
       "hot_reason": "发布三天后被北美监管部门勒令下线",
-      "last_event": "被北美监管部门以跨境数据安全隐患为由勒令下线",
-      "last_event_date": "2026-06-19",
+      "last_event": "IPO消息带动",
+      "last_event_date": "2026-06-23",
       "last_event_url": "https://36kr.com/p/3865331338918532",
       "related_people": [
         "dario-amodei"
@@ -7162,6 +7289,63 @@
       "related_people": [],
       "confidence": "medium",
       "updated_at": "2026-06-24T17:00:18.513432"
+    },
+    {
+      "id": "gpt-5-5-pro",
+      "name": "GPT-5.5 Pro",
+      "provider_id": "openai",
+      "family": "GPT",
+      "type": "文本",
+      "tier": "旗舰",
+      "hot_score": 96,
+      "capabilities": [
+        "100万Token上下文",
+        "多步推理"
+      ],
+      "last_event": "100万Token上下文",
+      "last_event_date": "2026-06-23",
+      "confidence": "high"
+    },
+    {
+      "id": "gemini-3-1-ultra",
+      "name": "Gemini 3.1 Ultra",
+      "provider_id": "google",
+      "family": "Gemini",
+      "type": "多模态",
+      "tier": "旗舰",
+      "hot_score": 90,
+      "last_event": "多模态升级",
+      "last_event_date": "2026-06-23",
+      "confidence": "high"
+    },
+    {
+      "id": "minimax-m1",
+      "name": "MiniMax M1",
+      "provider_id": "minimax",
+      "family": "M系列",
+      "type": "文本",
+      "tier": "旗舰",
+      "hot_score": 85,
+      "capabilities": [
+        "MoE",
+        "23B激活",
+        "百万上下文"
+      ],
+      "last_event": "编程评测超越海外",
+      "last_event_date": "2026-06-23",
+      "confidence": "high"
+    },
+    {
+      "id": "grok-4-20-llm",
+      "name": "Grok 4.20",
+      "provider_id": "spacex-xai",
+      "family": "Grok",
+      "type": "文本",
+      "tier": "旗舰",
+      "hot_score": 82,
+      "last_event": "多智能体推理",
+      "last_event_date": "2026-06-23",
+      "confidence": "high"
     }
   ],
   "changelog": [
@@ -8054,121 +8238,302 @@
       "date": "2026-06-24",
       "time": "17:00:18",
       "url": ""
+    },
+    {
+      "type": "update",
+      "dimension": "providers",
+      "id": "test-company",
+      "summary": "providers: 测试公司",
+      "date": "2026-06-24"
+    },
+    {
+      "type": "new",
+      "dimension": "hotspots",
+      "id": "test-event",
+      "summary": "hotspots: 测试热点事件",
+      "date": "2026-06-24"
+    },
+    {
+      "type": "update",
+      "dimension": "providers",
+      "id": "anthropic",
+      "summary": "providers: Anthropic",
+      "date": "2026-06-25"
+    },
+    {
+      "type": "update",
+      "dimension": "providers",
+      "id": "openai",
+      "summary": "providers: OpenAI",
+      "date": "2026-06-25"
+    },
+    {
+      "type": "new",
+      "dimension": "providers",
+      "id": "spacex-xai",
+      "summary": "providers: SpaceX/xAI",
+      "date": "2026-06-25"
+    },
+    {
+      "type": "new",
+      "dimension": "providers",
+      "id": "google",
+      "summary": "providers: Google",
+      "date": "2026-06-25"
+    },
+    {
+      "type": "update",
+      "dimension": "providers",
+      "id": "minimax",
+      "summary": "providers: MiniMax",
+      "date": "2026-06-25"
+    },
+    {
+      "type": "update",
+      "dimension": "providers",
+      "id": "meta",
+      "summary": "providers: Meta",
+      "date": "2026-06-25"
+    },
+    {
+      "type": "update",
+      "dimension": "providers",
+      "id": "alibaba",
+      "summary": "providers: 阿里巴巴",
+      "date": "2026-06-25"
+    },
+    {
+      "type": "update",
+      "dimension": "providers",
+      "id": "mistral-ai",
+      "summary": "providers: Mistral AI",
+      "date": "2026-06-25"
+    },
+    {
+      "type": "new",
+      "dimension": "people",
+      "id": "dario-amodei",
+      "summary": "people: Dario Amodei",
+      "date": "2026-06-25"
+    },
+    {
+      "type": "new",
+      "dimension": "people",
+      "id": "elon-musk",
+      "summary": "people: Elon Musk",
+      "date": "2026-06-25"
+    },
+    {
+      "type": "new",
+      "dimension": "people",
+      "id": "sam-altman",
+      "summary": "people: Sam Altman",
+      "date": "2026-06-25"
+    },
+    {
+      "type": "new",
+      "dimension": "people",
+      "id": "greg-brockman",
+      "summary": "people: Greg Brockman",
+      "date": "2026-06-25"
+    },
+    {
+      "type": "new",
+      "dimension": "tools",
+      "id": "gpt-5-5",
+      "summary": "tools: GPT-5.5",
+      "date": "2026-06-25"
+    },
+    {
+      "type": "new",
+      "dimension": "tools",
+      "id": "gemini-3-x",
+      "summary": "tools: Gemini 3.x",
+      "date": "2026-06-25"
+    },
+    {
+      "type": "new",
+      "dimension": "tools",
+      "id": "minimax-m-series",
+      "summary": "tools: MiniMax M系列",
+      "date": "2026-06-25"
+    },
+    {
+      "type": "new",
+      "dimension": "tools",
+      "id": "codestral",
+      "summary": "tools: Codestral",
+      "date": "2026-06-25"
+    },
+    {
+      "type": "new",
+      "dimension": "tools",
+      "id": "qwen-3-5",
+      "summary": "tools: Qwen 3.5",
+      "date": "2026-06-25"
+    },
+    {
+      "type": "new",
+      "dimension": "tools",
+      "id": "gemma-4",
+      "summary": "tools: Gemma 4",
+      "date": "2026-06-25"
+    },
+    {
+      "type": "new",
+      "dimension": "tools",
+      "id": "grok-4-20",
+      "summary": "tools: Grok 4.20",
+      "date": "2026-06-25"
+    },
+    {
+      "type": "new",
+      "dimension": "llms",
+      "id": "gpt-5-5-pro",
+      "summary": "llms: GPT-5.5 Pro",
+      "date": "2026-06-25"
+    },
+    {
+      "type": "new",
+      "dimension": "llms",
+      "id": "gemini-3-1-ultra",
+      "summary": "llms: Gemini 3.1 Ultra",
+      "date": "2026-06-25"
+    },
+    {
+      "type": "update",
+      "dimension": "llms",
+      "id": "claude-fable-5",
+      "summary": "llms: Claude Fable 5",
+      "date": "2026-06-25"
+    },
+    {
+      "type": "new",
+      "dimension": "llms",
+      "id": "minimax-m1",
+      "summary": "llms: MiniMax M1",
+      "date": "2026-06-25"
+    },
+    {
+      "type": "new",
+      "dimension": "llms",
+      "id": "grok-4-20-llm",
+      "summary": "llms: Grok 4.20",
+      "date": "2026-06-25"
+    },
+    {
+      "type": "new",
+      "dimension": "hotspots",
+      "id": "anthropic-ipo",
+      "summary": "hotspots: Anthropic秘密提交IPO申请，估值9650亿美元",
+      "date": "2026-06-25"
+    },
+    {
+      "type": "new",
+      "dimension": "hotspots",
+      "id": "spacex-ipo",
+      "summary": "hotspots: SpaceX/xAI计划750亿美元IPO，史上最大",
+      "date": "2026-06-25"
+    },
+    {
+      "type": "new",
+      "dimension": "hotspots",
+      "id": "openai-gpt55",
+      "summary": "hotspots: OpenAI发布GPT-5.5，100万Token上下文",
+      "date": "2026-06-25"
+    },
+    {
+      "type": "new",
+      "dimension": "hotspots",
+      "id": "ai-agent-era",
+      "summary": "hotspots: AI智能体规模化落地元年到来",
+      "date": "2026-06-25"
+    },
+    {
+      "type": "new",
+      "dimension": "hotspots",
+      "id": "china-llm-rise",
+      "summary": "hotspots: 国产大模型全面领跑，科创板开放AI上市",
+      "date": "2026-06-25"
     }
   ],
   "stats": {
-    "total_providers": 82,
-    "total_people": 56,
-    "total_tools": 88,
-    "total_llms": 83,
-    "total_hotspots": 6,
-    "new_this_period": 24,
-    "updated_this_period": 32,
-    "removed_this_period": 0
+    "total_providers": 84,
+    "total_people": 60,
+    "total_tools": 95,
+    "total_llms": 87,
+    "total_hotspots": 5,
+    "new_this_period": 22,
+    "updated_this_period": 7
   },
   "hotspots": [
     {
-      "id": "test-event",
-      "title": "测试热点事件",
-      "summary": "用于验证 MCP 协议的热点事件",
+      "id": "anthropic-ipo",
+      "title": "Anthropic秘密提交IPO申请，估值9650亿美元",
+      "summary": "Anthropic于6月1日向SEC秘密提交IPO文件，估值9650亿美元，年收入470亿美元",
       "date": "2026-06-23",
-      "source": "MCP Test",
-      "url": "",
+      "source": "综合",
+      "url": "https://www.usnews.com/news/best-states/washington/articles/2026-06-04/ai-companies-are-barreling-toward-huge-wall-street-debuts",
+      "related_providers": [
+        "anthropic"
+      ],
+      "related_people": [
+        "dario-amodei"
+      ],
       "confidence": "high"
     },
     {
-      "id": "spacex-acquires-cursor",
-      "title": "SpaceX以600亿美元收购AI编程工具Cursor",
-      "summary": "SpaceX以600亿美元股票交易收购AI代码编辑器Cursor，马斯克不补课直接买课代表，引发行业震动。Cursor 1.5T新模型放弃Kimi基座，同时马斯克第一刀砍向微软GitHub。",
-      "date": "2026-06-24",
-      "source": "InfoQ",
-      "url": "https://www.infoq.cn",
+      "id": "spacex-ipo",
+      "title": "SpaceX/xAI计划750亿美元IPO，史上最大",
+      "summary": "合并后估值1.25万亿美元，Elon Musk或成首位万亿富翁",
+      "date": "2026-06-23",
+      "source": "综合",
+      "url": "https://www.usnews.com/news/best-states/washington/articles/2026-06-04/ai-companies-are-barreling-toward-huge-wall-street-debuts",
       "related_providers": [
-        "spacex",
-        "cursor"
+        "spacex-xai"
       ],
       "related_people": [
         "elon-musk"
       ],
-      "related_tools": [
-        "cursor"
-      ],
-      "related_llms": [],
-      "updated_at": "2026-06-24T17:00:18.513432"
+      "confidence": "high"
     },
     {
-      "id": "anthropic-claude-fable5-takedown",
-      "title": "Anthropic两款旗舰大模型Fable 5和Mythos 5遭北美监管部门勒令下线",
-      "summary": "北美监管部门以跨境数据安全隐患为由，要求Anthropic关停Fable 5与Mythos 5两款最新大模型，杜绝境外调用。同时Anthropic CEO达里奥开火OpenAI奥特曼，称行业有人不值得信任。",
-      "date": "2026-06-19",
-      "source": "36氪",
-      "url": "https://36kr.com/p/3865331338918532",
+      "id": "openai-gpt55",
+      "title": "OpenAI发布GPT-5.5，100万Token上下文",
+      "summary": "GPT-5.5 Preview支持百万Token上下文，多步推理能力大幅跃升，计划秋季IPO",
+      "date": "2026-06-23",
+      "source": "综合",
+      "url": "https://blog.mean.ceo/new-ai-model-releases-news-june-2026/",
       "related_providers": [
-        "anthropic"
-      ],
-      "related_people": [
-        "dario-amodei",
-        "sam-altman"
-      ],
-      "related_tools": [],
-      "related_llms": [
-        "claude-fable-5",
-        "mythos-5"
-      ],
-      "updated_at": "2026-06-24T17:00:18.513432"
-    },
-    {
-      "id": "doubao-2-1-release",
-      "title": "字节跳动发布豆包大模型2.1，Agent独立完成芯片设计代码",
-      "summary": "豆包2.1版本发布，Agent能够自主运行18个小时完成芯片设计代码，跨越生产级质变点，标志着大模型从辅助工具向自主Agent演进的重要一步。",
-      "date": "2026-06-24",
-      "source": "量子位",
-      "url": "https://www.qbitai.com",
-      "related_providers": [
-        "byte-dance"
-      ],
-      "related_people": [],
-      "related_tools": [],
-      "related_llms": [
-        "doubao-2-1"
-      ],
-      "updated_at": "2026-06-24T17:00:18.513432"
-    },
-    {
-      "id": "zhipu-market-cap-trillion",
-      "title": "智谱AI市值突破1万亿港元，盘中大涨超40%",
-      "summary": "中国大模型第一股智谱AI股价大涨，市值突破1万亿港元。市场认为其终结了中国大模型‘平替’叙事，同时引发对大模型公司收入结构的重新审视。",
-      "date": "2026-06-24",
-      "source": "36氪",
-      "url": "https://36kr.com/p/3864006047929605",
-      "related_providers": [
-        "zhipu-ai"
-      ],
-      "related_people": [],
-      "related_tools": [],
-      "related_llms": [],
-      "updated_at": "2026-06-24T17:00:18.513432"
-    },
-    {
-      "id": "claude-code-major-upgrade",
-      "title": "Anthropic发布Claude Code大升级，卡帕西称LLM第三次变革",
-      "summary": "Claude Code迎来重大升级，目前A社约65%的产品代码已由Claude Tag参与完成。Andrej Karpathy评价这是LLM第三次变革，工具能力显著提升。",
-      "date": "2026-06-24",
-      "source": "量子位",
-      "url": "https://www.qbitai.com",
-      "related_providers": [
-        "anthropic"
-      ],
-      "related_people": [
-        "andrej-karpathy"
-      ],
-      "related_tools": [
-        "claude-code"
+        "openai"
       ],
       "related_llms": [
-        "claude"
+        "gpt-5-5-pro"
       ],
-      "updated_at": "2026-06-24T17:00:18.513432"
+      "confidence": "high"
+    },
+    {
+      "id": "ai-agent-era",
+      "title": "AI智能体规模化落地元年到来",
+      "summary": "单Agent能力成熟，Multi-Agent协同成型，桌面和业务流程智能体陆续商用",
+      "date": "2026-06-23",
+      "source": "综合",
+      "confidence": "high"
+    },
+    {
+      "id": "china-llm-rise",
+      "title": "国产大模型全面领跑，科创板开放AI上市",
+      "summary": "MiniMax M系列编程评测超越海外；证监会将AI大模型纳入科创板第五套上市标准",
+      "date": "2026-06-23",
+      "source": "综合",
+      "url": "https://xingyun3d.csdn.net/6a35e06e10ee7a33f28013c7.html",
+      "related_providers": [
+        "minimax"
+      ],
+      "related_llms": [
+        "minimax-m1"
+      ],
+      "confidence": "high"
     }
   ]
 }
