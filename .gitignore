@@ -2,6 +2,8 @@
 data/fetch-cache.json
 data/history/
 data/archive/
+data/*.log
+data/*.pid
 .DS_Store
 __pycache__/
 *.pyc
