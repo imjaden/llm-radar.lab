@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "generated_at": "2026-06-25T10:56:56.194950",
+  "generated_at": "2026-06-26T00:37:51.901448",
   "period": "2026-06-16 ~ 2026-06-23",
   "execution_mode": "semi-auto",
   "providers": [
@@ -8075,6 +8075,48 @@
       "id": "chinese-ai-us-market",
       "summary": "hotspots: 中国AI模型迅速占领美国市场：价格仅为1/10",
       "date": "2026-06-25"
+    },
+    {
+      "type": "update",
+      "dimension": "providers",
+      "id": "test-company",
+      "summary": "providers: 测试公司",
+      "date": "2026-06-26"
+    },
+    {
+      "type": "update",
+      "dimension": "hotspots",
+      "id": "test-event",
+      "summary": "hotspots: 测试热点事件",
+      "date": "2026-06-26"
+    },
+    {
+      "type": "update",
+      "dimension": "providers",
+      "id": "test-company",
+      "summary": "providers: 测试公司",
+      "date": "2026-06-26"
+    },
+    {
+      "type": "update",
+      "dimension": "hotspots",
+      "id": "test-event",
+      "summary": "hotspots: 测试热点事件",
+      "date": "2026-06-26"
+    },
+    {
+      "type": "update",
+      "dimension": "providers",
+      "id": "test-company",
+      "summary": "providers: 测试公司",
+      "date": "2026-06-26"
+    },
+    {
+      "type": "update",
+      "dimension": "hotspots",
+      "id": "test-event",
+      "summary": "hotspots: 测试热点事件",
+      "date": "2026-06-26"
     }
   ],
   "stats": {
@@ -8082,9 +8124,9 @@
     "total_people": 57,
     "total_tools": 89,
     "total_llms": 81,
-    "total_hotspots": 106,
-    "new_this_period": 4,
-    "updated_this_period": 0
+    "total_hotspots": 100,
+    "new_this_period": 0,
+    "updated_this_period": 2
   },
   "hotspots": [
     {
@@ -8435,7 +8477,9 @@
       "date": "2026-06-23",
       "source": "MCP Test",
       "url": "",
-      "confidence": "high"
+      "confidence": "high",
+      "hot_score": 0,
+      "hot_level": ""
     },
     {
       "id": "us-govt-bans-anthropic-fable5",
