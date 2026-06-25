@@ -192,6 +192,24 @@ def merge_entities(new_entities):
         'updated_this_period': update_count,
     }
 
+    # Data retention: max 100 per dimension + 15-day sliding window (same as Agent Loop)
+    from datetime import timedelta
+    cutoff = (datetime.now() - timedelta(days=15)).strftime('%Y-%m-%d')
+    for dim in ['providers', 'people', 'tools', 'llms', 'hotspots']:
+        items = snapshot.get(dim, [])
+        if len(items) <= 100:
+            continue
+        # Remove items without recent events
+        date_fields = {'hotspots': 'date', 'providers': 'last_event_date',
+                       'people': 'recent_activity_date', 'tools': 'last_update_date',
+                       'llms': 'last_event_date'}
+        df = date_fields.get(dim, 'last_event_date')
+        recent = [e for e in items if e.get(df, '') >= cutoff]
+        if len(recent) > 100:
+            recent.sort(key=lambda e: e.get(df, ''), reverse=True)
+            recent = recent[:100]
+        snapshot[dim] = recent if recent else items[:100]
+
     snapshot['generated_at'] = datetime.now().isoformat()
     DATA_DIR.mkdir(parents=True, exist_ok=True)
     SNAPSHOT_PATH.write_text(json.dumps(snapshot, ensure_ascii=False, indent=2), encoding='utf-8')
