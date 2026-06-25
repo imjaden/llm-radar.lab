@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "generated_at": "2026-06-25T01:21:23.094769",
+  "generated_at": "2026-06-25T10:56:56.194950",
   "period": "2026-06-16 ~ 2026-06-23",
   "execution_mode": "semi-auto",
   "providers": [
@@ -1547,6 +1547,16 @@
       "hot_level": "高热",
       "last_event": "发布测试产品",
       "last_event_date": "2026-06-23",
+      "confidence": "high"
+    },
+    {
+      "id": "z-ai",
+      "name": "z.AI (智谱)",
+      "country": "中国",
+      "hot_score": 88,
+      "hot_level": "高热",
+      "last_event": "GLM-5.1被评为最强开源编程模型，蝉联开源榜首",
+      "last_event_date": "2026-06-25",
       "confidence": "high"
     }
   ],
@@ -8037,18 +8047,176 @@
       "id": "test-event",
       "summary": "hotspots: 测试热点事件",
       "date": "2026-06-25"
+    },
+    {
+      "type": "new",
+      "dimension": "providers",
+      "id": "z-ai",
+      "summary": "providers: z.AI (智谱)",
+      "date": "2026-06-25"
+    },
+    {
+      "type": "new",
+      "dimension": "hotspots",
+      "id": "z-ai-open-source-leader",
+      "summary": "hotspots: z.AI GLM-5.1 蝉联开源模型榜首，竞品公开致敬",
+      "date": "2026-06-25"
+    },
+    {
+      "type": "new",
+      "dimension": "hotspots",
+      "id": "bernie-ai-dividend",
+      "summary": "hotspots: 桑德斯提案：AI公司利润50%税，每人每年发$1000",
+      "date": "2026-06-25"
+    },
+    {
+      "type": "new",
+      "dimension": "hotspots",
+      "id": "chinese-ai-us-market",
+      "summary": "hotspots: 中国AI模型迅速占领美国市场：价格仅为1/10",
+      "date": "2026-06-25"
     }
   ],
   "stats": {
-    "total_providers": 77,
+    "total_providers": 78,
     "total_people": 57,
     "total_tools": 89,
     "total_llms": 81,
-    "total_hotspots": 103,
-    "new_this_period": 2,
+    "total_hotspots": 106,
+    "new_this_period": 4,
     "updated_this_period": 0
   },
   "hotspots": [
+    {
+      "id": "anthropic-ipo",
+      "title": "Anthropic秘密提交IPO申请，估值9650亿美元",
+      "summary": "Anthropic于6月1日向SEC秘密提交IPO文件，估值9650亿美元，年收入470亿美元",
+      "date": "2026-06-25",
+      "source": "综合",
+      "url": "https://www.usnews.com/news/best-states/washington/articles/2026-06-04/ai-companies-are-barreling-toward-huge-wall-street-debuts",
+      "related_providers": [
+        "anthropic"
+      ],
+      "related_people": [
+        "dario-amodei"
+      ],
+      "confidence": "high"
+    },
+    {
+      "id": "spacex-ipo",
+      "title": "SpaceX/xAI计划750亿美元IPO，史上最大",
+      "summary": "合并后估值1.25万亿美元，Elon Musk或成首位万亿富翁",
+      "date": "2026-06-25",
+      "source": "综合",
+      "url": "https://www.usnews.com/news/best-states/washington/articles/2026-06-04/ai-companies-are-barreling-toward-huge-wall-street-debuts",
+      "related_providers": [
+        "spacex-xai"
+      ],
+      "related_people": [
+        "elon-musk"
+      ],
+      "confidence": "high"
+    },
+    {
+      "id": "openai-gpt55",
+      "title": "OpenAI发布GPT-5.5，100万Token上下文",
+      "summary": "GPT-5.5 Preview支持百万Token上下文，多步推理能力大幅跃升",
+      "date": "2026-06-25",
+      "source": "综合",
+      "url": "https://blog.mean.ceo/new-ai-model-releases-news-june-2026/",
+      "related_providers": [
+        "openai"
+      ],
+      "related_llms": [
+        "gpt-5-5-pro"
+      ],
+      "confidence": "high"
+    },
+    {
+      "id": "ai-agent-era",
+      "title": "AI智能体规模化落地元年到来",
+      "summary": "单Agent能力成熟，Multi-Agent协同成型，桌面和业务流程智能体陆续商用",
+      "date": "2026-06-25",
+      "source": "综合",
+      "confidence": "high"
+    },
+    {
+      "id": "china-llm-rise",
+      "title": "国产大模型全面领跑，科创板开放AI上市",
+      "summary": "MiniMax M系列编程评测超越海外；证监会将AI大模型纳入科创板第五套上市标准",
+      "date": "2026-06-25",
+      "source": "综合",
+      "url": "https://xingyun3d.csdn.net/6a35e06e10ee7a33f28013c7.html",
+      "related_providers": [
+        "minimax"
+      ],
+      "related_llms": [
+        "minimax-m1"
+      ],
+      "confidence": "high"
+    },
+    {
+      "id": "glm-5-2-local-ai",
+      "title": "GLM-5.2 成为本地AI社区新宠",
+      "summary": "智谱GLM-5.2在本地部署社区引发热议，1185 upvotes/304评论",
+      "date": "2026-06-25",
+      "source": "Reddit",
+      "url": "https://www.reddit.com/r/LocalLLaMA/comments/1u8ai2a/glm52_is_a_win_for_local_ai/",
+      "related_providers": [
+        "zhipu"
+      ],
+      "confidence": "high"
+    },
+    {
+      "id": "pentagon-grok",
+      "title": "五角大楼使用 Grok AI 发射2000枚导弹",
+      "summary": "美国国防部使用Elon Musk的Grok AI系统执行军事打击行动",
+      "date": "2026-06-25",
+      "source": "Reddit",
+      "url": "https://www.reddit.com/r/OpenAI/comments/1u80x1z/pentagon_used_elon_musks_grok_ai_to_fire_2000/",
+      "related_providers": [
+        "spacex-xai"
+      ],
+      "related_people": [
+        "elon-musk"
+      ],
+      "confidence": "high"
+    },
+    {
+      "id": "z-ai-open-source-leader",
+      "title": "z.AI GLM-5.1 蝉联开源模型榜首，竞品公开致敬",
+      "summary": "z.AI的GLM-5.1在kilo.ai和LMSys Arena等评测中被评为最强开源编程模型。排名第二的AI平台公开赞扬z.AI为\"第一\"，展现开源社区的健康竞争",
+      "date": "2026-06-25",
+      "source": "Reddit",
+      "url": "https://www.reddit.com/r/LocalLLaMA/comments/1uaxktf/",
+      "related_providers": [
+        "z-ai"
+      ],
+      "confidence": "high"
+    },
+    {
+      "id": "bernie-ai-dividend",
+      "title": "桑德斯提案：AI公司利润50%税，每人每年发$1000",
+      "summary": "Bernie Sanders提出AI财富基金法案，对最大AI公司征收50%股票税，建立7万亿美元基金，每年向每位美国人发放$1000。获Sam Altman等业界支持",
+      "date": "2026-06-25",
+      "source": "综合",
+      "url": "https://www.washingtonpost.com/business/2026/06/18/bernie-sanders-proposes-wealth-fund-give-americans-stake-ai/",
+      "confidence": "high"
+    },
+    {
+      "id": "chinese-ai-us-market",
+      "title": "中国AI模型迅速占领美国市场：价格仅为1/10",
+      "summary": "DeepSeek、Qwen、MiniMax等中国AI模型以美国产品1/10的价格快速获取美国客户。NYT报道硅谷企业大量转向中国开源模型，80%美国创业公司已切换",
+      "date": "2026-06-25",
+      "source": "综合",
+      "url": "https://restofworld.org/2026/when-americans-choose-chinese-ai/",
+      "related_providers": [
+        "alibaba",
+        "minimax",
+        "deepseek"
+      ],
+      "confidence": "high"
+    },
     {
       "id": "spacex-acquires-cursor",
       "title": "SpaceX以600亿美元股票收购AI编程工具Cursor",
@@ -8259,6 +8427,15 @@
       "related_tools": [],
       "related_llms": [],
       "updated_at": "2026-06-23T15:07:43.497974"
+    },
+    {
+      "id": "test-event",
+      "title": "测试热点事件",
+      "summary": "用于验证 MCP 协议的热点事件",
+      "date": "2026-06-23",
+      "source": "MCP Test",
+      "url": "",
+      "confidence": "high"
     },
     {
       "id": "us-govt-bans-anthropic-fable5",
@@ -8740,23 +8917,6 @@
       "updated_at": "2026-06-21T21:01:11.894709"
     },
     {
-      "id": "us-ban-anthropic-fable5",
-      "title": "美国政府禁止 Anthropic 发布 Fable 5 模型",
-      "summary": "美国政府对 Anthropic 的新模型 Fable 5 实施发布禁令，引发对 AI 出口管制和安全的广泛讨论。",
-      "date": "2026-06-17",
-      "source": "TechCrunch",
-      "url": "https://techcrunch.com/2026/06/17/the-us-banned-anthropics-fable-5-release/",
-      "related_providers": [
-        "anthropic"
-      ],
-      "related_people": [],
-      "related_tools": [],
-      "related_llms": [
-        "fable-5"
-      ],
-      "updated_at": "2026-06-22T19:59:56.704555"
-    },
-    {
       "id": "openai-q1-losses",
       "title": "OpenAI Q1烧钱250亿美元财报泄露",
       "summary": "OpenAI未经审计的财报显示Q1烧掉250亿美元，引发行业对盈利模式的质疑。同时OpenAI正为IPO引入多位重量级高管，包括前首席技术官等。",
@@ -8956,6 +9116,23 @@
       "related_tools": [],
       "related_llms": [],
       "updated_at": "2026-06-23T11:44:17.483265"
+    },
+    {
+      "id": "us-ban-anthropic-fable5",
+      "title": "美国政府禁止 Anthropic 发布 Fable 5 模型",
+      "summary": "美国政府对 Anthropic 的新模型 Fable 5 实施发布禁令，引发对 AI 出口管制和安全的广泛讨论。",
+      "date": "2026-06-17",
+      "source": "TechCrunch",
+      "url": "https://techcrunch.com/2026/06/17/the-us-banned-anthropics-fable-5-release/",
+      "related_providers": [
+        "anthropic"
+      ],
+      "related_people": [],
+      "related_tools": [],
+      "related_llms": [
+        "fable-5"
+      ],
+      "updated_at": "2026-06-22T19:59:56.704555"
     },
     {
       "id": "us-bans-anthropic-fable5",
@@ -9582,219 +9759,6 @@
         "mythos"
       ],
       "updated_at": "2026-06-16T16:01:37.103814"
-    },
-    {
-      "id": "anthropic-government-ban",
-      "title": "Anthropic发布Fable 5模型后遭美国政府限制访问",
-      "summary": "Anthropic推出旗舰模型Claude Fable 5与Mythos 5，但因安全风险担忧，美国政府决定限制联邦机构使用。此举引发关于AI安全与监管的广泛讨论。",
-      "date": "2026-06-13",
-      "source": "TechCrunch / 量子位",
-      "url": "https://techcrunch.com/category/artificial-intelligence/",
-      "related_providers": [
-        "anthropic"
-      ],
-      "related_people": [
-        "dario-amodei"
-      ],
-      "related_tools": [],
-      "related_llms": [
-        "claude-fable-5",
-        "mythos-5"
-      ],
-      "updated_at": "2026-06-16T22:02:06.974607"
-    },
-    {
-      "id": "spacex-ipo-cursor",
-      "title": "SpaceX成功IPO并收购Cursor，马斯克登顶万亿富豪",
-      "summary": "SpaceX以2.7万亿美元估值上市，随后宣布以600亿美元股票收购AI编程工具Cursor。创始人马斯克成为人类历史首位万亿美金富豪。",
-      "date": "2026-06-13",
-      "source": "TechCrunch / 量子位",
-      "url": "https://techcrunch.com/category/artificial-intelligence/",
-      "related_providers": [
-        "spacex",
-        "cursor"
-      ],
-      "related_people": [
-        "elon-musk"
-      ],
-      "related_tools": [
-        "cursor"
-      ],
-      "related_llms": [],
-      "updated_at": "2026-06-16T22:02:06.974607"
-    },
-    {
-      "id": "jeff-bezos-prometheus",
-      "title": "贝索斯旗下Prometheus融资120亿美元，开发物理世界通用AI",
-      "summary": "杰夫·贝索斯的AI新公司Prometheus完成120亿美元融资，旨在构建'通用工程智能'，将AI应用于物理世界的机器人、制造等领域。",
-      "date": "2026-06-13",
-      "source": "TechCrunch",
-      "url": "https://techcrunch.com/category/artificial-intelligence/",
-      "related_providers": [
-        "prometheus-ai"
-      ],
-      "related_people": [
-        "jeff-bezos"
-      ],
-      "related_tools": [],
-      "related_llms": [],
-      "updated_at": "2026-06-16T22:02:06.974607"
-    },
-    {
-      "id": "baai-2026-conference",
-      "title": "2026智源大会开幕，聚焦AI与物理世界、生命科学融合",
-      "summary": "智源研究院主办的2026智源大会开幕，提出推动AI、物理世界和生命科学三体互动，昆仑万维等企业展示世界模型等前沿成果。",
-      "date": "2026-06-13",
-      "source": "量子位",
-      "url": "https://www.qbitai.com",
-      "related_providers": [
-        "baai",
-        "kunlun-tech"
-      ],
-      "related_people": [],
-      "related_tools": [],
-      "related_llms": [
-        "matrix-game-3-5"
-      ],
-      "updated_at": "2026-06-16T22:02:06.974607"
-    },
-    {
-      "id": "openai-loss-ipo-shazeer",
-      "title": "OpenAI Q1亏损250亿美元，财报泄露，宣布IPO计划，并引入Transformer作者Noam Shazeer",
-      "summary": "OpenAI财报泄露显示Q1亏损250亿美元，引发业界震动。同时公司宣布IPO计划，并迎来Transformer作者Noam Shazeer从谷歌加盟，人事与财务双重动荡。",
-      "date": "2026-06-13",
-      "source": "量子位/TechCrunch",
-      "url": "",
-      "related_providers": [
-        "openai"
-      ],
-      "related_people": [
-        "noam-shazeer"
-      ],
-      "related_tools": [],
-      "related_llms": [],
-      "updated_at": "2026-06-20T00:01:40.791242"
-    },
-    {
-      "id": "spacex-largest-ipo",
-      "title": "SpaceX完成史上最大IPO，马斯克成万亿富豪",
-      "summary": "SpaceX以每股135美元完成史上最大规模IPO，马斯克成为人类历史首位万亿美金富豪。散户认购额达700亿美元，SpaceX员工将因此受益。",
-      "date": "2026-06-12",
-      "source": "TechCrunch, 量子位",
-      "url": "https://techcrunch.com/2026/06/12/spacex-officially-prices-shares-at-135-in-the-largest-ipo-ever/",
-      "related_providers": [
-        "spacex"
-      ],
-      "related_people": [
-        "Elon Musk"
-      ],
-      "related_tools": [],
-      "related_llms": [],
-      "updated_at": "2026-06-15T17:01:14.112333"
-    },
-    {
-      "id": "anthropic-ipo",
-      "title": "Anthropic秘密提交IPO申请，估值9650亿美元",
-      "summary": "Anthropic于6月1日向SEC秘密提交IPO文件，估值9650亿美元，年收入470亿美元",
-      "date": "2026-06-25",
-      "source": "综合",
-      "url": "https://www.usnews.com/news/best-states/washington/articles/2026-06-04/ai-companies-are-barreling-toward-huge-wall-street-debuts",
-      "related_providers": [
-        "anthropic"
-      ],
-      "related_people": [
-        "dario-amodei"
-      ],
-      "confidence": "high"
-    },
-    {
-      "id": "spacex-ipo",
-      "title": "SpaceX/xAI计划750亿美元IPO，史上最大",
-      "summary": "合并后估值1.25万亿美元，Elon Musk或成首位万亿富翁",
-      "date": "2026-06-25",
-      "source": "综合",
-      "url": "https://www.usnews.com/news/best-states/washington/articles/2026-06-04/ai-companies-are-barreling-toward-huge-wall-street-debuts",
-      "related_providers": [
-        "spacex-xai"
-      ],
-      "related_people": [
-        "elon-musk"
-      ],
-      "confidence": "high"
-    },
-    {
-      "id": "openai-gpt55",
-      "title": "OpenAI发布GPT-5.5，100万Token上下文",
-      "summary": "GPT-5.5 Preview支持百万Token上下文，多步推理能力大幅跃升",
-      "date": "2026-06-25",
-      "source": "综合",
-      "url": "https://blog.mean.ceo/new-ai-model-releases-news-june-2026/",
-      "related_providers": [
-        "openai"
-      ],
-      "related_llms": [
-        "gpt-5-5-pro"
-      ],
-      "confidence": "high"
-    },
-    {
-      "id": "ai-agent-era",
-      "title": "AI智能体规模化落地元年到来",
-      "summary": "单Agent能力成熟，Multi-Agent协同成型，桌面和业务流程智能体陆续商用",
-      "date": "2026-06-25",
-      "source": "综合",
-      "confidence": "high"
-    },
-    {
-      "id": "china-llm-rise",
-      "title": "国产大模型全面领跑，科创板开放AI上市",
-      "summary": "MiniMax M系列编程评测超越海外；证监会将AI大模型纳入科创板第五套上市标准",
-      "date": "2026-06-25",
-      "source": "综合",
-      "url": "https://xingyun3d.csdn.net/6a35e06e10ee7a33f28013c7.html",
-      "related_providers": [
-        "minimax"
-      ],
-      "related_llms": [
-        "minimax-m1"
-      ],
-      "confidence": "high"
-    },
-    {
-      "id": "glm-5-2-local-ai",
-      "title": "GLM-5.2 成为本地AI社区新宠",
-      "summary": "智谱GLM-5.2在本地部署社区引发热议，1185 upvotes/304评论",
-      "date": "2026-06-25",
-      "source": "Reddit",
-      "url": "https://www.reddit.com/r/LocalLLaMA/comments/1u8ai2a/glm52_is_a_win_for_local_ai/",
-      "related_providers": [
-        "zhipu"
-      ],
-      "confidence": "high"
-    },
-    {
-      "id": "pentagon-grok",
-      "title": "五角大楼使用 Grok AI 发射2000枚导弹",
-      "summary": "美国国防部使用Elon Musk的Grok AI系统执行军事打击行动",
-      "date": "2026-06-25",
-      "source": "Reddit",
-      "url": "https://www.reddit.com/r/OpenAI/comments/1u80x1z/pentagon_used_elon_musks_grok_ai_to_fire_2000/",
-      "related_providers": [
-        "spacex-xai"
-      ],
-      "related_people": [
-        "elon-musk"
-      ],
-      "confidence": "high"
-    },
-    {
-      "id": "test-event",
-      "title": "测试热点事件",
-      "summary": "用于验证 MCP 协议的热点事件",
-      "date": "2026-06-23",
-      "source": "MCP Test",
-      "url": "",
-      "confidence": "high"
     }
   ]
 }
