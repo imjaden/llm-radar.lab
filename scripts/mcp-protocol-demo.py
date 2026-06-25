@@ -16,6 +16,20 @@ LLM-Radar MCP Protocol 手工测试验证脚本
 
 依赖：
   - llm-radar-mcp-server.py 在项目根目录
+
+流程:
+scripts/mcp-protocol-demo.py
+    │
+    ├─ subprocess.Popen → python3 llm-radar-mcp-server.py（自动启动）
+    │
+    ├─ 发 JSON-RPC 请求 → stdin pipe
+    ├─ 收 JSON-RPC 响应 ← stdout pipe
+    │
+    ├─ 测试 5 个用例（health_check / submit / reject / empty / auth）
+    │
+    └─ 子进程退出（pipe 关闭 → EOF）
+
+  每次运行都是独立的、一次性的 stdio 会话。不需要也不依赖手工启动的 MCP Server 实例。
 """
 
 import subprocess
