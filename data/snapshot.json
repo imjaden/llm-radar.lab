@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "generated_at": "2026-06-26T00:37:51.901448",
+  "generated_at": "2026-06-29T23:42:41.968920",
   "period": "2026-06-16 ~ 2026-06-23",
   "execution_mode": "semi-auto",
   "providers": [
@@ -1558,6 +1558,49 @@
       "last_event": "GLM-5.1被评为最强开源编程模型，蝉联开源榜首",
       "last_event_date": "2026-06-25",
       "confidence": "high"
+    },
+    {
+      "aliases": [
+        "Z.ai",
+        "Zhipu AI",
+        "智谱AI"
+      ],
+      "description": "Released GLM-5.2, 753B MoE open-weight model under MIT license with 1M token context and multi-token prediction. Beats proprietary models on design arena benchmarks.",
+      "headquarters": "Beijing, China",
+      "last_active": "2026-06-17",
+      "name": "Z.ai (Zhipu AI)",
+      "region": "Asia Pacific",
+      "relevance_score": 90,
+      "tags": [
+        "LLM",
+        "open source",
+        "GLM",
+        "MoE",
+        "MIT license"
+      ],
+      "type": "LLM Lab",
+      "website": "https://z.ai"
+    },
+    {
+      "aliases": [
+        "SpaceX",
+        "xAI"
+      ],
+      "description": "Acquired Anysphere/Cursor for $60B in all-stock deal announced Jun 16. Grok AI development under xAI division. Major AI infrastructure play.",
+      "headquarters": "Hawthorne, CA / Memphis, TN",
+      "last_active": "2026-06-16",
+      "name": "SpaceX (xAI)",
+      "region": "North America",
+      "relevance_score": 92,
+      "tags": [
+        "acquisition",
+        "Cursor",
+        "AI coding",
+        "Grok",
+        "xAI"
+      ],
+      "type": "Technology Conglomerate",
+      "website": "https://spacex.com"
     }
   ],
   "people": [
@@ -2864,7 +2907,10 @@
       "hot_score": 95,
       "recent_activity": "带领Anthropic秘密提交IPO",
       "recent_activity_date": "2026-06-25",
-      "confidence": "high"
+      "confidence": "high",
+      "hot_level": "爆热",
+      "last_event": "Dario Amodei 多年开源立场获社区认可，Reddit 2,290 点赞讨论",
+      "last_event_date": "2026-06-26"
     },
     {
       "id": "elon-musk",
@@ -2875,7 +2921,8 @@
       "hot_score": 93,
       "recent_activity": "Grok AI被五角大楼用于军事行动",
       "recent_activity_date": "2026-06-25",
-      "confidence": "high"
+      "confidence": "high",
+      "hot_level": ""
     },
     {
       "id": "sam-altman",
@@ -2886,7 +2933,25 @@
       "hot_score": 88,
       "recent_activity": "GPT-5.5发布，计划秋季IPO",
       "recent_activity_date": "2026-06-25",
-      "confidence": "high"
+      "confidence": "high",
+      "hot_level": ""
+    },
+    {
+      "affiliation": "OpenAI",
+      "aliases": [
+        "Greg Brockman",
+        "gdb"
+      ],
+      "description": "Key leader at OpenAI during Jalapeño chip launch and ChatGPT 1B MAU milestone.",
+      "last_active": "2026-06-29",
+      "name": "Greg Brockman",
+      "relevance_score": 80,
+      "role": "President",
+      "tags": [
+        "OpenAI",
+        "leadership",
+        "AI"
+      ]
     }
   ],
   "tools": [
@@ -4708,6 +4773,79 @@
       "last_update": "r/LocalLLaMA社区热捧，1185 upvotes",
       "last_update_date": "2026-06-25",
       "confidence": "high"
+    },
+    {
+      "aliases": [
+        "Jalapeño chip",
+        "OpenAI Broadcom chip"
+      ],
+      "category": "AI Hardware",
+      "creator": "OpenAI / Broadcom",
+      "description": "OpenAI's first custom AI inference chip, co-designed with Broadcom. Branded as an 'Intelligence Processor' optimized for LLM inference workloads. Unveiled Jun 24.",
+      "last_active": "2026-06-24",
+      "name": "Jalapeño",
+      "relevance_score": 95,
+      "tags": [
+        "AI chip",
+        "inference",
+        "OpenAI",
+        "Broadcom",
+        "custom silicon"
+      ]
+    },
+    {
+      "aliases": [
+        "Claude Code CLI"
+      ],
+      "category": "AI Coding Tool",
+      "creator": "Anthropic",
+      "description": "Anthropic's coding agent CLI, key differentiator for enterprise adoption. Claude Opus 4.5 made it a must-have tool, driving Anthropic's enterprise lead over OpenAI.",
+      "last_active": "2026-06-29",
+      "name": "Claude Code",
+      "relevance_score": 90,
+      "tags": [
+        "AI coding",
+        "Anthropic",
+        "Claude",
+        "agent",
+        "enterprise"
+      ]
+    },
+    {
+      "aliases": [
+        "Agentjacking attack"
+      ],
+      "category": "Security Vulnerability",
+      "creator": "Tenet Security",
+      "description": "New attack vector exploiting AI coding agents via Sentry error pages to execute arbitrary code. Hit 2,388 organizations. Researchers demonstrated self-replicating AI worm variants.",
+      "last_active": "2026-06-29",
+      "name": "Agentjacking",
+      "relevance_score": 92,
+      "tags": [
+        "security",
+        "vulnerability",
+        "AI agent",
+        "coding agent",
+        "Sentry"
+      ]
+    },
+    {
+      "aliases": [
+        "AI Act 2026",
+        "Great American AI Act of 2026"
+      ],
+      "category": "Regulation",
+      "creator": "US Congress",
+      "description": "Discussion draft released Jun 4 by Rep. Obernolte (R-CA) and Rep. Trahan (D-MA). Comprehensive federal AI governance framework covering compliance, workforce oversight, and safety.",
+      "last_active": "2026-06-04",
+      "name": "Great American AI Act",
+      "relevance_score": 85,
+      "tags": [
+        "regulation",
+        "AI governance",
+        "US Congress",
+        "policy"
+      ]
     }
   ],
   "llms": [
@@ -6928,6 +7066,115 @@
       "last_event": "编程评测超越海外",
       "last_event_date": "2026-06-25",
       "confidence": "high"
+    },
+    {
+      "aliases": [
+        "Claude Opus 4.8",
+        "Opus 4.8"
+      ],
+      "architecture": "Transformer",
+      "context_window": "200K",
+      "creator": "Anthropic",
+      "description": "Latest Anthropic flagship. Stronger coding, agentic tasks, and enterprise safety tooling. Key driver of Anthropic's enterprise lead over OpenAI in US.",
+      "last_active": "2026-05-06",
+      "license": "Proprietary",
+      "name": "Claude Opus 4.8",
+      "parameter_count": "Unknown",
+      "relevance_score": 95,
+      "tags": [
+        "Anthropic",
+        "Claude",
+        "Opus",
+        "enterprise",
+        "coding"
+      ]
+    },
+    {
+      "aliases": [
+        "M3",
+        "MiniMax M3"
+      ],
+      "architecture": "Mixture of Experts (MoE)",
+      "context_window": "1M",
+      "creator": "MiniMax",
+      "description": "First open-weight model combining frontier-level coding performance, 1M token context, and native multimodality. 1/20th cost of proprietary alternatives.",
+      "last_active": "2026-06-01",
+      "license": "Open weights (partial open source)",
+      "name": "MiniMax M3",
+      "parameter_count": "Unknown",
+      "relevance_score": 88,
+      "tags": [
+        "open source",
+        "coding",
+        "multimodal",
+        "1M context",
+        "MiniMax"
+      ]
+    },
+    {
+      "aliases": [
+        "DeepSeek V4-Pro",
+        "V4-Pro"
+      ],
+      "architecture": "Transformer (MoE)",
+      "context_window": "1M",
+      "creator": "DeepSeek",
+      "description": "Open-source flagship for planning and long-context work. Beats all open models in math/STEM/coding. Rivals top closed-source models.",
+      "last_active": "2026-04-24",
+      "license": "MIT",
+      "name": "DeepSeek V4-Pro",
+      "parameter_count": "Unknown",
+      "relevance_score": 85,
+      "tags": [
+        "open source",
+        "coding",
+        "1M context",
+        "DeepSeek",
+        "MIT"
+      ]
+    },
+    {
+      "aliases": [
+        "DeepSeek V4-Flash",
+        "V4-Flash"
+      ],
+      "architecture": "Transformer (MoE)",
+      "context_window": "1M",
+      "creator": "DeepSeek",
+      "description": "High-volume coding companion model. Used for implementation tasks alongside Opus for planning. Low-cost, open source.",
+      "last_active": "2026-04-24",
+      "license": "MIT",
+      "name": "DeepSeek V4-Flash",
+      "parameter_count": "Unknown",
+      "relevance_score": 83,
+      "tags": [
+        "open source",
+        "coding",
+        "1M context",
+        "DeepSeek",
+        "MIT"
+      ]
+    },
+    {
+      "aliases": [
+        "Gemini 3",
+        "Gemini 3.x"
+      ],
+      "architecture": "Transformer",
+      "context_window": "1M+",
+      "creator": "Google DeepMind",
+      "description": "Google's multimodal flagship model. Stands out for multimodal tasks in June 2026 benchmarks.",
+      "last_active": "2026-06-01",
+      "license": "Proprietary",
+      "name": "Gemini 3.x",
+      "parameter_count": "Unknown",
+      "relevance_score": 80,
+      "tags": [
+        "Google",
+        "DeepMind",
+        "multimodal",
+        "Gemini"
+      ]
     }
   ],
   "changelog": [
@@ -8117,16 +8364,198 @@
       "id": "test-event",
       "summary": "hotspots: 测试热点事件",
       "date": "2026-06-26"
+    },
+    {
+      "type": "update",
+      "dimension": "providers",
+      "id": "OpenAI",
+      "summary": "providers: OpenAI",
+      "date": "2026-06-29"
+    },
+    {
+      "type": "update",
+      "dimension": "providers",
+      "id": "Anthropic",
+      "summary": "providers: Anthropic",
+      "date": "2026-06-29"
+    },
+    {
+      "type": "new",
+      "dimension": "providers",
+      "id": "Z.ai (Zhipu AI)",
+      "summary": "providers: Z.ai (Zhipu AI)",
+      "date": "2026-06-29"
+    },
+    {
+      "type": "update",
+      "dimension": "providers",
+      "id": "MiniMax",
+      "summary": "providers: MiniMax",
+      "date": "2026-06-29"
+    },
+    {
+      "type": "update",
+      "dimension": "providers",
+      "id": "DeepSeek",
+      "summary": "providers: DeepSeek",
+      "date": "2026-06-29"
+    },
+    {
+      "type": "new",
+      "dimension": "providers",
+      "id": "SpaceX (xAI)",
+      "summary": "providers: SpaceX (xAI)",
+      "date": "2026-06-29"
+    },
+    {
+      "type": "update",
+      "dimension": "people",
+      "id": "Sam Altman",
+      "summary": "people: Sam Altman",
+      "date": "2026-06-29"
+    },
+    {
+      "type": "update",
+      "dimension": "people",
+      "id": "Dario Amodei",
+      "summary": "people: Dario Amodei",
+      "date": "2026-06-29"
+    },
+    {
+      "type": "update",
+      "dimension": "people",
+      "id": "Elon Musk",
+      "summary": "people: Elon Musk",
+      "date": "2026-06-29"
+    },
+    {
+      "type": "new",
+      "dimension": "people",
+      "id": "Greg Brockman",
+      "summary": "people: Greg Brockman",
+      "date": "2026-06-29"
+    },
+    {
+      "type": "new",
+      "dimension": "tools",
+      "id": "Jalapeño",
+      "summary": "tools: Jalapeño",
+      "date": "2026-06-29"
+    },
+    {
+      "type": "update",
+      "dimension": "tools",
+      "id": "Cursor",
+      "summary": "tools: Cursor",
+      "date": "2026-06-29"
+    },
+    {
+      "type": "new",
+      "dimension": "tools",
+      "id": "Claude Code",
+      "summary": "tools: Claude Code",
+      "date": "2026-06-29"
+    },
+    {
+      "type": "new",
+      "dimension": "tools",
+      "id": "Agentjacking",
+      "summary": "tools: Agentjacking",
+      "date": "2026-06-29"
+    },
+    {
+      "type": "new",
+      "dimension": "tools",
+      "id": "Great American AI Act",
+      "summary": "tools: Great American AI Act",
+      "date": "2026-06-29"
+    },
+    {
+      "type": "new",
+      "dimension": "llms",
+      "id": "Claude Opus 4.8",
+      "summary": "llms: Claude Opus 4.8",
+      "date": "2026-06-29"
+    },
+    {
+      "type": "update",
+      "dimension": "llms",
+      "id": "GLM-5.2",
+      "summary": "llms: GLM-5.2",
+      "date": "2026-06-29"
+    },
+    {
+      "type": "new",
+      "dimension": "llms",
+      "id": "MiniMax M3",
+      "summary": "llms: MiniMax M3",
+      "date": "2026-06-29"
+    },
+    {
+      "type": "new",
+      "dimension": "llms",
+      "id": "DeepSeek V4-Pro",
+      "summary": "llms: DeepSeek V4-Pro",
+      "date": "2026-06-29"
+    },
+    {
+      "type": "new",
+      "dimension": "llms",
+      "id": "DeepSeek V4-Flash",
+      "summary": "llms: DeepSeek V4-Flash",
+      "date": "2026-06-29"
+    },
+    {
+      "type": "new",
+      "dimension": "llms",
+      "id": "Gemini 3.x",
+      "summary": "llms: Gemini 3.x",
+      "date": "2026-06-29"
+    },
+    {
+      "type": "update",
+      "dimension": "people",
+      "id": "dario-amodei",
+      "summary": "people: Dario Amodei",
+      "date": "2026-06-29"
+    },
+    {
+      "type": "new",
+      "dimension": "hotspots",
+      "id": "chatgpt-boomer-thread",
+      "summary": "hotspots: ChatGPT 被指\"老派\"，红迪 2.1 万点赞引爆代际争议",
+      "date": "2026-06-29"
+    },
+    {
+      "type": "new",
+      "dimension": "hotspots",
+      "id": "open-source-enemy",
+      "summary": "hotspots: Reddit 热议\"开源头号公敌\"，开源社区生态引担忧",
+      "date": "2026-06-29"
+    },
+    {
+      "type": "new",
+      "dimension": "hotspots",
+      "id": "ai-labs-building-chips",
+      "summary": "hotspots: 所有 AI 实验室突然开始自研芯片，OpenAI/Anthropic/Google 均布局",
+      "date": "2026-06-29"
+    },
+    {
+      "type": "new",
+      "dimension": "hotspots",
+      "id": "dario-amodei-discussion",
+      "summary": "hotspots: Anthropic CEO Dario Amodei 多年坚持开源立场获社区认可",
+      "date": "2026-06-29"
     }
   ],
   "stats": {
-    "total_providers": 78,
-    "total_people": 57,
-    "total_tools": 89,
-    "total_llms": 81,
-    "total_hotspots": 100,
-    "new_this_period": 0,
-    "updated_this_period": 2
+    "total_providers": 80,
+    "total_people": 58,
+    "total_tools": 93,
+    "total_llms": 86,
+    "total_hotspots": 104,
+    "new_this_period": 4,
+    "updated_this_period": 1
   },
   "hotspots": [
     {
@@ -9544,265 +9973,43 @@
       "updated_at": "2026-06-17T12:02:00.396215"
     },
     {
-      "id": "spacex-ipo",
-      "title": "SpaceX正式IPO，马斯克成为万亿富豪",
-      "summary": "SpaceX以每股135美元价格进行史上最大规模IPO，马斯克成为人类历史上首位万亿美金富豪，SpaceX员工穿上绿鞋庆祝。",
-      "date": "2026-06-13",
-      "source": "TechCrunch/量子位",
-      "url": "https://www.qbitai.com/2026/06/spacex-ipo/",
-      "related_providers": [
-        "spacex"
-      ],
-      "related_people": [
-        "elon-musk"
-      ],
-      "related_tools": [],
-      "related_llms": [],
-      "updated_at": "2026-06-16T19:02:11.328299"
+      "id": "chatgpt-boomer-thread",
+      "title": "ChatGPT 被指\"老派\"，红迪 2.1 万点赞引爆代际争议",
+      "summary": "r/ChatGPT 上一条\"ChatGPT is a boomer\"帖子获 21,329 upvotes / 843 评论，用户吐槽 ChatGPT 回复风格老派、像长辈说教，引发 AI 产品设计代际认知的大讨论",
+      "date": "2026-06-28",
+      "source": "Reddit",
+      "url": "https://www.reddit.com/r/ChatGPT/",
+      "confidence": "high"
     },
     {
-      "id": "prometheus-funding",
-      "title": "贝佐斯创立的Prometheus融资120亿美元，打造通用人工工程师",
-      "summary": "Jeff Bezos的AI公司Prometheus宣布融资120亿美元，目标构建面向物理世界的'通用人工工程师'，成为AI领域最大单笔融资之一。",
-      "date": "2026-06-13",
-      "source": "TechCrunch",
-      "url": "https://techcrunch.com/2026/06/10/jeff-bezoss-prometheus-raises-12b-to-build-an-artificial-general-engineer-for-the-physical-world/",
-      "related_providers": [
-        "prometheus"
-      ],
-      "related_people": [
-        "jeff-bezos"
-      ],
-      "related_tools": [],
-      "related_llms": [],
-      "updated_at": "2026-06-16T16:01:37.103814"
+      "id": "open-source-enemy",
+      "title": "Reddit 热议\"开源头号公敌\"，开源社区生态引担忧",
+      "summary": "r/LocalLLaMA 上\"The number 1 public enemy of open-source\"获 2,373 upvotes / 583 评论，讨论谁在威胁开源 AI 生态",
+      "date": "2026-06-28",
+      "source": "Reddit",
+      "url": "https://www.reddit.com/r/LocalLLaMA/comments/1ui241x/",
+      "confidence": "high"
     },
     {
-      "id": "mistral-funding-rumor",
-      "title": "Mistral传闻以200亿欧元估值融资30亿欧元",
-      "summary": "法国AI初创公司Mistral AI被传正在进行巨额融资，估值达200亿欧元，融资额约30亿欧元，显示欧洲AI赛道的资本热度。",
-      "date": "2026-06-13",
-      "source": "TechCrunch",
-      "url": "https://techcrunch.com/2026/06/09/mistral-is-rumored-to-be-raising-e3b-at-e20b-valuation/",
-      "related_providers": [
-        "mistral"
-      ],
-      "related_people": [],
-      "related_tools": [],
-      "related_llms": [
-        "mistral-large"
-      ],
-      "updated_at": "2026-06-16T16:01:37.103814"
+      "id": "ai-labs-building-chips",
+      "title": "所有 AI 实验室突然开始自研芯片，OpenAI/Anthropic/Google 均布局",
+      "summary": "r/OpenAI 上\"Why is every AI lab suddenly trying to build their own chips?\"获 874 upvotes/356 评论，分析各 AI 实验室自研芯片趋势，从依赖 NVIDIA 转向自主硬件",
+      "date": "2026-06-28",
+      "source": "Reddit",
+      "url": "https://www.reddit.com/r/OpenAI/comments/1uhn4y9/",
+      "confidence": "high"
     },
     {
-      "id": "qwen-world-cup-prediction",
-      "title": "阿里千问准确预测世界杯首日全部赛果",
-      "summary": "阿里千问模型在世界杯第一天精准预测所有比赛结果，包括比分、红牌和绝杀，引发对AI预测能力的广泛讨论。",
-      "date": "2026-06-13",
-      "source": "量子位",
-      "url": "https://www.qbitai.com/2026/06/qwen-world-cup-prediction",
-      "related_providers": [
-        "alibaba"
-      ],
-      "related_people": [],
-      "related_tools": [
-        "aliyun-volunteer-agent"
-      ],
-      "related_llms": [
-        "qwen"
-      ],
-      "updated_at": "2026-06-15T14:01:54.997781"
-    },
-    {
-      "id": "anthropic-fable-mythos-release",
-      "title": "Anthropic 发布 Claude Fable 5 和 Mythos 5 模型，引发安全争议",
-      "summary": "Anthropic 发布最新旗舰模型 Claude Fable 5 和 Mythos 5，其中 Fable 5 为 Mythos 的可公开访问版本。因安全警告，政府要求暂停最强大模型访问，印度就此辩论AI未来。",
-      "date": "2026-06-13",
-      "source": "TechCrunch / 量子位",
-      "url": "https://techcrunch.com/2026/06/13/anthropics-safety-warnings-may-have-just-backfired/",
-      "related_providers": [
-        "anthropic"
-      ],
+      "id": "dario-amodei-discussion",
+      "title": "Anthropic CEO Dario Amodei 多年坚持开源立场获社区认可",
+      "summary": "r/OpenAI 上\"Dario has been doing this for years\"获 2,290 upvotes/180 评论，回顾 Dario Amodei 多年来在 AI 安全、开源方面的持续观点，与 Sam Altman 形成对比",
+      "date": "2026-06-26",
+      "source": "Reddit",
+      "url": "https://www.reddit.com/r/OpenAI/comments/1ugbi6w/",
       "related_people": [
         "dario-amodei"
       ],
-      "related_tools": [],
-      "related_llms": [
-        "claude-fable-5",
-        "mythos-5"
-      ],
-      "updated_at": "2026-06-15T19:01:39.563015"
-    },
-    {
-      "id": "meta-manus-deal-canceled",
-      "title": "Meta应北京要求取消20亿美元Manus收购",
-      "summary": "Meta因北京政府要求，据报道取消了对AI公司Manus价值20亿美元的收购交易。同时Meta内部AI部门被工程师形容为'灵魂碾压的古拉格'。",
-      "date": "2026-06-13",
-      "source": "TechCrunch",
-      "url": "https://techcrunch.com/2026/06/13/meta-reportedly-moves-to-unwind-2b-manus-deal-after-beijings-demand",
-      "related_providers": [
-        "meta"
-      ],
-      "related_people": [],
-      "related_tools": [],
-      "related_llms": [],
-      "updated_at": "2026-06-15T14:01:54.997781"
-    },
-    {
-      "id": "mistral-3b-round",
-      "title": "Mistral传闻以200亿估值融资30亿欧元",
-      "summary": "法国AI初创公司Mistral被传正在进行新一轮融资，估值高达200亿美元，融资额30亿欧元，反映欧洲AI竞赛升温。",
-      "date": "2026-06-13",
-      "source": "TechCrunch",
-      "url": "https://techcrunch.com/2026/06/13/mistral-is-rumored-to-be-raising-3b-at-20b-valuation",
-      "related_providers": [
-        "mistral"
-      ],
-      "related_people": [],
-      "related_tools": [],
-      "related_llms": [],
-      "updated_at": "2026-06-15T14:01:54.997781"
-    },
-    {
-      "id": "openai-gpt-5-6",
-      "title": "OpenAI 发布 GPT-5.6 首批实测，精准狙击 Mythos",
-      "summary": "OpenAI 推出 GPT-5.6，首批实测显示模型性能强大，在智能体考试中击败 Fable 5。同时 OpenAI 面临美国多州检察长调查，AI 竞争与监管博弈加剧。",
-      "date": "2026-06-13",
-      "source": "量子位 / TechCrunch",
-      "url": "https://www.qbitai.com/2026/06/gpt-5-6-first-test/",
-      "related_providers": [
-        "openai"
-      ],
-      "related_people": [],
-      "related_tools": [],
-      "related_llms": [
-        "gpt-5-6"
-      ],
-      "updated_at": "2026-06-15T19:01:39.563015"
-    },
-    {
-      "id": "meta-ai-unit-crisis-manus-deal",
-      "title": "Meta AI 部门被曝内部危机，并取消 20 亿美元 Manus 交易",
-      "summary": "Meta 的 AI 部门被工程师形容为“灵魂碾压的古拉格”，士气低落。同时报道称 Meta 应北京要求，取消了对 Manus 的 20 亿美元投资交易，引发市场关注。",
-      "date": "2026-06-13",
-      "source": "TechCrunch / 机器之心",
-      "url": "https://techcrunch.com/2026/06/13/metas-months-old-ai-unit-is-a-soul-crushing-gulag/",
-      "related_providers": [
-        "meta"
-      ],
-      "related_people": [],
-      "related_tools": [],
-      "related_llms": [],
-      "updated_at": "2026-06-15T19:01:39.563015"
-    },
-    {
-      "id": "anthropic-model-restriction",
-      "title": "Anthropic最强模型因安全担忧被政府限制",
-      "summary": "Anthropic发布Claude Mythos 5和Fable 5后，政府因安全警告直接拔掉其最强大AI的插头，印度等国家也辩论AI未来，引发行业震荡。",
-      "date": "2026-06-13",
-      "source": "TechCrunch",
-      "url": "https://techcrunch.com/...",
-      "related_providers": [
-        "anthropic"
-      ],
-      "related_people": [
-        "dario-amodei"
-      ],
-      "related_tools": [],
-      "related_llms": [
-        "claude-mythos-5",
-        "claude-fable-5"
-      ],
-      "updated_at": "2026-06-15T20:01:36.991682"
-    },
-    {
-      "id": "mistral-3b-funding",
-      "title": "Mistral传闻以200亿美元估值融资30亿欧元",
-      "summary": "法国AI公司Mistral被曝正在进行新一轮大规模融资，估值高达200亿欧元，反映欧洲AI独角兽的崛起和资本对开源模型的信心。",
-      "date": "2026-06-13",
-      "source": "TechCrunch",
-      "url": "https://techcrunch.com/...",
-      "related_providers": [
-        "mistral"
-      ],
-      "related_people": [],
-      "related_tools": [],
-      "related_llms": [],
-      "updated_at": "2026-06-15T20:01:36.991682"
-    },
-    {
-      "id": "anthropic-fable-mythos-crisis",
-      "title": "Anthropic发布Fable 5与Mythos 5，同时遭遇监管危机",
-      "summary": "Anthropic发布新一代旗舰模型Claude Fable 5和Mythos 5，但因CEO Dario Amodei发布AI安全警告引发政府反弹，被迫暂停新模型访问。网络安全研究人员也对Fable 5的安全限制表示不满。",
-      "date": "2026-06-13",
-      "source": "机器之心/TechCrunch",
-      "url": "",
-      "related_providers": [
-        "anthropic"
-      ],
-      "related_people": [
-        "dario-amodei"
-      ],
-      "related_tools": [],
-      "related_llms": [
-        "claude-fable-5",
-        "claude-mythos-5"
-      ],
-      "updated_at": "2026-06-15T21:47:52.375671"
-    },
-    {
-      "id": "xiaomi-1t-model-release",
-      "title": "小米发布最快1T大模型，吞吐量破千Tokens",
-      "summary": "小米发布1T参数大模型，实测吞吐量达每秒1000+ Tokens，创行业速度纪录。该模型支持'Vibe Coding'，可实现七秒代码交付，显示端侧大模型性能竞赛进入新阶段。",
-      "date": "2026-06-13",
-      "source": "量子位",
-      "url": "",
-      "related_providers": [
-        "xiaomi"
-      ],
-      "related_people": [],
-      "related_tools": [],
-      "related_llms": [
-        "xiaomi-1t-model"
-      ],
-      "updated_at": "2026-06-15T21:47:52.375671"
-    },
-    {
-      "id": "meshy-3d-agent-launch",
-      "title": "Meshy发布全球首个3D AI Agent，3D创作迎来ChatGPT时刻",
-      "summary": "Meshy宣布推出全球首个3D AI Agent，宣称3D创作迎来'ChatGPT时刻'。该工具可智能生成3D内容，代表AI Agent从文本/2D向3D物理世界创作的重要跨越。",
-      "date": "2026-06-13",
-      "source": "量子位",
-      "url": "",
-      "related_providers": [
-        "meshy"
-      ],
-      "related_people": [],
-      "related_tools": [
-        "meshy-3d-agent"
-      ],
-      "related_llms": [],
-      "updated_at": "2026-06-15T21:47:52.375671"
-    },
-    {
-      "id": "us-gov-ban-anthropic-models",
-      "title": "美国政府禁用Anthropic最强模型引发安全争议",
-      "summary": "美国政府对Anthropic最强大的AI模型（Fable 5和Mythos）实施禁令，安全专家抗议此举危险，Anthropic暂停新模型访问，并引发印度等国的AI未来讨论。",
-      "date": "2026-06-13",
-      "source": "TechCrunch",
-      "url": "",
-      "related_providers": [
-        "anthropic"
-      ],
-      "related_people": [
-        "dario-amodei"
-      ],
-      "related_tools": [],
-      "related_llms": [
-        "fable-5",
-        "mythos"
-      ],
-      "updated_at": "2026-06-16T16:01:37.103814"
+      "confidence": "high"
     }
   ]
 }
