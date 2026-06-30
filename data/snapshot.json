@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "generated_at": "2026-06-29T23:42:41.968920",
+  "generated_at": "2026-06-30T20:45:21.800658",
   "period": "2026-06-16 ~ 2026-06-23",
   "execution_mode": "semi-auto",
   "providers": [
@@ -4846,6 +4846,19 @@
         "US Congress",
         "policy"
       ]
+    },
+    {
+      "id": "lmworkflow",
+      "name": "LmWorkflow",
+      "category": "AI Agent 框架",
+      "description": "LLM-authored, LLM-driven workflow tool over sub-agents",
+      "github": "https://github.com/achieveai/LmDotnetTools",
+      "maturity": "实验",
+      "hot_score": 65,
+      "hot_level": "温热",
+      "confidence": "high",
+      "last_update": "LmWorkflow 发布，支持 dogfooding schema 验证的子代理工作流",
+      "last_update_date": "2026-06-27"
     }
   ],
   "llms": [
@@ -8546,16 +8559,58 @@
       "id": "dario-amodei-discussion",
       "summary": "hotspots: Anthropic CEO Dario Amodei 多年坚持开源立场获社区认可",
       "date": "2026-06-29"
+    },
+    {
+      "type": "new",
+      "dimension": "tools",
+      "id": "lmworkflow",
+      "summary": "tools: LmWorkflow",
+      "date": "2026-06-30"
+    },
+    {
+      "type": "new",
+      "dimension": "hotspots",
+      "id": "ai-hardware-regulation",
+      "summary": "hotspots: AI 硬件管制担忧升温：开源社区担心政府将限制 GPU 购买",
+      "date": "2026-06-30"
+    },
+    {
+      "type": "new",
+      "dimension": "hotspots",
+      "id": "openai-public-enemy",
+      "summary": "hotspots: OpenAI 被指\"开源头号公敌\"，社区翻出 GPT-2 不开源旧账",
+      "date": "2026-06-30"
+    },
+    {
+      "type": "new",
+      "dimension": "hotspots",
+      "id": "ai-labs-custom-chips",
+      "summary": "hotspots: 所有 AI 实验室突然开始自研芯片，NVIDIA 面临挑战",
+      "date": "2026-06-30"
+    },
+    {
+      "type": "new",
+      "dimension": "hotspots",
+      "id": "anthropic-fable5-limits",
+      "summary": "hotspots: Anthropic Fable 5 安全限制有望下周解除 - Axios",
+      "date": "2026-06-30"
+    },
+    {
+      "type": "new",
+      "dimension": "hotspots",
+      "id": "lmworkflow-tool",
+      "summary": "hotspots: LmWorkflow: LLM 驱动的子代理工作流工具开源",
+      "date": "2026-06-30"
     }
   ],
   "stats": {
     "total_providers": 80,
     "total_people": 58,
-    "total_tools": 93,
+    "total_tools": 94,
     "total_llms": 86,
-    "total_hotspots": 104,
-    "new_this_period": 4,
-    "updated_this_period": 1
+    "total_hotspots": 94,
+    "new_this_period": 6,
+    "updated_this_period": 0
   },
   "hotspots": [
     {
@@ -10009,6 +10064,57 @@
       "related_people": [
         "dario-amodei"
       ],
+      "confidence": "high"
+    },
+    {
+      "id": "ai-hardware-regulation",
+      "title": "AI 硬件管制担忧升温：开源社区担心政府将限制 GPU 购买",
+      "summary": "r/LocalLLaMA 3,240 upvotes讨论未来 AI 监管可能从模型转向硬件：'管制你能买到的硬件比管制你能下载的模型容易得多'。社区担忧家庭服务器运行 AI 模型可能面临法律风险",
+      "date": "2026-06-28",
+      "source": "Reddit",
+      "url": "https://www.reddit.com/r/LocalLLaMA/comments/1uht2m0/",
+      "confidence": "high"
+    },
+    {
+      "id": "openai-public-enemy",
+      "title": "OpenAI 被指\"开源头号公敌\"，社区翻出 GPT-2 不开源旧账",
+      "summary": "r/LocalLLaMA 2,324 upvotes炮轰 OpenAI 是开源最大敌人。社区翻出 2019 年 Sam Altman 称 GPT-2 太危险不开源的旧账，对比当前 OpenAI 闭源策略，认为其本质从未改变",
+      "date": "2026-06-28",
+      "source": "Reddit",
+      "url": "https://www.reddit.com/r/LocalLLaMA/comments/1ui241x/",
+      "related_providers": [
+        "openai"
+      ],
+      "confidence": "high"
+    },
+    {
+      "id": "ai-labs-custom-chips",
+      "title": "所有 AI 实验室突然开始自研芯片，NVIDIA 面临挑战",
+      "summary": "r/OpenAI 864 upvotes讨论OpenAI/Anthropic/Google等AI实验室集体转向自研芯片趋势。社区认为这是AI行业从依赖NVIDIA转向自主硬件的重要信号",
+      "date": "2026-06-28",
+      "source": "Reddit",
+      "url": "https://www.reddit.com/r/OpenAI/comments/1uhn4y9/",
+      "confidence": "high"
+    },
+    {
+      "id": "anthropic-fable5-limits",
+      "title": "Anthropic Fable 5 安全限制有望下周解除 - Axios",
+      "summary": "Anthropic与美国政府内部人士透露，Fable 5的安全使用限制可能最早下周解除。r/Anthropic 210 upvotes讨论解除限制后对模型能力的潜在提升",
+      "date": "2026-06-27",
+      "source": "Reddit",
+      "url": "https://www.reddit.com/r/Anthropic/comments/1uh51q9/",
+      "related_providers": [
+        "anthropic"
+      ],
+      "confidence": "high"
+    },
+    {
+      "id": "lmworkflow-tool",
+      "title": "LmWorkflow: LLM 驱动的子代理工作流工具开源",
+      "summary": "achieveai/LmDotnetTools 发布 LmWorkflow，一个由 LLM 编写和驱动的子代理工作流工具，支持 dogfooding 模式验证工作流 schema，GitHub 上获关注",
+      "date": "2026-06-27",
+      "source": "GitHub",
+      "url": "https://github.com/achieveai/LmDotnetTools",
       "confidence": "high"
     }
   ]
