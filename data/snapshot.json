@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "generated_at": "2026-07-01T16:54:32.166187",
+  "generated_at": "2026-07-01T17:09:43.130314",
   "period": "2026-06-24 ~ 2026-07-01",
   "execution_mode": "semi-auto",
   "providers": [
@@ -254,7 +254,7 @@
         "大模型",
         "编码助手"
       ],
-      "hot_score": 100,
+      "hot_score": 90,
       "hot_level": "爆热",
       "last_event": "发布Sonnet 5；监管勒令下线Fable 5与Mythos 5",
       "last_event_date": "2026-07-01",
@@ -269,7 +269,7 @@
           "Constitutional AI"
         ]
       },
-      "updated_at": "2026-07-01T16:54:32.166187"
+      "updated_at": "2026-07-01T17:09:43.130314"
     },
     {
       "id": "google-deepmind",
@@ -6665,27 +6665,6 @@
   ],
   "changelog": [
     {
-      "type": "update",
-      "dimension": "llms",
-      "id": "claude-fable-5",
-      "summary": "llms: Claude Fable 5",
-      "date": "2026-06-25"
-    },
-    {
-      "type": "new",
-      "dimension": "llms",
-      "id": "minimax-m1",
-      "summary": "llms: MiniMax M1",
-      "date": "2026-06-25"
-    },
-    {
-      "type": "update",
-      "dimension": "llms",
-      "id": "glm-5-2-llm",
-      "summary": "llms: GLM-5.2",
-      "date": "2026-06-25"
-    },
-    {
       "type": "new",
       "dimension": "hotspots",
       "id": "anthropic-ipo",
@@ -7455,6 +7434,29 @@
       "date": "2026-07-01",
       "time": "16:54:32",
       "url": ""
+    },
+    {
+      "type": "update",
+      "dimension": "providers",
+      "id": "test-company",
+      "summary": "providers: 测试公司",
+      "date": "2026-07-01"
+    },
+    {
+      "type": "update",
+      "dimension": "hotspots",
+      "id": "test-event",
+      "summary": "hotspots: 测试热点事件",
+      "date": "2026-07-01"
+    },
+    {
+      "type": "update",
+      "dimension": "providers",
+      "id": "anthropic",
+      "summary": "hot_score: 100 → 90",
+      "date": "2026-07-01",
+      "time": "17:09:43",
+      "url": ""
     }
   ],
   "stats": {
@@ -7463,8 +7465,8 @@
     "total_tools": 54,
     "total_llms": 91,
     "total_hotspots": 99,
-    "new_this_period": 31,
-    "updated_this_period": 15,
+    "new_this_period": 0,
+    "updated_this_period": 1,
     "removed_this_period": 0
   },
   "hotspots": [

@@ -1,0 +1,16 @@
+name: LLM Radar Tests
+on:
+  push: {branches: [main, feat-*]}
+  pull_request: {branches: [main]}
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.11"}
+      - run: pip install pytest openai requests beautifulsoup4 selenium webdriver-manager prettytable
+      - run: cd llm-radar.jaden.tech && python3 -m pytest tests/ -v --tb=short
+        env:
+          DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
