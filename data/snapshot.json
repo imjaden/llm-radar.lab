@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "generated_at": "2026-07-01T17:11:12.470970",
+  "generated_at": "2026-07-01T17:11:43.307352",
   "period": "2026-06-24 ~ 2026-07-01",
   "execution_mode": "semi-auto",
   "providers": [
@@ -205,7 +205,7 @@
       "updated_at": "2026-06-22T10:02:25.544379"
     },
     {
-      "id": "openai-2",
+      "id": "openai",
       "name": "OpenAI",
       "country": "美国",
       "flagship_models": [
@@ -218,7 +218,7 @@
         "通用大模型",
         "推理芯片"
       ],
-      "hot_score": 92,
+      "hot_score": 99,
       "hot_level": "爆热",
       "last_event": "发布自研推理芯片Jalapeño；GPT-5.6被曝光",
       "last_event_date": "2026-07-01",
@@ -234,7 +234,7 @@
           "DPO"
         ]
       },
-      "updated_at": "2026-07-01T17:11:12.470970"
+      "updated_at": "2026-07-01T17:11:43.307352"
     },
     {
       "id": "anthropic",
@@ -269,7 +269,7 @@
           "Constitutional AI"
         ]
       },
-      "updated_at": "2026-07-01T17:11:07.561568"
+      "updated_at": "2026-07-01T17:11:43.296992"
     },
     {
       "id": "google-deepmind",
@@ -1747,13 +1747,13 @@
       "id": "tp",
       "name": "TP",
       "confidence": "high",
-      "updated_at": "2026-07-01T17:10:52.380538"
+      "updated_at": "2026-07-01T17:11:16.484419"
     },
     {
       "id": "cl-test",
       "name": "CLTest",
       "confidence": "high",
-      "updated_at": "2026-07-01T17:10:52.402408"
+      "updated_at": "2026-07-01T17:11:16.506577"
     }
   ],
   "people": [
@@ -3156,7 +3156,7 @@
       "id": "tpe",
       "name": "TPe",
       "confidence": "high",
-      "updated_at": "2026-07-01T17:10:52.380538"
+      "updated_at": "2026-07-01T17:11:16.484419"
     }
   ],
   "tools": [
@@ -4227,7 +4227,7 @@
       "id": "tt",
       "name": "TT",
       "confidence": "high",
-      "updated_at": "2026-07-01T17:10:52.380538"
+      "updated_at": "2026-07-01T17:11:16.484419"
     }
   ],
   "llms": [
@@ -6690,17 +6690,10 @@
       "id": "tl",
       "name": "TL",
       "confidence": "high",
-      "updated_at": "2026-07-01T17:10:52.380538"
+      "updated_at": "2026-07-01T17:11:16.484419"
     }
   ],
   "changelog": [
-    {
-      "type": "new",
-      "dimension": "hotspots",
-      "id": "chinese-ai-us-market",
-      "summary": "hotspots: 中国AI模型迅速占领美国市场：价格仅为1/10",
-      "date": "2026-06-25"
-    },
     {
       "type": "update",
       "dimension": "providers",
@@ -7510,6 +7503,15 @@
       "summary": "hot_score: 99 → 92",
       "date": "2026-07-01",
       "time": "17:11:12",
+      "url": ""
+    },
+    {
+      "type": "update",
+      "dimension": "providers",
+      "id": "openai-2",
+      "summary": "hot_score: 92 → 99",
+      "date": "2026-07-01",
+      "time": "17:11:43",
       "url": ""
     }
   ],
@@ -9130,7 +9132,7 @@
       "date": "2026-06-28",
       "summary": "t",
       "confidence": "high",
-      "updated_at": "2026-07-01T17:10:52.380538"
+      "updated_at": "2026-07-01T17:11:16.484419"
     }
   ]
 }

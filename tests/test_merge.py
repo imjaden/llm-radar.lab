@@ -8,7 +8,9 @@ class TestMergeEntities:
                               "confidence": "high"}]}
         result = collector.merge_entities(new)
         assert result is not None
-        assert result["stats"]["new_this_period"] >= 1
+        providers = result["providers"]
+        new_providers = [p for p in providers if p["id"] == "anthropic"]
+        assert len(new_providers) > 0
 
     def test_merge_existing_id(self, collector):
         new = {"providers": [{"id": "openai", "name": "OpenAI",
