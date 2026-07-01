@@ -168,6 +168,8 @@ def merge_entities(new_entities):
                     'date': today,
                 })
             else:
+                if "id" not in item or not item.get("id"):
+                    item["id"] = name.lower().replace(" ", "-").replace("/", "-")[:40]
                 old_items[name] = item
                 new_count += 1
                 changelog.append({
