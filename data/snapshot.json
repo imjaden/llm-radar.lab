@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "generated_at": "2026-07-01T21:45:53.757474",
+  "generated_at": "2026-07-01T21:45:58.847990",
   "period": "2026-06-24 ~ 2026-07-01",
   "execution_mode": "semi-auto",
   "providers": [
@@ -1744,13 +1744,13 @@
       "id": "tp",
       "name": "TP",
       "confidence": "high",
-      "updated_at": "2026-07-01T21:23:25.693303"
+      "updated_at": "2026-07-01T21:45:58.824510"
     },
     {
       "id": "cl-test",
       "name": "CLTest",
       "confidence": "high",
-      "updated_at": "2026-07-01T21:23:25.716161"
+      "updated_at": "2026-07-01T21:45:58.847990"
     },
     {
       "id": "robo-science",
@@ -3189,7 +3189,7 @@
       "id": "tpe",
       "name": "TPe",
       "confidence": "high",
-      "updated_at": "2026-07-01T21:23:25.693303"
+      "updated_at": "2026-07-01T21:45:58.824510"
     },
     {
       "id": "xing-bo",
@@ -4281,7 +4281,7 @@
       "id": "tt",
       "name": "TT",
       "confidence": "high",
-      "updated_at": "2026-07-01T21:23:25.693303"
+      "updated_at": "2026-07-01T21:45:58.824510"
     },
     {
       "id": "sonnet-5",
@@ -6832,7 +6832,7 @@
       "id": "tl",
       "name": "TL",
       "confidence": "high",
-      "updated_at": "2026-07-01T21:23:25.693303"
+      "updated_at": "2026-07-01T21:45:58.824510"
     },
     {
       "id": "seed-2-1",
@@ -7740,7 +7740,7 @@
     "total_llms": 94,
     "total_hotspots": 99,
     "new_this_period": 0,
-    "updated_this_period": 1,
+    "updated_this_period": 0,
     "removed_this_period": 0
   },
   "hotspots": [
@@ -9238,7 +9238,7 @@
       "date": "2026-06-28",
       "summary": "t",
       "confidence": "high",
-      "updated_at": "2026-07-01T21:23:25.693303"
+      "updated_at": "2026-07-01T21:45:58.824510"
     },
     {
       "id": "anthropic-sonnet5-launch",
