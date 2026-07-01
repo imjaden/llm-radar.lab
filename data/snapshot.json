@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "generated_at": "2026-07-01T21:23:11.102554",
+  "generated_at": "2026-07-01T21:23:16.068924",
   "period": "2026-06-24 ~ 2026-07-01",
   "execution_mode": "semi-auto",
   "providers": [
@@ -217,7 +217,7 @@
         "大模型",
         "芯片"
       ],
-      "hot_score": 90,
+      "hot_score": 99,
       "hot_level": "爆热",
       "last_event": "发布自研推理芯片 Jalapeño，曝光 GPT-5.6",
       "last_event_date": "2026-07-01",
@@ -233,7 +233,7 @@
           "DPO"
         ]
       },
-      "updated_at": "2026-07-01T17:39:15.257234"
+      "updated_at": "2026-07-01T21:23:16.068924"
     },
     {
       "id": "anthropic",
@@ -6887,15 +6887,6 @@
     {
       "type": "update",
       "dimension": "llms",
-      "id": "fable-5",
-      "summary": "hot_level: 爆热 → 高热; last_event: 美国政府禁止 Anthropic 发布 Fable 5 → 被监管部门勒令下线",
-      "date": "2026-07-01",
-      "time": "16:54:32",
-      "url": "https://36kr.com/p/3865331338918532"
-    },
-    {
-      "type": "update",
-      "dimension": "llms",
       "id": "mythos-5",
       "summary": "last_event: 发布Mythos 5 → 被监管部门勒令下线; status: 发布 → 已下线",
       "date": "2026-07-01",
@@ -7730,6 +7721,15 @@
       "summary": "hot_score: 95 → 90",
       "date": "2026-07-01",
       "time": "21:23:11",
+      "url": ""
+    },
+    {
+      "type": "update",
+      "dimension": "providers",
+      "id": "openai",
+      "summary": "hot_score: 90 → 99",
+      "date": "2026-07-01",
+      "time": "21:23:16",
       "url": ""
     }
   ],
