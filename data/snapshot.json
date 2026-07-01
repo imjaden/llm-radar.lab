@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "generated_at": "2026-07-01T17:12:08.131788",
+  "generated_at": "2026-07-01T17:12:13.020778",
   "period": "2026-06-24 ~ 2026-07-01",
   "execution_mode": "semi-auto",
   "providers": [
@@ -1747,13 +1747,13 @@
       "id": "tp",
       "name": "TP",
       "confidence": "high",
-      "updated_at": "2026-07-01T17:11:52.570493"
+      "updated_at": "2026-07-01T17:12:13.001930"
     },
     {
       "id": "cl-test",
       "name": "CLTest",
       "confidence": "high",
-      "updated_at": "2026-07-01T17:11:52.592766"
+      "updated_at": "2026-07-01T17:12:13.020778"
     }
   ],
   "people": [
@@ -3156,7 +3156,7 @@
       "id": "tpe",
       "name": "TPe",
       "confidence": "high",
-      "updated_at": "2026-07-01T17:11:52.570493"
+      "updated_at": "2026-07-01T17:12:13.001930"
     }
   ],
   "tools": [
@@ -4227,7 +4227,7 @@
       "id": "tt",
       "name": "TT",
       "confidence": "high",
-      "updated_at": "2026-07-01T17:11:52.570493"
+      "updated_at": "2026-07-01T17:12:13.001930"
     }
   ],
   "llms": [
@@ -6690,7 +6690,7 @@
       "id": "tl",
       "name": "TL",
       "confidence": "high",
-      "updated_at": "2026-07-01T17:11:52.570493"
+      "updated_at": "2026-07-01T17:12:13.001930"
     }
   ],
   "changelog": [
@@ -7528,7 +7528,7 @@
     "total_llms": 92,
     "total_hotspots": 100,
     "new_this_period": 0,
-    "updated_this_period": 1,
+    "updated_this_period": 0,
     "removed_this_period": 0
   },
   "hotspots": [
@@ -9138,7 +9138,7 @@
       "date": "2026-06-28",
       "summary": "t",
       "confidence": "high",
-      "updated_at": "2026-07-01T17:11:52.570493"
+      "updated_at": "2026-07-01T17:12:13.001930"
     }
   ]
 }
