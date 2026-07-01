@@ -1177,7 +1177,7 @@ hotspots 数组中每个元素格式：
                 driver = webdriver.Chrome(service=Service(driver_path), options=opts)
                 import time
                 t1 = time.time()
-                driver.get("https://www.google.com")
+                driver.get("data:text/html,<h1>Selenium OK</h1>")
                 elapsed = time.time() - t1
                 driver.quit()
                 print(f"  ✅ 浏览器启动测试: 通过 ({elapsed:.1f}s)")
