@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "generated_at": "2026-07-01T17:09:43.130314",
+  "generated_at": "2026-07-01T17:09:48.008759",
   "period": "2026-06-24 ~ 2026-07-01",
   "execution_mode": "semi-auto",
   "providers": [
@@ -218,7 +218,7 @@
         "通用大模型",
         "推理芯片"
       ],
-      "hot_score": 95,
+      "hot_score": 99,
       "hot_level": "爆热",
       "last_event": "发布自研推理芯片Jalapeño；GPT-5.6被曝光",
       "last_event_date": "2026-07-01",
@@ -234,7 +234,7 @@
           "DPO"
         ]
       },
-      "updated_at": "2026-07-01T16:54:32.166187"
+      "updated_at": "2026-07-01T17:09:48.008759"
     },
     {
       "id": "anthropic",
@@ -6667,13 +6667,6 @@
     {
       "type": "new",
       "dimension": "hotspots",
-      "id": "anthropic-ipo",
-      "summary": "hotspots: Anthropic秘密提交IPO申请，估值9650亿美元",
-      "date": "2026-06-25"
-    },
-    {
-      "type": "new",
-      "dimension": "hotspots",
       "id": "spacex-ipo",
       "summary": "hotspots: SpaceX/xAI计划750亿美元IPO，史上最大",
       "date": "2026-06-25"
@@ -7456,6 +7449,15 @@
       "summary": "hot_score: 100 → 90",
       "date": "2026-07-01",
       "time": "17:09:43",
+      "url": ""
+    },
+    {
+      "type": "update",
+      "dimension": "providers",
+      "id": "openai",
+      "summary": "hot_score: 95 → 99",
+      "date": "2026-07-01",
+      "time": "17:09:48",
       "url": ""
     }
   ],
