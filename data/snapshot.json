@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "generated_at": "2026-07-01T22:14:46.169431",
+  "generated_at": "2026-07-01T22:14:51.522550",
   "period": "2026-06-24 ~ 2026-07-01",
   "execution_mode": "semi-auto",
   "providers": [
@@ -204,7 +204,7 @@
       "updated_at": "2026-06-22T10:02:25.544379"
     },
     {
-      "id": "openai",
+      "id": "openai-2",
       "name": "OpenAI",
       "country": "美国",
       "flagship_models": [
@@ -217,7 +217,7 @@
         "大模型",
         "芯片"
       ],
-      "hot_score": 99,
+      "hot_score": 92,
       "hot_level": "爆热",
       "last_event": "发布自研推理芯片 Jalapeño，曝光 GPT-5.6",
       "last_event_date": "2026-07-01",
@@ -233,7 +233,7 @@
           "DPO"
         ]
       },
-      "updated_at": "2026-07-01T22:14:46.169431"
+      "updated_at": "2026-07-01T22:14:51.522550"
     },
     {
       "id": "anthropic",
@@ -6886,15 +6886,6 @@
   "changelog": [
     {
       "type": "new",
-      "dimension": "llms",
-      "id": "hyper3d",
-      "summary": "获数亿融资",
-      "date": "2026-07-01",
-      "time": "16:54:32",
-      "url": "https://36kr.com/p/3867973922755845"
-    },
-    {
-      "type": "new",
       "dimension": "hotspots",
       "id": "openai-jalapeno-chip-release",
       "summary": " (openai-jalapeno-chip-release)",
@@ -7730,6 +7721,15 @@
       "summary": "hot_score: 92 → 99",
       "date": "2026-07-01",
       "time": "22:14:46",
+      "url": ""
+    },
+    {
+      "type": "update",
+      "dimension": "providers",
+      "id": "openai",
+      "summary": "hot_score: 99 → 92",
+      "date": "2026-07-01",
+      "time": "22:14:51",
       "url": ""
     }
   ],
