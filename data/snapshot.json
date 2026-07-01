@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "generated_at": "2026-07-01T17:09:56.359250",
+  "generated_at": "2026-07-01T17:10:00.575268",
   "period": "2026-06-24 ~ 2026-07-01",
   "execution_mode": "semi-auto",
   "providers": [
@@ -1748,6 +1748,12 @@
       "name": "TP",
       "confidence": "high",
       "updated_at": "2026-07-01T17:09:56.359250"
+    },
+    {
+      "id": "cl-test",
+      "name": "CLTest",
+      "confidence": "high",
+      "updated_at": "2026-07-01T17:10:00.575268"
     }
   ],
   "people": [
@@ -6690,13 +6696,6 @@
   "changelog": [
     {
       "type": "new",
-      "dimension": "providers",
-      "id": "test-company",
-      "summary": "providers: 测试公司",
-      "date": "2026-06-25"
-    },
-    {
-      "type": "new",
       "dimension": "hotspots",
       "id": "test-event",
       "summary": "hotspots: 测试热点事件",
@@ -7495,15 +7494,24 @@
       "date": "2026-07-01",
       "time": "17:09:56",
       "url": ""
+    },
+    {
+      "type": "new",
+      "dimension": "providers",
+      "id": "cl-test",
+      "summary": "CLTest (cl-test)",
+      "date": "2026-07-01",
+      "time": "17:10:00",
+      "url": ""
     }
   ],
   "stats": {
-    "total_providers": 88,
+    "total_providers": 89,
     "total_people": 60,
     "total_tools": 55,
     "total_llms": 92,
     "total_hotspots": 100,
-    "new_this_period": 5,
+    "new_this_period": 1,
     "updated_this_period": 0,
     "removed_this_period": 0
   },
