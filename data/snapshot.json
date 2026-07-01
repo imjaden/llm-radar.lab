@@ -1579,7 +1579,8 @@
         "MIT license"
       ],
       "type": "LLM Lab",
-      "website": "https://z.ai"
+      "website": "https://z.ai",
+      "id": "z.ai-(zhipu-ai)"
     },
     {
       "aliases": [
@@ -1600,7 +1601,8 @@
         "xAI"
       ],
       "type": "Technology Conglomerate",
-      "website": "https://spacex.com"
+      "website": "https://spacex.com",
+      "id": "spacex-(xai)"
     }
   ],
   "people": [
@@ -2951,7 +2953,8 @@
         "OpenAI",
         "leadership",
         "AI"
-      ]
+      ],
+      "id": "greg-brockman"
     }
   ],
   "tools": [
@@ -4775,6 +4778,19 @@
       "confidence": "high"
     },
     {
+      "id": "lmworkflow",
+      "name": "LmWorkflow",
+      "category": "AI Agent 框架",
+      "description": "LLM-authored, LLM-driven workflow tool over sub-agents",
+      "github": "https://github.com/achieveai/LmDotnetTools",
+      "maturity": "实验",
+      "hot_score": 65,
+      "hot_level": "温热",
+      "confidence": "high",
+      "last_update": "LmWorkflow 发布，支持 dogfooding schema 验证的子代理工作流",
+      "last_update_date": "2026-06-27"
+    },
+    {
       "aliases": [
         "Jalapeño chip",
         "OpenAI Broadcom chip"
@@ -4791,7 +4807,8 @@
         "OpenAI",
         "Broadcom",
         "custom silicon"
-      ]
+      ],
+      "id": "jalapeño"
     },
     {
       "aliases": [
@@ -4809,7 +4826,8 @@
         "Claude",
         "agent",
         "enterprise"
-      ]
+      ],
+      "id": "claude-code"
     },
     {
       "aliases": [
@@ -4827,7 +4845,8 @@
         "AI agent",
         "coding agent",
         "Sentry"
-      ]
+      ],
+      "id": "agentjacking"
     },
     {
       "aliases": [
@@ -4845,20 +4864,8 @@
         "AI governance",
         "US Congress",
         "policy"
-      ]
-    },
-    {
-      "id": "lmworkflow",
-      "name": "LmWorkflow",
-      "category": "AI Agent 框架",
-      "description": "LLM-authored, LLM-driven workflow tool over sub-agents",
-      "github": "https://github.com/achieveai/LmDotnetTools",
-      "maturity": "实验",
-      "hot_score": 65,
-      "hot_level": "温热",
-      "confidence": "high",
-      "last_update": "LmWorkflow 发布，支持 dogfooding schema 验证的子代理工作流",
-      "last_update_date": "2026-06-27"
+      ],
+      "id": "great-american-ai-act"
     }
   ],
   "llms": [
@@ -7100,7 +7107,8 @@
         "Opus",
         "enterprise",
         "coding"
-      ]
+      ],
+      "id": "claude-opus-4.8"
     },
     {
       "aliases": [
@@ -7122,7 +7130,8 @@
         "multimodal",
         "1M context",
         "MiniMax"
-      ]
+      ],
+      "id": "minimax-m3"
     },
     {
       "aliases": [
@@ -7144,7 +7153,8 @@
         "1M context",
         "DeepSeek",
         "MIT"
-      ]
+      ],
+      "id": "deepseek-v4-pro"
     },
     {
       "aliases": [
@@ -7166,7 +7176,8 @@
         "1M context",
         "DeepSeek",
         "MIT"
-      ]
+      ],
+      "id": "deepseek-v4-flash"
     },
     {
       "aliases": [
@@ -7187,7 +7198,8 @@
         "DeepMind",
         "multimodal",
         "Gemini"
-      ]
+      ],
+      "id": "gemini-3.x"
     }
   ],
   "changelog": [

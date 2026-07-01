@@ -67,12 +67,7 @@ SOURCES = {
         'category': '中文科技媒体',
         'search_queries': ['大模型', 'AI融资', 'LLM'],
     },
-    'techcrunch': {
-        'name': 'TechCrunch AI',
-        'url': 'https://techcrunch.com/category/artificial-intelligence/',
-        'category': '英文媒体',
-        'search_queries': ['LLM', 'AI model', 'AI funding', 'OpenAI', 'Anthropic'],
-    },
+    # techcrunch REMOVED - Selenium page load timeout
     'github-trending': {
         'name': 'GitHub Trending',
         'url': 'https://github.com/trending?since=weekly',
@@ -111,13 +106,7 @@ SCRAPERS = {
         'date_sel': 'time, .date, span.date',
         'scroll': True,
     },
-    'techcrunch': {
-        'wait_sel': 'article',
-        'title_sel': 'h2 a, .post-block__title a, a[href*="/2026/"]',
-        'link_sel': 'h2 a, .post-block__title a, a[href*="/2026/"]',
-        'date_sel': 'time, .post-block__date',
-        'link_filter': lambda h: 'techcrunch.com/' in h and '/2026/' in h,
-    },
+    # techcrunch REMOVED
     '36kr': {
         'wait_sel': 'body',
         'title_sel': 'a[href*="/article/"], h3 a, .title a',
@@ -252,23 +241,30 @@ class LLMRadarCollector:
             from selenium import webdriver
             from selenium.webdriver.chrome.options import Options
             from selenium.webdriver.chrome.service import Service
-            from webdriver_manager.chrome import ChromeDriverManager
+            DRIVER_PATH = "/Users/jadenli/.wdm/drivers/chromedriver/mac-arm64/149.0.7827.197/chromedriver-mac-arm64/chromedriver"
 
             opts = Options()
-            opts.add_argument('--headless')
+            opts.add_argument('--headless=new')
+            opts.binary_location = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
             opts.add_argument('--no-sandbox')
             opts.add_argument('--disable-dev-shm-usage')
             opts.add_argument('--blink-settings=imagesEnabled=false')
-            opts.add_argument('user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36')
-            self._driver = webdriver.Chrome(
-                service=Service(ChromeDriverManager().install()),
-                options=opts
-            )
+            opts.add_argument('--window-size=1920,1080')
+            opts.add_argument('--disable-gpu')
+            opts.add_argument('user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36')
+            opts.add_experimental_option('excludeSwitches', ['enable-automation'])
+            service = Service(DRIVER_PATH)
+            self._driver = webdriver.Chrome(service=service, options=opts)
+            # 反检测：隐藏 webdriver 特征
+            self._driver.execute_cdp_cmd("Page.addScriptToEvaluateOnNewDocument", {
+                "source": "Object.defineProperty(navigator,'webdriver',{get:()=>undefined});"
+            })
+            self._driver.execute_cdp_cmd("Network.enable", {})
             self._print_ok('Selenium 无头浏览器已启动')
             return self._driver
         except Exception as e:
-            self._print_err(f'Selenium 初始化失败: {e}')
-            self._print_warn('降级到 requests+BS4 模式')
+            err_msg = str(e).split('\n')[0][:120]
+            self._print_err(f'Selenium 初始化失败: {err_msg}')
             return None
 
     def _quit_driver(self):
@@ -294,13 +290,14 @@ class LLMRadarCollector:
 
         for attempt in range(2):  # 最多重试 1 次（含驱动重启）
             try:
+                driver.set_page_load_timeout(25)
                 driver.get(url)
                 # 等待页面加载
                 wait_sel = scraper.get('wait_sel', 'body')
                 from selenium.webdriver.common.by import By
                 from selenium.webdriver.support.ui import WebDriverWait
                 from selenium.webdriver.support import expected_conditions as EC
-                WebDriverWait(driver, 12).until(EC.presence_of_element_located((By.CSS_SELECTOR, wait_sel)))
+                WebDriverWait(driver, 25).until(EC.presence_of_element_located((By.CSS_SELECTOR, wait_sel)))
                 time.sleep(1)
 
                 # 对 JS 懒加载的页面，滚动到底部触发加载
@@ -399,7 +396,7 @@ class LLMRadarCollector:
                     return None
 
     def fetch_source(self, source_key):
-        """抓取单个新闻源（Selenium 无头模式，失败降级到 requests）"""
+        """抓取单个新闻源（Selenium 无头模式，失败则跳过）"""
         source = SOURCES.get(source_key)
         if not source:
             self._print_err(f'未知新闻源: {source_key}')
@@ -410,31 +407,7 @@ class LLMRadarCollector:
         if result:
             return result
 
-        # 降级：requests + BS4（无头浏览器不可用时）
-        self._print_warn(f'{source["name"]} 降级到 requests 模式')
-        try:
-            import requests
-            from bs4 import BeautifulSoup
-            resp = requests.get(source['url'], timeout=15, headers={
-                'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36'
-            })
-            resp.raise_for_status()
-            resp.encoding = resp.apparent_encoding or 'utf-8'
-            soup = BeautifulSoup(resp.text, 'html.parser')
-            for tag in soup(['script', 'style', 'nav', 'footer', 'header']):
-                tag.decompose()
-            text = soup.get_text(separator='\n', strip=True)[:5000]
-            self._print_ok(f'{source["name"]} 降级抓取成功，{len(text)} 字符')
-            return {
-                'source': source_key,
-                'name': source['name'],
-                'url': source['url'],
-                'content': text,
-                'fetched_at': datetime.now().isoformat(),
-            }
-        except Exception as e:
-            self._print_err(f'{source["name"]} 降级抓取也失败: {e}')
-            return None
+
 
     def fetch_all(self, source_keys=None):
         """抓取所有新闻源（跳过已降级源）"""
@@ -685,7 +658,7 @@ hotspots 数组中每个元素格式：
         changelog = []
 
         for dimension in ['providers', 'people', 'tools', 'llms', 'hotspots']:
-            existing = {e['id']: e for e in snapshot.get(dimension, [])}
+            existing = {e["id"]: e for e in snapshot.get(dimension, []) if e.get("id")}
             new_items = new_entities.get(dimension, [])
 
             for item in new_items:
@@ -1104,6 +1077,92 @@ hotspots 数组中每个元素格式：
         self._print_ok(f'完成！当前数据: {stats.get("total_providers",0)} 厂商 / {stats.get("total_people",0)} 人物 / {stats.get("total_tools",0)} 工具 / {stats.get("total_llms",0)} 模型 / {stats.get("total_hotspots",0)} 热点')
         return True
 
+    # ===== Selenium Check =====
+    def check_selenium(self):
+        """检查 Selenium 环境是否满足抓取要求"""
+        import subprocess, os, shutil
+
+        print("\n🔍 Selenium 环境检查")
+        print("=" * 40)
+        all_pass = True
+
+        # 1. Chrome binary
+        chrome_path = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
+        if os.path.exists(chrome_path):
+            r = subprocess.run([chrome_path, "--version"], capture_output=True, text=True, timeout=10)
+            chrome_ver = r.stdout.strip() if r.stdout else "unknown"
+            print(f"  ✅ Chrome: {chrome_ver}")
+        else:
+            print(f"  ❌ Chrome: 未找到 ({chrome_path})")
+            print(f"     解决方案: 安装 Google Chrome")
+            all_pass = False
+
+        # 2. Chromedriver
+        driver_path = "/Users/jadenli/.wdm/drivers/chromedriver/mac-arm64/149.0.7827.197/chromedriver-mac-arm64/chromedriver"
+        if os.path.exists(driver_path):
+            r = subprocess.run([driver_path, "--version"], capture_output=True, text=True, timeout=5)
+            driver_ver = r.stdout.strip() if r.stdout else "unknown"
+            print(f"  ✅ ChromeDriver: {driver_ver}")
+            # Check version match
+            chrome_num = chrome_ver.split()[-1] if chrome_ver != "unknown" else ""
+            driver_num = driver_ver.split()[1] if len(driver_ver.split()) > 1 else ""
+            if chrome_num and driver_num and chrome_num != driver_num:
+                print(f"  ⚠️  版本不匹配: Chrome={chrome_num}, Driver={driver_num}")
+                print(f"     解决方案: python3 -c \"import urllib.request,zipfile,io,os;"
+                      f"url=f'https://storage.googleapis.com/chrome-for-testing-public/{chrome_num}/mac-arm64/chromedriver-mac-arm64.zip';"
+                      f"resp=urllib.request.urlopen(urllib.request.Request(url,headers={{'User-Agent':'curl/8.0'}}),timeout=30);"
+                      f"z=zipfile.ZipFile(io.BytesIO(resp.read()));"
+                      f"z.extract('chromedriver-mac-arm64/chromedriver',os.path.expanduser('~/.wdm/drivers/chromedriver/mac-arm64/{chrome_num}/'));"
+                      f"print('Done')\"")
+                all_pass = False
+        else:
+            print(f"  ❌ ChromeDriver: 未找到")
+            print(f"     解决方案: python3 -c \"from webdriver_manager.chrome import ChromeDriverManager; print(ChromeDriverManager().install())\"")
+            all_pass = False
+
+        # 3. Selenium import
+        try:
+            from selenium import webdriver
+            from selenium.webdriver.chrome.options import Options
+            from selenium.webdriver.chrome.service import Service
+            from selenium.webdriver.common.by import By
+            from selenium.webdriver.support.ui import WebDriverWait
+            from selenium.webdriver.support import expected_conditions as EC
+            print(f"  ✅ Selenium 库: 可用 (webdriver {webdriver.__version__})")
+        except ImportError as e:
+            print(f"  ❌ Selenium 库: 缺失 ({e})")
+            print(f"     解决方案: pip3 install selenium webdriver-manager")
+            all_pass = False
+
+        # 4. Actual browser launch test
+        if os.path.exists(driver_path):
+            try:
+                from selenium import webdriver
+                from selenium.webdriver.chrome.options import Options
+                opts = Options()
+                opts.add_argument("--headless=new")
+                opts.add_argument("--no-sandbox")
+                opts.add_argument("--disable-dev-shm-usage")
+                driver = webdriver.Chrome(service=Service(driver_path), options=opts)
+                import time
+                t1 = time.time()
+                driver.get("https://www.google.com")
+                elapsed = time.time() - t1
+                driver.quit()
+                print(f"  ✅ 浏览器启动测试: 通过 ({elapsed:.1f}s)")
+            except Exception as e:
+                err = str(e).split("\\n")[0][:80]
+                print(f"  ❌ 浏览器启动测试: 失败 ({err})")
+                print(f"     解决方案: 检查是否有残留 chromedriver 进程 (pkill -9 -f chromedriver) 后重试")
+                all_pass = False
+
+        # Summary
+        print("\n" + "=" * 40)
+        if all_pass:
+            print("✅ Selenium 环境满足要求")
+        else:
+            print("❌ Selenium 环境不满足要求，请按上述解决方案修复")
+
     # ===== Sources =====
     def list_sources(self):
         """列出所有新闻源"""
@@ -1241,15 +1300,18 @@ def main():
             if r.returncode == 0:
                 out = r.stdout.strip()
                 if 'Already up to date' in out:
-                    print('ℹ️  remote 无更新')
+                    print('ℹ️ remote 无更新')
                 else:
                     print('✅ remote 已同步')
             else:
-                print(f'⚠️  git pull 跳过: {r.stderr[:100]}')
+                print(f'⚠️ git pull 跳过: {r.stderr[:100]}')
         except Exception as e:
-            print(f'⚠️  git pull 失败: {e}')
+            print(f'⚠️ git pull 失败: {e}')
         source_keys = args if args else None
         collector.run(source_keys)
+
+    elif command == 'selenium-check':
+        collector.check_selenium()
 
     elif command == 'sources':
         collector.list_sources()
@@ -1276,7 +1338,7 @@ def main():
             if r.returncode == 0:
                 print(f'✅ commit 完成: {msg}')
             else:
-                print(f'ℹ️  {r.stderr.strip()}')
+                print(f'ℹ️ {r.stderr.strip()}')
         except Exception as e:
             print(f'❌ commit 失败: {e}')
 
@@ -1288,7 +1350,7 @@ def main():
             subprocess.run(['git', 'push'], cwd=PROJECT_ROOT, check=True, capture_output=True)
             print('✅ auto-push 完成')
         except subprocess.CalledProcessError as e:
-            print(f'ℹ️  auto-push 跳过: {e.stderr.decode()[:200] if e.stderr else str(e)}')
+            print(f'ℹ️ auto-push 跳过: {e.stderr.decode()[:200] if e.stderr else str(e)}')
 
     elif command == 'help':
         print('\n📖 LLM Radar 数据采集脚本\n')
@@ -1297,6 +1359,7 @@ def main():
         print('  fetch [source]           - 抓取新闻并提取实体（默认全部源）')
         print('  merge                    - 将 fetch 结果合并到 snapshot.json')
         print('  run [source]             - fetch + merge 一步完成（含 auto-push）')
+        print('  selenium-check           - 检查 Selenium 环境是否满足要求')
         print('  sources                  - 列出所有新闻源')
         print(f'  {CRON_HELP}')
         print('  crontab --remove         - 移除定时任务')
