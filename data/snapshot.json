@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "generated_at": "2026-07-01T17:09:52.098146",
+  "generated_at": "2026-07-01T17:09:56.359250",
   "period": "2026-06-24 ~ 2026-07-01",
   "execution_mode": "semi-auto",
   "providers": [
@@ -1742,6 +1742,12 @@
       ],
       "confidence": "medium",
       "updated_at": "2026-07-01T16:54:32.166187"
+    },
+    {
+      "id": "tp",
+      "name": "TP",
+      "confidence": "high",
+      "updated_at": "2026-07-01T17:09:56.359250"
     }
   ],
   "people": [
@@ -3139,6 +3145,12 @@
       "related_llms": [],
       "confidence": "medium",
       "updated_at": "2026-07-01T16:54:32.166187"
+    },
+    {
+      "id": "tpe",
+      "name": "TPe",
+      "confidence": "high",
+      "updated_at": "2026-07-01T17:09:56.359250"
     }
   ],
   "tools": [
@@ -4204,6 +4216,12 @@
       "related_llms": [],
       "confidence": "low",
       "updated_at": "2026-07-01T16:54:32.166187"
+    },
+    {
+      "id": "tt",
+      "name": "TT",
+      "confidence": "high",
+      "updated_at": "2026-07-01T17:09:56.359250"
     }
   ],
   "llms": [
@@ -6661,44 +6679,15 @@
       "related_people": [],
       "confidence": "high",
       "updated_at": "2026-07-01T16:54:32.166187"
+    },
+    {
+      "id": "tl",
+      "name": "TL",
+      "confidence": "high",
+      "updated_at": "2026-07-01T17:09:56.359250"
     }
   ],
   "changelog": [
-    {
-      "type": "new",
-      "dimension": "hotspots",
-      "id": "openai-gpt55",
-      "summary": "hotspots: OpenAI发布GPT-5.5，100万Token上下文",
-      "date": "2026-06-25"
-    },
-    {
-      "type": "new",
-      "dimension": "hotspots",
-      "id": "ai-agent-era",
-      "summary": "hotspots: AI智能体规模化落地元年到来",
-      "date": "2026-06-25"
-    },
-    {
-      "type": "new",
-      "dimension": "hotspots",
-      "id": "china-llm-rise",
-      "summary": "hotspots: 国产大模型全面领跑，科创板开放AI上市",
-      "date": "2026-06-25"
-    },
-    {
-      "type": "new",
-      "dimension": "hotspots",
-      "id": "glm-5-2-local-ai",
-      "summary": "hotspots: GLM-5.2 成为本地AI社区新宠",
-      "date": "2026-06-25"
-    },
-    {
-      "type": "new",
-      "dimension": "hotspots",
-      "id": "pentagon-grok",
-      "summary": "hotspots: 五角大楼使用 Grok AI 发射2000枚导弹",
-      "date": "2026-06-25"
-    },
     {
       "type": "new",
       "dimension": "providers",
@@ -7461,16 +7450,61 @@
       "date": "2026-07-01",
       "time": "17:09:52",
       "url": ""
+    },
+    {
+      "type": "new",
+      "dimension": "providers",
+      "id": "tp",
+      "summary": "TP (tp)",
+      "date": "2026-07-01",
+      "time": "17:09:56",
+      "url": ""
+    },
+    {
+      "type": "new",
+      "dimension": "people",
+      "id": "tpe",
+      "summary": "TPe (tpe)",
+      "date": "2026-07-01",
+      "time": "17:09:56",
+      "url": ""
+    },
+    {
+      "type": "new",
+      "dimension": "tools",
+      "id": "tt",
+      "summary": "TT (tt)",
+      "date": "2026-07-01",
+      "time": "17:09:56",
+      "url": ""
+    },
+    {
+      "type": "new",
+      "dimension": "llms",
+      "id": "tl",
+      "summary": "TL (tl)",
+      "date": "2026-07-01",
+      "time": "17:09:56",
+      "url": ""
+    },
+    {
+      "type": "new",
+      "dimension": "hotspots",
+      "id": "th",
+      "summary": " (th)",
+      "date": "2026-07-01",
+      "time": "17:09:56",
+      "url": ""
     }
   ],
   "stats": {
-    "total_providers": 87,
-    "total_people": 59,
-    "total_tools": 54,
-    "total_llms": 91,
-    "total_hotspots": 99,
-    "new_this_period": 0,
-    "updated_this_period": 1,
+    "total_providers": 88,
+    "total_people": 60,
+    "total_tools": 55,
+    "total_llms": 92,
+    "total_hotspots": 100,
+    "new_this_period": 5,
+    "updated_this_period": 0,
     "removed_this_period": 0
   },
   "hotspots": [
@@ -9073,6 +9107,14 @@
       "related_tools": [],
       "related_llms": [],
       "updated_at": "2026-07-01T16:54:32.166187"
+    },
+    {
+      "id": "th",
+      "title": "TH",
+      "date": "2026-06-28",
+      "summary": "t",
+      "confidence": "high",
+      "updated_at": "2026-07-01T17:09:56.359250"
     }
   ]
 }
