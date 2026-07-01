@@ -233,6 +233,34 @@ class LLMRadarCollector:
                 self._print_warn(f'dead letter 写入失败: {dl_err}')
 
     # ===== Fetch =====
+
+    @staticmethod
+    def _resolve_chrome_binary():
+        import os, shutil, sys as _sys
+        if _sys.platform == "darwin":
+            p = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
+            return p if os.path.exists(p) else None
+        for name in ["google-chrome", "google-chrome-stable", "chromium-browser", "chromium"]:
+            found = shutil.which(name)
+            if found: return found
+        return None
+
+    @staticmethod
+    def _resolve_chromedriver():
+        import os, glob, shutil
+        found = shutil.which("chromedriver")
+        if found: return found
+        wdm = os.path.expanduser("~/.wdm")
+        if not os.path.isdir(wdm): return None
+        candidates = []
+        for root, dirs, files in os.walk(wdm):
+            for f in files:
+                if f == "chromedriver":
+                    candidates.append(os.path.join(root, f))
+        if not candidates: return None
+        candidates.sort(key=lambda p: os.path.getmtime(p), reverse=True)
+        return candidates[0]
+
     def _init_driver(self):
         """初始化 Selenium 无头浏览器（单例）"""
         if hasattr(self, '_driver') and self._driver:
@@ -241,11 +269,13 @@ class LLMRadarCollector:
             from selenium import webdriver
             from selenium.webdriver.chrome.options import Options
             from selenium.webdriver.chrome.service import Service
-            DRIVER_PATH = "/Users/jadenli/.wdm/drivers/chromedriver/mac-arm64/149.0.7827.197/chromedriver-mac-arm64/chromedriver"
+            DRIVER_PATH = self._resolve_chromedriver()
 
             opts = Options()
             opts.add_argument('--headless=new')
-            opts.binary_location = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
+            chrome_bin = self._resolve_chrome_binary()
+            if chrome_bin:
+                opts.binary_location = chrome_bin
             opts.add_argument('--no-sandbox')
             opts.add_argument('--disable-dev-shm-usage')
             opts.add_argument('--blink-settings=imagesEnabled=false')
@@ -1087,8 +1117,8 @@ hotspots 数组中每个元素格式：
         all_pass = True
 
         # 1. Chrome binary
-        chrome_path = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
-        if os.path.exists(chrome_path):
+        chrome_path = self._resolve_chrome_binary()
+        if chrome_path and os.path.exists(chrome_path):
             r = subprocess.run([chrome_path, "--version"], capture_output=True, text=True, timeout=10)
             chrome_ver = r.stdout.strip() if r.stdout else "unknown"
             print(f"  ✅ Chrome: {chrome_ver}")
@@ -1098,8 +1128,8 @@ hotspots 数组中每个元素格式：
             all_pass = False
 
         # 2. Chromedriver
-        driver_path = "/Users/jadenli/.wdm/drivers/chromedriver/mac-arm64/149.0.7827.197/chromedriver-mac-arm64/chromedriver"
-        if os.path.exists(driver_path):
+        driver_path = self._resolve_chromedriver()
+        if driver_path and os.path.exists(driver_path):
             r = subprocess.run([driver_path, "--version"], capture_output=True, text=True, timeout=5)
             driver_ver = r.stdout.strip() if r.stdout else "unknown"
             print(f"  ✅ ChromeDriver: {driver_ver}")

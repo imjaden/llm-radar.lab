@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "generated_at": "2026-07-01T17:39:15.257234",
+  "generated_at": "2026-07-01T21:23:11.102554",
   "period": "2026-06-24 ~ 2026-07-01",
   "execution_mode": "semi-auto",
   "providers": [
@@ -251,7 +251,7 @@
         "大模型",
         "AI安全"
       ],
-      "hot_score": 95,
+      "hot_score": 90,
       "hot_level": "爆热",
       "last_event": "发布 Sonnet 5，同时被监管勒令下线 Fable 5 和 Mythos 5",
       "last_event_date": "2026-07-01",
@@ -266,7 +266,7 @@
           "Constitutional AI"
         ]
       },
-      "updated_at": "2026-07-01T17:39:15.257234"
+      "updated_at": "2026-07-01T21:23:11.102554"
     },
     {
       "id": "google-deepmind",
@@ -6885,231 +6885,6 @@
   ],
   "changelog": [
     {
-      "type": "new",
-      "dimension": "providers",
-      "id": "jiutianzhanyi",
-      "summary": "通过国产AI算力芯片解决大模型部署飞控困难",
-      "date": "2026-07-01",
-      "time": "16:54:32",
-      "url": "https://36kr.com/p/3864222044902662"
-    },
-    {
-      "type": "new",
-      "dimension": "providers",
-      "id": "xiehou",
-      "summary": "发布2.0大模型",
-      "date": "2026-07-01",
-      "time": "16:54:32",
-      "url": "https://36kr.com/p/3805817826729736"
-    },
-    {
-      "type": "new",
-      "dimension": "providers",
-      "id": "hyper3d",
-      "summary": "再获数亿融资，英伟达使用其3D大模型",
-      "date": "2026-07-01",
-      "time": "16:54:32",
-      "url": "https://36kr.com/p/3867973922755845"
-    },
-    {
-      "type": "new",
-      "dimension": "providers",
-      "id": "youdao",
-      "summary": "CEO周枫：Harness即产品",
-      "date": "2026-07-01",
-      "time": "16:54:32",
-      "url": "https://www.infoq.cn/article/3X8E2FVCllu24XYVoPeK"
-    },
-    {
-      "type": "new",
-      "dimension": "providers",
-      "id": "api7",
-      "summary": "创始人温铭用AI重写生产级网关",
-      "date": "2026-07-01",
-      "time": "16:54:32",
-      "url": "https://www.infoq.cn/article/5YIK6SvTf5h07YckXZd3"
-    },
-    {
-      "type": "new",
-      "dimension": "providers",
-      "id": "facemind",
-      "summary": "与港中文合作推出ToxPrune有毒子词剪枝",
-      "date": "2026-07-01",
-      "time": "16:54:32",
-      "url": "https://36kr.com/p/3865750221673733"
-    },
-    {
-      "type": "new",
-      "dimension": "people",
-      "id": "jiayangqing",
-      "summary": "因英伟达不满收购后运营效果，出走英伟达",
-      "date": "2026-07-01",
-      "time": "16:54:32",
-      "url": "https://www.infoq.cn/article/VceiPBYzkY9lSAOubvtP"
-    },
-    {
-      "type": "update",
-      "dimension": "people",
-      "id": "dario-amodei",
-      "summary": "name: Dario Amodei → 达里奥·阿莫迪; recent_activity: 带领Anthropic秘密提交IPO → 公开抨击OpenAI CEO奥特曼，称其不值得信任；宣布Anthropic收入已超越OpenAI",
-      "date": "2026-07-01",
-      "time": "16:54:32",
-      "url": "https://36kr.com/p/3865167945143561"
-    },
-    {
-      "type": "update",
-      "dimension": "people",
-      "id": "sam-altman",
-      "summary": "name: Sam Altman → 萨姆·奥特曼; hot_score: 88 → 90; hot_level:  → 爆热",
-      "date": "2026-07-01",
-      "time": "16:54:32",
-      "url": "https://36kr.com/p/3865167945143561"
-    },
-    {
-      "type": "new",
-      "dimension": "people",
-      "id": "thariq-shihipar",
-      "summary": "发文称HTML比MD更利于人类跟进智能体协作流程",
-      "date": "2026-07-01",
-      "time": "16:54:32",
-      "url": "https://www.infoq.cn/article/i3eauD7F8KF9gVY3SD18"
-    },
-    {
-      "type": "new",
-      "dimension": "people",
-      "id": "zhoufeng",
-      "summary": "提出Harness即产品观点",
-      "date": "2026-07-01",
-      "time": "16:54:32",
-      "url": "https://www.infoq.cn/article/3X8E2FVCllu24XYVoPeK"
-    },
-    {
-      "type": "new",
-      "dimension": "people",
-      "id": "wenming",
-      "summary": "用AI重写生产级网关，总结6条经验",
-      "date": "2026-07-01",
-      "time": "16:54:32",
-      "url": "https://www.infoq.cn/article/5YIK6SvTf5h07YckXZd3"
-    },
-    {
-      "type": "update",
-      "dimension": "tools",
-      "id": "claude-code",
-      "summary": "hot_score: None → 80; hot_level: None → 高热; last_update: None → 被曝偷查用户信息",
-      "date": "2026-07-01",
-      "time": "16:54:32",
-      "url": "https://www.jiqizhixin.com"
-    },
-    {
-      "type": "update",
-      "dimension": "tools",
-      "id": "cursor",
-      "summary": "hot_score: 85 → 70; last_update: 被SpaceX以600亿美元股票收购 → 与OpenClaw同时发布口袋编程功能",
-      "date": "2026-07-01",
-      "time": "16:54:32",
-      "url": "https://www.infoq.cn/article/6WCaAMdgSR8r46j3OZd4"
-    },
-    {
-      "type": "new",
-      "dimension": "tools",
-      "id": "openclaw",
-      "summary": "与Cursor同时发布口袋编程功能",
-      "date": "2026-07-01",
-      "time": "16:54:32",
-      "url": "https://www.infoq.cn/article/6WCaAMdgSR8r46j3OZd4"
-    },
-    {
-      "type": "new",
-      "dimension": "tools",
-      "id": "agents-cli",
-      "summary": "发布",
-      "date": "2026-07-01",
-      "time": "16:54:32",
-      "url": "https://www.jiqizhixin.com"
-    },
-    {
-      "type": "new",
-      "dimension": "tools",
-      "id": "openrl",
-      "summary": "发布",
-      "date": "2026-07-01",
-      "time": "16:54:32",
-      "url": "https://www.infoq.cn/article/d5MOPSyGi5XPi1erhUW3"
-    },
-    {
-      "type": "new",
-      "dimension": "tools",
-      "id": "toxprune",
-      "summary": "发布",
-      "date": "2026-07-01",
-      "time": "16:54:32",
-      "url": "https://36kr.com/p/3865750221673733"
-    },
-    {
-      "type": "new",
-      "dimension": "tools",
-      "id": "trm",
-      "summary": "上线",
-      "date": "2026-07-01",
-      "time": "16:54:32",
-      "url": "https://36kr.com/p/3866659734279170"
-    },
-    {
-      "type": "new",
-      "dimension": "tools",
-      "id": "core-ai",
-      "summary": "发布",
-      "date": "2026-07-01",
-      "time": "16:54:32",
-      "url": "https://www.infoq.cn/article/x6KDPdgrdHzY7I38JK9U"
-    },
-    {
-      "type": "new",
-      "dimension": "tools",
-      "id": "wechat-xiaowei",
-      "summary": "推出",
-      "date": "2026-07-01",
-      "time": "16:54:32",
-      "url": "https://36kr.com/p/3865254344168457"
-    },
-    {
-      "type": "new",
-      "dimension": "tools",
-      "id": "jetspec",
-      "summary": "发布论文与代码",
-      "date": "2026-07-01",
-      "time": "16:54:32",
-      "url": "https://www.jiqizhixin.com"
-    },
-    {
-      "type": "new",
-      "dimension": "tools",
-      "id": "liveworld",
-      "summary": "发布项目代码",
-      "date": "2026-07-01",
-      "time": "16:54:32",
-      "url": "https://www.jiqizhixin.com"
-    },
-    {
-      "type": "update",
-      "dimension": "llms",
-      "id": "gpt-5.6",
-      "summary": "hot_score: 90 → 95; last_event: 首批实测，精准对抗日志Mythos → 被曝光，深度评估者指出其作弊; status: 发布 → 预览",
-      "date": "2026-07-01",
-      "time": "16:54:32",
-      "url": "https://36kr.com/p/3869201971877120"
-    },
-    {
-      "type": "new",
-      "dimension": "llms",
-      "id": "sonnet-5",
-      "summary": "发布",
-      "date": "2026-07-01",
-      "time": "16:54:32",
-      "url": "https://www.jiqizhixin.com"
-    },
-    {
       "type": "update",
       "dimension": "llms",
       "id": "fable-5",
@@ -7779,6 +7554,183 @@
       "date": "2026-07-01",
       "time": "17:39:15",
       "url": ""
+    },
+    {
+      "type": "update",
+      "dimension": "providers",
+      "id": "OpenAI",
+      "summary": "providers: OpenAI",
+      "date": "2026-07-01"
+    },
+    {
+      "type": "update",
+      "dimension": "providers",
+      "id": "Anthropic",
+      "summary": "providers: Anthropic",
+      "date": "2026-07-01"
+    },
+    {
+      "type": "update",
+      "dimension": "providers",
+      "id": "DeepSeek",
+      "summary": "providers: DeepSeek",
+      "date": "2026-07-01"
+    },
+    {
+      "type": "update",
+      "dimension": "providers",
+      "id": "Google DeepMind",
+      "summary": "providers: Google DeepMind",
+      "date": "2026-07-01"
+    },
+    {
+      "type": "new",
+      "dimension": "providers",
+      "id": "Alibaba",
+      "summary": "providers: Alibaba",
+      "date": "2026-07-01"
+    },
+    {
+      "type": "update",
+      "dimension": "providers",
+      "id": "Meta",
+      "summary": "providers: Meta",
+      "date": "2026-07-01"
+    },
+    {
+      "type": "new",
+      "dimension": "people",
+      "id": "Sam Altman",
+      "summary": "people: Sam Altman",
+      "date": "2026-07-01"
+    },
+    {
+      "type": "new",
+      "dimension": "people",
+      "id": "Dario Amodei",
+      "summary": "people: Dario Amodei",
+      "date": "2026-07-01"
+    },
+    {
+      "type": "update",
+      "dimension": "people",
+      "id": "Demis Hassabis",
+      "summary": "people: Demis Hassabis",
+      "date": "2026-07-01"
+    },
+    {
+      "type": "new",
+      "dimension": "people",
+      "id": "Liang Wenfeng",
+      "summary": "people: Liang Wenfeng",
+      "date": "2026-07-01"
+    },
+    {
+      "type": "update",
+      "dimension": "tools",
+      "id": "Claude Code",
+      "summary": "tools: Claude Code",
+      "date": "2026-07-01"
+    },
+    {
+      "type": "new",
+      "dimension": "tools",
+      "id": "Cursor IDE",
+      "summary": "tools: Cursor IDE",
+      "date": "2026-07-01"
+    },
+    {
+      "type": "new",
+      "dimension": "tools",
+      "id": "Context Gateway",
+      "summary": "tools: Context Gateway",
+      "date": "2026-07-01"
+    },
+    {
+      "type": "new",
+      "dimension": "tools",
+      "id": "Ollama",
+      "summary": "tools: Ollama",
+      "date": "2026-07-01"
+    },
+    {
+      "type": "new",
+      "dimension": "tools",
+      "id": "Hermes Agent",
+      "summary": "tools: Hermes Agent",
+      "date": "2026-07-01"
+    },
+    {
+      "type": "new",
+      "dimension": "tools",
+      "id": "browser-use",
+      "summary": "tools: browser-use",
+      "date": "2026-07-01"
+    },
+    {
+      "type": "new",
+      "dimension": "tools",
+      "id": "Dify",
+      "summary": "tools: Dify",
+      "date": "2026-07-01"
+    },
+    {
+      "type": "new",
+      "dimension": "llms",
+      "id": "GPT-5.6 Sol",
+      "summary": "llms: GPT-5.6 Sol",
+      "date": "2026-07-01"
+    },
+    {
+      "type": "update",
+      "dimension": "llms",
+      "id": "Claude Fable 5",
+      "summary": "llms: Claude Fable 5",
+      "date": "2026-07-01"
+    },
+    {
+      "type": "new",
+      "dimension": "llms",
+      "id": "Claude Sonnet 5",
+      "summary": "llms: Claude Sonnet 5",
+      "date": "2026-07-01"
+    },
+    {
+      "type": "new",
+      "dimension": "llms",
+      "id": "DeepSeek V4 Pro",
+      "summary": "llms: DeepSeek V4 Pro",
+      "date": "2026-07-01"
+    },
+    {
+      "type": "new",
+      "dimension": "llms",
+      "id": "Gemini 3.5 Flash",
+      "summary": "llms: Gemini 3.5 Flash",
+      "date": "2026-07-01"
+    },
+    {
+      "type": "new",
+      "dimension": "llms",
+      "id": "GLM 5.2",
+      "summary": "llms: GLM 5.2",
+      "date": "2026-07-01"
+    },
+    {
+      "type": "new",
+      "dimension": "llms",
+      "id": "Arch-Router",
+      "summary": "llms: Arch-Router",
+      "date": "2026-07-01"
+    },
+    {
+      "type": "update",
+      "dimension": "providers",
+      "id": "anthropic",
+      "summary": "hot_score: 95 → 90",
+      "date": "2026-07-01",
+      "time": "21:23:11",
+      "url": ""
     }
   ],
   "stats": {
@@ -7787,8 +7739,8 @@
     "total_tools": 59,
     "total_llms": 94,
     "total_hotspots": 99,
-    "new_this_period": 14,
-    "updated_this_period": 31,
+    "new_this_period": 0,
+    "updated_this_period": 1,
     "removed_this_period": 0
   },
   "hotspots": [
