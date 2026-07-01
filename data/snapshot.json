@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "generated_at": "2026-07-01T21:23:25.716161",
+  "generated_at": "2026-07-01T21:45:47.891348",
   "period": "2026-06-24 ~ 2026-07-01",
   "execution_mode": "semi-auto",
   "providers": [
@@ -204,7 +204,7 @@
       "updated_at": "2026-06-22T10:02:25.544379"
     },
     {
-      "id": "openai-2",
+      "id": "openai",
       "name": "OpenAI",
       "country": "美国",
       "flagship_models": [
@@ -217,7 +217,7 @@
         "大模型",
         "芯片"
       ],
-      "hot_score": 92,
+      "hot_score": 99,
       "hot_level": "爆热",
       "last_event": "发布自研推理芯片 Jalapeño，曝光 GPT-5.6",
       "last_event_date": "2026-07-01",
@@ -233,7 +233,7 @@
           "DPO"
         ]
       },
-      "updated_at": "2026-07-01T21:23:20.917922"
+      "updated_at": "2026-07-01T21:45:47.891348"
     },
     {
       "id": "anthropic",
@@ -266,7 +266,7 @@
           "Constitutional AI"
         ]
       },
-      "updated_at": "2026-07-01T21:23:11.102554"
+      "updated_at": "2026-07-01T21:45:47.881327"
     },
     {
       "id": "google-deepmind",
@@ -6887,15 +6887,6 @@
     {
       "type": "new",
       "dimension": "llms",
-      "id": "seed-2.1",
-      "summary": "发布",
-      "date": "2026-07-01",
-      "time": "16:54:32",
-      "url": "https://www.jiqizhixin.com"
-    },
-    {
-      "type": "new",
-      "dimension": "llms",
       "id": "visics",
       "summary": "发布",
       "date": "2026-07-01",
@@ -7731,6 +7722,15 @@
       "date": "2026-07-01",
       "time": "21:23:20",
       "url": ""
+    },
+    {
+      "type": "update",
+      "dimension": "providers",
+      "id": "openai-2",
+      "summary": "hot_score: 92 → 99",
+      "date": "2026-07-01",
+      "time": "21:45:47",
+      "url": ""
     }
   ],
   "stats": {
@@ -7740,7 +7740,7 @@
     "total_llms": 94,
     "total_hotspots": 99,
     "new_this_period": 0,
-    "updated_this_period": 0,
+    "updated_this_period": 1,
     "removed_this_period": 0
   },
   "hotspots": [

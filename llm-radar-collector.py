@@ -1133,18 +1133,19 @@ hotspots 数组中每个元素格式：
             r = subprocess.run([driver_path, "--version"], capture_output=True, text=True, timeout=5)
             driver_ver = r.stdout.strip() if r.stdout else "unknown"
             print(f"  ✅ ChromeDriver: {driver_ver}")
-            # Check version match
-            chrome_num = chrome_ver.split()[-1] if chrome_ver != "unknown" else ""
-            driver_num = driver_ver.split()[1] if len(driver_ver.split()) > 1 else ""
-            if chrome_num and driver_num and chrome_num != driver_num:
-                print(f"  ⚠️  版本不匹配: Chrome={chrome_num}, Driver={driver_num}")
-                print(f"     解决方案: python3 -c \"import urllib.request,zipfile,io,os;"
-                      f"url=f'https://storage.googleapis.com/chrome-for-testing-public/{chrome_num}/mac-arm64/chromedriver-mac-arm64.zip';"
-                      f"resp=urllib.request.urlopen(urllib.request.Request(url,headers={{'User-Agent':'curl/8.0'}}),timeout=30);"
-                      f"z=zipfile.ZipFile(io.BytesIO(resp.read()));"
-                      f"z.extract('chromedriver-mac-arm64/chromedriver',os.path.expanduser('~/.wdm/drivers/chromedriver/mac-arm64/{chrome_num}/'));"
-                      f"print('Done')\"")
+            # Check version match (use regex, not split)
+            import re as _re
+            chrome_m = _re.search(r"(\d+\.\d+\.\d+\.\d+)", chrome_ver if chrome_ver != "unknown" else "")
+            driver_m = _re.search(r"(\d+\.\d+\.\d+\.\d+)", driver_ver if driver_ver != "unknown" else "")
+            chrome_num = chrome_m.group(1) if chrome_m else ""
+            driver_num = driver_m.group(1) if driver_m else ""
+            if chrome_num[:2] != driver_num[:2]:
+                print(f"  ❌ Chrome ({chrome_num}) 与 ChromeDriver ({driver_num}) 主版本不匹配")
+                print(f"     解决方案（Linux）: sudo yum install -y google-chrome-stable")
+                print(f"     或使用 pip install webdriver-manager 自动匹配")
                 all_pass = False
+            elif chrome_num != driver_num:
+                print(f"  ⚠️  版本不完全匹配: Chrome={chrome_num}, Driver={driver_num}（小版本差异，可尝试运行）")
         else:
             print(f"  ❌ ChromeDriver: 未找到")
             print(f"     解决方案: python3 -c \"from webdriver_manager.chrome import ChromeDriverManager; print(ChromeDriverManager().install())\"")
