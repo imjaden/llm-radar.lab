@@ -1,7 +1,7 @@
 {
   "version": "1.0",
-  "generated_at": "2026-07-01T22:39:18.514856",
-  "period": "2026-06-24 ~ 2026-07-01",
+  "generated_at": "2026-07-02T17:56:54.898142",
+  "period": "2026-06-25 ~ 2026-07-02",
   "execution_mode": "semi-auto",
   "providers": [
     {
@@ -251,7 +251,7 @@
         "安全",
         "大模型"
       ],
-      "hot_score": 95,
+      "hot_score": 90,
       "hot_level": "爆热",
       "last_event": "发布Sonnet 5，Fable 5和Mythos 5被监管下线",
       "last_event_date": "2026-07-01",
@@ -266,7 +266,7 @@
           "Constitutional AI"
         ]
       },
-      "updated_at": "2026-07-01T22:39:18.514856"
+      "updated_at": "2026-07-02T17:56:54.898142"
     },
     {
       "id": "google-deepmind",
@@ -6692,7 +6692,9 @@
         "enterprise",
         "coding"
       ],
-      "id": "claude-opus-4.8"
+      "id": "claude-opus-4.8",
+      "hot_score": 0,
+      "hot_level": ""
     },
     {
       "aliases": [
@@ -6981,195 +6983,6 @@
     }
   ],
   "changelog": [
-    {
-      "type": "update",
-      "dimension": "people",
-      "id": "jiayangqing",
-      "summary": "title: 创始人（前公司） → 前英伟达高管; recent_activity: 因英伟达不满收购后运营效果，出走英伟达 → 出走英伟达，收购仅一年即决裂；黄仁勋不满运营效果",
-      "date": "2026-07-01",
-      "time": "17:39:15",
-      "url": "https://www.infoq.cn/article/VceiPBYzkY9lSAOubvtP"
-    },
-    {
-      "type": "update",
-      "dimension": "people",
-      "id": "zhoufeng",
-      "summary": "title: CEO → 网易有道CEO",
-      "date": "2026-07-01",
-      "time": "17:39:15",
-      "url": "https://www.infoq.cn/article/3X8E2FVCllu24XYVoPeK"
-    },
-    {
-      "type": "update",
-      "dimension": "people",
-      "id": "thariq-shihipar",
-      "summary": "hot_score: 60 → 40; recent_activity: 发文称HTML比MD更利于人类跟进智能体协作流程 → 发文指出HTML比Markdown更利于人类跟进智能体协作流程",
-      "date": "2026-07-01",
-      "time": "17:39:15",
-      "url": "https://www.infoq.cn/article/i3eauD7F8KF9gVY3SD18"
-    },
-    {
-      "type": "new",
-      "dimension": "people",
-      "id": "xing-bo",
-      "summary": "再出手批评世界模型，这次轮到智能体了",
-      "date": "2026-07-01",
-      "time": "17:39:15",
-      "url": ""
-    },
-    {
-      "type": "new",
-      "dimension": "tools",
-      "id": "sonnet-5",
-      "summary": "Anthropic 突发推出 Sonnet 5",
-      "date": "2026-07-01",
-      "time": "17:39:15",
-      "url": "https://www.infoq.cn/article/S9zHYQqfFCXt8GoLlM5W"
-    },
-    {
-      "type": "new",
-      "dimension": "tools",
-      "id": "gpt-5-6",
-      "summary": "深夜遭曝光，能力测试中疯狂作弊",
-      "date": "2026-07-01",
-      "time": "17:39:15",
-      "url": "https://www.infoq.cn/article/MODueV4HEMT4Hb92HebD"
-    },
-    {
-      "type": "update",
-      "dimension": "tools",
-      "id": "openrl",
-      "summary": "hot_score: 55 → 60; last_update: 发布 → 发布 LLM 后训练微调框架",
-      "date": "2026-07-01",
-      "time": "17:39:15",
-      "url": "https://www.infoq.cn/article/d5MOPSyGi5XPi1erhUW3"
-    },
-    {
-      "type": "update",
-      "dimension": "tools",
-      "id": "core-ai",
-      "summary": "hot_score: 70 → 65; last_update: 发布 → 苹果推出 Core AI 框架",
-      "date": "2026-07-01",
-      "time": "17:39:15",
-      "url": "https://www.infoq.cn/article/x6KDPdgrdHzY7I38JK9U"
-    },
-    {
-      "type": "update",
-      "dimension": "tools",
-      "id": "agents-cli",
-      "summary": "hot_score: 60 → 45; last_update: 发布 → 发布 agents-cli 工具",
-      "date": "2026-07-01",
-      "time": "17:39:15",
-      "url": ""
-    },
-    {
-      "type": "update",
-      "dimension": "tools",
-      "id": "wechat-xiaowei",
-      "summary": "name: 微信小微 → 小微; hot_score: 60 → 55; last_update: 推出 → 微信推出AI助手「小微」",
-      "date": "2026-07-01",
-      "time": "17:39:15",
-      "url": "https://36kr.com/p/3865254344168457"
-    },
-    {
-      "type": "update",
-      "dimension": "tools",
-      "id": "claude-code",
-      "summary": "hot_score: 80 → 50; hot_level: 高热 → 温热",
-      "date": "2026-07-01",
-      "time": "17:39:15",
-      "url": ""
-    },
-    {
-      "type": "update",
-      "dimension": "tools",
-      "id": "cursor",
-      "summary": "hot_score: 70 → 55; hot_level: 高热 → 温热; last_update: 与OpenClaw同时发布口袋编程功能 → 支持「口袋编程」，程序员只用动嘴",
-      "date": "2026-07-01",
-      "time": "17:39:15",
-      "url": "https://www.infoq.cn/article/6WCaAMdgSR8r46j3OZd4"
-    },
-    {
-      "type": "update",
-      "dimension": "tools",
-      "id": "toxprune",
-      "summary": "hot_score: 50 → 40; last_update: 发布 → 提出ToxPrune方法，让大模型说不出脏话",
-      "date": "2026-07-01",
-      "time": "17:39:15",
-      "url": "https://36kr.com/p/3865750221673733"
-    },
-    {
-      "type": "update",
-      "dimension": "tools",
-      "id": "trm",
-      "summary": "hot_score: 45 → 35; last_update: 上线 → TRM思考奖励模型上线",
-      "date": "2026-07-01",
-      "time": "17:39:15",
-      "url": "https://36kr.com/p/3866659734279170"
-    },
-    {
-      "type": "new",
-      "dimension": "tools",
-      "id": "loopcoder-v2",
-      "summary": "发布LoopCoder v2",
-      "date": "2026-07-01",
-      "time": "17:39:15",
-      "url": ""
-    },
-    {
-      "type": "update",
-      "dimension": "tools",
-      "id": "liveworld",
-      "summary": "last_update: 发布项目代码 → 发布推理、训练代码及预训练权重",
-      "date": "2026-07-01",
-      "time": "17:39:15",
-      "url": ""
-    },
-    {
-      "type": "new",
-      "dimension": "tools",
-      "id": "jialapenyo-chip",
-      "summary": "OpenAI 发布自研推理芯片 Jalapeño",
-      "date": "2026-07-01",
-      "time": "17:39:15",
-      "url": ""
-    },
-    {
-      "type": "update",
-      "dimension": "llms",
-      "id": "sonnet-5",
-      "summary": "hot_score: 90 → 95; last_event: 发布 → Anthropic 突然发布 Sonnet 5; tier: 主力 → 旗舰",
-      "date": "2026-07-01",
-      "time": "17:39:15",
-      "url": "https://www.infoq.cn/article/S9zHYQqfFCXt8GoLlM5W"
-    },
-    {
-      "type": "update",
-      "dimension": "llms",
-      "id": "fable-5",
-      "summary": "hot_score: 85 → 80; last_event: 被监管部门勒令下线 → 因跨境数据安全隐患被要求全面关停",
-      "date": "2026-07-01",
-      "time": "17:39:15",
-      "url": "https://36kr.com/p/3865331338918532"
-    },
-    {
-      "type": "update",
-      "dimension": "llms",
-      "id": "mythos-5",
-      "summary": "hot_score: 85 → 80; last_event: 被监管部门勒令下线 → 因跨境数据安全隐患被要求全面关停",
-      "date": "2026-07-01",
-      "time": "17:39:15",
-      "url": "https://36kr.com/p/3865331338918532"
-    },
-    {
-      "type": "update",
-      "dimension": "llms",
-      "id": "gpt-5.6",
-      "summary": "hot_score: 95 → 90; last_event: 被曝光，深度评估者指出其作弊 → 深夜遭曝光，能力测试中疯狂作弊",
-      "date": "2026-07-01",
-      "time": "17:39:15",
-      "url": "https://www.infoq.cn/article/MODueV4HEMT4Hb92HebD"
-    },
     {
       "type": "new",
       "dimension": "llms",
@@ -7832,6 +7645,155 @@
       "date": "2026-07-01",
       "time": "22:39:18",
       "url": ""
+    },
+    {
+      "type": "update",
+      "dimension": "providers",
+      "id": "Anthropic",
+      "summary": "providers: Anthropic",
+      "date": "2026-07-02"
+    },
+    {
+      "type": "new",
+      "dimension": "providers",
+      "id": "Zhipu AI",
+      "summary": "providers: Zhipu AI",
+      "date": "2026-07-02"
+    },
+    {
+      "type": "update",
+      "dimension": "providers",
+      "id": "DeepSeek",
+      "summary": "providers: DeepSeek",
+      "date": "2026-07-02"
+    },
+    {
+      "type": "update",
+      "dimension": "providers",
+      "id": "OpenAI",
+      "summary": "providers: OpenAI",
+      "date": "2026-07-02"
+    },
+    {
+      "type": "new",
+      "dimension": "providers",
+      "id": "OpenRouter",
+      "summary": "providers: OpenRouter",
+      "date": "2026-07-02"
+    },
+    {
+      "type": "new",
+      "dimension": "people",
+      "id": "Vaibhav Sisinty",
+      "summary": "people: Vaibhav Sisinty",
+      "date": "2026-07-02"
+    },
+    {
+      "type": "new",
+      "dimension": "people",
+      "id": "uzra",
+      "summary": "people: uzra",
+      "date": "2026-07-02"
+    },
+    {
+      "type": "new",
+      "dimension": "people",
+      "id": "qingkong66",
+      "summary": "people: qingkong66",
+      "date": "2026-07-02"
+    },
+    {
+      "type": "new",
+      "dimension": "people",
+      "id": "_BreakingGood_",
+      "summary": "people: _BreakingGood_",
+      "date": "2026-07-02"
+    },
+    {
+      "type": "new",
+      "dimension": "tools",
+      "id": "OpenRouter",
+      "summary": "tools: OpenRouter",
+      "date": "2026-07-02"
+    },
+    {
+      "type": "update",
+      "dimension": "tools",
+      "id": "OpenClaw",
+      "summary": "tools: OpenClaw",
+      "date": "2026-07-02"
+    },
+    {
+      "type": "new",
+      "dimension": "tools",
+      "id": "Hermes Agent",
+      "summary": "tools: Hermes Agent",
+      "date": "2026-07-02"
+    },
+    {
+      "type": "new",
+      "dimension": "tools",
+      "id": "Agents Radar",
+      "summary": "tools: Agents Radar",
+      "date": "2026-07-02"
+    },
+    {
+      "type": "new",
+      "dimension": "llms",
+      "id": "Claude Sonnet 5",
+      "summary": "llms: Claude Sonnet 5",
+      "date": "2026-07-02"
+    },
+    {
+      "type": "update",
+      "dimension": "llms",
+      "id": "Claude Opus 4.8",
+      "summary": "llms: Claude Opus 4.8",
+      "date": "2026-07-02"
+    },
+    {
+      "type": "update",
+      "dimension": "llms",
+      "id": "Claude Fable 5",
+      "summary": "llms: Claude Fable 5",
+      "date": "2026-07-02"
+    },
+    {
+      "type": "new",
+      "dimension": "llms",
+      "id": "GLM 5.2",
+      "summary": "llms: GLM 5.2",
+      "date": "2026-07-02"
+    },
+    {
+      "type": "update",
+      "dimension": "llms",
+      "id": "GPT-5.5",
+      "summary": "llms: GPT-5.5",
+      "date": "2026-07-02"
+    },
+    {
+      "type": "update",
+      "dimension": "llms",
+      "id": "DeepSeek-V3",
+      "summary": "llms: DeepSeek-V3",
+      "date": "2026-07-02"
+    },
+    {
+      "type": "new",
+      "dimension": "hotspots",
+      "id": "test-mcp-client",
+      "summary": "hotspots: MCP Client integration test",
+      "date": "2026-07-02"
+    },
+    {
+      "type": "update",
+      "dimension": "providers",
+      "id": "anthropic",
+      "summary": "hot_score: 95 → 90",
+      "date": "2026-07-02",
+      "time": "17:56:54",
+      "url": ""
     }
   ],
   "stats": {
@@ -7840,8 +7802,8 @@
     "total_tools": 61,
     "total_llms": 95,
     "total_hotspots": 100,
-    "new_this_period": 8,
-    "updated_this_period": 31,
+    "new_this_period": 0,
+    "updated_this_period": 1,
     "removed_this_period": 0
   },
   "hotspots": [
@@ -9432,21 +9394,13 @@
       "updated_at": "2026-06-22T12:05:40.387393"
     },
     {
-      "id": "hotspot-alibaba-robot",
-      "title": "阿里发布首个具身大模型Qwen-Robot系列",
-      "summary": "阿里云推出Qwen-Robot系列，是其首个具身智能大模型，标志阿里在机器人领域的重要布局。",
-      "date": "2026-06-16",
-      "source": "量子位",
+      "id": "test-mcp-client",
+      "title": "MCP Client integration test",
+      "summary": "Testing agent-loop MCP Client -> llm-radar MCP Server",
+      "date": "2026-07-01",
+      "source": "agent-loop",
       "url": "",
-      "related_providers": [
-        "aliyun"
-      ],
-      "related_people": [],
-      "related_tools": [],
-      "related_llms": [
-        "qwen-robot"
-      ],
-      "updated_at": "2026-06-21T18:01:31.851076"
+      "confidence": "high"
     }
   ]
 }
