@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "generated_at": "2026-07-02T17:57:00.814304",
+  "generated_at": "2026-07-02T17:57:03.797809",
   "period": "2026-06-25 ~ 2026-07-02",
   "execution_mode": "semi-auto",
   "providers": [
@@ -204,7 +204,7 @@
       "updated_at": "2026-06-22T10:02:25.544379"
     },
     {
-      "id": "openai",
+      "id": "openai-2",
       "name": "OpenAI",
       "country": "美国",
       "flagship_models": [
@@ -217,7 +217,7 @@
         "通用AI",
         "推理芯片"
       ],
-      "hot_score": 99,
+      "hot_score": 92,
       "hot_level": "爆热",
       "last_event": "发布GPT-5.6及自研推理芯片Jalapeño",
       "last_event_date": "2026-07-01",
@@ -233,7 +233,7 @@
           "DPO"
         ]
       },
-      "updated_at": "2026-07-02T17:57:00.814304"
+      "updated_at": "2026-07-02T17:57:03.797809"
     },
     {
       "id": "anthropic",
@@ -6986,15 +6986,6 @@
     {
       "type": "update",
       "dimension": "llms",
-      "id": "visics",
-      "summary": "hot_score: 60 → 70; hot_level: 温热 → 高热; last_event: 发布 → 发布 Visics 通用具身大模型",
-      "date": "2026-07-01",
-      "time": "17:39:15",
-      "url": "https://36kr.com/p/3868276479710466"
-    },
-    {
-      "type": "update",
-      "dimension": "llms",
       "id": "hyper3d",
       "summary": "hot_score: 70 → 65; last_event: 获数亿融资 → 再获数亿融资",
       "date": "2026-07-01",
@@ -7793,6 +7784,15 @@
       "summary": "hot_score: 90 → 99",
       "date": "2026-07-02",
       "time": "17:57:00",
+      "url": ""
+    },
+    {
+      "type": "update",
+      "dimension": "providers",
+      "id": "openai",
+      "summary": "hot_score: 99 → 92",
+      "date": "2026-07-02",
+      "time": "17:57:03",
       "url": ""
     }
   ],
