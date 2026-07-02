@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "generated_at": "2026-07-02T17:56:54.898142",
+  "generated_at": "2026-07-02T17:57:00.814304",
   "period": "2026-06-25 ~ 2026-07-02",
   "execution_mode": "semi-auto",
   "providers": [
@@ -217,7 +217,7 @@
         "通用AI",
         "推理芯片"
       ],
-      "hot_score": 90,
+      "hot_score": 99,
       "hot_level": "爆热",
       "last_event": "发布GPT-5.6及自研推理芯片Jalapeño",
       "last_event_date": "2026-07-01",
@@ -233,7 +233,7 @@
           "DPO"
         ]
       },
-      "updated_at": "2026-07-01T22:39:18.514856"
+      "updated_at": "2026-07-02T17:57:00.814304"
     },
     {
       "id": "anthropic",
@@ -6984,15 +6984,6 @@
   ],
   "changelog": [
     {
-      "type": "new",
-      "dimension": "llms",
-      "id": "seed-2-1",
-      "summary": "发布 Seed 2.1 系列模型",
-      "date": "2026-07-01",
-      "time": "17:39:15",
-      "url": ""
-    },
-    {
       "type": "update",
       "dimension": "llms",
       "id": "visics",
@@ -7793,6 +7784,15 @@
       "summary": "hot_score: 95 → 90",
       "date": "2026-07-02",
       "time": "17:56:54",
+      "url": ""
+    },
+    {
+      "type": "update",
+      "dimension": "providers",
+      "id": "openai",
+      "summary": "hot_score: 90 → 99",
+      "date": "2026-07-02",
+      "time": "17:57:00",
       "url": ""
     }
   ],
