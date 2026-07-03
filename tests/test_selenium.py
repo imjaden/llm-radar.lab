@@ -1,5 +1,11 @@
-"""Test selenium check logic (not actual browser launch)."""
-import os, subprocess, re
+"""Test selenium check logic (not actual browser launch).
+Skipped on CI - no Chrome/chromedriver available.
+"""
+import os, subprocess, re, pytest
+
+pytestmark = pytest.mark.skipif(
+    os.environ.get("GITHUB_ACTIONS") == "true",
+    reason="CI has no Chrome/chromedriver binaries")
 
 class TestSeleniumCheck:
     def test_chrome_binary_exists(self):
