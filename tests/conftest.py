@@ -3,7 +3,7 @@ import importlib.util, json, os, tempfile
 from pathlib import Path
 import pytest
 
-PROJECT_ROOT = Path("/Users/jadenli/CodeSpace/llm-radar.jaden.tech")
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
 
 def import_collector():
     path = str(PROJECT_ROOT / "llm-radar-collector.py")
