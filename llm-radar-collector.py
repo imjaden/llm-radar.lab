@@ -1208,7 +1208,7 @@ hotspots 数组中每个元素格式：
 CRON_TAG = '# llm-radar-collector'
 RUN_SCRIPT = PROJECT_ROOT / 'llm-radar-run.sh'
 CRON_CMD = f'{RUN_SCRIPT} >> {DATA_DIR}/collector.log 2>&1'
-CRON_SCHEDULE = '0 9,16,23 * * *'  # 每天 9:00、16:00、23:00
+CRON_SCHEDULE = '0 7,14,21 * * *'  # 每天 7:00、14:00、21:00
 CRON_HELP = f'crontab --add [schedule] - 添加定时任务（默认 {CRON_SCHEDULE}）'
 
 def crontab_add(schedule=None):
