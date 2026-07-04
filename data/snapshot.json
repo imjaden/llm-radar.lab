@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "generated_at": "2026-07-04T15:08:49.632839",
+  "generated_at": "2026-07-04T15:12:58.963626",
   "period": "2026-06-27 ~ 2026-07-04",
   "execution_mode": "semi-auto",
   "providers": [
@@ -208,7 +208,7 @@
       "updated_at": "2026-06-22T10:02:25.544379"
     },
     {
-      "id": "openai-2",
+      "id": "openai",
       "name": "OpenAI",
       "country": "美国",
       "flagship_models": [
@@ -222,7 +222,7 @@
         "AI芯片",
         "生物学AI"
       ],
-      "hot_score": 92,
+      "hot_score": 99,
       "hot_level": "高热",
       "last_event": "GPT-5.6 深夜遭曝光，自研芯片计划被披露",
       "last_event_date": "2026-07-04",
@@ -238,7 +238,7 @@
           "DPO"
         ]
       },
-      "updated_at": "2026-07-04T15:08:49.632839"
+      "updated_at": "2026-07-04T15:12:58.963626"
     },
     {
       "id": "anthropic",
@@ -272,7 +272,7 @@
           "Constitutional AI"
         ]
       },
-      "updated_at": "2026-07-04T15:08:45.558288"
+      "updated_at": "2026-07-04T15:12:58.955451"
     },
     {
       "id": "google-deepmind",
@@ -1303,13 +1303,13 @@
       "id": "tp",
       "name": "TP",
       "confidence": "high",
-      "updated_at": "2026-07-01T22:14:57.119688"
+      "updated_at": "2026-07-04T15:08:54.208635"
     },
     {
       "id": "cl-test",
       "name": "CLTest",
       "confidence": "high",
-      "updated_at": "2026-07-01T22:14:57.139899"
+      "updated_at": "2026-07-04T15:08:54.230594"
     },
     {
       "id": "robo-science",
@@ -3087,7 +3087,7 @@
       "id": "tpe",
       "name": "TPe",
       "confidence": "high",
-      "updated_at": "2026-07-01T22:14:57.119688"
+      "updated_at": "2026-07-04T15:08:54.208635"
     },
     {
       "id": "xing-bo",
@@ -4386,7 +4386,7 @@
       "id": "tt",
       "name": "TT",
       "confidence": "high",
-      "updated_at": "2026-07-01T22:14:57.119688"
+      "updated_at": "2026-07-04T15:08:54.208635"
     },
     {
       "id": "sonnet-5",
@@ -5713,7 +5713,7 @@
       "id": "tl",
       "name": "TL",
       "confidence": "high",
-      "updated_at": "2026-07-01T22:14:57.119688"
+      "updated_at": "2026-07-04T15:08:54.208635"
     },
     {
       "id": "seed-2-1",
@@ -6971,6 +6971,20 @@
       "date": "2026-07-04",
       "time": "14:04:26",
       "url": ""
+    },
+    {
+      "type": "update",
+      "dimension": "providers",
+      "id": "test-company",
+      "summary": "providers: 测试公司",
+      "date": "2026-07-04"
+    },
+    {
+      "type": "update",
+      "dimension": "hotspots",
+      "id": "test-event",
+      "summary": "hotspots: 测试热点事件",
+      "date": "2026-07-04"
     }
   ],
   "stats": {
@@ -7610,7 +7624,7 @@
       "date": "2026-06-28",
       "summary": "t",
       "confidence": "high",
-      "updated_at": "2026-07-01T22:14:57.119688"
+      "updated_at": "2026-07-04T15:08:54.208635"
     },
     {
       "id": "anthropic-fable5-limits",

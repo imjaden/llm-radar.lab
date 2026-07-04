@@ -63,22 +63,26 @@
     var tbody = document.getElementById('log-body');
     var meta = document.getElementById('meta');
     meta.textContent = '数据更新时间: ' + (d.generated_at ? new Date(d.generated_at).toLocaleString('zh-CN') : '-') + ' · 共 ' + log.length + ' 条记录';
-    var row, ctype, dim, summary, url, bg, ext, i;
+    var row, ctype, dim, summary, url, eid, bg, ext, i;
     for(i = log.length - 1; i >= 0 && i >= log.length - 50; i--){
       ctype = log[i].type || '';
       dim = log[i].dimension || '';
       summary = log[i].summary || '';
       url = log[i].url || '';
+      eid = log[i].id || '';
       bg = ctype === 'new' ? 'bg-green-600' : ctype === 'update' ? 'bg-blue-600' : 'bg-red-600';
       ext = '';
       if(url && !/xxx|xxxx|example/.test(url)){
         ext = ' <a href="' + url + '" target="_blank" rel="noopener" class="text-cobalt-400 hover:text-cobalt-300">↗</a>';
       }
+      var summaryHtml = eid
+        ? '<a href="./#tab=' + dim + '&focus=' + eid + '" class="hover:text-cobalt-300 underline decoration-dotted underline-offset-2">' + summary + '</a>'
+        : '<span class="text-gray-300">' + summary + '</span>';
       row = document.createElement('tr');
       row.innerHTML = '<td class="p-2 border-b border-gray-800 text-xs text-gray-500 whitespace-nowrap">' + (log[i].date||'') + ' ' + (log[i].time||'') + '</td>' +
         '<td class="p-2 border-b border-gray-800"><span class="badge ' + bg + ' text-white text-xs">' + ctype + '</span></td>' +
         '<td class="p-2 border-b border-gray-800 text-xs text-gray-400">' + dim + '</td>' +
-        '<td class="p-2 border-b border-gray-800 text-xs text-white"><a href="./#tab=' + dim + '" class="hover:text-cobalt-400">' + summary + '</a>' + ext + '</td>';
+        '<td class="p-2 border-b border-gray-800 text-xs text-white">' + summaryHtml + ext + '</td>';
       tbody.appendChild(row);
     }
     if(!log.length){
