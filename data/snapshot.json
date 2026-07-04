@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "generated_at": "2026-07-04T15:12:58.963626",
+  "generated_at": "2026-07-04T15:13:02.783924",
   "period": "2026-06-27 ~ 2026-07-04",
   "execution_mode": "semi-auto",
   "providers": [
@@ -208,7 +208,7 @@
       "updated_at": "2026-06-22T10:02:25.544379"
     },
     {
-      "id": "openai",
+      "id": "openai-2",
       "name": "OpenAI",
       "country": "美国",
       "flagship_models": [
@@ -222,7 +222,7 @@
         "AI芯片",
         "生物学AI"
       ],
-      "hot_score": 99,
+      "hot_score": 92,
       "hot_level": "高热",
       "last_event": "GPT-5.6 深夜遭曝光，自研芯片计划被披露",
       "last_event_date": "2026-07-04",
@@ -238,7 +238,7 @@
           "DPO"
         ]
       },
-      "updated_at": "2026-07-04T15:12:58.963626"
+      "updated_at": "2026-07-04T15:13:02.783924"
     },
     {
       "id": "anthropic",
