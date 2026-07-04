@@ -782,10 +782,18 @@ hotspots 数组中每个元素格式：
 
         self._print_info(f'数据留存: {archive_count} 条过期数据已归档')
 
-        # 更新 changelog（保留最近 100 条）
+        # 过滤 changelog：实体已归档的条目丢弃
+        active_ids = {}
+        for dim in ['providers', 'people', 'tools', 'llms', 'hotspots']:
+            active_ids[dim] = {e.get('id', '') for e in snapshot.get(dim, []) if e.get('id')}
         existing_changelog = snapshot.get('changelog', [])
         existing_changelog.extend(changelog)
-        snapshot['changelog'] = existing_changelog[-100:]
+        filtered = [
+            e for e in existing_changelog
+            if not e.get('id')  # 无 id 的摘要保留（旧格式兼容，不可跳转）
+            or (e.get('dimension', '') and e.get('id') in active_ids.get(e.get('dimension', ''), set()))
+        ]
+        snapshot['changelog'] = filtered[-100:]
 
         # 更新 stats
         snapshot['stats'] = {

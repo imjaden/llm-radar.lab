@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "generated_at": "2026-07-04T14:04:26.747313",
+  "generated_at": "2026-07-04T15:08:45.567867",
   "period": "2026-06-27 ~ 2026-07-04",
   "execution_mode": "semi-auto",
   "providers": [
@@ -222,7 +222,7 @@
         "AI芯片",
         "生物学AI"
       ],
-      "hot_score": 85,
+      "hot_score": 99,
       "hot_level": "高热",
       "last_event": "GPT-5.6 深夜遭曝光，自研芯片计划被披露",
       "last_event_date": "2026-07-04",
@@ -238,7 +238,7 @@
           "DPO"
         ]
       },
-      "updated_at": "2026-07-04T14:04:26.747313"
+      "updated_at": "2026-07-04T15:08:45.567867"
     },
     {
       "id": "anthropic",
@@ -272,7 +272,7 @@
           "Constitutional AI"
         ]
       },
-      "updated_at": "2026-07-04T14:04:26.747313"
+      "updated_at": "2026-07-04T15:08:45.558288"
     },
     {
       "id": "google-deepmind",
@@ -6343,15 +6343,6 @@
       "url": "https://36kr.com/p/3864222044902662"
     },
     {
-      "type": "update",
-      "dimension": "providers",
-      "id": "xiehou-fashion-tech",
-      "summary": "hot_score: 55 → 30; hot_level: 平稳 → 温热; last_event: 发布2.0大模型，量化穿搭冲突指数 → 发布2.0大模型，量化穿搭冲突指数，面向B端服务",
-      "date": "2026-07-04",
-      "time": "07:02:41",
-      "url": "https://36kr.com/p/3805817826729736"
-    },
-    {
       "type": "new",
       "dimension": "providers",
       "id": "yunshi-ai",
@@ -6426,15 +6417,6 @@
     {
       "type": "update",
       "dimension": "tools",
-      "id": "viitorvoice-nar",
-      "summary": "hot_score: 40 → 35; last_update: 发布 → 开源发布",
-      "date": "2026-07-04",
-      "time": "07:02:41",
-      "url": ""
-    },
-    {
-      "type": "update",
-      "dimension": "tools",
       "id": "delta",
       "summary": "hot_score: 45 → 40; last_update: 发布 → 开源发布",
       "date": "2026-07-04",
@@ -6453,15 +6435,6 @@
     {
       "type": "update",
       "dimension": "tools",
-      "id": "aitoean",
-      "summary": "hot_score: 50 → 25; hot_level: 平稳 → 温热; last_update: 发布 → 开源发布",
-      "date": "2026-07-04",
-      "time": "07:02:41",
-      "url": ""
-    },
-    {
-      "type": "update",
-      "dimension": "tools",
       "id": "loop-engineering",
       "summary": "hot_score: 60 → 40; last_update: 发布 → 发布，被LeCun团队相关",
       "date": "2026-07-04",
@@ -6471,38 +6444,11 @@
     {
       "type": "update",
       "dimension": "tools",
-      "id": "ta-ro",
-      "summary": "hot_score: 50 → 45; last_update: 开源发布 → 开源发布，ICML 2026论文",
-      "date": "2026-07-04",
-      "time": "07:02:41",
-      "url": ""
-    },
-    {
-      "type": "update",
-      "dimension": "tools",
-      "id": "area-l-2-0",
-      "summary": "hot_score: 55 → 50; last_update: 2.0版本开源 → 开源发布2.0版本",
-      "date": "2026-07-04",
-      "time": "07:02:41",
-      "url": "https://www.infoq.cn/article/IeXGCZqbv5WQ5zFQXoup"
-    },
-    {
-      "type": "update",
-      "dimension": "tools",
       "id": "trm",
       "summary": "name: TRM思考奖励模型 → TRM; hot_score: 55 → 45; last_update: 上线 → 发布上线",
       "date": "2026-07-04",
       "time": "07:02:41",
       "url": "https://36kr.com/p/3866659734279170"
-    },
-    {
-      "type": "update",
-      "dimension": "tools",
-      "id": "toxprune",
-      "summary": "hot_score: 50 → 35; last_update: 发布 → 发布，港中文/FaceMind团队",
-      "date": "2026-07-04",
-      "time": "07:02:41",
-      "url": "https://36kr.com/p/3865750221673733"
     },
     {
       "type": "new",
@@ -6548,15 +6494,6 @@
       "date": "2026-07-04",
       "time": "07:02:41",
       "url": "https://36kr.com/p/3869201971877120"
-    },
-    {
-      "type": "update",
-      "dimension": "llms",
-      "id": "meituan-llm",
-      "summary": "hot_score: 80 → 75; last_event: 发布 → 美团发布「零英伟达」万亿大模型，国芯国模彻底跑通",
-      "date": "2026-07-04",
-      "time": "07:02:41",
-      "url": "https://36kr.com/p/3878407689089282"
     },
     {
       "type": "new",
@@ -6629,24 +6566,6 @@
       "date": "2026-07-04",
       "time": "07:02:41",
       "url": "https://36kr.com/p/3805817826729736"
-    },
-    {
-      "type": "update",
-      "dimension": "llms",
-      "id": "hyper3d",
-      "summary": "hot_score: 80 → 50; hot_level: 高热 → 温热; last_event: 再获数亿融资，被英伟达使用 → 获得数亿元融资",
-      "date": "2026-07-04",
-      "time": "07:02:41",
-      "url": "https://36kr.com/p/3867973922755845"
-    },
-    {
-      "type": "update",
-      "dimension": "llms",
-      "id": "agents-a1",
-      "summary": "hot_score: 55 → 45; last_event: InternScience 推出 Agents-A1 → 发布; tier: 主力 → 旗舰",
-      "date": "2026-07-04",
-      "time": "07:02:41",
-      "url": ""
     },
     {
       "type": "new",
@@ -6830,24 +6749,6 @@
     },
     {
       "type": "update",
-      "dimension": "providers",
-      "id": "qianfang-keji",
-      "summary": "last_event: 体系企业发布重卡能源大模型「智擎」，破解重卡补能痛点 → 体系企业发布重卡能源大模型「智擎」",
-      "date": "2026-07-04",
-      "time": "14:04:26",
-      "url": "https://36kr.com/p/3875522570793220"
-    },
-    {
-      "type": "update",
-      "dimension": "providers",
-      "id": "kunlun",
-      "summary": "hot_score: 70 → 55; last_event: 天工AI业务ARR突破8亿美元 → 天工 AI 业务 ARR 突破 8 亿美元，向首个非 BAT 的 10 亿美元 ARR 迈进",
-      "date": "2026-07-04",
-      "time": "14:04:26",
-      "url": ""
-    },
-    {
-      "type": "update",
       "dimension": "people",
       "id": "zhou-hongyi",
       "summary": "title: 创始人 → 360 创始人兼 CEO; hot_score: 55 → 65; recent_activity: 揭穿大模型幻觉残酷真相：烧光一亿Token只为写周报？ → 谈大模型幻觉：淘汰你的是会用 AI 的人，需重塑企业组织",
@@ -6863,15 +6764,6 @@
       "date": "2026-07-04",
       "time": "14:04:26",
       "url": "https://www.infoq.cn/article/tZe66KJ12UsjrqpeSiaA"
-    },
-    {
-      "type": "update",
-      "dimension": "people",
-      "id": "mahateng",
-      "summary": "title: 腾讯CEO → 腾讯董事会主席兼 CEO; recent_activity: 与雷军等投资3亿美元给AI创业公司（不造大模型不拼算力） → 腾讯联合领投可灵 AI 近 30 亿美元融资",
-      "date": "2026-07-04",
-      "time": "14:04:26",
-      "url": "https://www.infoq.cn/article/hX0uxPMVfPGakqQdKozL"
     },
     {
       "type": "update",
@@ -6896,15 +6788,6 @@
       "dimension": "tools",
       "id": "taro",
       "summary": "hot_score: 45 → 55; last_update: 开源发布，ICML 2026论文 → 北大与华为联合开源该框架",
-      "date": "2026-07-04",
-      "time": "14:04:26",
-      "url": ""
-    },
-    {
-      "type": "update",
-      "dimension": "tools",
-      "id": "viitorvoice-nar",
-      "summary": "hot_score: 35 → 40; last_update: 开源发布 → 发布开源模型权重与代码",
       "date": "2026-07-04",
       "time": "14:04:26",
       "url": ""
@@ -6955,15 +6838,6 @@
       "url": ""
     },
     {
-      "type": "update",
-      "dimension": "tools",
-      "id": "toxprune",
-      "summary": "hot_score: 35 → 45; last_update: 发布，港中文/FaceMind团队 → 港中文/FaceMind 团队提出该技术",
-      "date": "2026-07-04",
-      "time": "14:04:26",
-      "url": ""
-    },
-    {
       "type": "new",
       "dimension": "tools",
       "id": "trm-reward-model",
@@ -7007,15 +6881,6 @@
       "date": "2026-07-04",
       "time": "14:04:26",
       "url": "https://36kr.com/p/3869201971877120"
-    },
-    {
-      "type": "update",
-      "dimension": "llms",
-      "id": "kling",
-      "summary": "last_event: 可灵 AI 融资 30 亿美元，估值 180 亿美元 → 完成近 30 亿美元融资，投后估值 180 亿美元",
-      "date": "2026-07-04",
-      "time": "14:04:26",
-      "url": "https://www.infoq.cn/article/hX0uxPMVfPGakqQdKozL"
     },
     {
       "type": "update",
@@ -7124,6 +6989,15 @@
       "date": "2026-07-04",
       "time": "14:04:26",
       "url": ""
+    },
+    {
+      "type": "update",
+      "dimension": "providers",
+      "id": "openai",
+      "summary": "hot_score: 85 → 99",
+      "date": "2026-07-04",
+      "time": "15:08:45",
+      "url": ""
     }
   ],
   "stats": {
@@ -7132,8 +7006,8 @@
     "total_tools": 82,
     "total_llms": 55,
     "total_hotspots": 77,
-    "new_this_period": 6,
-    "updated_this_period": 42,
+    "new_this_period": 0,
+    "updated_this_period": 1,
     "removed_this_period": 0
   },
   "hotspots": [
