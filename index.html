@@ -60,12 +60,14 @@
     .filter-chip.active { border-color:#facc15; color:#facc15; background:rgba(250,204,21,0.08); }
 
     /* Highlight */
-    @keyframes hl { 0%{background:rgba(250,204,21,0.25)} 100%{background:transparent} }
-    .row-highlight { animation:hl 2s ease-out; }
+    @keyframes hl-pulse { 0%{background:rgba(250,204,21,0.3)} 50%{background:rgba(250,204,21,0.15)} 100%{background:rgba(250,204,21,0.08)} }
+    .row-highlight { animation:hl-pulse 2s ease-out; }
 
     /* Entity card (hotspots) */
     .entity-card { background:#1e1e2e; border:1px solid #2a2a3e; border-radius:12px; transition:border-color 0.2s,box-shadow 0.2s; }
     .entity-card:hover { border-color:#4f46e5; box-shadow:0 0 20px rgba(79,70,229,0.15); }
+    .entity-card.row-highlighted,
+    .row-highlighted { background:rgba(250,204,21,0.3); }
 
     /* Floating hotspot panel */
     .hotspot-fab { position:fixed; bottom:24px; right:24px; z-index:60; }
@@ -648,7 +650,10 @@ function switchTab(tab,focusId) {
       if(el) {
         el.scrollIntoView({behavior:'smooth',block:'center'});
         el.classList.add('row-highlight');
-        el.addEventListener('animationend',()=>el.classList.remove('row-highlight'),{once:true});
+        el.addEventListener('animationend',()=>{
+          el.classList.remove('row-highlight');
+          el.classList.add('row-highlighted');
+        },{once:true});
       }
     });
   }
@@ -712,7 +717,10 @@ function jumpToHotspot(id) {
     if (el) {
       el.scrollIntoView({ behavior: 'smooth', block: 'center' });
       el.classList.add('row-highlight');
-      el.addEventListener('animationend', () => el.classList.remove('row-highlight'), { once: true });
+      el.addEventListener('animationend', () => {
+        el.classList.remove('row-highlight');
+        el.classList.add('row-highlighted');
+      }, { once: true });
     }
   });
 }
