@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "generated_at": "2026-07-04T15:08:45.567867",
+  "generated_at": "2026-07-04T15:08:49.632839",
   "period": "2026-06-27 ~ 2026-07-04",
   "execution_mode": "semi-auto",
   "providers": [
@@ -208,7 +208,7 @@
       "updated_at": "2026-06-22T10:02:25.544379"
     },
     {
-      "id": "openai",
+      "id": "openai-2",
       "name": "OpenAI",
       "country": "美国",
       "flagship_models": [
@@ -222,7 +222,7 @@
         "AI芯片",
         "生物学AI"
       ],
-      "hot_score": 99,
+      "hot_score": 92,
       "hot_level": "高热",
       "last_event": "GPT-5.6 深夜遭曝光，自研芯片计划被披露",
       "last_event_date": "2026-07-04",
@@ -238,7 +238,7 @@
           "DPO"
         ]
       },
-      "updated_at": "2026-07-04T15:08:45.567867"
+      "updated_at": "2026-07-04T15:08:49.632839"
     },
     {
       "id": "anthropic",
@@ -6237,15 +6237,6 @@
     {
       "type": "update",
       "dimension": "providers",
-      "id": "openai",
-      "summary": "last_event: GPT-5.6 深夜遭曝光；自研芯片剑指英伟达 → GPT-5.6深夜遭曝光；同时开始自研芯片以降低对英伟达依赖",
-      "date": "2026-07-04",
-      "time": "07:02:41",
-      "url": "https://36kr.com/p/3869201971877120"
-    },
-    {
-      "type": "update",
-      "dimension": "providers",
       "id": "meituan",
       "summary": "hot_score: 85 → 80; last_event: 发布「零英伟达」万亿参数大模型 → 发布「零英伟达」万亿参数大模型，实现国产芯片+国产模型完全自主",
       "date": "2026-07-04",
@@ -6624,15 +6615,6 @@
     {
       "type": "update",
       "dimension": "providers",
-      "id": "openai",
-      "summary": "hot_level: 爆热 → 高热; last_event: GPT-5.6深夜遭曝光；同时开始自研芯片以降低对英伟达依赖 → GPT-5.6 深夜遭曝光，自研芯片计划被披露",
-      "date": "2026-07-04",
-      "time": "14:04:26",
-      "url": "https://36kr.com/p/3869201971877120"
-    },
-    {
-      "type": "update",
-      "dimension": "providers",
       "id": "kuaishou",
       "summary": "last_event: 旗下视频生成大模型「可灵AI」完成近30亿美元融资，创全球多模态大模型公司单轮融资规模新纪录，投后估值180亿美元 → 旗下可灵 AI 完成近 30 亿美元融资，投后估值 180 亿美元，创多模态大模型单轮融资纪录",
       "date": "2026-07-04",
@@ -6988,15 +6970,6 @@
       "summary": " (gpt-5-6-exposure)",
       "date": "2026-07-04",
       "time": "14:04:26",
-      "url": ""
-    },
-    {
-      "type": "update",
-      "dimension": "providers",
-      "id": "openai",
-      "summary": "hot_score: 85 → 99",
-      "date": "2026-07-04",
-      "time": "15:08:45",
       "url": ""
     }
   ],
