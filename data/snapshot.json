@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "generated_at": "2026-07-07T14:03:24.612648",
+  "generated_at": "2026-07-07T21:04:18.877814",
   "period": "2026-06-30 ~ 2026-07-07",
   "execution_mode": "semi-auto",
   "providers": [
@@ -47,18 +47,18 @@
       "name": "OpenAI",
       "country": "美国",
       "flagship_models": [
-        "gpt-5.6"
+        "GPT-5.6"
       ],
       "key_people": [
         "sam-altman"
       ],
       "focus_areas": [
-        "通用大模型",
-        "AI编程"
+        "大模型",
+        "AGI"
       ],
       "hot_score": 95,
       "hot_level": "爆热",
-      "last_event": "GPT-5.6三大模型曝光，定档7月7日发布，截杀Claude",
+      "last_event": "GPT-5.6三大模型曝光，定档7月7日",
       "last_event_date": "2026-07-07",
       "last_event_url": "https://36kr.com/p/3883839281099016",
       "confidence": "high",
@@ -72,25 +72,25 @@
           "DPO"
         ]
       },
-      "updated_at": "2026-07-07T14:03:24.612648"
+      "updated_at": "2026-07-07T21:04:18.877814"
     },
     {
       "id": "anthropic",
       "name": "Anthropic",
       "country": "美国",
       "flagship_models": [
-        "claude"
+        "Claude"
       ],
       "key_people": [
         "dario"
       ],
       "focus_areas": [
-        "大模型安全",
-        "AI agent"
+        "大模型",
+        "数据治理"
       ],
-      "hot_score": 85,
+      "hot_score": 80,
       "hot_level": "高热",
-      "last_event": "Claude承担95%内部数据分析查询；Claude Code提示词大幅优化",
+      "last_event": "Claude已承担95%内部数据分析查询工作",
       "last_event_date": "2026-07-07",
       "last_event_url": "https://www.infoq.cn/article/eHH8RTgeeOUWODLCLWXS",
       "confidence": "high",
@@ -103,7 +103,7 @@
           "Constitutional AI"
         ]
       },
-      "updated_at": "2026-07-07T14:03:24.612648"
+      "updated_at": "2026-07-07T21:04:18.877814"
     },
     {
       "id": "google-deepmind",
@@ -250,9 +250,9 @@
       "id": "deepseek",
       "name": "DeepSeek",
       "country": "中国",
-      "hot_score": 80,
-      "hot_level": "高热",
-      "last_event": "新技术移植苹果芯片，Mac本地大模型推理加速60%",
+      "hot_score": 70,
+      "hot_level": "温热",
+      "last_event": "新技术移植苹果芯片，Mac本地大模型加速60%",
       "last_event_date": "2026-07-07",
       "last_event_url": "https://36kr.com/p/3879842615308547",
       "flagship_models": [
@@ -262,11 +262,11 @@
         "gu-yuxian"
       ],
       "focus_areas": [
-        "端侧大模型",
-        "芯片适配"
+        "模型加速",
+        "芯片移植"
       ],
       "confidence": "high",
-      "updated_at": "2026-07-07T14:03:24.612648"
+      "updated_at": "2026-07-07T21:04:18.877814"
     },
     {
       "id": "huawei",
@@ -738,39 +738,39 @@
       "id": "roboscience",
       "name": "RoboScience机器科学",
       "country": "中国",
-      "hot_score": 76,
+      "hot_score": 70,
       "hot_level": "温热",
-      "last_event": "发布Visics通用具身大模型，跨本体/物体/任务",
+      "last_event": "发布Visics通用具身大模型",
       "last_event_date": "2026-07-07",
       "last_event_url": "https://36kr.com/p/3868276479710466",
       "flagship_models": [
-        "visics"
+        "Visics"
       ],
       "key_people": [],
       "focus_areas": [
         "具身智能",
-        "VLOA"
+        "机器人"
       ],
       "confidence": "high",
-      "updated_at": "2026-07-07T14:03:24.612648"
+      "updated_at": "2026-07-07T21:04:18.877814"
     },
     {
-      "id": "jiutianzhanyi",
+      "id": "jiutian-zanyi",
       "name": "九天展翼",
       "country": "中国",
-      "hot_score": 60,
+      "hot_score": 50,
       "hot_level": "温热",
-      "last_event": "通过国产AI算力芯片解决大模型部署飞控困难问题",
+      "last_event": "通过国产AI算力芯片解决大模型部署飞控困难",
       "last_event_date": "2026-07-07",
       "last_event_url": "https://36kr.com/p/3864222044902662",
       "flagship_models": [],
       "key_people": [],
       "focus_areas": [
         "AI飞控",
-        "国产算力部署"
+        "芯片国产化"
       ],
-      "confidence": "medium",
-      "updated_at": "2026-07-07T14:03:24.612648"
+      "confidence": "high",
+      "updated_at": "2026-07-07T21:04:18.877814"
     },
     {
       "id": "xiehou-fashion-tech",
@@ -796,20 +796,21 @@
       "id": "hyper3d",
       "name": "Hyper3D",
       "country": "中国",
-      "hot_score": 70,
-      "hot_level": "温热",
-      "last_event": "3D大模型获数亿融资，英伟达也在用",
-      "last_event_date": "2026-07-06",
+      "hot_score": 75,
+      "hot_level": "高热",
+      "last_event": "获得数亿元融资，英伟达都在用",
+      "last_event_date": "2026-07-07",
       "last_event_url": "https://36kr.com/p/3867973922755845",
       "flagship_models": [
-        "hyper3d"
+        "Hyper3D"
       ],
       "key_people": [],
       "focus_areas": [
-        "3D生成"
+        "3D生成",
+        "AI内容"
       ],
       "confidence": "high",
-      "updated_at": "2026-07-06T21:05:54.772116"
+      "updated_at": "2026-07-07T21:04:18.877814"
     },
     {
       "id": "netease-youdao",
@@ -956,23 +957,23 @@
     },
     {
       "id": "zhipu",
-      "name": "智谱",
+      "name": "智谱AI",
       "country": "中国",
-      "hot_score": 60,
+      "hot_score": 85,
       "hot_level": "高热",
-      "last_event": "破万亿，终结「平替」叙事",
-      "last_event_date": "2026-07-06",
-      "last_event_url": "https://36kr.com/p/3866649171432711",
+      "last_event": "GLM-5.2上线模力工场，开源AI编程工具",
+      "last_event_date": "2026-07-07",
+      "last_event_url": "https://www.infoq.cn/article/woKuALR13UH0o9XicUlZ",
       "flagship_models": [
-        "glm"
+        "GLM-5.2"
       ],
       "key_people": [],
       "focus_areas": [
-        "大模型",
-        "商业化"
+        "AI编程",
+        "大模型"
       ],
       "confidence": "high",
-      "updated_at": "2026-07-06T14:03:13.173060"
+      "updated_at": "2026-07-07T21:04:18.877814"
     },
     {
       "id": "slack",
@@ -995,21 +996,21 @@
       "id": "meituan",
       "name": "美团",
       "country": "中国",
-      "hot_score": 92,
-      "hot_level": "爆热",
-      "last_event": "发布「零英伟达」万亿大模型LongCat-2.0，基于国产卡（摩尔线程）",
+      "hot_score": 90,
+      "hot_level": "高热",
+      "last_event": "发布零英伟达万亿大模型LongCat-2.0",
       "last_event_date": "2026-07-07",
       "last_event_url": "https://36kr.com/p/3878407689089282",
       "flagship_models": [
-        "longcat-2.0"
+        "LongCat-2.0"
       ],
       "key_people": [],
       "focus_areas": [
-        "万亿大模型",
-        "国产算力"
+        "大模型",
+        "AI应用"
       ],
       "confidence": "high",
-      "updated_at": "2026-07-07T14:03:24.612648"
+      "updated_at": "2026-07-07T21:04:18.877814"
     },
     {
       "id": "kunlun-wanwei",
@@ -1069,41 +1070,41 @@
       "id": "qianfang-tech",
       "name": "千方科技",
       "country": "中国",
-      "hot_score": 68,
+      "hot_score": 50,
       "hot_level": "温热",
-      "last_event": "体系内企业发布重卡能源大模型「智擎」",
+      "last_event": "发布重卡能源大模型“智擎”",
       "last_event_date": "2026-07-07",
       "last_event_url": "https://36kr.com/p/3875522570793220",
       "flagship_models": [
-        "zhiqing"
+        "智擎"
       ],
       "key_people": [],
       "focus_areas": [
-        "能源AI",
-        "重卡补能"
+        "能源",
+        "交通"
       ],
       "confidence": "high",
-      "updated_at": "2026-07-07T14:03:24.612648"
+      "updated_at": "2026-07-07T21:04:18.877814"
     },
     {
-      "id": "xiehou",
+      "id": "xiehou-fashion",
       "name": "邂逅时尚",
       "country": "中国",
-      "hot_score": 50,
+      "hot_score": 40,
       "hot_level": "温热",
-      "last_event": "发布AI七维大模型2.0",
-      "last_event_date": "2026-07-02",
-      "last_event_url": "",
+      "last_event": "发布2.0大模型，AI量化穿搭冲突指数",
+      "last_event_date": "2026-07-07",
+      "last_event_url": "https://36kr.com/p/3805817826729736",
       "flagship_models": [
-        "xiehou-2-0"
+        "邂逅时尚2.0"
       ],
       "key_people": [],
       "focus_areas": [
-        "时尚穿搭AI",
-        "垂直大模型"
+        "时尚",
+        "AI应用"
       ],
-      "confidence": "medium",
-      "updated_at": "2026-07-02T21:05:29.627401"
+      "confidence": "high",
+      "updated_at": "2026-07-07T21:04:18.877814"
     },
     {
       "id": "beijing-decision-ai",
@@ -1164,12 +1165,12 @@
       "updated_at": "2026-07-06T14:03:13.173060"
     },
     {
-      "id": "qihoo360",
+      "id": "360",
       "name": "360",
       "country": "中国",
       "hot_score": 55,
-      "hot_level": "平稳",
-      "last_event": "周鸿祎谈大模型幻觉：烧光一亿Token只写周报",
+      "hot_level": "温热",
+      "last_event": "周鸿祎谈大模型幻觉，烧光一亿Token写周报",
       "last_event_date": "2026-07-07",
       "last_event_url": "https://36kr.com/p/3878668651936389",
       "flagship_models": [],
@@ -1177,11 +1178,11 @@
         "zhou-hongyi"
       ],
       "focus_areas": [
-        "AI安全",
-        "企业AI"
+        "大模型安全",
+        "AI应用"
       ],
       "confidence": "high",
-      "updated_at": "2026-07-07T14:03:24.612648"
+      "updated_at": "2026-07-07T21:04:18.877814"
     },
     {
       "id": "tencent-wechat",
@@ -1301,9 +1302,9 @@
       "id": "guangxiang-tech",
       "name": "光象科技",
       "country": "中国",
-      "hot_score": 73,
+      "hot_score": 70,
       "hot_level": "温热",
-      "last_event": "自研物理原生基座模型，获数亿元融资，跳出现有VLA/世界模型路线",
+      "last_event": "自研物理原生基座模型，获得数亿元融资",
       "last_event_date": "2026-07-07",
       "last_event_url": "https://www.infoq.cn/article/m4QJlWAyRq7Fp4yQImp9",
       "flagship_models": [
@@ -1311,11 +1312,11 @@
       ],
       "key_people": [],
       "focus_areas": [
-        "具身智能",
-        "物理世界模型"
+        "物理原生模型",
+        "具身智能"
       ],
-      "confidence": "medium",
-      "updated_at": "2026-07-07T14:03:24.612648"
+      "confidence": "high",
+      "updated_at": "2026-07-07T21:04:18.877814"
     },
     {
       "id": "kling-ai",
@@ -1356,68 +1357,67 @@
       "updated_at": "2026-07-06T21:05:54.772116"
     },
     {
-      "id": "xingfan-intelligence",
+      "id": "xingfan-ai",
       "name": "星凡智能",
       "country": "中国",
-      "hot_score": 75,
+      "hot_score": 60,
       "hot_level": "温热",
-      "last_event": "完成新一轮超3亿融资，加速AI进入真实世界",
+      "last_event": "完成新一轮超3亿融资",
       "last_event_date": "2026-07-07",
       "last_event_url": "https://www.infoq.cn/article/B5ajC4ZctfbQC1QbLlyW",
       "flagship_models": [],
       "key_people": [],
       "focus_areas": [
-        "AI落地",
-        "行业应用"
+        "AI应用"
       ],
       "confidence": "high",
-      "updated_at": "2026-07-07T14:03:24.612648"
+      "updated_at": "2026-07-07T21:04:18.877814"
     },
     {
-      "id": "moore-threads",
+      "id": "mthreads",
       "name": "摩尔线程",
       "country": "中国",
-      "hot_score": 78,
+      "hot_score": 70,
       "hot_level": "温热",
-      "last_event": "MTT S5000完成美团LongCat-2.0 Day-0适配，原生FP8加速",
+      "last_event": "硬件原生FP8加速，完成美团LongCat-2.0 Day-0适配",
       "last_event_date": "2026-07-07",
       "last_event_url": "https://www.infoq.cn/article/vRzlWZxXMaxC6aZM7Ufw",
       "flagship_models": [],
       "key_people": [],
       "focus_areas": [
-        "GPU",
-        "国产算力适配"
+        "AI芯片",
+        "大模型适配"
       ],
       "confidence": "high",
-      "updated_at": "2026-07-07T14:03:24.612648"
+      "updated_at": "2026-07-07T21:04:18.877814"
     },
     {
       "id": "alibaba-qwen",
-      "name": "阿里（千问）",
+      "name": "阿里千问",
       "country": "中国",
-      "hot_score": 60,
+      "hot_score": 65,
       "hot_level": "温热",
       "last_event": "千问大模型升级实时语音识别Fun-ASR-Realtime",
-      "last_event_date": "2026-07-06",
+      "last_event_date": "2026-07-07",
       "last_event_url": "https://36kr.com/p/3884024701874183",
       "flagship_models": [
-        "qwen"
+        "千问"
       ],
       "key_people": [],
       "focus_areas": [
-        "大语言模型",
-        "语音识别"
+        "语音识别",
+        "大模型"
       ],
       "confidence": "high",
-      "updated_at": "2026-07-06T21:05:54.772116"
+      "updated_at": "2026-07-07T21:04:18.877814"
     },
     {
       "id": "baidu-intelligent-cloud",
       "name": "百度智能云",
       "country": "中国",
-      "hot_score": 60,
+      "hot_score": 65,
       "hot_level": "温热",
-      "last_event": "与穆尧团队合作解决世界模型反应速度问题",
+      "last_event": "与穆尧团队合作给出世界模型最新解法",
       "last_event_date": "2026-07-07",
       "last_event_url": "https://www.infoq.cn/article/Lb4pQTNTQdq657Gzj7EI",
       "flagship_models": [],
@@ -1425,17 +1425,16 @@
         "mu-yao"
       ],
       "focus_areas": [
-        "世界模型",
-        "云服务"
+        "世界模型"
       ],
       "confidence": "high",
-      "updated_at": "2026-07-07T07:03:45.841909"
+      "updated_at": "2026-07-07T21:04:18.877814"
     },
     {
       "id": "youjia-innovation",
       "name": "佑驾创新",
       "country": "中国",
-      "hot_score": 65,
+      "hot_score": 50,
       "hot_level": "温热",
       "last_event": "正式发布四轮足机器人",
       "last_event_date": "2026-07-07",
@@ -1444,10 +1443,10 @@
       "key_people": [],
       "focus_areas": [
         "机器人",
-        "具身智能"
+        "自动驾驶"
       ],
       "confidence": "high",
-      "updated_at": "2026-07-07T14:03:24.612648"
+      "updated_at": "2026-07-07T21:04:18.877814"
     },
     {
       "id": "chen-yongchao-startup",
@@ -1469,24 +1468,24 @@
       "updated_at": "2026-07-07T07:03:45.841909"
     },
     {
-      "id": "ant-group",
+      "id": "antgroup",
       "name": "蚂蚁集团",
       "country": "中国",
-      "hot_score": 85,
+      "hot_score": 75,
       "hot_level": "高热",
-      "last_event": "蚂蚁灵波发布空间感知模型LingBot-Depth 2.0，数据扩至1.5亿",
+      "last_event": "发布空间感知模型LingBot-Depth 2.0",
       "last_event_date": "2026-07-07",
       "last_event_url": "https://www.infoq.cn/article/mqY10ihiZ874id2JDeXu",
       "flagship_models": [
-        "lingbot-depth-2.0"
+        "LingBot-Depth 2.0"
       ],
       "key_people": [],
       "focus_areas": [
-        "机器视觉",
-        "空间智能"
+        "空间感知",
+        "具身智能"
       ],
       "confidence": "high",
-      "updated_at": "2026-07-07T14:03:24.612648"
+      "updated_at": "2026-07-07T21:04:18.877814"
     },
     {
       "id": "baidu",
@@ -1512,19 +1511,19 @@
       "id": "elastic",
       "name": "Elastic",
       "country": "美国",
-      "hot_score": 80,
-      "hot_level": "高热",
-      "last_event": "开源基于认知科学的Atlas Agent Memory系统",
+      "hot_score": 65,
+      "hot_level": "温热",
+      "last_event": "开源基于认知科学的Atlas Agent Memory",
       "last_event_date": "2026-07-07",
       "last_event_url": "https://www.infoq.cn/article/pzYuRUO0ECSKktJjKV8P",
       "flagship_models": [],
       "key_people": [],
       "focus_areas": [
-        "Agent记忆",
-        "开源基础设施"
+        "智能代理",
+        "记忆系统"
       ],
       "confidence": "high",
-      "updated_at": "2026-07-07T14:03:24.612648"
+      "updated_at": "2026-07-07T21:04:18.877814"
     },
     {
       "id": "hyper3d-developer",
@@ -1565,6 +1564,46 @@
       ],
       "confidence": "low",
       "updated_at": "2026-07-07T14:03:24.612648"
+    },
+    {
+      "id": "tencent-hunyuan",
+      "name": "腾讯混元",
+      "country": "中国",
+      "hot_score": 85,
+      "hot_level": "高热",
+      "last_event": "正式发布Hy3模型，元宝上线Hy3 Agent能力",
+      "last_event_date": "2026-07-07",
+      "last_event_url": "https://pro.jiqizhixin.com/inbox",
+      "flagship_models": [
+        "Hy3"
+      ],
+      "key_people": [],
+      "focus_areas": [
+        "大模型",
+        "智能体"
+      ],
+      "confidence": "medium",
+      "updated_at": "2026-07-07T21:04:18.877814"
+    },
+    {
+      "id": "bai-yuan",
+      "name": "北京智源研究院",
+      "country": "中国",
+      "hot_score": 70,
+      "hot_level": "温热",
+      "last_event": "发布悟界·RoboBrain Orca通用世界基础模型",
+      "last_event_date": "2026-07-07",
+      "last_event_url": "https://www.infoq.cn/article/HpkpCVSwAHQXAhphZm34",
+      "flagship_models": [
+        "RoboBrain Orca"
+      ],
+      "key_people": [],
+      "focus_areas": [
+        "世界模型",
+        "基础研究"
+      ],
+      "confidence": "high",
+      "updated_at": "2026-07-07T21:04:18.877814"
     }
   ],
   "people": [
@@ -3139,23 +3178,23 @@
       "name": "周鸿祎",
       "name_en": "Zhou Hongyi",
       "title": "360创始人",
-      "employer_id": "qihoo360",
+      "employer_id": "360",
       "influence_level": "行业领袖",
-      "hot_score": 60,
-      "hot_level": "温热",
-      "recent_activity": "谈大模型幻觉：烧光一亿Token只为写周报，需重塑企业组织",
+      "hot_score": 75,
+      "hot_level": "高热",
+      "recent_activity": "谈大模型幻觉，烧光一亿Token只为写周报",
       "recent_activity_date": "2026-07-07",
       "recent_activity_url": "https://36kr.com/p/3878668651936389",
       "known_for": [
-        "网络安全",
-        "AI商业化"
+        "360",
+        "大模型安全"
       ],
       "related_providers": [
-        "qihoo360"
+        "360"
       ],
       "related_llms": [],
       "confidence": "high",
-      "updated_at": "2026-07-07T14:03:24.612648",
+      "updated_at": "2026-07-07T21:04:18.877814",
       "last_event": "驳斥大模型幻觉，称企业需掌握AI使用",
       "last_event_date": "2026-07-03",
       "last_event_url": "https://36kr.com/p/3878668651936389"
@@ -3239,11 +3278,11 @@
       "id": "chen-yongchao",
       "name": "陈勇超",
       "name_en": "Chen Yongchao",
-      "title": "清华大学助理教授，创业公司创始人",
+      "title": "清华助理教授",
       "employer_id": "tsinghua-university",
-      "influence_level": "新锐",
-      "hot_score": 75,
-      "hot_level": "温热",
+      "influence_level": "活跃人物",
+      "hot_score": 80,
+      "hot_level": "高热",
       "recent_activity": "婉拒DeepMind，官宣创业押注自进化大模型",
       "recent_activity_date": "2026-07-07",
       "recent_activity_url": "https://36kr.com/p/3883751049965576",
@@ -3255,28 +3294,28 @@
       ],
       "related_llms": [],
       "confidence": "high",
-      "updated_at": "2026-07-07T14:03:24.612648"
+      "updated_at": "2026-07-07T21:04:18.877814"
     },
     {
       "id": "linus-torvalds",
-      "name": "Linus Torvalds",
+      "name": "林纳斯·托瓦兹",
       "name_en": "Linus Torvalds",
       "title": "Linux创始人",
       "employer_id": "linux-foundation",
       "influence_level": "行业领袖",
-      "hot_score": 50,
-      "hot_level": "平稳",
+      "hot_score": 60,
+      "hot_level": "温热",
       "recent_activity": "再谈AI：大模型能写Demo，但对复杂系统要有敬畏之心",
       "recent_activity_date": "2026-07-07",
       "recent_activity_url": "https://www.infoq.cn/article/11fNtPYf59T76fyQkiPa",
       "known_for": [
-        "Linux内核",
-        "开源运动"
+        "Linux",
+        "Git"
       ],
       "related_providers": [],
       "related_llms": [],
       "confidence": "high",
-      "updated_at": "2026-07-07T14:03:24.612648"
+      "updated_at": "2026-07-07T21:04:18.877814"
     },
     {
       "id": "uv-founder",
@@ -3304,28 +3343,28 @@
     },
     {
       "id": "yann-lecun",
-      "name": "扬·勒丘恩",
+      "name": "扬·勒昆",
       "name_en": "Yann LeCun",
       "title": "Meta首席AI科学家",
       "employer_id": "meta",
       "influence_level": "行业领袖",
-      "hot_score": 60,
+      "hot_score": 50,
       "hot_level": "温热",
       "recent_activity": "团队提出自适应隐空间世界模型AdaJEPA",
       "recent_activity_date": "2026-07-07",
       "recent_activity_url": "",
       "known_for": [
-        "CNN",
-        "世界模型"
+        "世界模型",
+        "卷积网络"
       ],
       "related_providers": [
         "meta"
       ],
       "related_llms": [
-        "ada-jepa"
+        "AdaJEPA"
       ],
-      "confidence": "high",
-      "updated_at": "2026-07-07T07:03:45.841909"
+      "confidence": "medium",
+      "updated_at": "2026-07-07T21:04:18.877814"
     },
     {
       "id": "mu-yao",
@@ -3333,22 +3372,41 @@
       "name_en": "Mu Yao",
       "title": "团队负责人",
       "employer_id": "baidu",
-      "influence_level": "核心人物",
-      "hot_score": 68,
+      "influence_level": "活跃人物",
+      "hot_score": 60,
       "hot_level": "温热",
-      "recent_activity": "与百度智能云合作提出世界模型最新解法，回应速度不及VLA问题",
+      "recent_activity": "团队与百度智能云合作给出世界模型最新解法",
       "recent_activity_date": "2026-07-07",
       "recent_activity_url": "https://www.infoq.cn/article/Lb4pQTNTQdq657Gzj7EI",
       "known_for": [
-        "世界模型",
-        "VLA"
+        "世界模型"
       ],
       "related_providers": [
-        "baidu"
+        "baidu-intelligent-cloud"
       ],
       "related_llms": [],
-      "confidence": "high",
-      "updated_at": "2026-07-07T14:03:24.612648"
+      "confidence": "medium",
+      "updated_at": "2026-07-07T21:04:18.877814"
+    },
+    {
+      "id": "weng-li",
+      "name": "翁荔",
+      "name_en": "Weng Li",
+      "title": "博主/研究者",
+      "employer_id": "",
+      "influence_level": "活跃人物",
+      "hot_score": 50,
+      "hot_level": "温热",
+      "recent_activity": "博客上新，通过Harness工程实现AI自我提升",
+      "recent_activity_date": "2026-07-07",
+      "recent_activity_url": "",
+      "known_for": [
+        "AI自我提升"
+      ],
+      "related_providers": [],
+      "related_llms": [],
+      "confidence": "medium",
+      "updated_at": "2026-07-07T21:04:18.877814"
     }
   ],
   "tools": [
@@ -4179,13 +4237,25 @@
       "confidence": "high"
     },
     {
-      "id": "glm-5-2",
+      "id": "glm-5-2-tool",
       "name": "GLM-5.2",
-      "category": "大模型",
-      "hot_score": 82,
-      "last_update": "r/LocalLLaMA社区热捧，1185 upvotes",
-      "last_update_date": "2026-06-25",
-      "confidence": "high"
+      "category": "AI编程工具",
+      "hot_score": 85,
+      "last_update": "上线模力工场，提供免费tokens",
+      "last_update_date": "2026-07-07",
+      "confidence": "high",
+      "description": "智谱开源AI编程工具，上线模力工场，支持多种功能",
+      "pricing_model": "Freemium",
+      "maturity": "生产就绪",
+      "hot_level": "高热",
+      "last_update_url": "https://www.infoq.cn/article/woKuALR13UH0o9XicUlZ",
+      "related_providers": [
+        "zhipu"
+      ],
+      "related_llms": [
+        "glm-5-2-model"
+      ],
+      "updated_at": "2026-07-07T21:04:18.877814"
     },
     {
       "id": "lmworkflow",
@@ -4326,21 +4396,21 @@
     {
       "id": "trm",
       "name": "TRM思考奖励模型",
-      "category": "评估工具",
+      "category": "模型评估",
       "website": "",
       "github": "",
-      "description": "上线的大模型推理质量评估模型，能量化思考过程",
-      "pricing_model": "商业",
+      "description": "上线，用于量化大模型推理质量",
+      "pricing_model": "API 按量",
       "maturity": "可用",
-      "hot_score": 40,
+      "hot_score": 60,
       "hot_level": "温热",
-      "last_update": "TRM思考奖励模型上线",
-      "last_update_date": "2026-07-06",
+      "last_update": "上线服务",
+      "last_update_date": "2026-07-07",
       "last_update_url": "https://36kr.com/p/3866659734279170",
       "related_providers": [],
       "related_llms": [],
-      "confidence": "medium",
-      "updated_at": "2026-07-06T14:03:13.173060",
+      "confidence": "high",
+      "updated_at": "2026-07-07T21:04:18.877814",
       "last_event": "TRM 上线",
       "last_event_date": "2026-07-03",
       "last_event_url": "https://36kr.com/p/3866659734279170"
@@ -5157,25 +5227,25 @@
     {
       "id": "fun-asr-realtime",
       "name": "Fun-ASR-Realtime",
-      "category": "语音识别模型",
+      "category": "语音识别",
       "website": "",
       "github": "",
-      "description": "千问大模型升级的实时语音识别能力",
+      "description": "千问大模型升级的实时语音识别工具",
       "pricing_model": "开源免费",
       "maturity": "可用",
-      "hot_score": 40,
-      "hot_level": "平稳",
-      "last_update": "升级",
+      "hot_score": 65,
+      "hot_level": "温热",
+      "last_update": "千问升级实时语音识别",
       "last_update_date": "2026-07-07",
       "last_update_url": "https://36kr.com/p/3884024701874183",
       "related_providers": [
-        "alibaba"
+        "alibaba-qwen"
       ],
       "related_llms": [
         "qwen"
       ],
       "confidence": "high",
-      "updated_at": "2026-07-07T07:03:45.841909"
+      "updated_at": "2026-07-07T21:04:18.877814"
     },
     {
       "id": "ai-mediakit-cli",
@@ -5199,14 +5269,14 @@
     {
       "id": "atlas-agent-memory",
       "name": "Atlas Agent Memory",
-      "category": "Agent记忆系统",
+      "category": "AI记忆系统",
       "website": "",
       "github": "",
-      "description": "基于Elasticsearch构建的开源系统，为智能代理维护三类记忆（工作记忆、情景记忆、语义记忆）",
+      "description": "Elastic开源，基于Elasticsearch构建，为智能代理维护三类记忆",
       "pricing_model": "开源免费",
       "maturity": "可用",
-      "hot_score": 80,
-      "hot_level": "高热",
+      "hot_score": 70,
+      "hot_level": "温热",
       "last_update": "开源发布",
       "last_update_date": "2026-07-07",
       "last_update_url": "https://www.infoq.cn/article/pzYuRUO0ECSKktJjKV8P",
@@ -5215,7 +5285,7 @@
       ],
       "related_llms": [],
       "confidence": "high",
-      "updated_at": "2026-07-07T14:03:24.612648"
+      "updated_at": "2026-07-07T21:04:18.877814"
     },
     {
       "id": "fast-leworldmodel",
@@ -5235,6 +5305,52 @@
       "related_llms": [],
       "confidence": "low",
       "updated_at": "2026-07-07T14:03:24.612648"
+    },
+    {
+      "id": "hyper3d-tool",
+      "name": "Hyper3D",
+      "category": "3D生成",
+      "website": "",
+      "github": "",
+      "description": "英伟达都在用的3D大模型，支持生成高质量3D内容",
+      "pricing_model": "商业",
+      "maturity": "生产就绪",
+      "hot_score": 75,
+      "hot_level": "高热",
+      "last_update": "获得数亿元融资",
+      "last_update_date": "2026-07-07",
+      "last_update_url": "https://36kr.com/p/3867973922755845",
+      "related_providers": [
+        "hyper3d"
+      ],
+      "related_llms": [
+        "hyper3d-model"
+      ],
+      "confidence": "high",
+      "updated_at": "2026-07-07T21:04:18.877814"
+    },
+    {
+      "id": "visics-tool",
+      "name": "Visics通用具身大模型",
+      "category": "具身智能模型",
+      "website": "",
+      "github": "",
+      "description": "实现跨本体、跨物体、跨任务的通用具身模型",
+      "pricing_model": "未知",
+      "maturity": "实验",
+      "hot_score": 70,
+      "hot_level": "温热",
+      "last_update": "发布",
+      "last_update_date": "2026-07-07",
+      "last_update_url": "https://36kr.com/p/3868276479710466",
+      "related_providers": [
+        "roboscience"
+      ],
+      "related_llms": [
+        "visics-model"
+      ],
+      "confidence": "high",
+      "updated_at": "2026-07-07T21:04:18.877814"
     }
   ],
   "llms": [
@@ -5291,31 +5407,30 @@
       "updated_at": "2026-07-05T07:04:07.781036"
     },
     {
-      "id": "gpt-5.6",
+      "id": "gpt-5-6",
       "name": "GPT-5.6",
       "provider_id": "openai",
       "family": "GPT",
-      "type": "通用对话",
+      "type": "旗舰",
       "open_weights": false,
       "tier": "旗舰",
       "capabilities": [
-        "对话",
+        "文本生成",
         "推理",
-        "编码",
-        "多模态（推测）"
+        "多模态"
       ],
       "status": "预览",
       "hot_score": 95,
       "hot_level": "爆热",
-      "hot_reason": "偷跑截杀Claude，定档7月7日发布，三大模型全曝",
-      "last_event": "模型底层代码曝光，三大神秘模型待发布",
+      "hot_reason": "三大模型曝光，定档7月7日，截杀Claude",
+      "last_event": "底层代码曝光，即将发布",
       "last_event_date": "2026-07-07",
       "last_event_url": "https://36kr.com/p/3883839281099016",
       "related_people": [
         "sam-altman"
       ],
       "confidence": "high",
-      "updated_at": "2026-07-07T14:03:24.612648"
+      "updated_at": "2026-07-07T21:04:18.877814"
     },
     {
       "id": "gpt-5-5",
@@ -5442,27 +5557,28 @@
       "updated_at": "2026-07-06T07:03:13.294479"
     },
     {
-      "id": "glm-5-2",
+      "id": "glm-5-2-model",
       "name": "GLM-5.2",
-      "provider_id": "zhipu-ai",
+      "provider_id": "zhipu",
       "family": "GLM",
-      "type": "大语言模型",
+      "type": "主力",
       "open_weights": true,
       "tier": "主力",
       "capabilities": [
-        "代码生成",
-        "编程能力"
+        "编程",
+        "推理",
+        "代码生成"
       ],
       "status": "发布",
-      "hot_score": 82,
+      "hot_score": 80,
       "hot_level": "高热",
-      "hot_reason": "开源且取得AI编程评测第一",
-      "last_event": "社区热捧",
-      "last_event_date": "2026-06-25",
-      "last_event_url": "https://www.qbitai.com",
+      "hot_reason": "开源AI编程工具，上线模力工场",
+      "last_event": "上线模力工场，提供免费tokens",
+      "last_event_date": "2026-07-07",
+      "last_event_url": "https://www.infoq.cn/article/woKuALR13UH0o9XicUlZ",
       "related_people": [],
       "confidence": "high",
-      "updated_at": "2026-06-18T01:01:29.882884"
+      "updated_at": "2026-07-07T21:04:18.877814"
     },
     {
       "id": "abot-earth05",
@@ -5958,27 +6074,27 @@
       "updated_at": "2026-07-07T14:03:24.612648"
     },
     {
-      "id": "hyper3d",
+      "id": "hyper3d-model",
       "name": "Hyper3D",
-      "provider_id": "hyper3d-developer",
+      "provider_id": "hyper3d",
       "family": "Hyper3D",
-      "type": "专用3D生成",
+      "type": "专用",
       "open_weights": false,
       "tier": "专用",
       "capabilities": [
-        "3D模型生成",
-        "纹理生成"
+        "3D生成",
+        "内容创作"
       ],
       "status": "发布",
-      "hot_score": 72,
-      "hot_level": "温热",
-      "hot_reason": "获数亿融资，英伟达也在使用",
-      "last_event": "再次获得数亿元融资",
+      "hot_score": 75,
+      "hot_level": "高热",
+      "hot_reason": "英伟达都在用，获得数亿融资",
+      "last_event": "获得数亿元融资",
       "last_event_date": "2026-07-07",
       "last_event_url": "https://36kr.com/p/3867973922755845",
       "related_people": [],
-      "confidence": "low",
-      "updated_at": "2026-07-07T14:03:24.612648"
+      "confidence": "high",
+      "updated_at": "2026-07-07T21:04:18.877814"
     },
     {
       "id": "tl",
@@ -6037,25 +6153,25 @@
     {
       "id": "xiehou-fashion-2-0",
       "name": "邂逅时尚2.0大模型",
-      "provider_id": "xiehou-fashion-tech",
+      "provider_id": "xiehou-fashion",
       "family": "邂逅时尚",
-      "type": "AI穿搭模型",
+      "type": "专用",
       "open_weights": false,
       "tier": "专用",
       "capabilities": [
-        "穿搭冲突量化",
-        "AI穿搭推荐"
+        "穿搭推荐",
+        "量化冲突指数"
       ],
       "status": "发布",
-      "hot_score": 30,
-      "hot_level": "平稳",
-      "hot_reason": "AI七维大模型解决穿搭决策",
-      "last_event": "发布2.0大模型，面向B端服务",
-      "last_event_date": "2026-07-05",
+      "hot_score": 40,
+      "hot_level": "温热",
+      "hot_reason": "AI量化穿搭冲突指数",
+      "last_event": "发布2.0",
+      "last_event_date": "2026-07-07",
       "last_event_url": "https://36kr.com/p/3805817826729736",
       "related_people": [],
-      "confidence": "medium",
-      "updated_at": "2026-07-05T14:03:04.837228"
+      "confidence": "high",
+      "updated_at": "2026-07-07T21:04:18.877814"
     },
     {
       "id": "meituan-llm",
@@ -6084,16 +6200,16 @@
       "id": "zhiqing",
       "name": "智擎",
       "provider_id": "qianfang-tech",
-      "family": "智擎",
-      "type": "专用行业（重卡能源）",
+      "family": "重卡能源",
+      "type": "专用",
       "open_weights": false,
       "tier": "专用",
       "capabilities": [
-        "重卡补能规划",
-        "能源调度"
+        "能源优化",
+        "重卡补能"
       ],
       "status": "发布",
-      "hot_score": 65,
+      "hot_score": 50,
       "hot_level": "温热",
       "hot_reason": "业内首个重卡能源大模型",
       "last_event": "发布",
@@ -6101,7 +6217,7 @@
       "last_event_url": "https://36kr.com/p/3875522570793220",
       "related_people": [],
       "confidence": "high",
-      "updated_at": "2026-07-07T14:03:24.612648"
+      "updated_at": "2026-07-07T21:04:18.877814"
     },
     {
       "id": "tiangong",
@@ -6551,25 +6667,24 @@
       "name": "Claude",
       "provider_id": "anthropic",
       "family": "Claude",
-      "type": "通用对话",
+      "type": "旗舰",
       "open_weights": false,
       "tier": "旗舰",
       "capabilities": [
-        "对话",
-        "推理",
-        "编码",
-        "数据分析"
+        "文本",
+        "数据分析",
+        "对话"
       ],
       "status": "发布",
-      "hot_score": 82,
+      "hot_score": 80,
       "hot_level": "高热",
-      "hot_reason": "内部承担95%数据分析查询；Claude Code提示词大幅优化",
-      "last_event": "承担95%内部数据分析查询，员工可直接对话业务数据",
+      "hot_reason": "内部数据分析查询95%由AI完成；发现类意识工作台",
+      "last_event": "已承担95%内部数据分析查询工作",
       "last_event_date": "2026-07-07",
       "last_event_url": "https://www.infoq.cn/article/eHH8RTgeeOUWODLCLWXS",
       "related_people": [],
       "confidence": "high",
-      "updated_at": "2026-07-07T14:03:24.612648"
+      "updated_at": "2026-07-07T21:04:18.877814"
     },
     {
       "id": "glm",
@@ -6669,103 +6784,98 @@
     },
     {
       "id": "qwen",
-      "name": "千问（Qwen）",
+      "name": "千问",
       "provider_id": "alibaba-qwen",
-      "family": "Qwen",
-      "type": "大语言模型",
+      "family": "千问",
+      "type": "旗舰",
       "open_weights": false,
       "tier": "旗舰",
       "capabilities": [
-        "语音识别",
-        "代码",
-        "推理"
+        "文本",
+        "语音识别"
       ],
       "status": "发布",
-      "hot_score": 60,
+      "hot_score": 65,
       "hot_level": "温热",
       "hot_reason": "升级实时语音识别Fun-ASR-Realtime",
-      "last_event": "升级语音识别能力",
-      "last_event_date": "2026-07-06",
+      "last_event": "升级实时语音识别",
+      "last_event_date": "2026-07-07",
       "last_event_url": "https://36kr.com/p/3884024701874183",
       "related_people": [],
       "confidence": "high",
-      "updated_at": "2026-07-06T21:05:54.772116"
+      "updated_at": "2026-07-07T21:04:18.877814"
     },
     {
-      "id": "longcat-2.0",
+      "id": "longcat-2-0",
       "name": "LongCat-2.0",
       "provider_id": "meituan",
       "family": "LongCat",
-      "type": "通用对话",
+      "type": "万亿参数混合专家",
       "open_weights": true,
       "tier": "旗舰",
       "capabilities": [
         "万亿参数",
-        "长上下文",
-        "推理",
-        "编程"
+        "国产芯片训练",
+        "零英伟达"
       ],
       "status": "发布",
-      "hot_score": 92,
-      "hot_level": "爆热",
-      "hot_reason": "国内首个国产卡训推万亿大模型，零英伟达，开源",
-      "last_event": "基于摩尔线程MTT S5000完成适配，实现零英伟达训练推理",
+      "hot_score": 90,
+      "hot_level": "高热",
+      "hot_reason": "国内首个国产卡训推万亿大模型",
+      "last_event": "发布，零英伟达方案",
       "last_event_date": "2026-07-07",
       "last_event_url": "https://36kr.com/p/3878407689089282",
       "related_people": [],
       "confidence": "high",
-      "updated_at": "2026-07-07T14:03:24.612648"
+      "updated_at": "2026-07-07T21:04:18.877814"
     },
     {
       "id": "hy3",
       "name": "Hy3",
-      "provider_id": "tencent",
+      "provider_id": "tencent-hunyuan",
       "family": "混元",
-      "type": "MoE通用",
+      "type": "混合专家模型",
       "open_weights": false,
       "tier": "旗舰",
       "capabilities": [
         "推理",
-        "Agent",
-        "编程",
-        "办公",
-        "金融",
+        "智能体",
         "长上下文"
       ],
       "status": "发布",
-      "hot_score": 88,
+      "hot_score": 85,
       "hot_level": "高热",
-      "hot_reason": "295B参数MoE，21B激活，性能比肩2-5倍参数量模型，元宝免费开放Agent能力",
-      "last_event": "正式发布并上线元宝Agent能力",
+      "hot_reason": "295B参数MoE，比肩2-5倍参数开源模型",
+      "last_event": "正式发布，元宝上线Hy3 Agent能力",
       "last_event_date": "2026-07-07",
-      "last_event_url": "",
+      "last_event_url": "https://pro.jiqizhixin.com/inbox",
       "related_people": [],
       "confidence": "medium",
-      "updated_at": "2026-07-07T14:03:24.612648"
+      "updated_at": "2026-07-07T21:04:18.877814"
     },
     {
-      "id": "lingbot-depth-2.0",
+      "id": "lingbot-depth-2-0",
       "name": "LingBot-Depth 2.0",
-      "provider_id": "ant-group",
+      "provider_id": "antgroup",
       "family": "LingBot",
-      "type": "专用视觉（深度估计）",
+      "type": "专用",
       "open_weights": false,
       "tier": "专用",
       "capabilities": [
-        "空间感知",
         "深度估计",
-        "语义分割"
+        "空间感知",
+        "密集预测"
       ],
       "status": "发布",
-      "hot_score": 82,
+      "hot_score": 75,
       "hot_level": "高热",
       "hot_reason": "训练数据从300万扩至1.5亿，性能全面升级",
-      "last_event": "发布，看得更懂、更准",
+      "last_event": "发布空间感知模型",
       "last_event_date": "2026-07-07",
       "last_event_url": "https://www.infoq.cn/article/mqY10ihiZ874id2JDeXu",
       "related_people": [],
       "confidence": "high",
-      "updated_at": "2026-07-07T14:03:24.612648"
+      "updated_at": "2026-07-07T21:04:18.877814"
     },
     {
       "id": "fun-asr-realtime",
@@ -6812,315 +6922,81 @@
       "related_people": [],
       "confidence": "medium",
       "updated_at": "2026-07-07T14:03:24.612648"
+    },
+    {
+      "id": "robobrain-orca",
+      "name": "悟界·RoboBrain Orca",
+      "provider_id": "bai-yuan",
+      "family": "悟界",
+      "type": "通用世界基础模型",
+      "open_weights": false,
+      "tier": "旗舰",
+      "capabilities": [
+        "世界模型",
+        "无意识学习",
+        "有意识学习"
+      ],
+      "status": "发布",
+      "hot_score": 70,
+      "hot_level": "温热",
+      "hot_reason": "成通用世界基础模型基石",
+      "last_event": "把世界学习拆成两条互补路径",
+      "last_event_date": "2026-07-07",
+      "last_event_url": "https://www.infoq.cn/article/HpkpCVSwAHQXAhphZm34",
+      "related_people": [],
+      "confidence": "high",
+      "updated_at": "2026-07-07T21:04:18.877814"
+    },
+    {
+      "id": "visics-model",
+      "name": "Visics通用具身大模型",
+      "provider_id": "roboscience",
+      "family": "Visics",
+      "type": "专用",
+      "open_weights": false,
+      "tier": "专用",
+      "capabilities": [
+        "具身智能",
+        "跨本体操作",
+        "跨物体",
+        "跨任务"
+      ],
+      "status": "发布",
+      "hot_score": 70,
+      "hot_level": "温热",
+      "hot_reason": "实现跨本体、跨物体、跨任务通用",
+      "last_event": "发布",
+      "last_event_date": "2026-07-07",
+      "last_event_url": "https://36kr.com/p/3868276479710466",
+      "related_people": [],
+      "confidence": "high",
+      "updated_at": "2026-07-07T21:04:18.877814"
+    },
+    {
+      "id": "deepseek-apple",
+      "name": "DeepSeek苹果芯片移植模型",
+      "provider_id": "deepseek",
+      "family": "DeepSeek",
+      "type": "主力",
+      "open_weights": false,
+      "tier": "主力",
+      "capabilities": [
+        "推理",
+        "加速"
+      ],
+      "status": "预览",
+      "hot_score": 70,
+      "hot_level": "温热",
+      "hot_reason": "新技术移植苹果芯片，Mac本地加速60%",
+      "last_event": "新技术移植苹果芯片",
+      "last_event_date": "2026-07-07",
+      "last_event_url": "https://36kr.com/p/3879842615308547",
+      "related_people": [],
+      "confidence": "high",
+      "updated_at": "2026-07-07T21:04:18.877814"
     }
   ],
   "changelog": [
-    {
-      "type": "update",
-      "dimension": "tools",
-      "id": "claude-code",
-      "summary": "hot_score: 85 → 80; last_update: 提示词优化，删除 80% 冗余 → Anthropic通过Fable 5优化提示词，降低80%提示词消耗",
-      "date": "2026-07-06",
-      "time": "21:05:54",
-      "url": "https://www.infoq.cn/article/GEkEm7rkUJfF8bdwTuBt"
-    },
-    {
-      "type": "update",
-      "dimension": "tools",
-      "id": "fable-5",
-      "summary": "hot_score: 85 → 70; hot_level: 爆热 → 温热; last_update: Claude Code 80%提示词可删，AI降本 → 发布，用于节省Token成本",
-      "date": "2026-07-06",
-      "time": "21:05:54",
-      "url": "https://www.infoq.cn/article/GEkEm7rkUJfF8bdwTuBt"
-    },
-    {
-      "type": "update",
-      "dimension": "tools",
-      "id": "loop-engineering",
-      "summary": "hot_score: 75 → 55; hot_level: 高热 → 温热; last_update: 机器之心PRO通讯重点提及，成为Week 27关键词 → 发布介绍（机器之心Week27预告）",
-      "date": "2026-07-06",
-      "time": "21:05:54",
-      "url": ""
-    },
-    {
-      "type": "update",
-      "dimension": "tools",
-      "id": "icrdrag",
-      "summary": "hot_score: 30 → 50; last_update: 开源预训练模型与数据集，被ECCV 2026接收 → 发布预训练模型和数据集",
-      "date": "2026-07-06",
-      "time": "21:05:54",
-      "url": ""
-    },
-    {
-      "type": "update",
-      "dimension": "tools",
-      "id": "caveman",
-      "summary": "hot_score: 25 → 50; last_update: 发布，支持30多平台 → 发布",
-      "date": "2026-07-06",
-      "time": "21:05:54",
-      "url": ""
-    },
-    {
-      "type": "update",
-      "dimension": "tools",
-      "id": "mandol",
-      "summary": "hot_score: 50 → 55; last_update: 开源发布，取得LoCoMo和LongMemEval最佳准确率 → 发布，在LoCoMo和LongMemEval基准取得SOTA",
-      "date": "2026-07-06",
-      "time": "21:05:54",
-      "url": ""
-    },
-    {
-      "type": "update",
-      "dimension": "tools",
-      "id": "chrome-devtools-mcp",
-      "summary": "hot_score: 25 → 50; last_update: 发布 → 发布介绍",
-      "date": "2026-07-06",
-      "time": "21:05:54",
-      "url": ""
-    },
-    {
-      "type": "new",
-      "dimension": "tools",
-      "id": "fun-asr-realtime",
-      "summary": "千问大模型升级",
-      "date": "2026-07-06",
-      "time": "21:05:54",
-      "url": "https://36kr.com/p/3884024701874183"
-    },
-    {
-      "type": "update",
-      "dimension": "tools",
-      "id": "trm-reward-model",
-      "summary": "hot_score: 62 → 55",
-      "date": "2026-07-06",
-      "time": "21:05:54",
-      "url": "https://36kr.com/p/3866659734279170"
-    },
-    {
-      "type": "update",
-      "dimension": "llms",
-      "id": "claude",
-      "summary": "hot_score: 90 → 85; hot_level: 爆热 → 高热; last_event: 已承担95%内部数据分析请求；Claude Code可用于大幅削减提示词 → 被Anthropic内部广泛使用，以及Fable 5降本",
-      "date": "2026-07-06",
-      "time": "21:05:54",
-      "url": "https://www.infoq.cn/article/eHH8RTgeeOUWODLCLWXS"
-    },
-    {
-      "type": "new",
-      "dimension": "llms",
-      "id": "hunyuan-hy3",
-      "summary": "正式发布Hy3",
-      "date": "2026-07-06",
-      "time": "21:05:54",
-      "url": "https://www.infoq.cn/article/ZiwKE3YKaNXQUK8yf59a"
-    },
-    {
-      "type": "update",
-      "dimension": "llms",
-      "id": "meituan-zero-nvidia-model",
-      "summary": "name: 美团零英伟达万亿模型 → 美团零英伟达万亿大模型; hot_score: 82 → 85; last_event: 美团发布零英伟达万亿大模型 → 发布万亿参数级别大模型",
-      "date": "2026-07-06",
-      "time": "21:05:54",
-      "url": "https://36kr.com/p/3878407689089282"
-    },
-    {
-      "type": "update",
-      "dimension": "llms",
-      "id": "kling",
-      "summary": "hot_score: 85 → 95; last_event: 落地近30亿美元融资，投后估值180亿美元，独立商业化发展 → 融资近30亿美元",
-      "date": "2026-07-06",
-      "time": "21:05:54",
-      "url": "https://www.infoq.cn/article/hX0uxPMVfPGakqQdKozL"
-    },
-    {
-      "type": "new",
-      "dimension": "llms",
-      "id": "qwen",
-      "summary": "升级语音识别能力",
-      "date": "2026-07-06",
-      "time": "21:05:54",
-      "url": "https://36kr.com/p/3884024701874183"
-    },
-    {
-      "type": "update",
-      "dimension": "llms",
-      "id": "agents-a1",
-      "summary": "hot_score: 35 → 55; hot_level: 平稳 → 温热; last_event: 发布35B MoE智能体模型Agents-A1 → 发布",
-      "date": "2026-07-06",
-      "time": "21:05:54",
-      "url": ""
-    },
-    {
-      "type": "update",
-      "dimension": "llms",
-      "id": "visics",
-      "summary": "name: Visics → Visics通用具身大模型; hot_score: 55 → 60; last_event: RoboScience发布Visics通用具身大模型 → 发布Visics",
-      "date": "2026-07-06",
-      "time": "21:05:54",
-      "url": "https://36kr.com/p/3868276479710466"
-    },
-    {
-      "type": "update",
-      "dimension": "llms",
-      "id": "deepseek",
-      "summary": "hot_score: 70 → 80; hot_level: 温热 → 高热; last_event: 被提及用于魔兽世界场景 → 新技术移植苹果芯片",
-      "date": "2026-07-06",
-      "time": "21:05:54",
-      "url": "https://36kr.com/p/3879842615308547"
-    },
-    {
-      "type": "new",
-      "dimension": "hotspots",
-      "id": "gpt5-6-exposure",
-      "summary": " (gpt5-6-exposure)",
-      "date": "2026-07-06",
-      "time": "21:05:54",
-      "url": ""
-    },
-    {
-      "type": "new",
-      "dimension": "hotspots",
-      "id": "kling-funding",
-      "summary": " (kling-funding)",
-      "date": "2026-07-06",
-      "time": "21:05:54",
-      "url": ""
-    },
-    {
-      "type": "new",
-      "dimension": "hotspots",
-      "id": "tencent-hunyuan-hy3",
-      "summary": " (tencent-hunyuan-hy3)",
-      "date": "2026-07-06",
-      "time": "21:05:54",
-      "url": ""
-    },
-    {
-      "type": "update",
-      "dimension": "hotspots",
-      "id": "meituan-zero-nvidia",
-      "summary": "title: 美团发布「零英伟达」万亿大模型，国产芯片跑通 → 美团发布零英伟达万亿大模型，国芯国模跑通",
-      "date": "2026-07-06",
-      "time": "21:05:54",
-      "url": ""
-    },
-    {
-      "type": "new",
-      "dimension": "hotspots",
-      "id": "llm-safety-report",
-      "summary": " (llm-safety-report)",
-      "date": "2026-07-06",
-      "time": "21:05:54",
-      "url": ""
-    },
-    {
-      "type": "update",
-      "dimension": "providers",
-      "id": "openai",
-      "summary": "hot_score: 95 → 90; last_event: GPT-5.6三大神秘模型底层代码曝光，定档7月7日发布 → GPT-5.6三大模型偷跑曝光；收购uv工具创始人；自研芯片计划",
-      "date": "2026-07-07",
-      "time": "07:03:45",
-      "url": ""
-    },
-    {
-      "type": "update",
-      "dimension": "providers",
-      "id": "anthropic",
-      "summary": "hot_level: 高热 → 爆热; last_event: Claude已承担95%内部数据分析查询工作；推出Fable 5降本工具 → Claude承担95%内部数据分析；自研芯片；Fable 5优化Claude Code提示词",
-      "date": "2026-07-07",
-      "time": "07:03:45",
-      "url": "https://www.infoq.cn/article/eHH8RTgeeOUWODLCLWXS"
-    },
-    {
-      "type": "update",
-      "dimension": "providers",
-      "id": "tencent",
-      "summary": "hot_score: 90 → 85; last_event: 发布混元Hy3模型，Agent能力和产品体验跃升 → 发布腾讯混元Hy3模型，Agent能力跃升，元宝同步上线",
-      "date": "2026-07-07",
-      "time": "07:03:45",
-      "url": ""
-    },
-    {
-      "type": "update",
-      "dimension": "providers",
-      "id": "meituan",
-      "summary": "hot_score: 85 → 80; hot_level: 高热 → 爆热; last_event: 发布零英伟达万亿大模型，国芯国模跑通 → 发布零英伟达万亿大模型；LongCat-2.0适配；限豆包、阿里禁Claude Code",
-      "date": "2026-07-07",
-      "time": "07:03:45",
-      "url": "https://36kr.com/p/3878407689089282"
-    },
-    {
-      "type": "update",
-      "dimension": "providers",
-      "id": "zhipu-ai",
-      "summary": "hot_level: 高热 → 爆热; last_event: 智谱破万亿，中国大模型终结平替叙事 → 估值破万亿，中国大模型终结平替叙事",
-      "date": "2026-07-07",
-      "time": "07:03:45",
-      "url": "https://36kr.com/p/3866649171432711"
-    },
-    {
-      "type": "update",
-      "dimension": "providers",
-      "id": "kling-ai",
-      "summary": "hot_score: 95 → 90; last_event: 落地近30亿美元融资，创全球多模态大模型单轮融资规模纪录 → 完成近30亿美元融资，创全球多模态AI单轮融资纪录",
-      "date": "2026-07-07",
-      "time": "07:03:45",
-      "url": "https://www.infoq.cn/article/hX0uxPMVfPGakqQdKozL"
-    },
-    {
-      "type": "update",
-      "dimension": "providers",
-      "id": "deepseek",
-      "summary": "hot_score: 80 → 70",
-      "date": "2026-07-07",
-      "time": "07:03:45",
-      "url": "https://36kr.com/p/3879842615308547"
-    },
-    {
-      "type": "update",
-      "dimension": "providers",
-      "id": "alibaba",
-      "summary": "hot_score: 72 → 65; last_event: Qwen 3.5+开源模型持续更新 → 千问大模型升级实时语音识别Fun-ASR-Realtime；限制Claude Code",
-      "date": "2026-07-07",
-      "time": "07:03:45",
-      "url": "https://36kr.com/p/3884024701874183"
-    },
-    {
-      "type": "update",
-      "dimension": "providers",
-      "id": "google-deepmind",
-      "summary": "hot_score: 50 → 70; hot_level: 温热 → 高热; last_event: 发布Nano Banana 2 Lite与Gemini Omni Flash → 发布Nano Banana 2 Lite与Gemini Omni Flash模型",
-      "date": "2026-07-07",
-      "time": "07:03:45",
-      "url": ""
-    },
-    {
-      "type": "update",
-      "dimension": "providers",
-      "id": "mistral-ai",
-      "summary": "last_event: 发布开源代码Agent模型Leanstral 1.5 → 发布Leanstral 1.5开源代码Agent模型",
-      "date": "2026-07-07",
-      "time": "07:03:45",
-      "url": ""
-    },
-    {
-      "type": "new",
-      "dimension": "providers",
-      "id": "baidu-intelligent-cloud",
-      "summary": "与穆尧团队合作解决世界模型反应速度问题",
-      "date": "2026-07-07",
-      "time": "07:03:45",
-      "url": "https://www.infoq.cn/article/Lb4pQTNTQdq657Gzj7EI"
-    },
-    {
-      "type": "update",
-      "dimension": "providers",
-      "id": "moore-threads",
-      "summary": "hot_score: 60 → 55; last_event: 完成美团LongCat-2.0 Day-0极速适配，MTT S5000具备硬件级原生FP8加速 → 完成美团LongCat-2.0 Day-0适配，FP8加持",
-      "date": "2026-07-07",
-      "time": "07:03:45",
-      "url": "https://www.infoq.cn/article/vRzlWZxXMaxC6aZM7Ufw"
-    },
     {
       "type": "update",
       "dimension": "providers",
@@ -7365,15 +7241,6 @@
       "url": "https://www.jiqizhixin.com/ai_shortlist"
     },
     {
-      "type": "new",
-      "dimension": "providers",
-      "id": "ant-group",
-      "summary": "蚂蚁灵波发布空间感知模型LingBot-Depth 2.0，数据扩至1.5亿",
-      "date": "2026-07-07",
-      "time": "14:03:24",
-      "url": "https://www.infoq.cn/article/mqY10ihiZ874id2JDeXu"
-    },
-    {
       "type": "update",
       "dimension": "providers",
       "id": "meituan",
@@ -7381,15 +7248,6 @@
       "date": "2026-07-07",
       "time": "14:03:24",
       "url": "https://36kr.com/p/3878407689089282"
-    },
-    {
-      "type": "update",
-      "dimension": "providers",
-      "id": "moore-threads",
-      "summary": "hot_score: 55 → 78; last_event: 完成美团LongCat-2.0 Day-0适配，FP8加持 → MTT S5000完成美团LongCat-2.0 Day-0适配，原生FP8加速",
-      "date": "2026-07-07",
-      "time": "14:03:24",
-      "url": "https://www.infoq.cn/article/vRzlWZxXMaxC6aZM7Ufw"
     },
     {
       "type": "new",
@@ -7583,29 +7441,11 @@
     {
       "type": "new",
       "dimension": "llms",
-      "id": "longcat-2.0",
-      "summary": "基于摩尔线程MTT S5000完成适配，实现零英伟达训练推理",
-      "date": "2026-07-07",
-      "time": "14:03:24",
-      "url": "https://36kr.com/p/3878407689089282"
-    },
-    {
-      "type": "new",
-      "dimension": "llms",
       "id": "hy3",
       "summary": "正式发布并上线元宝Agent能力",
       "date": "2026-07-07",
       "time": "14:03:24",
       "url": ""
-    },
-    {
-      "type": "new",
-      "dimension": "llms",
-      "id": "lingbot-depth-2.0",
-      "summary": "发布，看得更懂、更准",
-      "date": "2026-07-07",
-      "time": "14:03:24",
-      "url": "https://www.infoq.cn/article/mqY10ihiZ874id2JDeXu"
     },
     {
       "type": "new",
@@ -7651,15 +7491,6 @@
       "date": "2026-07-07",
       "time": "14:03:24",
       "url": "https://36kr.com/p/3875522570793220"
-    },
-    {
-      "type": "update",
-      "dimension": "llms",
-      "id": "hyper3d",
-      "summary": "hot_score: 70 → 72; last_event: 再获数亿融资 → 再次获得数亿元融资; tier: 旗舰 → 专用",
-      "date": "2026-07-07",
-      "time": "14:03:24",
-      "url": "https://36kr.com/p/3867973922755845"
     },
     {
       "type": "update",
@@ -7714,16 +7545,367 @@
       "date": "2026-07-07",
       "time": "14:03:24",
       "url": ""
+    },
+    {
+      "type": "update",
+      "dimension": "providers",
+      "id": "meituan",
+      "summary": "hot_score: 92 → 90; hot_level: 爆热 → 高热; last_event: 发布「零英伟达」万亿大模型LongCat-2.0，基于国产卡（摩尔线程） → 发布零英伟达万亿大模型LongCat-2.0",
+      "date": "2026-07-07",
+      "time": "21:04:18",
+      "url": "https://36kr.com/p/3878407689089282"
+    },
+    {
+      "type": "update",
+      "dimension": "providers",
+      "id": "zhipu",
+      "summary": "name: 智谱 → 智谱AI; hot_score: 60 → 85; last_event: 破万亿，终结「平替」叙事 → GLM-5.2上线模力工场，开源AI编程工具",
+      "date": "2026-07-07",
+      "time": "21:04:18",
+      "url": "https://www.infoq.cn/article/woKuALR13UH0o9XicUlZ"
+    },
+    {
+      "type": "new",
+      "dimension": "providers",
+      "id": "tencent-hunyuan",
+      "summary": "正式发布Hy3模型，元宝上线Hy3 Agent能力",
+      "date": "2026-07-07",
+      "time": "21:04:18",
+      "url": "https://pro.jiqizhixin.com/inbox"
+    },
+    {
+      "type": "update",
+      "dimension": "providers",
+      "id": "baidu-intelligent-cloud",
+      "summary": "hot_score: 60 → 65; last_event: 与穆尧团队合作解决世界模型反应速度问题 → 与穆尧团队合作给出世界模型最新解法",
+      "date": "2026-07-07",
+      "time": "21:04:18",
+      "url": "https://www.infoq.cn/article/Lb4pQTNTQdq657Gzj7EI"
+    },
+    {
+      "type": "update",
+      "dimension": "providers",
+      "id": "qianfang-tech",
+      "summary": "hot_score: 68 → 50; last_event: 体系内企业发布重卡能源大模型「智擎」 → 发布重卡能源大模型“智擎”",
+      "date": "2026-07-07",
+      "time": "21:04:18",
+      "url": "https://36kr.com/p/3875522570793220"
+    },
+    {
+      "type": "update",
+      "dimension": "providers",
+      "id": "guangxiang-tech",
+      "summary": "hot_score: 73 → 70; last_event: 自研物理原生基座模型，获数亿元融资，跳出现有VLA/世界模型路线 → 自研物理原生基座模型，获得数亿元融资",
+      "date": "2026-07-07",
+      "time": "21:04:18",
+      "url": "https://www.infoq.cn/article/m4QJlWAyRq7Fp4yQImp9"
+    },
+    {
+      "type": "update",
+      "dimension": "providers",
+      "id": "elastic",
+      "summary": "hot_score: 80 → 65; hot_level: 高热 → 温热; last_event: 开源基于认知科学的Atlas Agent Memory系统 → 开源基于认知科学的Atlas Agent Memory",
+      "date": "2026-07-07",
+      "time": "21:04:18",
+      "url": "https://www.infoq.cn/article/pzYuRUO0ECSKktJjKV8P"
+    },
+    {
+      "type": "new",
+      "dimension": "providers",
+      "id": "bai-yuan",
+      "summary": "发布悟界·RoboBrain Orca通用世界基础模型",
+      "date": "2026-07-07",
+      "time": "21:04:18",
+      "url": "https://www.infoq.cn/article/HpkpCVSwAHQXAhphZm34"
+    },
+    {
+      "type": "update",
+      "dimension": "providers",
+      "id": "openai",
+      "summary": "last_event: GPT-5.6三大模型曝光，定档7月7日发布，截杀Claude → GPT-5.6三大模型曝光，定档7月7日",
+      "date": "2026-07-07",
+      "time": "21:04:18",
+      "url": "https://36kr.com/p/3883839281099016"
+    },
+    {
+      "type": "update",
+      "dimension": "providers",
+      "id": "anthropic",
+      "summary": "hot_score: 85 → 80; last_event: Claude承担95%内部数据分析查询；Claude Code提示词大幅优化 → Claude已承担95%内部数据分析查询工作",
+      "date": "2026-07-07",
+      "time": "21:04:18",
+      "url": "https://www.infoq.cn/article/eHH8RTgeeOUWODLCLWXS"
+    },
+    {
+      "type": "update",
+      "dimension": "providers",
+      "id": "alibaba-qwen",
+      "summary": "name: 阿里（千问） → 阿里千问; hot_score: 60 → 65",
+      "date": "2026-07-07",
+      "time": "21:04:18",
+      "url": "https://36kr.com/p/3884024701874183"
+    },
+    {
+      "type": "update",
+      "dimension": "providers",
+      "id": "roboscience",
+      "summary": "hot_score: 76 → 70; last_event: 发布Visics通用具身大模型，跨本体/物体/任务 → 发布Visics通用具身大模型",
+      "date": "2026-07-07",
+      "time": "21:04:18",
+      "url": "https://36kr.com/p/3868276479710466"
+    },
+    {
+      "type": "update",
+      "dimension": "providers",
+      "id": "hyper3d",
+      "summary": "hot_score: 70 → 75; hot_level: 温热 → 高热; last_event: 3D大模型获数亿融资，英伟达也在用 → 获得数亿元融资，英伟达都在用",
+      "date": "2026-07-07",
+      "time": "21:04:18",
+      "url": "https://36kr.com/p/3867973922755845"
+    },
+    {
+      "type": "update",
+      "dimension": "providers",
+      "id": "youjia-innovation",
+      "summary": "hot_score: 65 → 50",
+      "date": "2026-07-07",
+      "time": "21:04:18",
+      "url": "https://36kr.com/p/3884024701874183"
+    },
+    {
+      "type": "update",
+      "dimension": "providers",
+      "id": "deepseek",
+      "summary": "hot_score: 80 → 70; hot_level: 高热 → 温热; last_event: 新技术移植苹果芯片，Mac本地大模型推理加速60% → 新技术移植苹果芯片，Mac本地大模型加速60%",
+      "date": "2026-07-07",
+      "time": "21:04:18",
+      "url": "https://36kr.com/p/3879842615308547"
+    },
+    {
+      "type": "update",
+      "dimension": "people",
+      "id": "chen-yongchao",
+      "summary": "title: 清华大学助理教授，创业公司创始人 → 清华助理教授; hot_score: 75 → 80; hot_level: 温热 → 高热",
+      "date": "2026-07-07",
+      "time": "21:04:18",
+      "url": "https://36kr.com/p/3883751049965576"
+    },
+    {
+      "type": "update",
+      "dimension": "people",
+      "id": "zhou-hongyi",
+      "summary": "hot_score: 60 → 75; hot_level: 温热 → 高热; recent_activity: 谈大模型幻觉：烧光一亿Token只为写周报，需重塑企业组织 → 谈大模型幻觉，烧光一亿Token只为写周报",
+      "date": "2026-07-07",
+      "time": "21:04:18",
+      "url": "https://36kr.com/p/3878668651936389"
+    },
+    {
+      "type": "update",
+      "dimension": "people",
+      "id": "linus-torvalds",
+      "summary": "name: Linus Torvalds → 林纳斯·托瓦兹; hot_score: 50 → 60; hot_level: 平稳 → 温热",
+      "date": "2026-07-07",
+      "time": "21:04:18",
+      "url": "https://www.infoq.cn/article/11fNtPYf59T76fyQkiPa"
+    },
+    {
+      "type": "update",
+      "dimension": "people",
+      "id": "mu-yao",
+      "summary": "hot_score: 68 → 60; recent_activity: 与百度智能云合作提出世界模型最新解法，回应速度不及VLA问题 → 团队与百度智能云合作给出世界模型最新解法",
+      "date": "2026-07-07",
+      "time": "21:04:18",
+      "url": "https://www.infoq.cn/article/Lb4pQTNTQdq657Gzj7EI"
+    },
+    {
+      "type": "new",
+      "dimension": "people",
+      "id": "weng-li",
+      "summary": "博客上新，通过Harness工程实现AI自我提升",
+      "date": "2026-07-07",
+      "time": "21:04:18",
+      "url": ""
+    },
+    {
+      "type": "update",
+      "dimension": "people",
+      "id": "yann-lecun",
+      "summary": "name: 扬·勒丘恩 → 扬·勒昆; hot_score: 60 → 50",
+      "date": "2026-07-07",
+      "time": "21:04:18",
+      "url": ""
+    },
+    {
+      "type": "update",
+      "dimension": "tools",
+      "id": "atlas-agent-memory",
+      "summary": "hot_score: 80 → 70; hot_level: 高热 → 温热",
+      "date": "2026-07-07",
+      "time": "21:04:18",
+      "url": "https://www.infoq.cn/article/pzYuRUO0ECSKktJjKV8P"
+    },
+    {
+      "type": "update",
+      "dimension": "tools",
+      "id": "fun-asr-realtime",
+      "summary": "hot_score: 40 → 65; hot_level: 平稳 → 温热; last_update: 升级 → 千问升级实时语音识别",
+      "date": "2026-07-07",
+      "time": "21:04:18",
+      "url": "https://36kr.com/p/3884024701874183"
+    },
+    {
+      "type": "update",
+      "dimension": "tools",
+      "id": "trm",
+      "summary": "hot_score: 40 → 60; last_update: TRM思考奖励模型上线 → 上线服务",
+      "date": "2026-07-07",
+      "time": "21:04:18",
+      "url": "https://36kr.com/p/3866659734279170"
+    },
+    {
+      "type": "new",
+      "dimension": "tools",
+      "id": "hyper3d-tool",
+      "summary": "获得数亿元融资",
+      "date": "2026-07-07",
+      "time": "21:04:18",
+      "url": "https://36kr.com/p/3867973922755845"
+    },
+    {
+      "type": "new",
+      "dimension": "tools",
+      "id": "visics-tool",
+      "summary": "发布",
+      "date": "2026-07-07",
+      "time": "21:04:18",
+      "url": "https://36kr.com/p/3868276479710466"
+    },
+    {
+      "type": "update",
+      "dimension": "llms",
+      "id": "claude",
+      "summary": "hot_score: 82 → 80; last_event: 承担95%内部数据分析查询，员工可直接对话业务数据 → 已承担95%内部数据分析查询工作",
+      "date": "2026-07-07",
+      "time": "21:04:18",
+      "url": "https://www.infoq.cn/article/eHH8RTgeeOUWODLCLWXS"
+    },
+    {
+      "type": "update",
+      "dimension": "llms",
+      "id": "hy3",
+      "summary": "hot_score: 88 → 85; last_event: 正式发布并上线元宝Agent能力 → 正式发布，元宝上线Hy3 Agent能力",
+      "date": "2026-07-07",
+      "time": "21:04:18",
+      "url": "https://pro.jiqizhixin.com/inbox"
+    },
+    {
+      "type": "new",
+      "dimension": "llms",
+      "id": "robobrain-orca",
+      "summary": "把世界学习拆成两条互补路径",
+      "date": "2026-07-07",
+      "time": "21:04:18",
+      "url": "https://www.infoq.cn/article/HpkpCVSwAHQXAhphZm34"
+    },
+    {
+      "type": "new",
+      "dimension": "llms",
+      "id": "visics-model",
+      "summary": "发布",
+      "date": "2026-07-07",
+      "time": "21:04:18",
+      "url": "https://36kr.com/p/3868276479710466"
+    },
+    {
+      "type": "update",
+      "dimension": "llms",
+      "id": "zhiqing",
+      "summary": "hot_score: 65 → 50",
+      "date": "2026-07-07",
+      "time": "21:04:18",
+      "url": "https://36kr.com/p/3875522570793220"
+    },
+    {
+      "type": "update",
+      "dimension": "llms",
+      "id": "xiehou-fashion-2-0",
+      "summary": "hot_score: 30 → 40; hot_level: 平稳 → 温热; last_event: 发布2.0大模型，面向B端服务 → 发布2.0",
+      "date": "2026-07-07",
+      "time": "21:04:18",
+      "url": "https://36kr.com/p/3805817826729736"
+    },
+    {
+      "type": "update",
+      "dimension": "llms",
+      "id": "qwen",
+      "summary": "name: 千问（Qwen） → 千问; hot_score: 60 → 65; last_event: 升级语音识别能力 → 升级实时语音识别",
+      "date": "2026-07-07",
+      "time": "21:04:18",
+      "url": "https://36kr.com/p/3884024701874183"
+    },
+    {
+      "type": "new",
+      "dimension": "llms",
+      "id": "deepseek-apple",
+      "summary": "新技术移植苹果芯片",
+      "date": "2026-07-07",
+      "time": "21:04:18",
+      "url": "https://36kr.com/p/3879842615308547"
+    },
+    {
+      "type": "new",
+      "dimension": "hotspots",
+      "id": "gpt56-exposure",
+      "summary": " (gpt56-exposure)",
+      "date": "2026-07-07",
+      "time": "21:04:18",
+      "url": ""
+    },
+    {
+      "type": "new",
+      "dimension": "hotspots",
+      "id": "meituan-longcat-release",
+      "summary": " (meituan-longcat-release)",
+      "date": "2026-07-07",
+      "time": "21:04:18",
+      "url": ""
+    },
+    {
+      "type": "new",
+      "dimension": "hotspots",
+      "id": "zhipu-glm52-launch",
+      "summary": " (zhipu-glm52-launch)",
+      "date": "2026-07-07",
+      "time": "21:04:18",
+      "url": ""
+    },
+    {
+      "type": "new",
+      "dimension": "hotspots",
+      "id": "tencent-hy3-release",
+      "summary": " (tencent-hy3-release)",
+      "date": "2026-07-07",
+      "time": "21:04:18",
+      "url": ""
+    },
+    {
+      "type": "new",
+      "dimension": "hotspots",
+      "id": "anthropic-claude-data",
+      "summary": " (anthropic-claude-data)",
+      "date": "2026-07-07",
+      "time": "21:04:18",
+      "url": ""
     }
   ],
   "stats": {
-    "total_providers": 78,
-    "total_people": 76,
-    "total_tools": 93,
-    "total_llms": 68,
-    "total_hotspots": 97,
-    "new_this_period": 17,
-    "updated_this_period": 31,
+    "total_providers": 80,
+    "total_people": 77,
+    "total_tools": 95,
+    "total_llms": 71,
+    "total_hotspots": 95,
+    "new_this_period": 13,
+    "updated_this_period": 38,
     "removed_this_period": 0
   },
   "hotspots": [
@@ -8744,119 +8926,6 @@
       "hot_level": ""
     },
     {
-      "id": "us-govt-bans-anthropic-fable5",
-      "title": "美国政府禁止Anthropic发布Fable 5模型",
-      "summary": "美国以国家安全为由禁止Anthropic发布其最新旗舰模型Fable 5，引发国内外对AI监管和主权的广泛讨论。",
-      "date": "2026-06-20",
-      "source": "TechCrunch",
-      "url": "https://techcrunch.com",
-      "related_providers": [
-        "anthropic"
-      ],
-      "related_people": [],
-      "related_tools": [],
-      "related_llms": [
-        "fable-5"
-      ],
-      "updated_at": "2026-06-20T02:01:22.472708"
-    },
-    {
-      "id": "groq-650m-raise",
-      "title": "AI芯片公司Groq确认6.5亿美元融资",
-      "summary": "Groq确认完成6.5亿美元融资，并重新招兵买马。此前Nvidia 200亿美元收购要约告吹，Groq独立发展决心坚定。",
-      "date": "2026-06-20",
-      "source": "TechCrunch",
-      "url": "",
-      "related_providers": [
-        "groq"
-      ],
-      "related_people": [],
-      "related_tools": [],
-      "related_llms": [],
-      "updated_at": "2026-06-23T11:44:17.483265"
-    },
-    {
-      "id": "deepseek-agent-hiring",
-      "title": "DeepSeek急招Agent人才，负责人公开贴广告",
-      "summary": "DeepSeek全力押注Agent方向，负责人到处贴广告招聘相关人才，反映行业对Agent开发人才的激烈争夺。",
-      "date": "2026-06-19",
-      "source": "量子位",
-      "url": "",
-      "related_providers": [
-        "deepseek"
-      ],
-      "related_people": [],
-      "related_tools": [],
-      "related_llms": [],
-      "updated_at": "2026-06-23T11:44:17.483265"
-    },
-    {
-      "id": "daxiao-robot-funding",
-      "title": "大晓机器人获数亿美元融资，具身大脑赛道火热",
-      "summary": "头部具身大脑公司大晓机器人完成数亿美元融资，15家VC争投，半年内完成从开源到训练场的三连发。",
-      "date": "2026-06-19",
-      "source": "量子位",
-      "url": "https://www.qbitai.com",
-      "related_providers": [
-        "daxiao-robot"
-      ],
-      "related_people": [],
-      "related_tools": [],
-      "related_llms": [],
-      "updated_at": "2026-06-20T02:01:22.472708"
-    },
-    {
-      "id": "lin-junyang-founds-borag",
-      "title": "林俊旸创立新公司卜拉格，首轮估值135亿",
-      "summary": "前知名AI研究员林俊旸成立卜拉格，首轮估值135亿人民币，腾讯、高榕、红杉联合投资，成为国内AI赛道新星。",
-      "date": "2026-06-19",
-      "source": "量子位",
-      "url": "https://www.qbitai.com",
-      "related_providers": [
-        "borag"
-      ],
-      "related_people": [
-        "lin-junyang"
-      ],
-      "related_tools": [],
-      "related_llms": [],
-      "updated_at": "2026-06-20T02:01:22.472708"
-    },
-    {
-      "id": "alibaba-happyhorse-1-1",
-      "title": "阿里发布视频生成模型HappyHorse 1.1，五大维度全面升级",
-      "summary": "阿里巴巴推出视频生成模型HappyHorse 1.1，在画面质量、连贯性、长度、风格多样性等五大维度实现全面升级，进一步巩固其在AI视频生成领域的竞争力。",
-      "date": "2026-06-19",
-      "source": "量子位",
-      "url": "",
-      "related_providers": [
-        "alibaba"
-      ],
-      "related_people": [],
-      "related_tools": [],
-      "related_llms": [
-        "happyhorse-1-1"
-      ],
-      "updated_at": "2026-06-22T20:01:31.865580"
-    },
-    {
-      "id": "happyhorse-11-release",
-      "title": "阿里发布视频生成模型HappyHorse 1.1",
-      "summary": "阿里云发布视频生成模型HappyHorse 1.1版本，在五大维度全面升级，提升视频生成质量和多样性。",
-      "date": "2026-06-19",
-      "source": "量子位",
-      "url": "",
-      "related_providers": [
-        "alibaba-cloud"
-      ],
-      "related_people": [],
-      "related_tools": [],
-      "related_llms": [
-        "happyhorse-1-1"
-      ],
-      "updated_at": "2026-06-23T11:44:17.483265"
-    },
-    {
       "id": "keling-30-billion-financing",
       "title": "「可灵AI」落地近30亿美元融资，创全球多模态大模型公司单轮融资规模新纪录",
       "summary": "快手旗下视频生成大模型可灵AI完成近30亿美元融资，投后估值180亿美元，由CPE源峰、国方创投、腾讯等领投，光源资本担任独家财务顾问，开启独立商业化发展。",
@@ -9314,6 +9383,94 @@
         "lingbot-depth-2.0"
       ],
       "updated_at": "2026-07-07T14:03:24.612648"
+    },
+    {
+      "id": "gpt56-exposure",
+      "title": "GPT-5.6三大模型曝光，OpenAI卡点截杀Claude",
+      "summary": "OpenAI GPT-5.6三大神秘模型底层代码曝光，定档7月7日发布。此举被认为是在Claude出现争议后趁火打劫，用超高额度截杀Claude，成为2026下半场AI竞争焦点。",
+      "date": "2026-07-07",
+      "source": "36氪",
+      "url": "https://36kr.com/p/3883839281099016",
+      "related_providers": [
+        "openai"
+      ],
+      "related_people": [],
+      "related_tools": [],
+      "related_llms": [
+        "gpt-5-6"
+      ],
+      "updated_at": "2026-07-07T21:04:18.877814"
+    },
+    {
+      "id": "meituan-longcat-release",
+      "title": "美团发布国内首个国产卡训推万亿大模型LongCat-2.0",
+      "summary": "美团正式发布LongCat-2.0万亿参数大模型，采用摩尔线程MTT S5000等国产芯片完成训练和推理，实现‘零英伟达’方案，标志着国芯国模跑通新阶段。",
+      "date": "2026-07-07",
+      "source": "36氪",
+      "url": "https://36kr.com/p/3878407689089282",
+      "related_providers": [
+        "meituan",
+        "mthreads"
+      ],
+      "related_people": [],
+      "related_tools": [],
+      "related_llms": [
+        "longcat-2-0"
+      ],
+      "updated_at": "2026-07-07T21:04:18.877814"
+    },
+    {
+      "id": "zhipu-glm52-launch",
+      "title": "智谱发布开源AI编程工具GLM-5.2，上线模力工场",
+      "summary": "智谱AI将GLM-5.2上线模力工场，作为开源AI编程工具第一，新用户可获得1000万免费tokens，标志着国产AI编程工具进入新阶段。",
+      "date": "2026-07-07",
+      "source": "InfoQ",
+      "url": "https://www.infoq.cn/article/woKuALR13UH0o9XicUlZ",
+      "related_providers": [
+        "zhipu"
+      ],
+      "related_people": [],
+      "related_tools": [
+        "glm-5-2-tool"
+      ],
+      "related_llms": [
+        "glm-5-2-model"
+      ],
+      "updated_at": "2026-07-07T21:04:18.877814"
+    },
+    {
+      "id": "tencent-hy3-release",
+      "title": "腾讯混元发布295B参数MoE模型Hy3，元宝上线Agent能力",
+      "summary": "腾讯混元团队发布Hy3模型，拥有21B激活参数，在推理、智能体及长上下文任务上表现优异，超过同体量模型，元宝同步上线Hy3 Agent能力并免费开放。",
+      "date": "2026-07-07",
+      "source": "机器之心",
+      "url": "https://pro.jiqizhixin.com/inbox",
+      "related_providers": [
+        "tencent-hunyuan"
+      ],
+      "related_people": [],
+      "related_tools": [],
+      "related_llms": [
+        "hy3"
+      ],
+      "updated_at": "2026-07-07T21:04:18.877814"
+    },
+    {
+      "id": "anthropic-claude-data",
+      "title": "Anthropic披露Claude已承担95%内部数据分析查询工作",
+      "summary": "Anthropic透露约95%的内部数据分析请求已由Claude自动完成，员工可直接向Claude查询业务数据，无需依赖数据团队。公司认为成果来自数据治理和工程规范。",
+      "date": "2026-07-07",
+      "source": "InfoQ",
+      "url": "https://www.infoq.cn/article/eHH8RTgeeOUWODLCLWXS",
+      "related_providers": [
+        "anthropic"
+      ],
+      "related_people": [],
+      "related_tools": [],
+      "related_llms": [
+        "claude"
+      ],
+      "updated_at": "2026-07-07T21:04:18.877814"
     }
   ]
 }
