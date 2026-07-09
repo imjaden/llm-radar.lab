@@ -1,7 +1,7 @@
 {
   "version": "1.0",
-  "generated_at": "2026-07-09T21:02:22.857452",
-  "period": "2026-07-02 ~ 2026-07-09",
+  "generated_at": "2026-07-10T07:02:56.665608",
+  "period": "2026-07-03 ~ 2026-07-10",
   "execution_mode": "semi-auto",
   "providers": [
     {
@@ -47,7 +47,7 @@
       "name": "OpenAI",
       "country": "美国",
       "flagship_models": [
-        "GPT-5.6"
+        "gpt-5.6"
       ],
       "key_people": [
         "sam-altman"
@@ -56,10 +56,10 @@
         "大模型",
         "AI芯片"
       ],
-      "hot_score": 90,
+      "hot_score": 95,
       "hot_level": "爆热",
-      "last_event": "GPT-5.6三大模型被曝，定档7月7日；自研芯片推理性能媲美Blackwell，成本降低约50%",
-      "last_event_date": "2026-07-09",
+      "last_event": "GPT-5.6三大模型偷跑截杀Claude，自研芯片性价比获验证",
+      "last_event_date": "2026-07-07",
       "last_event_url": "https://36kr.com/p/3883839281099016",
       "confidence": "high",
       "ref": {
@@ -72,27 +72,26 @@
           "DPO"
         ]
       },
-      "updated_at": "2026-07-09T21:02:22.857452"
+      "updated_at": "2026-07-10T07:02:56.665608"
     },
     {
       "id": "anthropic",
       "name": "Anthropic",
       "country": "美国",
       "flagship_models": [
-        "Claude"
+        "claude"
       ],
       "key_people": [
         "dario"
       ],
       "focus_areas": [
-        "大模型",
         "AI安全",
         "可解释性"
       ],
       "hot_score": 85,
       "hot_level": "高热",
-      "last_event": "Claude隐藏工作空间自发涌现类人意识，谷歌DeepMind权威认证，已开源相关代码",
-      "last_event_date": "2026-07-09",
+      "last_event": "Claude隐藏工作空间自发涌现类人意识，谷歌DeepMind认证，代码开源",
+      "last_event_date": "2026-07-10",
       "last_event_url": "https://www.infoq.cn/article/7Rgp3820XIGYqEV9JPSq",
       "confidence": "high",
       "ref": {
@@ -104,28 +103,28 @@
           "Constitutional AI"
         ]
       },
-      "updated_at": "2026-07-09T21:02:22.857452"
+      "updated_at": "2026-07-10T07:02:56.665608"
     },
     {
       "id": "google-deepmind",
       "name": "Google DeepMind",
-      "country": "美国",
+      "country": "英国",
       "flagship_models": [
-        "Nano Banana 2 Lite",
-        "Gemini Omni Flash"
+        "gemini-omni-flash",
+        "nano-banana-2-lite"
       ],
       "key_people": [
         "John Jumper"
       ],
       "focus_areas": [
-        "大模型",
         "AGI",
-        "具身智能"
+        "机器人",
+        "多模态"
       ],
-      "hot_score": 75,
-      "hot_level": "温热",
-      "last_event": "发布Nano Banana 2 Lite与Gemini Omni Flash；认证Claude意识涌现",
-      "last_event_date": "2026-07-09",
+      "hot_score": 80,
+      "hot_level": "高热",
+      "last_event": "发布Nano Banana 2 Lite与Gemini Omni Flash；联合认证Claude脑内小剧场",
+      "last_event_date": "2026-07-10",
       "last_event_url": "https://www.infoq.cn/article/7Rgp3820XIGYqEV9JPSq",
       "confidence": "medium",
       "ref": {
@@ -137,7 +136,7 @@
           "MoE"
         ]
       },
-      "updated_at": "2026-07-09T21:02:22.857452"
+      "updated_at": "2026-07-10T07:02:56.665608"
     },
     {
       "id": "wechat",
@@ -161,10 +160,10 @@
       "id": "nvidia",
       "name": "NVIDIA",
       "country": "美国",
-      "hot_score": 60,
+      "hot_score": 55,
       "hot_level": "温热",
-      "last_event": "发布全原子DiffDock分子口袋对接模型nvDock",
-      "last_event_date": "2026-07-09",
+      "last_event": "推出全原子DiffDock分子口袋对接模型nvDock",
+      "last_event_date": "2026-07-10",
       "last_event_url": "https://www.infoq.cn/article/VceiPBYzkY9lSAOubvtP",
       "flagship_models": [
         "nemotron-labs-audex-2b"
@@ -174,11 +173,11 @@
         "jia-yangqing"
       ],
       "focus_areas": [
-        "AI for Science",
-        "分子对接"
+        "AI计算",
+        "生物医药"
       ],
       "confidence": "low",
-      "updated_at": "2026-07-09T21:02:22.857452"
+      "updated_at": "2026-07-10T07:02:56.665608"
     },
     {
       "id": "spacex",
@@ -222,21 +221,20 @@
       "name": "腾讯",
       "country": "中国",
       "flagship_models": [
-        "腾讯混元"
+        "hunyuan"
       ],
       "key_people": [
         "ma-huateng"
       ],
       "focus_areas": [
         "大模型",
-        "云服务",
-        "AI Agent"
+        "AI基础设施"
       ],
-      "hot_score": 70,
-      "hot_level": "温热",
-      "last_event": "Cube Sandbox正式支持Arm架构；腾讯混元ACL 2026论文探讨SFT未来方向",
-      "last_event_date": "2026-07-09",
-      "last_event_url": "https://www.infoq.cn/article/c4GEoZLWvNZQhSSSWAoH",
+      "hot_score": 75,
+      "hot_level": "高热",
+      "last_event": "ACL 2026发表SFT不完全学习论文，发布R3-Embedding模型，Cube Sandbox支持Arm多架构算力",
+      "last_event_date": "2026-07-10",
+      "last_event_url": "https://www.infoq.cn/article/R3bVEmOPR090gN4ovm1A",
       "confidence": "high",
       "ref": {
         "founded": "1998",
@@ -247,16 +245,16 @@
           "MoE"
         ]
       },
-      "updated_at": "2026-07-09T21:02:22.857452"
+      "updated_at": "2026-07-10T07:02:56.665608"
     },
     {
       "id": "deepseek",
       "name": "DeepSeek",
       "country": "中国",
-      "hot_score": 85,
-      "hot_level": "高热",
-      "last_event": "被曝自研AI推理芯片，已启动一年，正对接代工与存储厂商",
-      "last_event_date": "2026-07-09",
+      "hot_score": 95,
+      "hot_level": "爆热",
+      "last_event": "被曝自研AI推理芯片，一年前已启动，正对接代工与存储厂商",
+      "last_event_date": "2026-07-10",
       "last_event_url": "https://www.infoq.cn/article/sLYxUorQQs5K17DILrx8",
       "flagship_models": [
         "deepseek"
@@ -265,11 +263,11 @@
         "gu-yuxian"
       ],
       "focus_areas": [
-        "AI芯片",
-        "大模型"
+        "大模型",
+        "AI芯片"
       ],
       "confidence": "high",
-      "updated_at": "2026-07-09T21:02:22.857452"
+      "updated_at": "2026-07-10T07:02:56.665608"
     },
     {
       "id": "huawei",
@@ -300,13 +298,13 @@
         "yann-lecun"
       ],
       "focus_areas": [
-        "世界模型",
-        "自监督学习"
+        "AI研究",
+        "世界模型"
       ],
-      "hot_score": 60,
+      "hot_score": 70,
       "hot_level": "温热",
       "last_event": "LeCun团队提出自适应隐空间世界模型AdaJEPA",
-      "last_event_date": "2026-07-09",
+      "last_event_date": "2026-07-10",
       "last_event_url": "https://www.infoq.cn/article/vxgbzsNORRzQDz6xK1jv",
       "confidence": "medium",
       "ref": {
@@ -318,7 +316,7 @@
           "MoE"
         ]
       },
-      "updated_at": "2026-07-09T07:03:00.955797"
+      "updated_at": "2026-07-10T07:02:56.665608"
     },
     {
       "id": "aliyun",
@@ -342,22 +340,22 @@
     },
     {
       "id": "alibaba",
-      "name": "阿里巴巴",
+      "name": "阿里",
       "country": "中国",
       "flagship_models": [
-        "千问大模型"
+        "qwen"
       ],
       "key_people": [
         "zhoujingren"
       ],
       "focus_areas": [
         "大模型",
-        "语音识别"
+        "语音AI"
       ],
       "hot_score": 65,
       "hot_level": "温热",
       "last_event": "千问大模型升级实时语音识别Fun-ASR-Realtime",
-      "last_event_date": "2026-07-09",
+      "last_event_date": "2026-07-10",
       "last_event_url": "https://36kr.com/p/3884024701874183",
       "confidence": "high",
       "ref": {
@@ -370,7 +368,7 @@
           "GQA"
         ]
       },
-      "updated_at": "2026-07-09T21:02:22.857452"
+      "updated_at": "2026-07-10T07:02:56.665608"
     },
     {
       "id": "amazon",
@@ -499,27 +497,26 @@
       "updated_at": "2026-07-07T07:03:45.841909"
     },
     {
-      "id": "tsinghua",
+      "id": "tsinghua-university",
       "name": "清华大学",
       "country": "中国",
-      "hot_score": 70,
+      "hot_score": 65,
       "hot_level": "温热",
-      "last_event": "清华开源空间模型，在ECCV 2026中打败Gemini；提出可信原生中转基础设施TrustedARI",
-      "last_event_date": "2026-06-22",
-      "last_event_url": "https://www.qbitai.com/2026/06/tsinghua-space-model/",
+      "last_event": "陈勇超助理教授官宣创业押注自进化大模型；与马普所合作推出d-OPSD；与人大&腾讯获WWW最佳长文",
+      "last_event_date": "2026-07-10",
+      "last_event_url": "https://36kr.com/p/3883751049965576",
       "flagship_models": [
         "空间模型"
       ],
       "key_people": [
-        "何恺明"
+        "chen-yongchao"
       ],
       "focus_areas": [
         "AI研究",
-        "空间智能",
-        "安全"
+        "大模型"
       ],
       "confidence": "high",
-      "updated_at": "2026-06-23T13:12:33.979498"
+      "updated_at": "2026-07-10T07:02:56.665608"
     },
     {
       "id": "groq",
@@ -962,21 +959,20 @@
       "id": "zhipu",
       "name": "智谱",
       "country": "中国",
-      "hot_score": 88,
+      "hot_score": 80,
       "hot_level": "高热",
-      "last_event": "被曝考虑自研AI芯片；GLM-5.2上线模力工场",
-      "last_event_date": "2026-07-09",
-      "last_event_url": "https://36kr.com/p/3886800988680200",
+      "last_event": "GLM-5.2上线模力工场，提供专属折扣；被曝考虑自研AI芯片",
+      "last_event_date": "2026-07-10",
+      "last_event_url": "https://www.infoq.cn/article/woKuALR13UH0o9XicUlZ",
       "flagship_models": [
         "glm-5.2"
       ],
       "key_people": [],
       "focus_areas": [
-        "大模型",
-        "AI芯片"
+        "大模型"
       ],
       "confidence": "high",
-      "updated_at": "2026-07-09T14:04:27.661480"
+      "updated_at": "2026-07-10T07:02:56.665608"
     },
     {
       "id": "slack",
@@ -999,13 +995,13 @@
       "id": "meituan",
       "name": "美团",
       "country": "中国",
-      "hot_score": 70,
-      "hot_level": "温热",
-      "last_event": "发布零英伟达万亿大模型，国芯+国模跑通",
-      "last_event_date": "2026-07-09",
+      "hot_score": 90,
+      "hot_level": "爆热",
+      "last_event": "发布「零英伟达」万亿大模型，首个国产卡训推万亿大模型开源",
+      "last_event_date": "2026-07-10",
       "last_event_url": "https://36kr.com/p/3878407689089282",
       "flagship_models": [
-        "美团万亿大模型"
+        "meituan-trillion-model"
       ],
       "key_people": [],
       "focus_areas": [
@@ -1013,7 +1009,7 @@
         "国产算力"
       ],
       "confidence": "high",
-      "updated_at": "2026-07-09T21:02:22.857452"
+      "updated_at": "2026-07-10T07:02:56.665608"
     },
     {
       "id": "kunlun-wanwei",
@@ -1150,41 +1146,41 @@
       "id": "kuaishou",
       "name": "快手",
       "country": "中国",
-      "hot_score": 85,
-      "hot_level": "爆热",
-      "last_event": "旗下视频生成大模型「可灵AI」落地近30亿美元融资，创全球多模态大模型单轮融资纪录",
-      "last_event_date": "2026-07-02",
+      "hot_score": 60,
+      "hot_level": "温热",
+      "last_event": "与浙大开源GUI Agent数据飞轮工具MobileForge",
+      "last_event_date": "2026-07-10",
       "last_event_url": "https://www.infoq.cn/article/hX0uxPMVfPGakqQdKozL",
       "flagship_models": [
         "kling"
       ],
       "key_people": [],
       "focus_areas": [
-        "视频生成",
-        "多模态大模型"
+        "AI Agent",
+        "移动端"
       ],
-      "confidence": "high",
-      "updated_at": "2026-07-06T14:03:13.173060"
+      "confidence": "low",
+      "updated_at": "2026-07-10T07:02:56.665608"
     },
     {
       "id": "360",
       "name": "360",
       "country": "中国",
       "hot_score": 50,
-      "hot_level": "温水",
+      "hot_level": "平稳",
       "last_event": "周鸿祎揭穿大模型幻觉残酷真相",
-      "last_event_date": "2026-07-09",
+      "last_event_date": "2026-07-10",
       "last_event_url": "https://36kr.com/p/3878668651936389",
       "flagship_models": [],
       "key_people": [
         "zhou-hongyi"
       ],
       "focus_areas": [
-        "大模型",
+        "AI安全",
         "企业服务"
       ],
       "confidence": "high",
-      "updated_at": "2026-07-09T21:02:22.857452"
+      "updated_at": "2026-07-10T07:02:56.665608"
     },
     {
       "id": "tencent-wechat",
@@ -1514,19 +1510,19 @@
       "id": "elastic",
       "name": "Elastic",
       "country": "美国",
-      "hot_score": 65,
+      "hot_score": 60,
       "hot_level": "温热",
       "last_event": "开源基于认知科学的Atlas Agent Memory",
-      "last_event_date": "2026-07-09",
+      "last_event_date": "2026-07-10",
       "last_event_url": "https://www.infoq.cn/article/pzYuRUO0ECSKktJjKV8P",
       "flagship_models": [],
       "key_people": [],
       "focus_areas": [
-        "搜索",
-        "AI记忆系统"
+        "Agent",
+        "内存"
       ],
-      "confidence": "medium",
-      "updated_at": "2026-07-09T14:04:27.661480"
+      "confidence": "high",
+      "updated_at": "2026-07-10T07:02:56.665608"
     },
     {
       "id": "hyper3d-developer",
@@ -1612,24 +1608,22 @@
       "id": "ant-lingbot",
       "name": "蚂蚁灵波",
       "country": "中国",
-      "hot_score": 80,
+      "hot_score": 85,
       "hot_level": "高热",
-      "last_event": "发布LingBot-Depth 2.0、世界模型2.0，开源具身视频模型LingBot-Video",
-      "last_event_date": "2026-07-09",
+      "last_event": "发布世界模型2.0（小时级实时生成+Agent实时陪玩），开源具身视频基础模型LingBot-Video",
+      "last_event_date": "2026-07-10",
       "last_event_url": "https://www.infoq.cn/article/mqY10ihiZ874id2JDeXu",
       "flagship_models": [
-        "lingbot-world-model-2.0",
-        "lingbot-depth-2.0",
-        "lingbot-video"
+        "lingbot-world-model-2.0"
       ],
       "key_people": [],
       "focus_areas": [
         "具身智能",
         "世界模型",
-        "空间感知"
+        "机器人"
       ],
       "confidence": "high",
-      "updated_at": "2026-07-09T14:04:27.661480"
+      "updated_at": "2026-07-10T07:02:56.665608"
     },
     {
       "id": "baai",
@@ -1768,21 +1762,22 @@
       "updated_at": "2026-07-09T14:04:27.661480"
     },
     {
-      "id": "chumenwenwen",
+      "id": "mobvoi",
       "name": "出门问问",
       "country": "中国",
-      "hot_score": 60,
-      "hot_level": "温热",
-      "last_event": "发布企业微信首款AI硬件：TicNote合作款",
-      "last_event_date": "2026-07-09",
+      "hot_score": 50,
+      "hot_level": "平稳",
+      "last_event": "发布企业微信首款AI硬件TicNote合作款",
+      "last_event_date": "2026-07-10",
       "last_event_url": "https://www.infoq.cn/article/CiwPd7c4oYfzqBGMbotV",
       "flagship_models": [],
       "key_people": [],
       "focus_areas": [
-        "AI硬件"
+        "AI硬件",
+        "企业微信"
       ],
-      "confidence": "medium",
-      "updated_at": "2026-07-09T14:04:27.661480"
+      "confidence": "high",
+      "updated_at": "2026-07-10T07:02:56.665608"
     },
     {
       "id": "volcano-engine",
@@ -1821,22 +1816,22 @@
       "updated_at": "2026-07-09T07:03:00.955797"
     },
     {
-      "id": "boyun",
+      "id": "bocloud",
       "name": "博云科技",
       "country": "中国",
-      "hot_score": 75,
-      "hot_level": "高热",
-      "last_event": "完成新一轮数亿元融资，AI战略向金融、制造、公共服务纵深推进",
-      "last_event_date": "2026-07-09",
+      "hot_score": 50,
+      "hot_level": "平稳",
+      "last_event": "完成新一轮数亿元融资，AI战略向金融、制造、公共服务纵深",
+      "last_event_date": "2026-07-10",
       "last_event_url": "https://www.infoq.cn/article/6xRIxMiLF6mJpvQz770h",
       "flagship_models": [],
       "key_people": [],
       "focus_areas": [
-        "AI战略",
-        "金融/制造/公共服务"
+        "AI基础设施",
+        "行业AI"
       ],
       "confidence": "high",
-      "updated_at": "2026-07-09T14:04:27.661480"
+      "updated_at": "2026-07-10T07:02:56.665608"
     },
     {
       "id": "wujie-roborain",
@@ -3432,22 +3427,22 @@
       "name_en": "Zhou Hongyi",
       "title": "360集团创始人",
       "employer_id": "360",
-      "influence_level": "核心人物",
-      "hot_score": 50,
-      "hot_level": "温水",
-      "recent_activity": "谈大模型幻觉：淘汰你的是会用AI的人",
-      "recent_activity_date": "2026-07-09",
+      "influence_level": "行业领袖",
+      "hot_score": 60,
+      "hot_level": "温热",
+      "recent_activity": "揭穿大模型幻觉残酷真相，谈企业组织重塑",
+      "recent_activity_date": "2026-07-10",
       "recent_activity_url": "https://36kr.com/p/3878668651936389",
       "known_for": [
-        "大模型",
-        "网络安全"
+        "网络安全",
+        "AI言论"
       ],
       "related_providers": [
         "360"
       ],
       "related_llms": [],
       "confidence": "high",
-      "updated_at": "2026-07-09T21:02:22.857452",
+      "updated_at": "2026-07-10T07:02:56.665608",
       "last_event": "驳斥大模型幻觉，称企业需掌握AI使用",
       "last_event_date": "2026-07-03",
       "last_event_url": "https://36kr.com/p/3878668651936389"
@@ -3532,22 +3527,22 @@
       "name": "陈勇超",
       "name_en": "Chen Yongchao",
       "title": "清华大学助理教授",
-      "employer_id": "qianfang-tech",
+      "employer_id": "tsinghua-university",
       "influence_level": "新锐",
       "hot_score": 70,
       "hot_level": "温热",
-      "recent_activity": "婉拒DeepMind，官宣创业押注自进化大模型",
-      "recent_activity_date": "2026-07-09",
+      "recent_activity": "官宣创业，押注自进化大模型",
+      "recent_activity_date": "2026-07-10",
       "recent_activity_url": "https://36kr.com/p/3883751049965576",
       "known_for": [
         "自进化大模型"
       ],
       "related_providers": [
-        "chen-yongchao-startup"
+        "tsinghua-university"
       ],
       "related_llms": [],
       "confidence": "high",
-      "updated_at": "2026-07-09T21:02:22.857452"
+      "updated_at": "2026-07-10T07:02:56.665608"
     },
     {
       "id": "linus-torvalds",
@@ -3596,19 +3591,19 @@
     },
     {
       "id": "yann-lecun",
-      "name": "Yann LeCun",
+      "name": "杨立昆",
       "name_en": "Yann LeCun",
-      "title": "Meta AI首席科学家",
+      "title": "Meta首席AI科学家",
       "employer_id": "meta",
       "influence_level": "行业领袖",
-      "hot_score": 60,
+      "hot_score": 70,
       "hot_level": "温热",
       "recent_activity": "团队提出自适应隐空间世界模型AdaJEPA",
-      "recent_activity_date": "2026-07-09",
+      "recent_activity_date": "2026-07-10",
       "recent_activity_url": "",
       "known_for": [
-        "世界模型",
-        "AI基础研究"
+        "卷积神经网络",
+        "AI研究"
       ],
       "related_providers": [
         "meta"
@@ -3617,7 +3612,7 @@
         "adajepa"
       ],
       "confidence": "medium",
-      "updated_at": "2026-07-09T21:02:22.857452"
+      "updated_at": "2026-07-10T07:02:56.665608"
     },
     {
       "id": "mu-yao",
@@ -4984,16 +4979,16 @@
     {
       "id": "fun-asr-realtime",
       "name": "Fun-ASR-Realtime",
-      "category": "语音识别模型",
+      "category": "语音识别",
       "website": "https://www.modelscope.cn",
       "github": "",
-      "description": "千问大模型升级的实时语音识别功能",
+      "description": "千问大模型升级的实时语音识别工具，提供实时语音交互能力",
       "pricing_model": "开源免费",
       "maturity": "可用",
-      "hot_score": 65,
+      "hot_score": 60,
       "hot_level": "温热",
-      "last_update": "千问大模型升级实时语音识别Fun-ASR-Realtime",
-      "last_update_date": "2026-07-09",
+      "last_update": "升级发布",
+      "last_update_date": "2026-07-10",
       "last_update_url": "https://36kr.com/p/3884024701874183",
       "related_providers": [
         "alibaba"
@@ -5002,7 +4997,7 @@
         "千问大模型"
       ],
       "confidence": "high",
-      "updated_at": "2026-07-09T21:02:22.857452",
+      "updated_at": "2026-07-10T07:02:56.665608",
       "last_event_url": "https://36kr.com/p/3884024701874183"
     },
     {
@@ -5027,23 +5022,23 @@
     {
       "id": "atlas-agent-memory",
       "name": "Atlas Agent Memory",
-      "category": "Agent记忆框架",
+      "category": "Agent内存",
       "website": "https://elastic.co",
       "github": "",
-      "description": "Elastic开源基于认知科学的Agent记忆系统",
+      "description": "Elastic开源的基于认知科学的Agent记忆系统，为Agent提供可信上下文",
       "pricing_model": "开源免费",
       "maturity": "可用",
-      "hot_score": 60,
+      "hot_score": 65,
       "hot_level": "温热",
-      "last_update": "Elastic开源Atlas Agent Memory",
-      "last_update_date": "2026-07-09",
+      "last_update": "开源发布",
+      "last_update_date": "2026-07-10",
       "last_update_url": "https://www.infoq.cn/article/pzYuRUO0ECSKktJjKV8P",
       "related_providers": [
         "elastic"
       ],
       "related_llms": [],
       "confidence": "high",
-      "updated_at": "2026-07-09T21:02:22.857452"
+      "updated_at": "2026-07-10T07:02:56.665608"
     },
     {
       "id": "fast-leworldmodel",
@@ -5252,46 +5247,46 @@
       "updated_at": "2026-07-08T14:03:52.955779"
     },
     {
-      "id": "deep-tutor",
+      "id": "deeptutor",
       "name": "DeepTutor",
-      "category": "AI辅导系统",
+      "category": "教育AI",
       "website": "https://github.com/HKUDS",
       "github": "https://github.com/HKUDS/DeepTutor",
-      "description": "港大开源代理辅导系统，提供终身个性化教学",
+      "description": "香港大学开发的开源代理辅导系统，支持终身个性化教学与多模态文档导入",
       "pricing_model": "开源免费",
       "maturity": "可用",
-      "hot_score": 55,
-      "hot_level": "温热",
-      "last_update": "开源代理辅导系统DeepTutor",
-      "last_update_date": "2026-07-09",
+      "hot_score": 50,
+      "hot_level": "平稳",
+      "last_update": "开源发布",
+      "last_update_date": "2026-07-10",
       "last_update_url": "",
       "related_providers": [
         "hku"
       ],
       "related_llms": [],
       "confidence": "low",
-      "updated_at": "2026-07-09T14:04:27.661480"
+      "updated_at": "2026-07-10T07:02:56.665608"
     },
     {
       "id": "cube-sandbox",
       "name": "Cube Sandbox",
-      "category": "云原生沙箱/代理部署工具",
+      "category": "基础设施",
       "website": "https://cloud.tencent.com",
       "github": "",
-      "description": "腾讯云推出的沙箱环境，支持Arm架构，解锁Agent多架构算力",
+      "description": "腾讯云与Arm联手推出的多架构算力沙箱，正式支持Arm架构，解锁Agent多架构算力",
       "pricing_model": "商业",
       "maturity": "生产就绪",
-      "hot_score": 60,
+      "hot_score": 55,
       "hot_level": "温热",
-      "last_update": "正式支持Arm架构，与Arm联手解锁Agent多架构算力",
-      "last_update_date": "2026-07-09",
+      "last_update": "支持Arm架构",
+      "last_update_date": "2026-07-10",
       "last_update_url": "https://www.infoq.cn/article/c4GEoZLWvNZQhSSSWAoH",
       "related_providers": [
-        "tencent-cloud"
+        "tencent"
       ],
       "related_llms": [],
-      "confidence": "medium",
-      "updated_at": "2026-07-09T14:04:27.661480"
+      "confidence": "high",
+      "updated_at": "2026-07-10T07:02:56.665608"
     },
     {
       "id": "ralph-loop",
@@ -5315,23 +5310,23 @@
     {
       "id": "lingbot-video",
       "name": "LingBot-Video",
-      "category": "具身视频基础模型",
+      "category": "视频基础模型",
       "website": "",
       "github": "",
-      "description": "专注于理解物理世界动态的具身视频基座模型，构建物理引擎",
+      "description": "蚂蚁灵波开源的具身视频基础模型，融合7万小时数据，预测物理世界变化",
       "pricing_model": "开源免费",
       "maturity": "可用",
-      "hot_score": 80,
+      "hot_score": 85,
       "hot_level": "高热",
-      "last_update": "蚂蚁灵波开源具身视频基模LingBot-Video",
-      "last_update_date": "2026-07-09",
+      "last_update": "开源发布",
+      "last_update_date": "2026-07-10",
       "last_update_url": "https://www.infoq.cn/article/mqY10ihiZ874id2JDeXu",
       "related_providers": [
-        "ant-lingbo"
+        "ant-lingbot"
       ],
       "related_llms": [],
       "confidence": "high",
-      "updated_at": "2026-07-09T21:02:22.857452"
+      "updated_at": "2026-07-10T07:02:56.665608"
     },
     {
       "id": "lingbot-depth-2-0",
@@ -5357,23 +5352,23 @@
     {
       "id": "nvdock",
       "name": "nvDock",
-      "category": "分子对接模型",
+      "category": "分子对接",
       "website": "",
       "github": "",
-      "description": "NVIDIA推出的全原子DiffDock分子口袋对接扩散模型",
+      "description": "NVIDIA推出的全原子DiffDock分子口袋对接扩散模型，包含评分和置信度模型",
       "pricing_model": "开源免费",
-      "maturity": "可用",
-      "hot_score": 60,
-      "hot_level": "温热",
-      "last_update": "NVIDIA发布nvDock分子对接模型",
-      "last_update_date": "2026-07-09",
+      "maturity": "实验",
+      "hot_score": 50,
+      "hot_level": "平稳",
+      "last_update": "模型发布",
+      "last_update_date": "2026-07-10",
       "last_update_url": "",
       "related_providers": [
         "nvidia"
       ],
       "related_llms": [],
       "confidence": "low",
-      "updated_at": "2026-07-09T21:02:22.857452"
+      "updated_at": "2026-07-10T07:02:56.665608"
     },
     {
       "id": "adajepa",
@@ -5381,32 +5376,34 @@
       "category": "世界模型",
       "website": "",
       "github": "",
-      "description": "LeCun团队提出的自适应隐空间世界模型",
+      "description": "LeCun团队提出的自适应隐空间世界模型，用于LLM推理动态短板",
       "pricing_model": "开源免费",
       "maturity": "实验",
       "hot_score": 70,
       "hot_level": "温热",
-      "last_update": "LeCun团队提出AdaJEPA",
-      "last_update_date": "2026-07-09",
+      "last_update": "模型提出",
+      "last_update_date": "2026-07-10",
       "last_update_url": "",
-      "related_providers": [],
+      "related_providers": [
+        "meta"
+      ],
       "related_llms": [],
       "confidence": "medium",
-      "updated_at": "2026-07-09T21:02:22.857452"
+      "updated_at": "2026-07-10T07:02:56.665608"
     },
     {
       "id": "r3-embedding",
       "name": "R3-Embedding",
-      "category": "技能检索模型",
+      "category": "文本嵌入",
       "website": "",
       "github": "",
-      "description": "腾讯推出的专用于智能体技能检索的文本嵌入模型，基于Qwen3-0.6B",
+      "description": "腾讯推出的智能体技能检索文本嵌入模型，基于Qwen3-0.6B-Base，专为Agent技能路由优化",
       "pricing_model": "开源免费",
-      "maturity": "可用",
-      "hot_score": 65,
+      "maturity": "生产就绪",
+      "hot_score": 60,
       "hot_level": "温热",
-      "last_update": "腾讯发布R3-Embedding，用于Agent技能路由",
-      "last_update_date": "2026-07-09",
+      "last_update": "模型发布",
+      "last_update_date": "2026-07-10",
       "last_update_url": "",
       "related_providers": [
         "tencent"
@@ -5414,8 +5411,149 @@
       "related_llms": [
         "r3-embedding"
       ],
-      "confidence": "high",
-      "updated_at": "2026-07-09T21:02:22.857452"
+      "confidence": "medium",
+      "updated_at": "2026-07-10T07:02:56.665608"
+    },
+    {
+      "id": "mobileforge",
+      "name": "MobileForge",
+      "category": "AI Agent",
+      "website": "",
+      "github": "",
+      "description": "快手与浙大开源的GUI Agent数据飞轮工具，不用人工标注",
+      "pricing_model": "开源免费",
+      "maturity": "可用",
+      "hot_score": 60,
+      "hot_level": "温热",
+      "last_update": "开源发布",
+      "last_update_date": "2026-07-10",
+      "last_update_url": "",
+      "related_providers": [
+        "kuaishou"
+      ],
+      "related_llms": [],
+      "confidence": "low",
+      "updated_at": "2026-07-10T07:02:56.665608"
+    },
+    {
+      "id": "d-opsd",
+      "name": "d-OPSD",
+      "category": "训练方法",
+      "website": "",
+      "github": "",
+      "description": "马普所与清华推出的首个针对扩散语言模型的在线自蒸馏学习方法",
+      "pricing_model": "开源免费",
+      "maturity": "实验",
+      "hot_score": 50,
+      "hot_level": "平稳",
+      "last_update": "论文发布",
+      "last_update_date": "2026-07-10",
+      "last_update_url": "",
+      "related_providers": [
+        "tsinghua-university"
+      ],
+      "related_llms": [],
+      "confidence": "low",
+      "updated_at": "2026-07-10T07:02:56.665608"
+    },
+    {
+      "id": "xpolicylab",
+      "name": "XPolicyLab",
+      "category": "机器人开发",
+      "website": "",
+      "github": "",
+      "description": "统一的机器人策略开发与部署标准和基础设施，集成VLA/WAM策略、模仿学习基线",
+      "pricing_model": "开源免费",
+      "maturity": "实验",
+      "hot_score": 50,
+      "hot_level": "平稳",
+      "last_update": "项目发布",
+      "last_update_date": "2026-07-10",
+      "last_update_url": "",
+      "related_providers": [],
+      "related_llms": [],
+      "confidence": "low",
+      "updated_at": "2026-07-10T07:02:56.665608"
+    },
+    {
+      "id": "comattack",
+      "name": "Comattack",
+      "category": "AI安全",
+      "website": "",
+      "github": "",
+      "description": "针对LLM Agent提示压缩过程的黑盒对抗框架，覆盖工具选择、问答、系统提示破坏任务",
+      "pricing_model": "开源免费",
+      "maturity": "实验",
+      "hot_score": 50,
+      "hot_level": "平稳",
+      "last_update": "项目发布",
+      "last_update_date": "2026-07-10",
+      "last_update_url": "",
+      "related_providers": [],
+      "related_llms": [],
+      "confidence": "low",
+      "updated_at": "2026-07-10T07:02:56.665608"
+    },
+    {
+      "id": "surgmotion",
+      "name": "SurgMotion",
+      "category": "医疗AI",
+      "website": "",
+      "github": "",
+      "description": "面向通用外科手术视频理解的视频原生基础模型，在SurgMotion-15M数据集上预训练",
+      "pricing_model": "开源免费",
+      "maturity": "实验",
+      "hot_score": 55,
+      "hot_level": "温热",
+      "last_update": "模型发布",
+      "last_update_date": "2026-07-10",
+      "last_update_url": "",
+      "related_providers": [],
+      "related_llms": [],
+      "confidence": "low",
+      "updated_at": "2026-07-10T07:02:56.665608"
+    },
+    {
+      "id": "lingbot-vla-2",
+      "name": "LingBot-VLA 2.0",
+      "category": "机器人基础模型",
+      "website": "",
+      "github": "",
+      "description": "蚂蚁灵波面向真实机器人应用的Vision-Language-Action基础模型，扩展动作空间和预测动力学建模",
+      "pricing_model": "开源免费",
+      "maturity": "可用",
+      "hot_score": 70,
+      "hot_level": "温热",
+      "last_update": "模型发布",
+      "last_update_date": "2026-07-10",
+      "last_update_url": "",
+      "related_providers": [
+        "ant-lingbot"
+      ],
+      "related_llms": [],
+      "confidence": "medium",
+      "updated_at": "2026-07-10T07:02:56.665608"
+    },
+    {
+      "id": "gpt-live",
+      "name": "GPT-Live",
+      "category": "语音对话产品",
+      "website": "",
+      "github": "",
+      "description": "OpenAI发布的实时语音对话功能，让ChatGPT像真人一样说话",
+      "pricing_model": "商业",
+      "maturity": "可用",
+      "hot_score": 75,
+      "hot_level": "高热",
+      "last_update": "产品发布",
+      "last_update_date": "2026-07-10",
+      "last_update_url": "",
+      "related_providers": [
+        "openai"
+      ],
+      "related_llms": [],
+      "confidence": "low",
+      "updated_at": "2026-07-10T07:02:56.665608"
     }
   ],
   "llms": [
@@ -5472,11 +5610,11 @@
       "updated_at": "2026-07-05T07:04:07.781036"
     },
     {
-      "id": "gpt-5-6",
+      "id": "gpt-5.6",
       "name": "GPT-5.6",
       "provider_id": "openai",
       "family": "GPT",
-      "type": "对话模型",
+      "type": "文本",
       "open_weights": false,
       "tier": "旗舰",
       "capabilities": [
@@ -5484,17 +5622,17 @@
         "推理"
       ],
       "status": "预览",
-      "hot_score": 90,
+      "hot_score": 95,
       "hot_level": "爆热",
-      "hot_reason": "三大模型被曝偷跑，定档7月7日，截杀Claude",
-      "last_event": "GPT-5.6三大模型底层代码曝光，预计7月7日发布",
-      "last_event_date": "2026-07-09",
+      "hot_reason": "三大模型偷跑截杀Claude，定档7月7日发布",
+      "last_event": "底层代码曝光，卡点截杀Claude",
+      "last_event_date": "2026-07-07",
       "last_event_url": "https://36kr.com/p/3883839281099016",
       "related_people": [
         "sam-altman"
       ],
       "confidence": "medium",
-      "updated_at": "2026-07-09T21:02:22.857452"
+      "updated_at": "2026-07-10T07:02:56.665608"
     },
     {
       "id": "gpt-5-5",
@@ -5621,27 +5759,27 @@
       "updated_at": "2026-07-06T07:03:13.294479"
     },
     {
-      "id": "glm-5-2",
+      "id": "glm-5.2",
       "name": "GLM-5.2",
-      "provider_id": "zhipu-ai",
+      "provider_id": "zhipu",
       "family": "GLM",
-      "type": "对话模型",
+      "type": "文本",
       "open_weights": true,
-      "tier": "旗舰",
+      "tier": "主力",
       "capabilities": [
         "文本生成",
-        "代码生成"
+        "编程"
       ],
       "status": "发布",
-      "hot_score": 75,
-      "hot_level": "温热",
-      "hot_reason": "上线模力工场，提供专属折扣，被当作开源AI编程工具第一",
-      "last_event": "GLM-5.2上线模力工场",
-      "last_event_date": "2026-07-09",
+      "hot_score": 80,
+      "hot_level": "高热",
+      "hot_reason": "上线模力工场，提供专属折扣",
+      "last_event": "上线模力工场，开源AI编程工具第一",
+      "last_event_date": "2026-07-10",
       "last_event_url": "https://www.infoq.cn/article/woKuALR13UH0o9XicUlZ",
       "related_people": [],
       "confidence": "high",
-      "updated_at": "2026-07-09T21:02:22.857452"
+      "updated_at": "2026-07-10T07:02:56.665608"
     },
     {
       "id": "abot-earth05",
@@ -6259,24 +6397,24 @@
     {
       "id": "zhiqing",
       "name": "智擎",
-      "provider_id": "qianfang",
-      "family": "重卡能源",
+      "provider_id": "qianfang-keji（千方科技）",
+      "family": "未知",
       "type": "专用",
       "open_weights": false,
       "tier": "专用",
       "capabilities": [
-        "重卡补能规划"
+        "重卡能源预测"
       ],
       "status": "发布",
       "hot_score": 50,
       "hot_level": "平稳",
       "hot_reason": "业内首个重卡能源大模型",
       "last_event": "发布",
-      "last_event_date": "2026-07-09",
+      "last_event_date": "2026-07-10",
       "last_event_url": "https://36kr.com/p/3875522570793220",
       "related_people": [],
-      "confidence": "low",
-      "updated_at": "2026-07-09T14:04:27.661480"
+      "confidence": "medium",
+      "updated_at": "2026-07-10T07:02:56.665608"
     },
     {
       "id": "tiangong",
@@ -6540,22 +6678,22 @@
       "name": "Nano Banana 2 Lite",
       "provider_id": "google-deepmind",
       "family": "Nano Banana",
-      "type": "轻量文本",
+      "type": "文本",
       "open_weights": false,
       "tier": "轻量",
       "capabilities": [
         "文本生成"
       ],
       "status": "发布",
-      "hot_score": 55,
+      "hot_score": 65,
       "hot_level": "温热",
-      "hot_reason": "Google DeepMind发布",
-      "last_event": "发布",
-      "last_event_date": "2026-07-09",
+      "hot_reason": "轻量级模型发布",
+      "last_event": "官方发布",
+      "last_event_date": "2026-07-10",
       "last_event_url": "https://pro.jiqizhixin.com/reference/26e73ad7-f0e3-4700-bb63-32a69358d470",
       "related_people": [],
       "confidence": "low",
-      "updated_at": "2026-07-09T14:04:27.661480"
+      "updated_at": "2026-07-10T07:02:56.665608"
     },
     {
       "id": "gemini-omni-flash",
@@ -6568,18 +6706,19 @@
       "capabilities": [
         "文本",
         "图像",
-        "音频"
+        "音频",
+        "视频"
       ],
       "status": "发布",
-      "hot_score": 55,
+      "hot_score": 70,
       "hot_level": "温热",
-      "hot_reason": "Google DeepMind发布",
-      "last_event": "发布",
-      "last_event_date": "2026-07-09",
+      "hot_reason": "Google DeepMind最新多模态模型发布",
+      "last_event": "官方发布",
+      "last_event_date": "2026-07-10",
       "last_event_url": "https://pro.jiqizhixin.com/reference/26e73ad7-f0e3-4700-bb63-32a69358d470",
       "related_people": [],
       "confidence": "low",
-      "updated_at": "2026-07-09T14:04:27.661480"
+      "updated_at": "2026-07-10T07:02:56.665608"
     },
     {
       "id": "gelab-zero-4b-preview-sico-evolution",
@@ -7055,25 +7194,26 @@
     {
       "id": "qwen",
       "name": "千问大模型",
-      "provider_id": "aliyun",
+      "provider_id": "alibaba",
       "family": "Qwen",
-      "type": "文本",
+      "type": "多模态",
       "open_weights": true,
       "tier": "旗舰",
       "capabilities": [
-        "文本生成",
-        "语音识别"
+        "文本",
+        "图像",
+        "语音"
       ],
       "status": "发布",
-      "hot_score": 60,
+      "hot_score": 65,
       "hot_level": "温热",
       "hot_reason": "升级实时语音识别Fun-ASR-Realtime",
-      "last_event": "升级实时语音识别",
-      "last_event_date": "2026-07-09",
+      "last_event": "语音功能升级",
+      "last_event_date": "2026-07-10",
       "last_event_url": "https://36kr.com/p/3884024701874183",
       "related_people": [],
-      "confidence": "medium",
-      "updated_at": "2026-07-09T14:04:27.661480"
+      "confidence": "high",
+      "updated_at": "2026-07-10T07:02:56.665608"
     },
     {
       "id": "lingbot-vla-2-0",
@@ -7243,9 +7383,9 @@
     },
     {
       "id": "meituan-trillion-model",
-      "name": "美团万亿大模型（暂无名）",
+      "name": "美团万亿大模型",
       "provider_id": "meituan",
-      "family": "meituan",
+      "family": "未知",
       "type": "文本",
       "open_weights": true,
       "tier": "旗舰",
@@ -7254,15 +7394,15 @@
         "推理"
       ],
       "status": "发布",
-      "hot_score": 92,
+      "hot_score": 90,
       "hot_level": "爆热",
-      "hot_reason": "国内首个国产卡训推万亿大模型，零英伟达，开源",
-      "last_event": "发布‘零英伟达’万亿大模型并开源",
-      "last_event_date": "2026-07-09",
+      "hot_reason": "首个国产卡训推万亿大模型，零英伟达，开源",
+      "last_event": "发布开源",
+      "last_event_date": "2026-07-10",
       "last_event_url": "https://36kr.com/p/3878407689089282",
       "related_people": [],
       "confidence": "high",
-      "updated_at": "2026-07-09T14:04:27.661480"
+      "updated_at": "2026-07-10T07:02:56.665608"
     },
     {
       "id": "lingbot-world-model-2-0",
@@ -7377,324 +7517,33 @@
       "related_people": [],
       "confidence": "low",
       "updated_at": "2026-07-09T21:02:22.857452"
+    },
+    {
+      "id": "lingbot-world-model-2.0",
+      "name": "蚂蚁灵波世界模型2.0",
+      "provider_id": "ant-lingbot",
+      "family": "LingBot",
+      "type": "世界模型",
+      "open_weights": false,
+      "tier": "旗舰",
+      "capabilities": [
+        "物理模拟",
+        "实时生成",
+        "Agent陪玩"
+      ],
+      "status": "发布",
+      "hot_score": 85,
+      "hot_level": "高热",
+      "hot_reason": "两大首创：小时级实时生成+Agent实时陪玩",
+      "last_event": "正式发布",
+      "last_event_date": "2026-07-10",
+      "last_event_url": "https://www.infoq.cn/article/mqY10ihiZ874id2JDeXu",
+      "related_people": [],
+      "confidence": "high",
+      "updated_at": "2026-07-10T07:02:56.665608"
     }
   ],
   "changelog": [
-    {
-      "type": "update",
-      "dimension": "providers",
-      "id": "chinese-academy-of-sciences",
-      "summary": "hot_score: 55 → 70; last_event: 联合全球机构发布首个十亿参数级手术视频基础模型SurgMotion → 携手全球机构发布首个十亿参数级手术视频基础模型SurgMotion",
-      "date": "2026-07-09",
-      "time": "07:03:00",
-      "url": ""
-    },
-    {
-      "type": "update",
-      "dimension": "providers",
-      "id": "elastic",
-      "summary": "hot_score: 55 → 60; last_event: 开源基于认知科学的Atlas Agent Memory记忆系统 → 开源基于认知科学的Atlas Agent Memory",
-      "date": "2026-07-09",
-      "time": "07:03:00",
-      "url": "https://www.infoq.cn/article/pzYuRUO0ECSKktJjKV8P"
-    },
-    {
-      "type": "update",
-      "dimension": "providers",
-      "id": "wujie-robobrain",
-      "summary": "hot_score: 60 → 55; hot_level: 温热 → 平稳; last_event: 发布Orca通用世界基础模型，拆解世界学习为两条互补路径 → 发布通用世界基础模型Orca，将世界学习拆成无意识学习和有意识学习",
-      "date": "2026-07-09",
-      "time": "07:03:00",
-      "url": "https://www.infoq.cn/article/HpkpCVSwAHQXAhphZm34"
-    },
-    {
-      "type": "update",
-      "dimension": "providers",
-      "id": "roboscience",
-      "summary": "name: 机器科学(RoboScience) → RoboScience",
-      "date": "2026-07-09",
-      "time": "07:03:00",
-      "url": "https://36kr.com/p/3868276479710466"
-    },
-    {
-      "type": "new",
-      "dimension": "providers",
-      "id": "haizhi",
-      "summary": "院士专家工作站再升级，重点攻关知识图谱与大模型融合",
-      "date": "2026-07-09",
-      "time": "07:03:00",
-      "url": "https://36kr.com/p/3886711417630722"
-    },
-    {
-      "type": "update",
-      "dimension": "providers",
-      "id": "xiehou-fashion-tech",
-      "summary": "hot_score: 40 → 35; hot_level: 温热 → 平稳; last_event: 发布2.0大模型，AI量化穿搭冲突指数 → 发布2.0大模型，用AI七维大模型解决穿搭决策痛点",
-      "date": "2026-07-09",
-      "time": "07:03:00",
-      "url": "https://36kr.com/p/3805817826729736"
-    },
-    {
-      "type": "new",
-      "dimension": "providers",
-      "id": "volcano-engine",
-      "summary": "视频云用RTC+直播打造云上陪看房解决方案",
-      "date": "2026-07-09",
-      "time": "07:03:00",
-      "url": "https://www.infoq.cn/article/PEcre9jZeRucpbk5rezX"
-    },
-    {
-      "type": "new",
-      "dimension": "providers",
-      "id": "target",
-      "summary": "推出基于LLM的语义匹配系统提升营销预测流程效率",
-      "date": "2026-07-09",
-      "time": "07:03:00",
-      "url": "https://www.infoq.cn/article/cEfBc7qdIDe3ZVFDyjS5"
-    },
-    {
-      "type": "update",
-      "dimension": "providers",
-      "id": "meta",
-      "summary": "hot_score: 50 → 60",
-      "date": "2026-07-09",
-      "time": "07:03:00",
-      "url": ""
-    },
-    {
-      "type": "update",
-      "dimension": "people",
-      "id": "yann-lecun",
-      "summary": "name: 扬·勒昆 → Yann LeCun; hot_score: 50 → 70",
-      "date": "2026-07-09",
-      "time": "07:03:00",
-      "url": ""
-    },
-    {
-      "type": "update",
-      "dimension": "tools",
-      "id": "claude-code",
-      "summary": "hot_score: 82 → 70; hot_level: 高热 → 温热; last_update: Anthropic用Fable 5大幅精简提示词，80%可删 → Claude、Cursor、OpenClaw集体上手机端，支持24h编程",
-      "date": "2026-07-09",
-      "time": "07:03:00",
-      "url": "https://www.infoq.cn/article/77YytRGDYm7T9ovQKaW9"
-    },
-    {
-      "type": "update",
-      "dimension": "tools",
-      "id": "cursor",
-      "summary": "hot_score: 60 → 70; last_update: 更新：支持语音编程 → 上手机端，与Claude Code等集体出现",
-      "date": "2026-07-09",
-      "time": "07:03:00",
-      "url": "https://www.infoq.cn/article/77YytRGDYm7T9ovQKaW9"
-    },
-    {
-      "type": "update",
-      "dimension": "tools",
-      "id": "openclaw",
-      "summary": "hot_score: 50 → 65; last_update: 发布 → 上手机端",
-      "date": "2026-07-09",
-      "time": "07:03:00",
-      "url": "https://www.infoq.cn/article/77YytRGDYm7T9ovQKaW9"
-    },
-    {
-      "type": "new",
-      "dimension": "tools",
-      "id": "ralph-loop",
-      "summary": "创造者的暴论引起关注",
-      "date": "2026-07-09",
-      "time": "07:03:00",
-      "url": "https://www.infoq.cn/article/d2tmcGi9Fy6PMkNGpo9y"
-    },
-    {
-      "type": "update",
-      "dimension": "tools",
-      "id": "deep-tutor",
-      "summary": "hot_level: 温热 → 平稳; last_update: 发布 → 发布开源版本",
-      "date": "2026-07-09",
-      "time": "07:03:00",
-      "url": ""
-    },
-    {
-      "type": "update",
-      "dimension": "tools",
-      "id": "office-cli",
-      "summary": "hot_level: 温热 → 平稳",
-      "date": "2026-07-09",
-      "time": "07:03:00",
-      "url": ""
-    },
-    {
-      "type": "update",
-      "dimension": "tools",
-      "id": "memgui-agent",
-      "summary": "hot_score: 45 → 50; hot_level: 温热 → 平稳",
-      "date": "2026-07-09",
-      "time": "07:03:00",
-      "url": ""
-    },
-    {
-      "type": "update",
-      "dimension": "tools",
-      "id": "atlas-agent-memory",
-      "summary": "hot_score: 60 → 55; hot_level: 温热 → 平稳",
-      "date": "2026-07-09",
-      "time": "07:03:00",
-      "url": "https://www.infoq.cn/article/pzYuRUO0ECSKktJjKV8P"
-    },
-    {
-      "type": "update",
-      "dimension": "tools",
-      "id": "cube-sandbox",
-      "summary": "hot_level: 温热 → 平稳",
-      "date": "2026-07-09",
-      "time": "07:03:00",
-      "url": "https://www.infoq.cn/article/c4GEoZLWvNZQhSSSWAoH"
-    },
-    {
-      "type": "update",
-      "dimension": "tools",
-      "id": "fun-asr-realtime",
-      "summary": "hot_score: 55 → 60; last_update: 升级发布 → 千问大模型升级发布",
-      "date": "2026-07-09",
-      "time": "07:03:00",
-      "url": "https://36kr.com/p/3884024701874183"
-    },
-    {
-      "type": "update",
-      "dimension": "llms",
-      "id": "gpt-5-6",
-      "summary": "name: GPT-5.6 (三个神秘模型) → GPT-5.6; last_event: 三种神秘模型底层代码曝光，计划截杀Claude发布 → GPT-5.6三大模型意外曝光，传闻最快明天发布",
-      "date": "2026-07-09",
-      "time": "07:03:00",
-      "url": "https://36kr.com/p/3883839281099016"
-    },
-    {
-      "type": "update",
-      "dimension": "llms",
-      "id": "claude",
-      "summary": "hot_score: 80 → 70; hot_level: 高热 → 温热; last_event: Anthropic表示Claude已承担95%内部数据分析查询工作 → Claude Code等工具上手机端",
-      "date": "2026-07-09",
-      "time": "07:03:00",
-      "url": "https://www.infoq.cn/article/77YytRGDYm7T9ovQKaW9"
-    },
-    {
-      "type": "update",
-      "dimension": "llms",
-      "id": "glm-5-2",
-      "summary": "hot_score: 70 → 75; hot_level: 高热 → 温热; last_event: 上线模力工场，提供免费试用 → GLM-5.2上线模力工场",
-      "date": "2026-07-09",
-      "time": "07:03:00",
-      "url": "https://www.infoq.cn/article/woKuALR13UH0o9XicUlZ"
-    },
-    {
-      "type": "update",
-      "dimension": "llms",
-      "id": "nano-banana-2-lite",
-      "summary": "hot_score: 70 → 65; last_event: 机器之心PRO通讯中提及发布 → 与Gemini Omni Flash一同发布",
-      "date": "2026-07-09",
-      "time": "07:03:00",
-      "url": ""
-    },
-    {
-      "type": "update",
-      "dimension": "llms",
-      "id": "gemini-omni-flash",
-      "summary": "hot_score: 72 → 70; hot_level: 高热 → 温热; last_event: 机器之心PRO通讯中提及发布 → 与Nano Banana 2 Lite一同发布",
-      "date": "2026-07-09",
-      "time": "07:03:00",
-      "url": ""
-    },
-    {
-      "type": "new",
-      "dimension": "llms",
-      "id": "qwen3-4b",
-      "summary": "被用于fable-traces微调",
-      "date": "2026-07-09",
-      "time": "07:03:00",
-      "url": ""
-    },
-    {
-      "type": "update",
-      "dimension": "llms",
-      "id": "qwen3-vl-8b",
-      "summary": "hot_score: 30 → 50; last_event: MemGUI-Agent基于Qwen3-VL-8B微调发布 → 被用于MemGUI-Agent SFT模型基座; tier: 轻量 → 主力",
-      "date": "2026-07-09",
-      "time": "07:03:00",
-      "url": ""
-    },
-    {
-      "type": "update",
-      "dimension": "llms",
-      "id": "lingbot-vla-2-0",
-      "summary": "hot_score: 80 → 70; hot_level: 高热 → 温热; last_event: 开源具身基座模型，支持20种机器人 → 开源具身基座模型，支持20+机器人",
-      "date": "2026-07-09",
-      "time": "07:03:00",
-      "url": ""
-    },
-    {
-      "type": "update",
-      "dimension": "llms",
-      "id": "lingbot-depth-2-0",
-      "summary": "hot_score: 75 → 65; hot_level: 高热 → 温热; last_event: 发布空间感知模型LingBot-Depth 2.0 → 发布空间感知模型，1.5亿数据",
-      "date": "2026-07-09",
-      "time": "07:03:00",
-      "url": "https://www.infoq.cn/article/mqY10ihiZ874id2JDeXu"
-    },
-    {
-      "type": "update",
-      "dimension": "llms",
-      "id": "visics",
-      "summary": "hot_score: 70 → 65; hot_level: 高热 → 温热; last_event: 发布Visics通用具身大模型 → 发布通用具身大模型Visics",
-      "date": "2026-07-09",
-      "time": "07:03:00",
-      "url": "https://36kr.com/p/3868276479710466"
-    },
-    {
-      "type": "update",
-      "dimension": "llms",
-      "id": "zhiqing",
-      "summary": "hot_score: 60 → 45; hot_level: 温热 → 平稳; last_event: 发布重卡能源大模型 → 发布",
-      "date": "2026-07-09",
-      "time": "07:03:00",
-      "url": "https://36kr.com/p/3875522570793220"
-    },
-    {
-      "type": "update",
-      "dimension": "llms",
-      "id": "surgmotion",
-      "summary": "hot_score: 65 → 60; last_event: 发布十亿参数级手术视频基础模型 → 中国科学院携手全球机构发布",
-      "date": "2026-07-09",
-      "time": "07:03:00",
-      "url": ""
-    },
-    {
-      "type": "new",
-      "dimension": "llms",
-      "id": "adajepa",
-      "summary": "论文发布",
-      "date": "2026-07-09",
-      "time": "07:03:00",
-      "url": ""
-    },
-    {
-      "type": "new",
-      "dimension": "hotspots",
-      "id": "deepseek-zhipu-self-developed-chip",
-      "summary": " (deepseek-zhipu-self-developed-chip)",
-      "date": "2026-07-09",
-      "time": "07:03:00",
-      "url": ""
-    },
-    {
-      "type": "update",
-      "dimension": "hotspots",
-      "id": "gpt-5-6-exposure",
-      "summary": "title: GPT-5.6 深夜遭曝光，OpenAI 大模型路线图再引关注 → GPT-5.6三大模型曝光，定档7月7日",
-      "date": "2026-07-09",
-      "time": "07:03:00",
-      "url": ""
-    },
     {
       "type": "update",
       "dimension": "hotspots",
@@ -7784,15 +7633,6 @@
       "date": "2026-07-09",
       "time": "14:04:27",
       "url": "https://www.infoq.cn/article/R3bVEmOPR090gN4ovm1A"
-    },
-    {
-      "type": "new",
-      "dimension": "providers",
-      "id": "boyun",
-      "summary": "完成新一轮数亿元融资，AI战略向金融、制造、公共服务纵深推进",
-      "date": "2026-07-09",
-      "time": "14:04:27",
-      "url": "https://www.infoq.cn/article/6xRIxMiLF6mJpvQz770h"
     },
     {
       "type": "update",
@@ -7886,39 +7726,12 @@
     },
     {
       "type": "update",
-      "dimension": "tools",
-      "id": "deep-tutor",
-      "summary": "hot_score: 50 → 55; hot_level: 平稳 → 温热; last_update: 发布开源版本 → 开源代理辅导系统DeepTutor",
-      "date": "2026-07-09",
-      "time": "14:04:27",
-      "url": ""
-    },
-    {
-      "type": "update",
-      "dimension": "llms",
-      "id": "gpt-5-6",
-      "summary": "hot_score: 95 → 98; last_event: GPT-5.6三大模型意外曝光，传闻最快明天发布 → 三大模型代码曝光，定档7月7日",
-      "date": "2026-07-09",
-      "time": "14:04:27",
-      "url": "https://36kr.com/p/3883839281099016"
-    },
-    {
-      "type": "update",
       "dimension": "llms",
       "id": "claude",
       "summary": "hot_score: 70 → 85; hot_level: 温热 → 高热; last_event: Claude Code等工具上手机端 → 隐藏工作空间自发涌现类人意识，已开源相关代码",
       "date": "2026-07-09",
       "time": "14:04:27",
       "url": "https://www.infoq.cn/article/7Rgp3820XIGYqEV9JPSq"
-    },
-    {
-      "type": "update",
-      "dimension": "llms",
-      "id": "glm-5-2",
-      "summary": "hot_score: 75 → 80; hot_level: 温热 → 高热; last_event: GLM-5.2上线模力工场 → 上线模力工场，提供专属折扣",
-      "date": "2026-07-09",
-      "time": "14:04:27",
-      "url": "https://www.infoq.cn/article/woKuALR13UH0o9XicUlZ"
     },
     {
       "type": "new",
@@ -8184,29 +7997,11 @@
     {
       "type": "update",
       "dimension": "llms",
-      "id": "gpt-5-6",
-      "summary": "hot_score: 98 → 90; last_event: 三大模型代码曝光，定档7月7日 → GPT-5.6三大模型底层代码曝光，预计7月7日发布",
-      "date": "2026-07-09",
-      "time": "21:02:22",
-      "url": "https://36kr.com/p/3883839281099016"
-    },
-    {
-      "type": "update",
-      "dimension": "llms",
       "id": "claude",
       "summary": "last_event: 隐藏工作空间自发涌现类人意识，已开源相关代码 → Claude运行时出现内部隐藏对话空间，Anthropic已开源相关代码",
       "date": "2026-07-09",
       "time": "21:02:22",
       "url": "https://www.infoq.cn/article/7Rgp3820XIGYqEV9JPSq"
-    },
-    {
-      "type": "update",
-      "dimension": "llms",
-      "id": "glm-5-2",
-      "summary": "hot_score: 80 → 75; hot_level: 高热 → 温热; last_event: 上线模力工场，提供专属折扣 → GLM-5.2上线模力工场",
-      "date": "2026-07-09",
-      "time": "21:02:22",
-      "url": "https://www.infoq.cn/article/woKuALR13UH0o9XicUlZ"
     },
     {
       "type": "new",
@@ -8279,19 +8074,456 @@
       "date": "2026-07-09",
       "time": "21:02:22",
       "url": ""
+    },
+    {
+      "type": "update",
+      "dimension": "providers",
+      "id": "openai",
+      "summary": "hot_score: 90 → 95; last_event: GPT-5.6三大模型被曝，定档7月7日；自研芯片推理性能媲美Blackwell，成本降低约50% → GPT-5.6三大模型偷跑截杀Claude，自研芯片性价比获验证",
+      "date": "2026-07-10",
+      "time": "07:02:56",
+      "url": "https://36kr.com/p/3883839281099016"
+    },
+    {
+      "type": "update",
+      "dimension": "providers",
+      "id": "anthropic",
+      "summary": "last_event: Claude隐藏工作空间自发涌现类人意识，谷歌DeepMind权威认证，已开源相关代码 → Claude隐藏工作空间自发涌现类人意识，谷歌DeepMind认证，代码开源",
+      "date": "2026-07-10",
+      "time": "07:02:56",
+      "url": "https://www.infoq.cn/article/7Rgp3820XIGYqEV9JPSq"
+    },
+    {
+      "type": "update",
+      "dimension": "providers",
+      "id": "deepseek",
+      "summary": "hot_score: 85 → 95; hot_level: 高热 → 爆热; last_event: 被曝自研AI推理芯片，已启动一年，正对接代工与存储厂商 → 被曝自研AI推理芯片，一年前已启动，正对接代工与存储厂商",
+      "date": "2026-07-10",
+      "time": "07:02:56",
+      "url": "https://www.infoq.cn/article/sLYxUorQQs5K17DILrx8"
+    },
+    {
+      "type": "update",
+      "dimension": "providers",
+      "id": "zhipu",
+      "summary": "hot_score: 88 → 80; last_event: 被曝考虑自研AI芯片；GLM-5.2上线模力工场 → GLM-5.2上线模力工场，提供专属折扣；被曝考虑自研AI芯片",
+      "date": "2026-07-10",
+      "time": "07:02:56",
+      "url": "https://www.infoq.cn/article/woKuALR13UH0o9XicUlZ"
+    },
+    {
+      "type": "update",
+      "dimension": "providers",
+      "id": "meituan",
+      "summary": "hot_score: 70 → 90; hot_level: 温热 → 爆热; last_event: 发布零英伟达万亿大模型，国芯+国模跑通 → 发布「零英伟达」万亿大模型，首个国产卡训推万亿大模型开源",
+      "date": "2026-07-10",
+      "time": "07:02:56",
+      "url": "https://36kr.com/p/3878407689089282"
+    },
+    {
+      "type": "update",
+      "dimension": "providers",
+      "id": "ant-lingbot",
+      "summary": "hot_score: 80 → 85; last_event: 发布LingBot-Depth 2.0、世界模型2.0，开源具身视频模型LingBot-Video → 发布世界模型2.0（小时级实时生成+Agent实时陪玩），开源具身视频基础模型LingBot-Video",
+      "date": "2026-07-10",
+      "time": "07:02:56",
+      "url": "https://www.infoq.cn/article/mqY10ihiZ874id2JDeXu"
+    },
+    {
+      "type": "update",
+      "dimension": "providers",
+      "id": "google-deepmind",
+      "summary": "hot_score: 75 → 80; hot_level: 温热 → 高热; last_event: 发布Nano Banana 2 Lite与Gemini Omni Flash；认证Claude意识涌现 → 发布Nano Banana 2 Lite与Gemini Omni Flash；联合认证Claude脑内小剧场",
+      "date": "2026-07-10",
+      "time": "07:02:56",
+      "url": "https://www.infoq.cn/article/7Rgp3820XIGYqEV9JPSq"
+    },
+    {
+      "type": "update",
+      "dimension": "providers",
+      "id": "tencent",
+      "summary": "hot_score: 70 → 75; hot_level: 温热 → 高热; last_event: Cube Sandbox正式支持Arm架构；腾讯混元ACL 2026论文探讨SFT未来方向 → ACL 2026发表SFT不完全学习论文，发布R3-Embedding模型，Cube Sandbox支持Arm多架构算力",
+      "date": "2026-07-10",
+      "time": "07:02:56",
+      "url": "https://www.infoq.cn/article/R3bVEmOPR090gN4ovm1A"
+    },
+    {
+      "type": "update",
+      "dimension": "providers",
+      "id": "elastic",
+      "summary": "hot_score: 65 → 60",
+      "date": "2026-07-10",
+      "time": "07:02:56",
+      "url": "https://www.infoq.cn/article/pzYuRUO0ECSKktJjKV8P"
+    },
+    {
+      "type": "update",
+      "dimension": "providers",
+      "id": "kuaishou",
+      "summary": "hot_score: 85 → 60; hot_level: 爆热 → 温热; last_event: 旗下视频生成大模型「可灵AI」落地近30亿美元融资，创全球多模态大模型单轮融资纪录 → 与浙大开源GUI Agent数据飞轮工具MobileForge",
+      "date": "2026-07-10",
+      "time": "07:02:56",
+      "url": ""
+    },
+    {
+      "type": "update",
+      "dimension": "providers",
+      "id": "alibaba",
+      "summary": "name: 阿里巴巴 → 阿里",
+      "date": "2026-07-10",
+      "time": "07:02:56",
+      "url": "https://36kr.com/p/3884024701874183"
+    },
+    {
+      "type": "update",
+      "dimension": "providers",
+      "id": "360",
+      "summary": "hot_level: 温水 → 平稳",
+      "date": "2026-07-10",
+      "time": "07:02:56",
+      "url": "https://36kr.com/p/3878668651936389"
+    },
+    {
+      "type": "update",
+      "dimension": "providers",
+      "id": "nvidia",
+      "summary": "hot_score: 60 → 55; last_event: 发布全原子DiffDock分子口袋对接模型nvDock → 推出全原子DiffDock分子口袋对接模型nvDock",
+      "date": "2026-07-10",
+      "time": "07:02:56",
+      "url": ""
+    },
+    {
+      "type": "update",
+      "dimension": "providers",
+      "id": "meta",
+      "summary": "hot_score: 60 → 70",
+      "date": "2026-07-10",
+      "time": "07:02:56",
+      "url": ""
+    },
+    {
+      "type": "update",
+      "dimension": "people",
+      "id": "yann-lecun",
+      "summary": "name: Yann LeCun → 杨立昆; title: Meta AI首席科学家 → Meta首席AI科学家; hot_score: 60 → 70",
+      "date": "2026-07-10",
+      "time": "07:02:56",
+      "url": ""
+    },
+    {
+      "type": "update",
+      "dimension": "people",
+      "id": "chen-yongchao",
+      "summary": "recent_activity: 婉拒DeepMind，官宣创业押注自进化大模型 → 官宣创业，押注自进化大模型",
+      "date": "2026-07-10",
+      "time": "07:02:56",
+      "url": "https://36kr.com/p/3883751049965576"
+    },
+    {
+      "type": "update",
+      "dimension": "people",
+      "id": "zhou-hongyi",
+      "summary": "hot_score: 50 → 60; hot_level: 温水 → 温热; recent_activity: 谈大模型幻觉：淘汰你的是会用AI的人 → 揭穿大模型幻觉残酷真相，谈企业组织重塑",
+      "date": "2026-07-10",
+      "time": "07:02:56",
+      "url": "https://36kr.com/p/3878668651936389"
+    },
+    {
+      "type": "update",
+      "dimension": "tools",
+      "id": "adajepa",
+      "summary": "last_update: LeCun团队提出AdaJEPA → 模型提出",
+      "date": "2026-07-10",
+      "time": "07:02:56",
+      "url": ""
+    },
+    {
+      "type": "new",
+      "dimension": "tools",
+      "id": "mobileforge",
+      "summary": "开源发布",
+      "date": "2026-07-10",
+      "time": "07:02:56",
+      "url": ""
+    },
+    {
+      "type": "new",
+      "dimension": "tools",
+      "id": "d-opsd",
+      "summary": "论文发布",
+      "date": "2026-07-10",
+      "time": "07:02:56",
+      "url": ""
+    },
+    {
+      "type": "update",
+      "dimension": "tools",
+      "id": "lingbot-video",
+      "summary": "hot_score: 80 → 85; last_update: 蚂蚁灵波开源具身视频基模LingBot-Video → 开源发布",
+      "date": "2026-07-10",
+      "time": "07:02:56",
+      "url": "https://www.infoq.cn/article/mqY10ihiZ874id2JDeXu"
+    },
+    {
+      "type": "update",
+      "dimension": "tools",
+      "id": "r3-embedding",
+      "summary": "hot_score: 65 → 60; last_update: 腾讯发布R3-Embedding，用于Agent技能路由 → 模型发布",
+      "date": "2026-07-10",
+      "time": "07:02:56",
+      "url": ""
+    },
+    {
+      "type": "update",
+      "dimension": "tools",
+      "id": "nvdock",
+      "summary": "hot_score: 60 → 50; hot_level: 温热 → 平稳; last_update: NVIDIA发布nvDock分子对接模型 → 模型发布",
+      "date": "2026-07-10",
+      "time": "07:02:56",
+      "url": ""
+    },
+    {
+      "type": "new",
+      "dimension": "tools",
+      "id": "xpolicylab",
+      "summary": "项目发布",
+      "date": "2026-07-10",
+      "time": "07:02:56",
+      "url": ""
+    },
+    {
+      "type": "new",
+      "dimension": "tools",
+      "id": "comattack",
+      "summary": "项目发布",
+      "date": "2026-07-10",
+      "time": "07:02:56",
+      "url": ""
+    },
+    {
+      "type": "new",
+      "dimension": "tools",
+      "id": "surgmotion",
+      "summary": "模型发布",
+      "date": "2026-07-10",
+      "time": "07:02:56",
+      "url": ""
+    },
+    {
+      "type": "new",
+      "dimension": "tools",
+      "id": "lingbot-vla-2",
+      "summary": "模型发布",
+      "date": "2026-07-10",
+      "time": "07:02:56",
+      "url": ""
+    },
+    {
+      "type": "update",
+      "dimension": "tools",
+      "id": "atlas-agent-memory",
+      "summary": "hot_score: 60 → 65; last_update: Elastic开源Atlas Agent Memory → 开源发布",
+      "date": "2026-07-10",
+      "time": "07:02:56",
+      "url": "https://www.infoq.cn/article/pzYuRUO0ECSKktJjKV8P"
+    },
+    {
+      "type": "update",
+      "dimension": "tools",
+      "id": "cube-sandbox",
+      "summary": "hot_score: 60 → 55; last_update: 正式支持Arm架构，与Arm联手解锁Agent多架构算力 → 支持Arm架构",
+      "date": "2026-07-10",
+      "time": "07:02:56",
+      "url": "https://www.infoq.cn/article/c4GEoZLWvNZQhSSSWAoH"
+    },
+    {
+      "type": "update",
+      "dimension": "tools",
+      "id": "fun-asr-realtime",
+      "summary": "hot_score: 65 → 60; last_update: 千问大模型升级实时语音识别Fun-ASR-Realtime → 升级发布",
+      "date": "2026-07-10",
+      "time": "07:02:56",
+      "url": "https://36kr.com/p/3884024701874183"
+    },
+    {
+      "type": "new",
+      "dimension": "tools",
+      "id": "gpt-live",
+      "summary": "产品发布",
+      "date": "2026-07-10",
+      "time": "07:02:56",
+      "url": ""
+    },
+    {
+      "type": "update",
+      "dimension": "llms",
+      "id": "gemini-omni-flash",
+      "summary": "hot_score: 55 → 70; last_event: 发布 → 官方发布",
+      "date": "2026-07-10",
+      "time": "07:02:56",
+      "url": ""
+    },
+    {
+      "type": "update",
+      "dimension": "llms",
+      "id": "nano-banana-2-lite",
+      "summary": "hot_score: 55 → 65; last_event: 发布 → 官方发布",
+      "date": "2026-07-10",
+      "time": "07:02:56",
+      "url": ""
+    },
+    {
+      "type": "update",
+      "dimension": "llms",
+      "id": "meituan-trillion-model",
+      "summary": "name: 美团万亿大模型（暂无名） → 美团万亿大模型; hot_score: 92 → 90; last_event: 发布‘零英伟达’万亿大模型并开源 → 发布开源",
+      "date": "2026-07-10",
+      "time": "07:02:56",
+      "url": "https://36kr.com/p/3878407689089282"
+    },
+    {
+      "type": "update",
+      "dimension": "llms",
+      "id": "qwen",
+      "summary": "hot_score: 60 → 65; last_event: 升级实时语音识别 → 语音功能升级",
+      "date": "2026-07-10",
+      "time": "07:02:56",
+      "url": "https://36kr.com/p/3884024701874183"
+    },
+    {
+      "type": "new",
+      "dimension": "llms",
+      "id": "lingbot-world-model-2.0",
+      "summary": "正式发布",
+      "date": "2026-07-10",
+      "time": "07:02:56",
+      "url": "https://www.infoq.cn/article/mqY10ihiZ874id2JDeXu"
+    },
+    {
+      "type": "new",
+      "dimension": "hotspots",
+      "id": "deepseek-ai-chip-rumor",
+      "summary": " (deepseek-ai-chip-rumor)",
+      "date": "2026-07-10",
+      "time": "07:02:56",
+      "url": ""
+    },
+    {
+      "type": "new",
+      "dimension": "hotspots",
+      "id": "openai-gpt-5.6-leak",
+      "summary": " (openai-gpt-5.6-leak)",
+      "date": "2026-07-10",
+      "time": "07:02:56",
+      "url": ""
+    },
+    {
+      "type": "new",
+      "dimension": "hotspots",
+      "id": "claude-brain-theater",
+      "summary": " (claude-brain-theater)",
+      "date": "2026-07-10",
+      "time": "07:02:56",
+      "url": ""
+    },
+    {
+      "type": "new",
+      "dimension": "hotspots",
+      "id": "meituan-zero-nvidia-trillion-model",
+      "summary": " (meituan-zero-nvidia-trillion-model)",
+      "date": "2026-07-10",
+      "time": "07:02:56",
+      "url": ""
+    },
+    {
+      "type": "new",
+      "dimension": "hotspots",
+      "id": "ant-lingbot-world-model-2.0",
+      "summary": " (ant-lingbot-world-model-2.0)",
+      "date": "2026-07-10",
+      "time": "07:02:56",
+      "url": ""
     }
   ],
   "stats": {
     "total_providers": 93,
     "total_people": 78,
-    "total_tools": 85,
-    "total_llms": 85,
+    "total_tools": 92,
+    "total_llms": 86,
     "total_hotspots": 100,
-    "new_this_period": 12,
-    "updated_this_period": 22,
+    "new_this_period": 13,
+    "updated_this_period": 34,
     "removed_this_period": 0
   },
   "hotspots": [
+    {
+      "id": "deepseek-ai-chip-rumor",
+      "title": "DeepSeek被曝自研AI推理芯片，一年前已启动",
+      "summary": "据多家媒体报道，DeepSeek已启动自研AI推理芯片项目约一年，正在对接代工与存储厂商，试图绕开英伟达。同时智谱也被曝考虑自研芯片，国产大模型公司集体下场造芯引发关注。",
+      "date": "2026-07-10",
+      "source": "InfoQ/36氪",
+      "url": "https://www.infoq.cn/article/sLYxUorQQs5K17DILrx8",
+      "related_providers": [
+        "deepseek",
+        "zhipu"
+      ],
+      "related_people": [],
+      "related_tools": [],
+      "related_llms": [],
+      "updated_at": "2026-07-10T07:02:56.665608"
+    },
+    {
+      "id": "claude-brain-theater",
+      "title": "Claude“脑内小剧场”首曝光，隐藏工作空间自发涌现类人意识",
+      "summary": "Anthropic首次披露Claude在推理时存在隐藏工作空间，自发涌现类人意识，谷歌DeepMind权威认证。相关代码已开源，并与Neuronpedia合作推出交互式演示。",
+      "date": "2026-07-10",
+      "source": "InfoQ",
+      "url": "https://www.infoq.cn/article/7Rgp3820XIGYqEV9JPSq",
+      "related_providers": [
+        "anthropic",
+        "google-deepmind"
+      ],
+      "related_people": [],
+      "related_tools": [],
+      "related_llms": [],
+      "updated_at": "2026-07-10T07:02:56.665608"
+    },
+    {
+      "id": "meituan-zero-nvidia-trillion-model",
+      "title": "美团发布「零英伟达」万亿大模型，首个国产卡训推万亿大模型开源",
+      "summary": "美团宣布发布完全基于国产芯片训练的万亿参数大模型，实现零英伟达依赖。该模型已开源，被视为国产算力彻底跑通的重要里程碑。",
+      "date": "2026-07-10",
+      "source": "36氪",
+      "url": "https://36kr.com/p/3878407689089282",
+      "related_providers": [
+        "meituan"
+      ],
+      "related_people": [],
+      "related_tools": [],
+      "related_llms": [
+        "meituan-trillion-model"
+      ],
+      "updated_at": "2026-07-10T07:02:56.665608"
+    },
+    {
+      "id": "ant-lingbot-world-model-2.0",
+      "title": "蚂蚁灵波世界模型2.0发布，开源具身视频基础模型LingBot-Video",
+      "summary": "蚂蚁灵波正式发布世界模型2.0，实现小时级实时生成环境和Agent实时‘陪玩’两大首创。同时开源融合7万小时数据的具身视频基础模型LingBot-Video，推动机器人大脑发展。",
+      "date": "2026-07-10",
+      "source": "InfoQ",
+      "url": "https://www.infoq.cn/article/mqY10ihiZ874id2JDeXu",
+      "related_providers": [
+        "ant-lingbot"
+      ],
+      "related_people": [],
+      "related_tools": [
+        "lingbot-video"
+      ],
+      "related_llms": [
+        "lingbot-world-model-2.0"
+      ],
+      "updated_at": "2026-07-10T07:02:56.665608"
+    },
     {
       "id": "deepseek-zhipu-chip",
       "title": "DeepSeek、智谱被曝自研AI推理芯片",
@@ -8874,6 +9106,24 @@
       "related_tools": [],
       "related_llms": [],
       "updated_at": "2026-07-08T21:03:23.031441"
+    },
+    {
+      "id": "openai-gpt-5.6-leak",
+      "title": "GPT-5.6三大模型偷跑截杀Claude，定档7月7日发布",
+      "summary": "OpenAI GPT-5.6三大模型底层代码被曝偷跑，卡在Anthropic Claude负面事件节点发布，意图截杀。消息称OpenAI最快于7月7日端出三大模型，引发行业地震。",
+      "date": "2026-07-07",
+      "source": "36氪",
+      "url": "https://36kr.com/p/3883839281099016",
+      "related_providers": [
+        "openai",
+        "anthropic"
+      ],
+      "related_people": [],
+      "related_tools": [],
+      "related_llms": [
+        "gpt-5.6"
+      ],
+      "updated_at": "2026-07-10T07:02:56.665608"
     },
     {
       "id": "anthropic-sonnet5-fable5",
@@ -9879,71 +10129,6 @@
       "date": "2026-06-25",
       "source": "综合",
       "url": "https://www.usnews.com/news/best-states/washington/articles/2026-06-04/ai-companies-are-barreling-toward-huge-wall-street-debuts",
-      "related_providers": [
-        "spacex-xai"
-      ],
-      "related_people": [
-        "elon-musk"
-      ],
-      "confidence": "high"
-    },
-    {
-      "id": "openai-gpt55",
-      "title": "OpenAI发布GPT-5.5，100万Token上下文",
-      "summary": "GPT-5.5 Preview支持百万Token上下文，多步推理能力大幅跃升",
-      "date": "2026-06-25",
-      "source": "综合",
-      "url": "https://blog.mean.ceo/new-ai-model-releases-news-june-2026/",
-      "related_providers": [
-        "openai"
-      ],
-      "related_llms": [
-        "gpt-5-5-pro"
-      ],
-      "confidence": "high"
-    },
-    {
-      "id": "ai-agent-era",
-      "title": "AI智能体规模化落地元年到来",
-      "summary": "单Agent能力成熟，Multi-Agent协同成型，桌面和业务流程智能体陆续商用",
-      "date": "2026-06-25",
-      "source": "综合",
-      "confidence": "high"
-    },
-    {
-      "id": "china-llm-rise",
-      "title": "国产大模型全面领跑，科创板开放AI上市",
-      "summary": "MiniMax M系列编程评测超越海外；证监会将AI大模型纳入科创板第五套上市标准",
-      "date": "2026-06-25",
-      "source": "综合",
-      "url": "https://xingyun3d.csdn.net/6a35e06e10ee7a33f28013c7.html",
-      "related_providers": [
-        "minimax"
-      ],
-      "related_llms": [
-        "minimax-m1"
-      ],
-      "confidence": "high"
-    },
-    {
-      "id": "glm-5-2-local-ai",
-      "title": "GLM-5.2 成为本地AI社区新宠",
-      "summary": "智谱GLM-5.2在本地部署社区引发热议，1185 upvotes/304评论",
-      "date": "2026-06-25",
-      "source": "Reddit",
-      "url": "https://www.reddit.com/r/LocalLLaMA/comments/1u8ai2a/glm52_is_a_win_for_local_ai/",
-      "related_providers": [
-        "zhipu"
-      ],
-      "confidence": "high"
-    },
-    {
-      "id": "pentagon-grok",
-      "title": "五角大楼使用 Grok AI 发射2000枚导弹",
-      "summary": "美国国防部使用Elon Musk的Grok AI系统执行军事打击行动",
-      "date": "2026-06-25",
-      "source": "Reddit",
-      "url": "https://www.reddit.com/r/OpenAI/comments/1u80x1z/pentagon_used_elon_musks_grok_ai_to_fire_2000/",
       "related_providers": [
         "spacex-xai"
       ],
