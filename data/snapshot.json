@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "generated_at": "2026-07-11T11:53:26.467587",
+  "generated_at": "2026-07-11T11:53:30.571976",
   "period": "2026-07-04 ~ 2026-07-11",
   "execution_mode": "semi-auto",
   "providers": [
@@ -880,7 +880,7 @@
       "id": "tp",
       "name": "TP",
       "confidence": "high",
-      "updated_at": "2026-07-04T15:08:54.208635"
+      "updated_at": "2026-07-11T11:53:30.571976"
     },
     {
       "id": "cl-test",
@@ -3331,7 +3331,7 @@
       "id": "tpe",
       "name": "TPe",
       "confidence": "high",
-      "updated_at": "2026-07-04T15:08:54.208635"
+      "updated_at": "2026-07-11T11:53:30.571976"
     },
     {
       "id": "xing-bo",
@@ -4393,7 +4393,7 @@
       "id": "tt",
       "name": "TT",
       "confidence": "high",
-      "updated_at": "2026-07-04T15:08:54.208635"
+      "updated_at": "2026-07-11T11:53:30.571976"
     },
     {
       "id": "sonnet-5",
@@ -6609,7 +6609,7 @@
       "id": "tl",
       "name": "TL",
       "confidence": "high",
-      "updated_at": "2026-07-04T15:08:54.208635"
+      "updated_at": "2026-07-11T11:53:30.571976"
     },
     {
       "id": "seed-2-1",
@@ -8827,8 +8827,8 @@
     "total_tools": 100,
     "total_llms": 90,
     "total_hotspots": 100,
-    "new_this_period": 0,
-    "updated_this_period": 1,
+    "new_this_period": 1,
+    "updated_this_period": 0,
     "removed_this_period": 0
   },
   "hotspots": [
