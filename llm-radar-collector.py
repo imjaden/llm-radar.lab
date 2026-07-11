@@ -749,6 +749,18 @@ hotspots 数组中每个元素格式：
 
             snapshot[dimension] = list(existing.values())
 
+        # ---- 时间衰减: 对所有实体应用热度时间衰减 ----
+        decay_count = 0
+        for dim in ['providers', 'people', 'tools', 'llms']:
+            items = snapshot.get(dim, [])
+            for item in items:
+                old_score = item.get('hot_score', 0)
+                self._apply_time_decay(item)
+                if item.get('hot_score', 0) != old_score:
+                    decay_count += 1
+        if decay_count:
+            self._print_info(f'时间衰减: {decay_count} 个实体热度已调整')
+
         # ---- 数据留存: 最多 100 条 + 最近 15 天滑动窗口 ----
         retention_dims = ['providers', 'people', 'tools', 'llms', 'hotspots']
         archive_count = 0
