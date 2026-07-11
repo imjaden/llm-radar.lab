@@ -26,21 +26,35 @@ import os
 import sys
 import json
 import logging
+import secrets
 from datetime import datetime
 from pathlib import Path
 
 # ── Config ──────────────────────────────────────────────────────────────
-API_KEY = os.environ.get('LLM_RADAR_MCP_KEY', 'llm-radar-mcp-2026')
+API_KEY = os.environ.get('LLM_RADAR_MCP_KEY', '')
+if not API_KEY:
+    API_KEY = secrets.token_hex(32)  # 64-char random hex
+    logging.basicConfig(
+        level=logging.WARNING,
+        format='%(asctime)s [%(levelname)s] %(message)s',
+        stream=sys.stderr,
+    )
+    log = logging.getLogger('mcp-llm-radar')
+    log.warning('=' * 60)
+    log.warning('⚠️  LLM_RADAR_MCP_KEY 未设置，已生成临时随机 key')
+    log.warning(f'   本次会话 key: {API_KEY[:8]}...{API_KEY[-4:]}')
+    log.warning('   建议: export LLM_RADAR_MCP_KEY=<your-secure-key>')
+    log.warning('=' * 60)
+else:
+    logging.basicConfig(
+        level=logging.INFO,
+        format='%(asctime)s [%(levelname)s] %(message)s',
+        stream=sys.stderr,
+    )
+    log = logging.getLogger('mcp-llm-radar')
 PROJECT_ROOT = Path(os.environ.get('LLM_RADAR_DIR', __file__)).resolve().parent
 DATA_DIR = PROJECT_ROOT / 'data'
 SNAPSHOT_PATH = DATA_DIR / 'snapshot.json'
-
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s [%(levelname)s] %(message)s',
-    stream=sys.stderr,
-)
-log = logging.getLogger('mcp-llm-radar')
 
 # ── Protocol Helpers ────────────────────────────────────────────────────
 

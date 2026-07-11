@@ -7,10 +7,16 @@
 4. git add + commit
 """
 import subprocess, json, os, sys, signal
+from pathlib import Path
 
-SERVER = '/Users/jadenli/CodeSpace/llm-radar.jaden.tech/llm-radar-mcp-server.py'
-API_KEY = 'llm-radar-mcp-2026'
-PROJECT_DIR = '/Users/jadenli/CodeSpace/llm-radar.jaden.tech'
+_PROJECT_ROOT = Path(__file__).resolve().parent.parent
+SERVER = str(_PROJECT_ROOT / 'llm-radar-mcp-server.py')
+API_KEY=os.environ.get('LLM_RADAR_MCP_KEY', '')
+if not API_KEY:
+    print('ERROR: LLM_RADAR_MCP_KEY 环境变量未设置', file=sys.stderr)
+    print('  export LLM_RADAR_MCP_KEY=<your-secure-key>', file=sys.stderr)
+    sys.exit(1)
+PROJECT_DIR = str(_PROJECT_ROOT)
 
 def send(proc, msg):
     line = json.dumps(msg, ensure_ascii=False)
@@ -28,133 +34,100 @@ def recv(proc, timeout=30):
             line = proc.stdout.readline()
             if not line:
                 break
-            buf += line
-            try:
-                resp = json.loads(buf.strip())
-                if 'jsonrpc' in resp:
-                    return resp
-            except json.JSONDecodeError:
+            line = line.strip()
+            if not line:
                 continue
-    except TimeoutError:
-        return {'error': f'超时 {timeout}s'}
+            try:
+                return json.loads(line)
+            except json.JSONDecodeError:
+                buf += line
+                try:
+                    return json.loads(buf)
+                except json.JSONDecodeError:
+                    continue
     finally:
         signal.alarm(0)
 
-# 启动 MCP 服务
-env = os.environ.copy()
-env['LLM_RADAR_MCP_KEY'] = API_KEY
-proc = subprocess.Popen(
-    ['python3', SERVER],
-    stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
-    env=env, text=True
-)
+def main():
+    """MCP 提交主流程"""
+    print('启动 MCP 服务器...')
+    proc = subprocess.Popen(
+        [sys.executable, SERVER],
+        stdin=subprocess.PIPE,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+        env={**os.environ, 'LLM_RADAR_MCP_KEY': API_KEY},
+    )
 
-try:
-    # Step 1: Initialize
-    print('[1/4] 初始化 MCP 连接...', flush=True)
-    send(proc, {
+    # 初始化
+    init_resp = send(proc, {
         'jsonrpc': '2.0', 'id': 1, 'method': 'initialize',
-        'params': {
-            'protocolVersion': '2025-03-26',
-            'capabilities': {},
-            'clientInfo': {'name': 'hermes-research', 'version': '1.0'}
-        }
+        'params': {'protocolVersion': '2025-03-26', 'clientInfo': {'name': 'submit-script'}},
     })
-    resp = recv(proc)
-    if resp.get('error'):
-        print(f'  ❌ 初始化失败: {resp["error"]}', flush=True)
+    init_result = recv(proc)
+    if not init_result or 'result' not in init_result:
+        print(f'初始化失败: {init_result}', file=sys.stderr)
+        proc.kill()
         sys.exit(1)
-    print(f'  ✅ MCP Server: {resp["result"]["serverInfo"]["name"]}')
+    print(f'  MCP 版本: {init_result["result"].get("protocolVersion", "?")}')
+    print(f'  服务器: {init_result["result"].get("serverInfo", {}).get("name", "?")}')
 
-    # Step 2: Initialized notification
-    print('[2/4] 发送初始化确认...', flush=True)
-    send(proc, {'jsonrpc': '2.0', 'method': 'notifications/initialized'})
+    # 检查命令行参数
+    if len(sys.argv) < 2:
+        print('Usage: python3 scripts/mcp_submit_update.py <json_file_or_json_string>')
+        proc.kill()
+        sys.exit(1)
 
-    # Step 3: Health check
-    print('[3/4] 健康检查...', flush=True)
+    # 读取实体数据
+    entity_input = sys.argv[1]
+    if os.path.isfile(entity_input):
+        with open(entity_input) as f:
+            entities = json.load(f)
+    else:
+        try:
+            entities = json.loads(entity_input)
+        except json.JSONDecodeError as e:
+            print(f'JSON 解析失败: {e}', file=sys.stderr)
+            proc.kill()
+            sys.exit(1)
+
+    # 提交
     send(proc, {
         'jsonrpc': '2.0', 'id': 2, 'method': 'tools/call',
-        'params': {
-            'name': 'health_check',
-            'arguments': {'api_key': API_KEY}
-        }
+        'params': {'name': 'submit_entities', 'arguments': {'entities': entities, 'api_key': API_KEY}},
     })
-    resp = recv(proc)
-    if resp.get('result'):
-        r = resp['result']
-        print(f'  状态: {r["status"]}')
-        print(f'  实体总数: {r["total_entities"]}')
-    else:
-        print(f'  ⚠️ health_check 异常: {resp}')
+    result = recv(proc)
+    if not result:
+        print('无响应', file=sys.stderr)
+        proc.kill()
+        sys.exit(1)
 
-    # Step 4: Submit updated entities (fix key issues found in review)
-    print('[4/4] 提交数据更新...', flush=True)
+    if 'error' in result:
+        print(f'提交失败: {result["error"]}', file=sys.stderr)
+        proc.kill()
+        sys.exit(1)
 
-    # Fix: 空URL provider 补充
-    fix_providers = [
-        # 特斯拉
-        {
-            'id': 'tesla', 'name': '特斯拉', 'country': '美国',
-            'hot_score': 55, 'hot_level': '温热',
-            'last_event': '马斯克盯上AI基建，特斯拉将卖算力积木，新商标已曝光',
-            'last_event_date': '2026-06-23',
-            'last_event_url': 'https://36kr.com/p/3855730629899523',
-            'key_people': ['埃隆·马斯克'],
-            'focus_areas': ['AI基础设施', '自动驾驶'],
-            'confidence': 'high',
-        },
-    ]
+    submit_result = result.get('result', {})
+    stats = submit_result.get('stats', {})
+    print(f'✅ 提交成功: 新增 {stats.get("new", 0)} / 更新 {stats.get("updated", 0)} / 拒绝 {stats.get("rejected", 0)}')
 
-    payload = {
-        'api_key': API_KEY,
-        'providers': fix_providers,
-        'people': [],
-        'tools': [],
-        'llms': [],
-        'hotspots': [],
-    }
+    # Git commit
+    try:
+        subprocess.run(['git', 'add', '-A'], cwd=PROJECT_DIR, check=True, capture_output=True)
+        msg = f'mcp@llm-radar: submit update ({stats.get("new", 0)} new, {stats.get("updated", 0)} updated)'
+        r = subprocess.run(['git', 'commit', '-m', msg], cwd=PROJECT_DIR, capture_output=True, text=True)
+        if r.returncode == 0:
+            print('✅ Git commit 完成')
+        elif 'nothing to commit' in (r.stdout + r.stderr):
+            print('ℹ️ 无变更，跳过 commit')
+        else:
+            print(f'⚠️ Git commit 失败: {r.stderr[:200]}')
+    except Exception as e:
+        print(f'⚠️ Git 操作失败: {e}')
 
-    send(proc, {
-        'jsonrpc': '2.0', 'id': 3, 'method': 'tools/call',
-        'params': {
-            'name': 'submit_entities',
-            'arguments': payload,
-        }
-    })
-    resp = recv(proc, timeout=60)
-    if resp.get('result'):
-        r = resp['result']
-        status = '✅' if r['status'] in ('accepted','partial') else '❌'
-        print(f'  {status} 状态: {r["status"]}')
-        print(f'  接受: {r["accepted"]}')
-        if r.get('rejected_reasons'):
-            print(f'  拒绝: {r["rejected_reasons"]}')
-        if r.get('merge_result'):
-            m = r['merge_result']
-            print(f'  合并结果: 新增={m["new"]}, 更新={m["updated"]}')
-        if r.get('snapshot_totals'):
-            print(f'  最新总数: {r["snapshot_totals"]}')
-    else:
-        print(f'  ❌ submit_entities 失败: {resp}')
-
-finally:
     proc.stdin.close()
-    try: proc.wait(timeout=5)
-    except: proc.kill()
+    proc.wait()
 
-print()
-print('=== Git Commit ===')
-os.chdir(PROJECT_DIR)
-subprocess.run(['git', 'add', '-A'], check=True)
-subprocess.run(['git', 'status'], check=True)
-print()
-result = subprocess.run(
-    ['git', 'commit', '-m', 'feat@audit: 提交数据质量评审报告; 通过MCP修复空URL'],
-    capture_output=True, text=True
-)
-print(result.stdout)
-if result.returncode == 0:
-    subprocess.run(['git', 'push'], check=True)
-    print('✅ 已推送')
-else:
-    print('⚠️ 无变更或提交失败')
+if __name__ == '__main__':
+    main()

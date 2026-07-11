@@ -36,12 +36,17 @@ import subprocess
 import json
 import sys
 import os
+import secrets
 from pathlib import Path
 
 SCRIPT_DIR = Path(__file__).resolve().parent
 PROJECT_ROOT = SCRIPT_DIR.parent
 MCP_SERVER = PROJECT_ROOT / 'llm-radar-mcp-server.py'
-API_KEY = 'llm-radar-mcp-2026'
+API_KEY = os.environ.get('LLM_RADAR_MCP_KEY', '')
+if not API_KEY:
+    API_KEY = secrets.token_hex(32)
+    print(f'WARN  LLM_RADAR_MCP_KEY not set, generated temp key: {API_KEY[:8]}...{API_KEY[-4:]}',
+          file=sys.stderr)
 WRONG_KEY = 'wrong-key'
 
 

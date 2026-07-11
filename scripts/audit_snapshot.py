@@ -3,8 +3,10 @@
 import json
 from datetime import datetime, timedelta
 from collections import Counter
+from pathlib import Path
 
-with open('/Users/jadenli/CodeSpace/llm-radar.jaden.tech/data/snapshot.json') as f:
+_PROJECT_ROOT = Path(__file__).resolve().parent.parent
+with open(_PROJECT_ROOT / 'data' / 'snapshot.json') as f:
     data = json.load(f)
 
 print(f"Version: {data['version']}")
