@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "generated_at": "2026-07-11T11:59:39.361799",
+  "generated_at": "2026-07-11T11:59:43.374605",
   "period": "2026-07-04 ~ 2026-07-11",
   "execution_mode": "semi-auto",
   "providers": [
@@ -382,7 +382,7 @@
         "开源大模型",
         "代码Agent"
       ],
-      "hot_score": 28,
+      "hot_score": 26,
       "hot_level": "平稳",
       "last_event": "发布Leanstral 1.5开源代码Agent模型",
       "last_event_date": "2026-07-07",
@@ -445,7 +445,7 @@
         "大语言模型",
         "智能体"
       ],
-      "hot_score": 18,
+      "hot_score": 16,
       "hot_level": "平稳",
       "last_event": "豆包关停智能体功能（被限）",
       "last_event_date": "2026-07-07",
@@ -840,7 +840,7 @@
       "id": "tp",
       "name": "TP",
       "confidence": "high",
-      "updated_at": "2026-07-11T11:55:11.186508"
+      "updated_at": "2026-07-11T11:59:43.374605"
     },
     {
       "id": "cl-test",
@@ -1191,7 +1191,7 @@
       "id": "guangxiang-tech",
       "name": "光象科技",
       "country": "中国",
-      "hot_score": 38,
+      "hot_score": 36,
       "hot_level": "温热",
       "last_event": "自研物理原生基座模型，获得数亿元融资",
       "last_event_date": "2026-07-07",
@@ -1211,7 +1211,7 @@
       "id": "kling-ai",
       "name": "可灵AI",
       "country": "中国",
-      "hot_score": 58,
+      "hot_score": 56,
       "hot_level": "温热",
       "last_event": "完成近30亿美元融资，创全球多模态AI单轮融资纪录",
       "last_event_date": "2026-07-07",
@@ -1323,7 +1323,7 @@
       "id": "chen-yongchao-startup",
       "name": "陈勇超创业公司",
       "country": "中国",
-      "hot_score": 23,
+      "hot_score": 21,
       "hot_level": "平稳",
       "last_event": "清华助理教授陈勇超宣布创业，押注自进化大模型",
       "last_event_date": "2026-07-07",
@@ -1400,7 +1400,7 @@
       "id": "hyper3d-developer",
       "name": "Hyper3D开发团队",
       "country": "中国",
-      "hot_score": 40,
+      "hot_score": 38,
       "hot_level": "温热",
       "last_event": "3D大模型Hyper3D再获数亿融资，英伟达也在用",
       "last_event_date": "2026-07-07",
@@ -1420,7 +1420,7 @@
       "id": "astral",
       "name": "Astral",
       "country": "美国",
-      "hot_score": 38,
+      "hot_score": 36,
       "hot_level": "温热",
       "last_event": "被OpenAI收购后，uv工具创始人反思AI编程",
       "last_event_date": "2026-07-07",
@@ -1460,7 +1460,7 @@
       "id": "bai-yuan",
       "name": "北京智源研究院",
       "country": "中国",
-      "hot_score": 38,
+      "hot_score": 36,
       "hot_level": "温热",
       "last_event": "发布悟界·RoboBrain Orca通用世界基础模型",
       "last_event_date": "2026-07-07",
@@ -3234,7 +3234,7 @@
       "id": "tpe",
       "name": "TPe",
       "confidence": "high",
-      "updated_at": "2026-07-11T11:55:11.186508"
+      "updated_at": "2026-07-11T11:59:43.374605"
     },
     {
       "id": "xing-bo",
@@ -3553,7 +3553,7 @@
       "title": "Astral创始人",
       "employer_id": "astral",
       "influence_level": "核心人物",
-      "hot_score": 38,
+      "hot_score": 36,
       "hot_level": "温热",
       "recent_activity": "被OpenAI收购后反思AI编程：优秀的工程师用AI更猛，初期工程师易陷坏习惯",
       "recent_activity_date": "2026-07-07",
@@ -4301,7 +4301,7 @@
       "id": "tt",
       "name": "TT",
       "confidence": "high",
-      "updated_at": "2026-07-11T11:55:11.186508"
+      "updated_at": "2026-07-11T11:59:43.374605"
     },
     {
       "id": "sonnet-5",
@@ -4829,7 +4829,7 @@
       "description": "Anthropic用于优化Claude Code提示词，可删除80%的提示词，降低Prompt债",
       "pricing_model": "商业",
       "maturity": "可用",
-      "hot_score": 28,
+      "hot_score": 26,
       "hot_level": "平稳",
       "last_update": "发布/应用",
       "last_update_date": "2026-07-07",
@@ -4852,7 +4852,7 @@
       "description": "原生内存层次记忆系统，专为长期对话设计，实现92.21%准确率，5.4倍检索加速",
       "pricing_model": "开源免费",
       "maturity": "实验",
-      "hot_score": 13,
+      "hot_score": 11,
       "hot_level": "平稳",
       "last_update": "发布",
       "last_update_date": "2026-07-07",
@@ -4873,7 +4873,7 @@
       "description": "通用命令行工具，支持超过68种编码Agent，实现技能标准化分发与统一管理",
       "pricing_model": "开源免费",
       "maturity": "可用",
-      "hot_score": 18,
+      "hot_score": 16,
       "hot_level": "平稳",
       "last_update": "发布",
       "last_update_date": "2026-07-07",
@@ -4951,7 +4951,7 @@
       "description": "Rust编写的超快Python包管理器，已被OpenAI收购",
       "pricing_model": "开源免费",
       "maturity": "生产就绪",
-      "hot_score": 43,
+      "hot_score": 41,
       "hot_level": "温热",
       "last_update": "被OpenAI收购后创始人反思AI编程影响",
       "last_update_date": "2026-07-07",
@@ -4997,7 +4997,7 @@
       "description": "让Agent从“会调用模型”走向“能编排音视频工作流”的命令行工具和技能系统",
       "pricing_model": "开源免费",
       "maturity": "可用",
-      "hot_score": 33,
+      "hot_score": 31,
       "hot_level": "温热",
       "last_update": "发布",
       "last_update_date": "2026-07-07",
@@ -5056,7 +5056,7 @@
       "description": "英伟达都在用的3D大模型，支持生成高质量3D内容",
       "pricing_model": "商业",
       "maturity": "生产就绪",
-      "hot_score": 43,
+      "hot_score": 41,
       "hot_level": "温热",
       "last_update": "获得数亿元融资",
       "last_update_date": "2026-07-07",
@@ -5079,7 +5079,7 @@
       "description": "实现跨本体、跨物体、跨任务的通用具身模型",
       "pricing_model": "未知",
       "maturity": "实验",
-      "hot_score": 38,
+      "hot_score": 36,
       "hot_level": "温热",
       "last_update": "发布",
       "last_update_date": "2026-07-07",
@@ -5883,7 +5883,7 @@
         "编码"
       ],
       "status": "预览",
-      "hot_score": 28,
+      "hot_score": 24,
       "hot_level": "平稳",
       "hot_reason": "预计明天解禁，与Claude Code提示词优化深度关联",
       "last_event": "Fable 5明天解禁，成为Claude Code效率提升关键",
@@ -6307,7 +6307,7 @@
         "对话"
       ],
       "status": "发布",
-      "hot_score": 26,
+      "hot_score": 22,
       "hot_level": "平稳",
       "hot_reason": "Anthropic突发Sonnet 5，但市场更期待Fable 5和Mythos 5明天解禁",
       "last_event": "Anthropic突发Sonnet 5",
@@ -6380,7 +6380,7 @@
         "穿搭推荐"
       ],
       "status": "发布",
-      "hot_score": 23,
+      "hot_score": 21,
       "hot_level": "平稳",
       "hot_reason": "AI量化穿搭冲突指数",
       "last_event": "发布2.0版本",
@@ -6416,7 +6416,7 @@
       "id": "tl",
       "name": "TL",
       "confidence": "high",
-      "updated_at": "2026-07-11T11:55:11.186508"
+      "updated_at": "2026-07-11T11:59:43.374605"
     },
     {
       "id": "seed-2-1",
@@ -6640,8 +6640,8 @@
         "多模态"
       ],
       "status": "发布",
-      "hot_score": 31,
-      "hot_level": "温热",
+      "hot_score": 27,
+      "hot_level": "平稳",
       "hot_reason": "完成近30亿美元融资，创多模态大模型单轮融资纪录",
       "last_event": "可灵AI完成近30亿美元融资",
       "last_event_date": "2026-07-06",
@@ -6737,7 +6737,7 @@
         "编码"
       ],
       "status": "发布",
-      "hot_score": 21,
+      "hot_score": 17,
       "hot_level": "平稳",
       "hot_reason": "通过ds4-rs-metal引擎在苹果芯片上实现60%加速",
       "last_event": "DeepSeek新技术移植苹果芯片，Mac本地大模型加速60%",
@@ -6927,7 +6927,7 @@
         "工具调用"
       ],
       "status": "发布",
-      "hot_score": 26,
+      "hot_score": 22,
       "hot_level": "平稳",
       "hot_reason": "正式发布，Agent能力和产品体验跃升，元宝同步上线",
       "last_event": "正式发布Hy3",
@@ -7047,7 +7047,7 @@
         "ASR"
       ],
       "status": "发布",
-      "hot_score": 38,
+      "hot_score": 36,
       "hot_level": "温热",
       "hot_reason": "千问大模型升级实时语音识别能力",
       "last_event": "推出实时语音识别功能",
@@ -7070,7 +7070,7 @@
         "具身智能"
       ],
       "status": "预览",
-      "hot_score": 41,
+      "hot_score": 39,
       "hot_level": "温热",
       "hot_reason": "跳出现有VLA/世界模型路线，获数亿元融资",
       "last_event": "获得数亿元融资，加速研发",
@@ -7118,7 +7118,7 @@
         "跨任务"
       ],
       "status": "发布",
-      "hot_score": 38,
+      "hot_score": 36,
       "hot_level": "温热",
       "hot_reason": "实现跨本体、跨物体、跨任务通用",
       "last_event": "发布",
@@ -7141,7 +7141,7 @@
         "加速"
       ],
       "status": "预览",
-      "hot_score": 38,
+      "hot_score": 36,
       "hot_level": "温热",
       "hot_reason": "新技术移植苹果芯片，Mac本地加速60%",
       "last_event": "新技术移植苹果芯片",
@@ -8402,8 +8402,8 @@
     "total_tools": 96,
     "total_llms": 80,
     "total_hotspots": 100,
-    "new_this_period": 0,
-    "updated_this_period": 1,
+    "new_this_period": 1,
+    "updated_this_period": 0,
     "removed_this_period": 0
   },
   "hotspots": [
