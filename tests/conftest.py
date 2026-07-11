@@ -40,12 +40,14 @@ def collector():
 
 @pytest.fixture
 def temp_snapshot(collector):
-    original = collector.SNAPSHOT_PATH
+    original_path = collector.snapshot_path
+    original_data = collector.data_dir
     tmp = tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False)
     json.dump(SAMPLE_SNAPSHOT, tmp, indent=2, ensure_ascii=False)
     tmp.close()
-    collector.SNAPSHOT_PATH = Path(tmp.name)
-    collector.DATA_DIR = Path(tmp.name).parent
+    collector.snapshot_path = Path(tmp.name)
+    collector.data_dir = Path(tmp.name).parent
     yield collector
     os.unlink(tmp.name)
-    collector.SNAPSHOT_PATH = original
+    collector.snapshot_path = original_path
+    collector.data_dir = original_data
