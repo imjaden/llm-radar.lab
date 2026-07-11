@@ -31,6 +31,7 @@ def collector():
     mod = import_collector()
     c = mod.LLMRadarCollector()
     c.api_key = "test-key"
+    c._skip_push = True  # prevent test-triggered git push
     c._print_ok = lambda msg: None
     c._print_err = lambda msg: None
     c._print_info = lambda msg: None
