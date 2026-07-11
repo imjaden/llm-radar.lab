@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "generated_at": "2026-07-11T12:01:49.468757",
+  "generated_at": "2026-07-11T12:33:27.347639",
   "period": "2026-07-04 ~ 2026-07-11",
   "execution_mode": "semi-auto",
   "providers": [
@@ -1191,7 +1191,7 @@
       "id": "guangxiang-tech",
       "name": "光象科技",
       "country": "中国",
-      "hot_score": 12,
+      "hot_score": 10,
       "hot_level": "平稳",
       "last_event": "自研物理原生基座模型，获得数亿元融资",
       "last_event_date": "2026-07-07",
@@ -1211,7 +1211,7 @@
       "id": "kling-ai",
       "name": "可灵AI",
       "country": "中国",
-      "hot_score": 32,
+      "hot_score": 30,
       "hot_level": "温热",
       "last_event": "完成近30亿美元融资，创全球多模态AI单轮融资纪录",
       "last_event_date": "2026-07-07",
@@ -1400,7 +1400,7 @@
       "id": "hyper3d-developer",
       "name": "Hyper3D开发团队",
       "country": "中国",
-      "hot_score": 14,
+      "hot_score": 12,
       "hot_level": "平稳",
       "last_event": "3D大模型Hyper3D再获数亿融资，英伟达也在用",
       "last_event_date": "2026-07-07",
@@ -1420,7 +1420,7 @@
       "id": "astral",
       "name": "Astral",
       "country": "美国",
-      "hot_score": 12,
+      "hot_score": 10,
       "hot_level": "平稳",
       "last_event": "被OpenAI收购后，uv工具创始人反思AI编程",
       "last_event_date": "2026-07-07",
@@ -1460,7 +1460,7 @@
       "id": "bai-yuan",
       "name": "北京智源研究院",
       "country": "中国",
-      "hot_score": 12,
+      "hot_score": 10,
       "hot_level": "平稳",
       "last_event": "发布悟界·RoboBrain Orca通用世界基础模型",
       "last_event_date": "2026-07-07",
@@ -1834,6 +1834,13 @@
       ],
       "confidence": "medium",
       "updated_at": "2026-07-10T21:03:00.469886"
+    },
+    {
+      "id": "isolation-test",
+      "name": "IsolationTest",
+      "confidence": "high",
+      "hot_score": 99,
+      "updated_at": "2026-07-11T12:33:27.347639"
     }
   ],
   "people": [
@@ -3553,7 +3560,7 @@
       "title": "Astral创始人",
       "employer_id": "astral",
       "influence_level": "核心人物",
-      "hot_score": 12,
+      "hot_score": 10,
       "hot_level": "平稳",
       "recent_activity": "被OpenAI收购后反思AI编程：优秀的工程师用AI更猛，初期工程师易陷坏习惯",
       "recent_activity_date": "2026-07-07",
@@ -4951,7 +4958,7 @@
       "description": "Rust编写的超快Python包管理器，已被OpenAI收购",
       "pricing_model": "开源免费",
       "maturity": "生产就绪",
-      "hot_score": 17,
+      "hot_score": 15,
       "hot_level": "平稳",
       "last_update": "被OpenAI收购后创始人反思AI编程影响",
       "last_update_date": "2026-07-07",
@@ -5056,7 +5063,7 @@
       "description": "英伟达都在用的3D大模型，支持生成高质量3D内容",
       "pricing_model": "商业",
       "maturity": "生产就绪",
-      "hot_score": 17,
+      "hot_score": 15,
       "hot_level": "平稳",
       "last_update": "获得数亿元融资",
       "last_update_date": "2026-07-07",
@@ -5079,7 +5086,7 @@
       "description": "实现跨本体、跨物体、跨任务的通用具身模型",
       "pricing_model": "未知",
       "maturity": "实验",
-      "hot_score": 12,
+      "hot_score": 10,
       "hot_level": "平稳",
       "last_update": "发布",
       "last_update_date": "2026-07-07",
@@ -7047,7 +7054,7 @@
         "ASR"
       ],
       "status": "发布",
-      "hot_score": 12,
+      "hot_score": 10,
       "hot_level": "平稳",
       "hot_reason": "千问大模型升级实时语音识别能力",
       "last_event": "推出实时语音识别功能",
@@ -7070,7 +7077,7 @@
         "具身智能"
       ],
       "status": "预览",
-      "hot_score": 15,
+      "hot_score": 13,
       "hot_level": "平稳",
       "hot_reason": "跳出现有VLA/世界模型路线，获数亿元融资",
       "last_event": "获得数亿元融资，加速研发",
@@ -7118,7 +7125,7 @@
         "跨任务"
       ],
       "status": "发布",
-      "hot_score": 12,
+      "hot_score": 10,
       "hot_level": "平稳",
       "hot_reason": "实现跨本体、跨物体、跨任务通用",
       "last_event": "发布",
@@ -7141,7 +7148,7 @@
         "加速"
       ],
       "status": "预览",
-      "hot_score": 12,
+      "hot_score": 10,
       "hot_level": "平稳",
       "hot_reason": "新技术移植苹果芯片，Mac本地加速60%",
       "last_event": "新技术移植苹果芯片",
@@ -8394,10 +8401,19 @@
       "id": "tesla",
       "summary": "providers: 特斯拉",
       "date": "2026-07-11"
+    },
+    {
+      "type": "new",
+      "dimension": "providers",
+      "id": "isolation-test",
+      "summary": "IsolationTest (isolation-test)",
+      "date": "2026-07-11",
+      "time": "12:33:27",
+      "url": ""
     }
   ],
   "stats": {
-    "total_providers": 92,
+    "total_providers": 93,
     "total_people": 81,
     "total_tools": 96,
     "total_llms": 80,

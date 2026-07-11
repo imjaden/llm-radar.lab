@@ -760,7 +760,23 @@ hotspots 数组中每个元素格式：
                         if changes:
                             changelog.append({'type': 'update', 'dimension': dimension, 'id': old['id'], 'summary': changes, 'date': today, 'time': datetime.now().strftime('%H:%M:%S'), 'url': item.get('last_event_url') or item.get('recent_activity_url') or item.get('last_update_url') or ''})
                     else:
-                        # 新增实体
+                        # 新增实体：日期有效性过滤（>14 天的新实体拒绝入库）
+                        date_str = (item.get('last_event_date') or
+                                    item.get('recent_activity_date') or
+                                    item.get('last_update_date') or '')
+                        if date_str and len(date_str) >= 10:
+                            try:
+                                event_dt = datetime.strptime(date_str[:10], '%Y-%m-%d')
+                                days_old = (datetime.now() - event_dt).days
+                                if days_old > 14:
+                                    self._print_info(
+                                        f'跳过过期新实体: {item.get("name","")} '
+                                        f'({date_str[:10]}, {days_old}天前)'
+                                    )
+                                    continue
+                            except (ValueError, TypeError):
+                                pass  # 无法解析日期，允许入库
+
                         item['updated_at'] = now
                         existing[item_id] = item
                         changelog.append({
