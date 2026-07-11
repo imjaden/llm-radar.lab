@@ -1028,8 +1028,82 @@ hotspots 数组中每个元素格式：
         hotspots = entities.get('hotspots', [])
         if len(hotspots) < 3:
             issues.append(f'热点仅 {len(hotspots)} 条')
-        # 3. 去重比异常（仅当有存量数据时）
+        # 3. URL 质量
+        url_stats = self._validate_entity_urls(entities)
+        if url_stats.get('empty_urls', 0) > 5:
+            issues.append(f'空 URL: {url_stats["empty_urls"]} 条')
+        if url_stats.get('truncated_urls', 0) > 0:
+            issues.append(f'截断 URL: {url_stats["truncated_urls"]} 条')
+        if url_stats.get('bare_domain_urls', 0) > 2:
+            issues.append(f'裸域名 URL: {url_stats["bare_domain_urls"]} 条')
+        # 4. 数据完整性
+        comp = self._validate_data_completeness(entities)
+        if comp.get('key_people_empty_ratio', 0) > 0.5:
+            issues.append(f'key_people 缺失率 {comp["key_people_empty_ratio"]:.0%}')
+        # 5. 去重比异常（仅当有存量数据时）
         return issues
+
+    def _validate_entity_urls(self, entities):
+        """检查实体 URL 质量：空、截断、裸域名。
+
+        Returns:
+            dict with keys: empty_urls, truncated_urls, bare_domain_urls
+        """
+        empty = 0
+        truncated = 0
+        bare_domain = 0
+
+        url_keys_by_dim = {
+            'providers': 'last_event_url',
+            'people': 'recent_activity_url',
+            'tools': 'last_update_url',
+            'llms': 'last_event_url',
+            'hotspots': 'url',
+        }
+
+        for dim, url_key in url_keys_by_dim.items():
+            for item in entities.get(dim, []):
+                url = item.get(url_key, '')
+                if not url or not url.strip():
+                    empty += 1
+                elif '...' in url:
+                    truncated += 1
+                else:
+                    # 检查是否为裸域名（去掉协议后无路径段）
+                    stripped = re.sub(r'^https?://', '', url)
+                    if '/' not in stripped:
+                        bare_domain += 1
+
+        return {
+            'empty_urls': empty,
+            'truncated_urls': truncated,
+            'bare_domain_urls': bare_domain,
+        }
+
+    def _validate_data_completeness(self, entities):
+        """检查数据完整性：key_people, focus_areas, low confidence。
+
+        Returns:
+            dict with keys: key_people_empty_ratio, focus_areas_empty_ratio,
+                           low_confidence_count
+        """
+        providers = entities.get('providers', [])
+        total = len(providers)
+
+        kp_empty = sum(1 for p in providers if not p.get('key_people'))
+        fa_empty = sum(1 for p in providers if not p.get('focus_areas'))
+
+        low_conf = 0
+        for dim in ['providers', 'people', 'tools', 'llms', 'hotspots']:
+            for item in entities.get(dim, []):
+                if item.get('confidence') == 'low':
+                    low_conf += 1
+
+        return {
+            'key_people_empty_ratio': kp_empty / total if total > 0 else 0,
+            'focus_areas_empty_ratio': fa_empty / total if total > 0 else 0,
+            'low_confidence_count': low_conf,
+        }
 
     # ===== Agent Loop: Observe =====
     def _observe(self, run_result, fetch_results=None, entities=None, snapshot=None):
