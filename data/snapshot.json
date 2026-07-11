@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "generated_at": "2026-07-11T07:02:45.148844",
+  "generated_at": "2026-07-11T11:39:38.176772",
   "period": "2026-07-04 ~ 2026-07-11",
   "execution_mode": "semi-auto",
   "providers": [
@@ -541,25 +541,24 @@
       "updated_at": "2026-06-23T13:12:33.979498"
     },
     {
-      "id": "zhipu-ai",
+      "id": "zhipu",
       "name": "智谱AI",
       "country": "中国",
-      "hot_score": 85,
-      "hot_level": "爆热",
-      "last_event": "被曝自研AI芯片；GLM-5.2上线模力工场",
-      "last_event_date": "2026-07-10",
-      "last_event_url": "https://www.infoq.cn/article/woKuALR13UH0o9XicUlZ",
+      "hot_score": 75,
+      "hot_level": "高热",
+      "last_event": "被曝考虑自研AI芯片",
+      "last_event_date": "2026-07-11",
+      "last_event_url": "https://36kr.com/p/3886547036437129",
       "flagship_models": [
-        "glm-5-2"
+        "glm"
       ],
       "key_people": [],
       "focus_areas": [
-        "大模型",
-        "AI芯片",
-        "开源编程工具"
+        "大语言模型",
+        "AI芯片"
       ],
-      "confidence": "high",
-      "updated_at": "2026-07-10T14:02:39.428912"
+      "confidence": "medium",
+      "updated_at": "2026-07-11T07:02:45.148844"
     },
     {
       "id": "dropbox",
@@ -662,9 +661,9 @@
       "country": "美国",
       "hot_score": 55,
       "hot_level": "温热",
-      "last_event": "马斯克盯上AI基建，特斯拉将卖‘算力积木’，新商标已曝光",
+      "last_event": "马斯克盯上AI基建，特斯拉将卖算力积木，新商标已曝光",
       "last_event_date": "2026-06-23",
-      "last_event_url": "",
+      "last_event_url": "https://36kr.com/p/3855730629899523",
       "flagship_models": [],
       "key_people": [
         "elon-musk"
@@ -742,13 +741,13 @@
       "updated_at": "2026-07-07T07:03:45.841909"
     },
     {
-      "id": "roboscience",
+      "id": "robo-science",
       "name": "RoboScience",
       "country": "中国",
-      "hot_score": 65,
-      "hot_level": "温热",
-      "last_event": "发布Visics通用具身大模型，实现跨本体、跨物体、跨任务",
-      "last_event_date": "2026-07-09",
+      "hot_score": 70,
+      "hot_level": "高热",
+      "last_event": "发布Visics通用具身大模型，实现跨本体跨物体跨任务",
+      "last_event_date": "2026-07-08",
       "last_event_url": "https://36kr.com/p/3868276479710466",
       "flagship_models": [
         "visics"
@@ -756,10 +755,10 @@
       "key_people": [],
       "focus_areas": [
         "具身智能",
-        "机器人"
+        "通用机器人"
       ],
       "confidence": "high",
-      "updated_at": "2026-07-09T07:03:00.955797"
+      "updated_at": "2026-07-08T14:03:52.955779"
     },
     {
       "id": "jiutianzhanyi",
@@ -890,26 +889,6 @@
       "updated_at": "2026-07-04T15:08:54.230594"
     },
     {
-      "id": "robo-science",
-      "name": "RoboScience",
-      "country": "中国",
-      "hot_score": 70,
-      "hot_level": "高热",
-      "last_event": "发布Visics通用具身大模型，实现跨本体跨物体跨任务",
-      "last_event_date": "2026-07-08",
-      "last_event_url": "https://36kr.com/p/3868276479710466",
-      "flagship_models": [
-        "visics"
-      ],
-      "key_people": [],
-      "focus_areas": [
-        "具身智能",
-        "通用机器人"
-      ],
-      "confidence": "high",
-      "updated_at": "2026-07-08T14:03:52.955779"
-    },
-    {
       "id": "lenovo",
       "name": "联想",
       "country": "中国",
@@ -962,26 +941,6 @@
       ],
       "confidence": "medium",
       "updated_at": "2026-07-02T09:05:26.886781"
-    },
-    {
-      "id": "zhipu",
-      "name": "智谱AI",
-      "country": "中国",
-      "hot_score": 75,
-      "hot_level": "高热",
-      "last_event": "被曝考虑自研AI芯片",
-      "last_event_date": "2026-07-11",
-      "last_event_url": "https://36kr.com/p/3886547036437129",
-      "flagship_models": [
-        "glm"
-      ],
-      "key_people": [],
-      "focus_areas": [
-        "大语言模型",
-        "AI芯片"
-      ],
-      "confidence": "medium",
-      "updated_at": "2026-07-11T07:02:45.148844"
     },
     {
       "id": "slack",
@@ -1615,13 +1574,13 @@
       "updated_at": "2026-07-07T21:04:18.877814"
     },
     {
-      "id": "ant-lingbot",
+      "id": "ant-lingbo",
       "name": "蚂蚁灵波",
       "country": "中国",
-      "hot_score": 80,
+      "hot_score": 72,
       "hot_level": "高热",
-      "last_event": "发布具身原生世界动作模型LingBot-VA 2.0，开源视频基座模型LingBot-Video",
-      "last_event_date": "2026-07-11",
+      "last_event": "发布LingBot-VA 2.0和LingBot-Video开源模型",
+      "last_event_date": "2026-07-10",
       "last_event_url": "https://www.infoq.cn/article/aU7GMFKF8qZRhT8VMWvY",
       "flagship_models": [
         "lingbot-va-2-0",
@@ -1634,7 +1593,7 @@
         "视频生成"
       ],
       "confidence": "high",
-      "updated_at": "2026-07-11T07:02:45.148844"
+      "updated_at": "2026-07-10T21:03:00.469886"
     },
     {
       "id": "baai",
@@ -1694,28 +1653,6 @@
       ],
       "confidence": "medium",
       "updated_at": "2026-07-09T07:03:00.955797"
-    },
-    {
-      "id": "ant-lingbo",
-      "name": "蚂蚁灵波",
-      "country": "中国",
-      "hot_score": 72,
-      "hot_level": "高热",
-      "last_event": "发布LingBot-VA 2.0和LingBot-Video开源模型",
-      "last_event_date": "2026-07-10",
-      "last_event_url": "https://www.infoq.cn/article/aU7GMFKF8qZRhT8VMWvY",
-      "flagship_models": [
-        "lingbot-va-2-0",
-        "lingbot-video"
-      ],
-      "key_people": [],
-      "focus_areas": [
-        "具身智能",
-        "机器人",
-        "视频生成"
-      ],
-      "confidence": "high",
-      "updated_at": "2026-07-10T21:03:00.469886"
     },
     {
       "id": "tencent-cloud",
@@ -8911,17 +8848,23 @@
       "date": "2026-07-11",
       "time": "07:02:45",
       "url": ""
+    },
+    {
+      "type": "update",
+      "dimension": "providers",
+      "id": "tesla",
+      "summary": "providers: 特斯拉",
+      "date": "2026-07-11"
     }
   ],
   "stats": {
-    "total_providers": 100,
+    "total_providers": 97,
     "total_people": 81,
     "total_tools": 100,
     "total_llms": 90,
     "total_hotspots": 100,
-    "new_this_period": 3,
-    "updated_this_period": 27,
-    "removed_this_period": 0
+    "new_this_period": 0,
+    "updated_this_period": 1
   },
   "hotspots": [
     {
