@@ -16,7 +16,7 @@ Tools:
   - health_check(api_key)
 
 Environment:
-  LLM_RADAR_MCP_KEY  — API key for authentication (default: llm-radar-mcp-2026)
+  LLM_RADAR_MCP_KEY  — API key for authentication (auto-generated if not set)
   LLM_RADAR_DIR      — project root (default: auto-detect from script location)
 
 Version: 1.0(2026-06-23)

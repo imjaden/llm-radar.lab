@@ -1,0 +1,25 @@
+level: L2
+owner: Jaden Li
+classification: public
+data_types:
+  - news-aggregation
+  - llm-industry-intelligence
+compliance:
+  - none
+review_history:
+  - date: 2026-07-11
+    reviewer: Security Reviewer (IRIS)
+    review_level: L2
+    verdict: PASS
+    score: 100
+    findings_total: 8
+    findings_open: 1
+    tracking: LR-SEC-001 ~ LR-SEC-008
+  - date: 2026-07-11
+    reviewer: Security Reviewer (IRIS)
+    review_level: L2
+    verdict: FAIL
+    score: 65
+    findings_total: 7
+    findings_open: 6
+    tracking: LR-SEC-001 ~ LR-SEC-007

@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "generated_at": "2026-07-11T12:33:27.347639",
+  "generated_at": "2026-07-11T12:57:55.369034",
   "period": "2026-07-04 ~ 2026-07-11",
   "execution_mode": "semi-auto",
   "providers": [
@@ -1211,8 +1211,8 @@
       "id": "kling-ai",
       "name": "可灵AI",
       "country": "中国",
-      "hot_score": 30,
-      "hot_level": "温热",
+      "hot_score": 28,
+      "hot_level": "平稳",
       "last_event": "完成近30亿美元融资，创全球多模态AI单轮融资纪录",
       "last_event_date": "2026-07-07",
       "last_event_url": "https://www.infoq.cn/article/hX0uxPMVfPGakqQdKozL",
@@ -1400,7 +1400,7 @@
       "id": "hyper3d-developer",
       "name": "Hyper3D开发团队",
       "country": "中国",
-      "hot_score": 12,
+      "hot_score": 10,
       "hot_level": "平稳",
       "last_event": "3D大模型Hyper3D再获数亿融资，英伟达也在用",
       "last_event_date": "2026-07-07",
@@ -1840,7 +1840,7 @@
       "name": "IsolationTest",
       "confidence": "high",
       "hot_score": 99,
-      "updated_at": "2026-07-11T12:33:27.347639"
+      "updated_at": "2026-07-11T12:57:55.369034"
     }
   ],
   "people": [
@@ -4958,7 +4958,7 @@
       "description": "Rust编写的超快Python包管理器，已被OpenAI收购",
       "pricing_model": "开源免费",
       "maturity": "生产就绪",
-      "hot_score": 15,
+      "hot_score": 13,
       "hot_level": "平稳",
       "last_update": "被OpenAI收购后创始人反思AI编程影响",
       "last_update_date": "2026-07-07",
@@ -5063,7 +5063,7 @@
       "description": "英伟达都在用的3D大模型，支持生成高质量3D内容",
       "pricing_model": "商业",
       "maturity": "生产就绪",
-      "hot_score": 15,
+      "hot_score": 13,
       "hot_level": "平稳",
       "last_update": "获得数亿元融资",
       "last_update_date": "2026-07-07",
@@ -7077,7 +7077,7 @@
         "具身智能"
       ],
       "status": "预览",
-      "hot_score": 13,
+      "hot_score": 11,
       "hot_level": "平稳",
       "hot_reason": "跳出现有VLA/世界模型路线，获数亿元融资",
       "last_event": "获得数亿元融资，加速研发",
@@ -8418,7 +8418,7 @@
     "total_tools": 96,
     "total_llms": 80,
     "total_hotspots": 100,
-    "new_this_period": 1,
+    "new_this_period": 0,
     "updated_this_period": 0,
     "removed_this_period": 0
   },
