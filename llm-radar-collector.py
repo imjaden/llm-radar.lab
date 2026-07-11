@@ -1156,8 +1156,6 @@ hotspots 数组中每个元素格式：
         if len(items) <= 1:
             return items
 
-        seen_ids = set()
-
         def normalize(name):
             """规范化名称：去括号、去后缀、去空格、小写"""
             n = re.sub(r'\(.*?\)', '', name)  # 去掉括号及内容
@@ -1209,7 +1207,6 @@ hotspots 数组中每个元素格式：
                 old_kp = matched.get('key_people', [])
                 # 先保存需要特殊处理的字段旧值
                 old_score = matched.get('hot_score', 0)
-                old_date = matched.get('last_event_date') or matched.get('recent_activity_date') or ''
                 # 合并通用字段（排除 hot_score 和日期字段）
                 for key, value in item.items():
                     if key in ('id', 'updated_at', 'hot_score',
