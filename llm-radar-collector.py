@@ -131,6 +131,20 @@ SCRAPERS = {
 class LLMRadarCollector:
     """LLM Radar 数据采集器"""
 
+    # 已知别名映射：变体名 → 主条目 id
+    KNOWN_ALIASES = {
+        'z.ai': 'zhipu-ai',
+        'z.AI(智谱)': 'zhipu-ai',
+        '阿里巴巴': 'alibaba',
+        '阿里云': 'alibaba',
+        '阿里千问': 'alibaba',
+        '微信': 'tencent',
+        '腾讯微信': 'tencent',
+    }
+
+    # 规范化时去掉的常见后缀
+    NORMALIZE_SUFFIXES = ['科技', '云', 'AI', '大模型', '千问', '研究院', '实验室']
+
     def __init__(self):
         self.project_root = PROJECT_ROOT
         self.data_dir = DATA_DIR
@@ -514,8 +528,20 @@ class LLMRadarCollector:
 4. ID 使用英文小写+连字符格式
 5. 日期使用 YYYY-MM-DD 格式
 6. 不要编造数据，只提取新闻中明确提到的信息
-7. URL 字段必须填写完整可访问的链接。如果不确定具体文章 URL，留空字符串('')，不要使用 xxxx/xxx/example 等占位符
-8. **时效优先**：优先提取最近 48 小时内的最新事件。超过 7 天的旧事件除非有重大更新（如新版本发布、融资、人员变动），否则不提取"""
+7. **URL 硬规则**：
+   - 必须填写完整可访问的文章链接（含协议和路径），如 https://www.qbitai.com/2026/07/12345.html
+   - ❌ 禁止：裸域名（qbitai.com）、截断（.../article/...）、占位符（xxx/example/localhost）
+   - ❌ 禁止：门户首页 URL —— 必须指向具体文章页面
+   - 如果找不到具体文章 URL，留空字符串 ""
+8. **时效硬规则**：
+   - 日期字段必须使用新闻中明确出现的日期，禁止编造
+   - 优先当前日期前后 48h 内的事件
+   - 超过 7 天的旧事件【绝对不提取】
+   - 示例：今天是 2026-07-11，不要提取任何日期早于 2026-07-04 的事件
+9. **key_people 强制规则**：
+   - 只要新闻中提到该厂商的高管/创始人/核心研究人员，必须填写 key_people
+   - key_people 格式：["姓名-头衔", ...]，如 ["Sam Altman-CEO", "Greg Brockman-董事长"]
+   - 头部厂商（OpenAI, Google, 微软, Meta, 阿里, 腾讯, 字节, 百度, 华为等）不要留空"""
 
         user_prompt = f"""当前日期: {datetime.now().strftime('%Y-%m-%d')}
 
@@ -748,6 +774,16 @@ hotspots 数组中每个元素格式：
                         })
 
             snapshot[dimension] = list(existing.values())
+
+        # ---- 模糊名称去重: 合并别名/变体 ----
+        dedup_count = 0
+        for dim in ['providers', 'people', 'tools', 'llms']:
+            before = len(snapshot.get(dim, []))
+            snapshot[dim] = self._fuzzy_name_dedup(snapshot.get(dim, []))
+            after = len(snapshot.get(dim, []))
+            dedup_count += (before - after)
+        if dedup_count:
+            self._print_info(f'模糊去重: 合并 {dedup_count} 个重复实体')
 
         # ---- 时间衰减: 对所有实体应用热度时间衰减 ----
         decay_count = 0
@@ -1104,6 +1140,103 @@ hotspots 数组中每个元素格式：
             'focus_areas_empty_ratio': fa_empty / total if total > 0 else 0,
             'low_confidence_count': low_conf,
         }
+
+    def _fuzzy_name_dedup(self, items):
+        """对实体列表进行模糊名称去重。
+
+        去重策略（按优先级）：
+        1. 已知别名映射（KNOWN_ALIASES）
+        2. 精确同名合并
+        3. 去掉括号内容后同名
+        4. 去掉常见后缀后同名
+
+        合并规则：保留先出现的条目 ID，取最新的事件日期和最高热度分，
+        新数据字段覆盖旧数据中的空字段。
+        """
+        if len(items) <= 1:
+            return items
+
+        seen_ids = set()
+
+        def normalize(name):
+            """规范化名称：去括号、去后缀、去空格、小写"""
+            n = re.sub(r'\(.*?\)', '', name)  # 去掉括号及内容
+            n = re.sub(r'（.*?）', '', n)       # 中文括号
+            n = n.strip()                        # 去括号后的空格
+            for suffix in self.NORMALIZE_SUFFIXES:
+                if n.endswith(suffix) and len(n) > len(suffix):
+                    n = n[:-len(suffix)]
+            return n.strip().lower()
+
+        # 第一步：别名映射
+        alias_ids = {}
+        for item in items:
+            name = item.get('name', '')
+            if name in self.KNOWN_ALIASES:
+                alias_ids[item['id']] = self.KNOWN_ALIASES[name]
+
+        # 第二步：规范化去重
+        norms = {}  # normalized_name -> primary item
+        order = []  # preserve insertion order
+
+        for item in items:
+            item_id = alias_ids.get(item['id'], item['id'])
+            name = item.get('name', '')
+            norm_name = normalize(name)
+            norm_id = normalize(item_id)
+
+            # 尝试匹配：
+            # a) 精确同名
+            # b) 规范化同名
+            # c) 别名映射指向同一个主 ID
+            matched = None
+
+            if name in norms:
+                matched = norms[name]
+            elif norm_name in norms:
+                matched = norms[norm_name]
+            elif norm_id in norms:
+                matched = norms[norm_id]
+            else:
+                # 查找是否有其他条目规范化后匹配
+                for existing_norm, existing_primary in norms.items():
+                    if existing_norm == norm_name or existing_norm == norm_id:
+                        matched = existing_primary
+                        break
+
+            if matched:
+                # 合并：保留旧 key_people（非空不覆盖）
+                old_kp = matched.get('key_people', [])
+                # 先保存需要特殊处理的字段旧值
+                old_score = matched.get('hot_score', 0)
+                old_date = matched.get('last_event_date') or matched.get('recent_activity_date') or ''
+                # 合并通用字段（排除 hot_score 和日期字段）
+                for key, value in item.items():
+                    if key in ('id', 'updated_at', 'hot_score',
+                               'last_event_date', 'recent_activity_date', 'last_update_date'):
+                        continue
+                    if key == 'key_people' and old_kp:
+                        continue  # 保留原有的非空 key_people
+                    if value is not None and value != '' and value != [] and value != 0:
+                        matched[key] = value
+                if old_kp:
+                    matched['key_people'] = old_kp
+                # 取最高热度
+                matched['hot_score'] = max(old_score, item.get('hot_score', 0))
+                # 取最新日期
+                for dk in ['last_event_date', 'recent_activity_date', 'last_update_date']:
+                    new_d = item.get(dk, '')
+                    cur_d = matched.get(dk, '')
+                    if new_d and new_d > (cur_d or ''):
+                        matched[dk] = new_d
+                matched['hot_level'] = self._score_to_level(matched['hot_score'])
+            else:
+                norms[name] = item
+                norms[norm_name] = item
+                norms[norm_id] = item
+                order.append(item)
+
+        return order
 
     # ===== Agent Loop: Observe =====
     def _observe(self, run_result, fetch_results=None, entities=None, snapshot=None):
