@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "generated_at": "2026-07-11T11:53:21.919408",
+  "generated_at": "2026-07-11T11:53:26.467587",
   "period": "2026-07-04 ~ 2026-07-11",
   "execution_mode": "semi-auto",
   "providers": [
@@ -43,7 +43,7 @@
       ]
     },
     {
-      "id": "openai",
+      "id": "openai-2",
       "name": "OpenAI",
       "country": "美国",
       "flagship_models": [
@@ -57,7 +57,7 @@
         "AI芯片",
         "生产力工具"
       ],
-      "hot_score": 99,
+      "hot_score": 92,
       "hot_level": "爆热",
       "last_event": "GPT-5.6全面上线，合并Codex，推出ChatGPT Work；自研芯片性能媲美英伟达Blackwell，成本降低约50%",
       "last_event_date": "2026-07-11",
@@ -73,7 +73,7 @@
           "DPO"
         ]
       },
-      "updated_at": "2026-07-11T11:53:21.919408"
+      "updated_at": "2026-07-11T11:53:26.467587"
     },
     {
       "id": "anthropic",
@@ -8087,15 +8087,6 @@
     {
       "type": "update",
       "dimension": "providers",
-      "id": "openai",
-      "summary": "hot_score: 100 → 95; last_event: GPT-5.6全面上线，Codex被合并，生产力工具ChatGPT Work发布；自研芯片推理性能媲美英伟达Blackwell和谷歌TPU，成本降低50% → GPT-5.6全面上线，ChatGPT Work发布",
-      "date": "2026-07-10",
-      "time": "21:03:00",
-      "url": "https://36kr.com/p/3889721001032456"
-    },
-    {
-      "type": "update",
-      "dimension": "providers",
       "id": "deepseek",
       "summary": "hot_score: 90 → 80; hot_level: 爆热 → 高热; last_event: 被曝自研AI推理芯片（已启动一年，正对接代工与存储厂商） → 被曝自研AI推理芯片，已启动一年",
       "date": "2026-07-10",
@@ -8582,15 +8573,6 @@
     {
       "type": "update",
       "dimension": "providers",
-      "id": "openai",
-      "summary": "last_event: GPT-5.6全面上线，ChatGPT Work发布 → GPT-5.6全面上线，合并Codex，推出ChatGPT Work；自研芯片性能媲美英伟达Blackwell，成本降低约50%",
-      "date": "2026-07-11",
-      "time": "07:02:45",
-      "url": "https://36kr.com/p/3883839281099016"
-    },
-    {
-      "type": "update",
-      "dimension": "providers",
       "id": "anthropic",
       "summary": "hot_score: 92 → 90; last_event: 季度利润破10亿美元，Claude脑内小剧场被揭示 → 季度利润破10亿美元；Claude Fable 5被GPT-5.6挑战；Claude内部工作空间被曝涌现类人意识，已开源代码",
       "date": "2026-07-11",
@@ -8837,15 +8819,6 @@
       "id": "tesla",
       "summary": "providers: 特斯拉",
       "date": "2026-07-11"
-    },
-    {
-      "type": "update",
-      "dimension": "providers",
-      "id": "openai",
-      "summary": "hot_score: 95 → 99",
-      "date": "2026-07-11",
-      "time": "11:53:21",
-      "url": ""
     }
   ],
   "stats": {
