@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "generated_at": "2026-07-11T11:39:38.176772",
+  "generated_at": "2026-07-11T11:53:21.919408",
   "period": "2026-07-04 ~ 2026-07-11",
   "execution_mode": "semi-auto",
   "providers": [
@@ -57,7 +57,7 @@
         "AI芯片",
         "生产力工具"
       ],
-      "hot_score": 95,
+      "hot_score": 99,
       "hot_level": "爆热",
       "last_event": "GPT-5.6全面上线，合并Codex，推出ChatGPT Work；自研芯片性能媲美英伟达Blackwell，成本降低约50%",
       "last_event_date": "2026-07-11",
@@ -73,7 +73,7 @@
           "DPO"
         ]
       },
-      "updated_at": "2026-07-11T07:02:45.148844"
+      "updated_at": "2026-07-11T11:53:21.919408"
     },
     {
       "id": "anthropic",
@@ -105,7 +105,7 @@
           "Constitutional AI"
         ]
       },
-      "updated_at": "2026-07-11T07:02:45.148844"
+      "updated_at": "2026-07-11T11:53:21.910935"
     },
     {
       "id": "google-deepmind",
@@ -7952,15 +7952,6 @@
     {
       "type": "update",
       "dimension": "tools",
-      "id": "r3-embedding",
-      "summary": "hot_score: 60 → 50; last_update: 模型发布 → 发布并配合R3-Rerank-0.6B使用",
-      "date": "2026-07-10",
-      "time": "14:02:39",
-      "url": ""
-    },
-    {
-      "type": "update",
-      "dimension": "tools",
       "id": "nvdock",
       "summary": "hot_score: 50 → 45; hot_level: 平稳 → 温热; last_update: 模型发布 → 发布模型",
       "date": "2026-07-10",
@@ -8627,15 +8618,6 @@
     {
       "type": "update",
       "dimension": "providers",
-      "id": "ant-lingbot",
-      "summary": "hot_score: 85 → 80; last_event: 发布世界模型2.0（小时级实时生成+Agent实时陪玩），开源具身视频基础模型LingBot-Video → 发布具身原生世界动作模型LingBot-VA 2.0，开源视频基座模型LingBot-Video",
-      "date": "2026-07-11",
-      "time": "07:02:45",
-      "url": "https://www.infoq.cn/article/aU7GMFKF8qZRhT8VMWvY"
-    },
-    {
-      "type": "update",
-      "dimension": "providers",
       "id": "google-deepmind",
       "summary": "hot_score: 75 → 70; last_event: 发布Nano Banana 2 Lite与Gemini Omni Flash；认证Claude隐藏工作空间涌现意识 → 发布Nano Banana 2 Lite与Gemini Omni Flash；认证Claude意识涌现研究；让量子计算机学会强化学习实时容错优化",
       "date": "2026-07-11",
@@ -8855,6 +8837,15 @@
       "id": "tesla",
       "summary": "providers: 特斯拉",
       "date": "2026-07-11"
+    },
+    {
+      "type": "update",
+      "dimension": "providers",
+      "id": "openai",
+      "summary": "hot_score: 95 → 99",
+      "date": "2026-07-11",
+      "time": "11:53:21",
+      "url": ""
     }
   ],
   "stats": {
@@ -8864,7 +8855,8 @@
     "total_llms": 90,
     "total_hotspots": 100,
     "new_this_period": 0,
-    "updated_this_period": 1
+    "updated_this_period": 1,
+    "removed_this_period": 0
   },
   "hotspots": [
     {

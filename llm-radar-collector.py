@@ -838,6 +838,56 @@ hotspots 数组中每个元素格式：
                 merged[key] = value
         return merged
 
+    def _apply_time_decay(self, item):
+        """对热度过期的事件进行时间衰减。
+
+        衰减规则:
+        - 1 天内: 不减分
+        - 2-3 天: 不减分
+        - 4-7 天: 每天 -2 分
+        - >7 天: 基础 -8 分 + 每天额外 -3 分
+        - 下限: 10 分
+        - 无日期字段: 跳过衰减
+        """
+        date_str = item.get('last_event_date') or item.get('recent_activity_date') or item.get('last_update_date') or ''
+        if not date_str or len(date_str) < 10:
+            return item
+
+        try:
+            event_date = datetime.strptime(date_str[:10], '%Y-%m-%d')
+            days_old = (datetime.now() - event_date).days
+        except (ValueError, TypeError):
+            return item
+
+        if days_old <= 3:
+            item['hot_level'] = self._score_to_level(item.get('hot_score', 50))
+            return item
+
+        score = item.get('hot_score', 50)
+
+        if days_old <= 7:
+            decay = (days_old - 3) * 2
+        else:
+            decay = 8 + (days_old - 7) * 3
+
+        new_score = max(10, score - decay)
+        item['hot_score'] = new_score
+        item['hot_level'] = self._score_to_level(new_score)
+        return item
+
+    @staticmethod
+    def _score_to_level(score):
+        """将 hot_score 映射为 hot_level 文本。"""
+        if score >= 80:
+            return '爆热'
+        if score >= 60:
+            return '高热'
+        if score >= 30:
+            return '温热'
+        if score >= 10:
+            return '平稳'
+        return '冷淡'
+
     def _diff_fields(self, old, new):
         """对比两个实体的字段差异，返回变更摘要"""
         changes = []
