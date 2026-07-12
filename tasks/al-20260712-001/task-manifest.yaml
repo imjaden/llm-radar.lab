@@ -1,0 +1,36 @@
+author: jaden
+closed_at: null
+created_at: '2026-07-12T01:03:59.199251+08:00'
+escalated: false
+history:
+- date: '2026-07-12T01:03:59.199251+08:00'
+  profile: research
+  step: created
+  summary: 任务已创建，需求待编写
+- date: '2026-07-12T01:03:59.199251+08:00'
+  profile: research
+  step: demand
+  summary: 需求已锁定，可开始执行
+- date: '2026-07-12T01:10:02.550707+08:00'
+  profile: ops
+  step: assign
+  summary: scanner 自动分配
+- date: null
+  profile: dev
+  step: implement
+  summary: null
+- date: null
+  profile: review
+  step: review
+  summary: null
+- date: null
+  profile: ops
+  step: close
+  summary: null
+max_retries: 3
+retry_count: 0
+source: requirements.md
+source_hash: 39a67d16a9905b22a0ce751feb458e9a9e1faabe542821994d5caed6c74a257f
+state: demand
+task_id: al-20260712-001
+title: 测试 RSS 数据源

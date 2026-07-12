@@ -1,0 +1,11 @@
+escalated_tasks: []
+open_task_count: 1
+project: llm-radar.jaden.tech
+task_count: 1
+tasks:
+  al-20260712-001:
+    created_at: '2026-07-12T01:03:59.199251+08:00'
+    cycles: 0
+    escalated: false
+    state: assigned
+    title: 测试 RSS 数据源
