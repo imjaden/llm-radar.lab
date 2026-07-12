@@ -15,6 +15,22 @@ review_history:
     findings_total: 8
     findings_open: 1
     tracking: LR-SEC-001 ~ LR-SEC-008
+  - date: 2026-07-13
+    reviewer: Security Reviewer (IRIS)
+    review_level: L2
+    verdict: CONDITIONAL_PASS
+    score: 75
+    findings_total: 3
+    findings_open: 0
+    tracking: LR-SEC-005/REGRESSION, LR-SEC-009 ~ LR-SEC-010
+  - date: 2026-07-13
+    reviewer: Security Reviewer (IRIS)
+    review_level: L2
+    verdict: PASS
+    score: 100
+    findings_total: 0
+    findings_open: 0
+    tracking: re-review — all issues fixed
   - date: 2026-07-11
     reviewer: Security Reviewer (IRIS)
     review_level: L2

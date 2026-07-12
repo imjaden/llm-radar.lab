@@ -93,8 +93,96 @@
 | LR-SEC-002 | Tailwind CDN 缺少 SRI | MEDIUM | P1 | Accepted Risk |
 | LR-SEC-003 | 外部链接缺失 rel="noopener" | MEDIUM | P1 | Closed |
 | LR-SEC-004 | 缺少 Content-Security-Policy | MEDIUM | P2 | Closed |
-| LR-SEC-005 | 脚本中硬编码本地路径 | MEDIUM | P2 | Closed |
+| LR-SEC-005 | 脚本中硬编码本地路径 | MEDIUM | P2 | REGRESSION |
 | LR-SEC-006 | Git 历史 /Users/jadenli/ 路径 | LOW | P2 | Open |
 | LR-SEC-007 | collector.log 已从 git 删除 | LOW | — | Closed |
+
+---
+
+## 2026-07-13 — Commit-range review (283eb6c → f0cde02, 5 commits)
+
+- **Reviewer**: Security Reviewer (IRIS)
+- **Level**: L2
+- **Scope**: 5 local commits — _skip_push guard, test isolation, date filtering, security fixes, docs reorganization
+- **Commit(s)**: 283eb6c, a8c58a1, c44df1c, cfa3e0f, f0cde02
+- **Verdict**: CONDITIONAL PASS
+- **Score**: 75 / 100 (Rating: B)
+- **Findings total**: 3 (🔴:1 / 🟡:2 / 🟢:0)
+
+### Summary
+
+共审查 5 个 commits。4 个代码提交 (283eb6c~c44df1c) 质量良好：_skip_push 测试保护、merge 测试隔离、日期过滤逻辑完整有边界测试，无安全问题。安全修复 commit (cfa3e0f) 正确解决了 LR-SEC-001/003/004/005。但最后一个 docs 重组 commit (f0cde02) 引入的新文件 `tasks/al-scanner.py` 再次硬编码了本地绝对路径，导致 LR-SEC-005 回归 (🔴)。同时 `al-scanner.py` 的 `sh()` 函数使用 `shell=True` 存在注入风险接口 (🟡)，且 `al-dev.sh`/`al-review.sh` 硬编码 `$HOME` 路径 (🟡)。
+
+### Findings
+
+| # | Severity | Title | File:Line | Status |
+|:-:|:--------:|:------|:---------:|:------:|
+| 1 | 🔴 | LR-SEC-005 REGRESSION: 硬编码本地绝对路径 | `tasks/al-scanner.py:27` | Open |
+| 2 | 🟡 | LR-SEC-009: shell=True 注入风险接口 | `tasks/al-scanner.py:45` | Open |
+| 3 | 🟡 | LR-SEC-010: Shell 脚本硬编码 $HOME 路径 | `tasks/al-dev.sh:8`, `tasks/al-review.sh:6` | Open |
+
+### Details
+
+**LR-SEC-005 REGRESSION (🔴 P0)**: 曾在 cfa3e0f 修复 (`audit_snapshot.py`/`mcp_submit_update.py` 改用 `Path(__file__)`)，但在 f0cde02 新增的 `tasks/al-scanner.py:27` 中再次出现 `PROJECT = Path("/Users/jadenli/CodeSpace/llm-radar.jaden.tech")`。建议改用 `pwd.getpwuid(os.getuid()).pw_dir`（`al-init.py` 已使用此模式）。
+
+**LR-SEC-009 (🟡 P2)**: `tasks/al-scanner.py:45` 的 `sh()` 函数接受任意 `cmd: str` 并用 `shell=True` 执行。当前调用者仅传硬编码 git 命令 (`"git pull"`, `"git push origin main"`)，但函数接口本身是注入向量，未来调者传入动态参数即构成风险。建议改为 list form: `subprocess.run(['git', 'pull'], ...)`。
+
+**LR-SEC-010 (🟡 P2)**: `tasks/al-dev.sh:8` 和 `tasks/al-review.sh:6` 使用 `BASE="$HOME/CodeSpace/llm-radar.jaden.tech"`。虽比硬编码 `/Users/jadenli/` 好但不可移植。`al-rename.sh` 已使用 `$(cd "$(dirname "$0")/.." && pwd)` 的相对路径解析模式，建议统一。
+
+### Positives
+
+- Credential scan Pass 1 + Pass 2 均通过：无硬编码 API key / token / password
+- MCP API key 正确使用 `os.environ.get()` + 随机降级 (`secrets.token_hex(32)`)
+- `_skip_push` 测试保护机制正确，防止测试触发 git push
+- 测试隔离 (`temp_snapshot` fixture) 避免污染真实数据
+- 日期过滤逻辑边界完善（含 ≤14 天、>14 天、无日期、已有实体更新 4 种场景）
+- 无 eval/exec/compile 使用
+- `al-init.py` 正确使用 `pwd.getpwuid(os.getuid()).pw_dir` 动态解析 HOME
+
+### Tracking
+
+| Issue | Title | Severity | Priority | Status |
+|:------|:------|:--------:|:--------:|:------:|
+| LR-SEC-005 | 硬编码本地路径 | MEDIUM→🔴 | P0 | ✅ Closed (commit 3714860) |
+| LR-SEC-009 | shell=True 注入风险接口 | MEDIUM | P2 | ✅ Closed (commit 3714860) |
+| LR-SEC-010 | Shell 脚本硬编码 $HOME 路径 | MEDIUM | P2 | ✅ Closed (commit 3714860) |
+
+---
+
+## 2026-07-13 — Re-review (post-fix)
+
+- **Reviewer**: Security Reviewer (IRIS)
+- **Level**: L2
+- **Scope**: Verify fixes for LR-SEC-005 REGRESSION, LR-SEC-009, LR-SEC-010
+- **Commit(s)**: 3714860 (fix@llm-radar: commit-review fixes)
+- **Verdict**: PASS
+- **Score**: 100 / 100 (Rating: A)
+- **Findings total**: 0 (🔴:0 / 🟡:0 / 🟢:0)
+
+### Summary
+
+复查确认 3 项修复全部到位。LR-SEC-005 使用 `Path(__file__).resolve().parent.parent` 替换硬编码路径；LR-SEC-009 `sh()` 函数改为 list form `subprocess.run(cmd)` 无 shell 注入风险；LR-SEC-010 shell 脚本统一使用 `$(cd "$(dirname "$0")/.." && pwd)` 相对路径解析。Credential scan Pass 1+2 0 hits, shell=True 0 hits, 硬编码路径 0 hits。score 从 75 回到 100。
+
+### Findings
+
+(无新增发现)
+
+| # | Severity | Title | File:Line | Status |
+|:-:|:--------:|:------|:---------:|:------:|
+| — | — | — | — | All clear |
+
+### Positives
+
+- 3 项修复均精确对应建议方案
+- al-scanner.py 改用 Path(__file__) 与 al-init.py 的 pwd.getpwuid 模式保持一致性
+- sh() 函数签名从 `cmd: str` 改为 `cmd: list`，防御性设计预防未来注入
+
+### Tracking
+
+| Issue | Title | Severity | Priority | Status |
+|:------|:------|:--------:|:--------:|:------:|
+| LR-SEC-005 | 硬编码本地路径 | MEDIUM→🔴 | P0 | ✅ Closed |
+| LR-SEC-009 | shell=True 注入风险接口 | MEDIUM | P2 | ✅ Closed |
+| LR-SEC-010 | Shell 脚本硬编码 $HOME 路径 | MEDIUM | P2 | ✅ Closed |
 
 ---
