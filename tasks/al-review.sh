@@ -3,7 +3,7 @@
 #
 # 在 cron job 的 agent mode 中运行, 将当前 task 的评审上下文注入。
 
-BASE="$HOME/CodeSpace/llm-radar.jaden.tech"
+BASE="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$BASE" || exit 1
 
 TASK_DIR="$(readlink tasks/active-task 2>/dev/null || echo "")"

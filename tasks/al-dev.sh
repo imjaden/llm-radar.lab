@@ -5,7 +5,7 @@
 # stdout 被 cron 系统作为 script context 使用。
 # stderr 用于进度提示（>/dev/stderr）。
 
-BASE="$HOME/CodeSpace/llm-radar.jaden.tech"
+BASE="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$BASE" || exit 1
 
 TASK_DIR="$(readlink tasks/active-task 2>/dev/null || echo "")"

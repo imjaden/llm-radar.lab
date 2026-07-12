@@ -24,7 +24,7 @@ from pathlib import Path
 from datetime import datetime, timezone, timedelta
 
 # ── 配置 ──
-PROJECT = Path("/Users/jadenli/CodeSpace/llm-radar.jaden.tech")
+PROJECT = Path(__file__).resolve().parent.parent
 TASKS = PROJECT / "tasks"
 LOCK_PATH = TASKS / ".agent-loop.lock"
 STALE_THRESHOLD = 900       # 15 分钟
@@ -40,11 +40,11 @@ def log(msg: str):
     print(f"[{ts}] {msg}")
 
 
-def sh(cmd: str, cwd: Path = PROJECT) -> str:
-    """执行 shell 命令, 返回 stdout"""
-    r = subprocess.run(cmd, shell=True, capture_output=True, text=True, cwd=cwd)
+def sh(cmd: list, cwd: Path = PROJECT) -> str:
+    """执行命令 (list form, 无 shell 注入风险), 返回 stdout"""
+    r = subprocess.run(cmd, capture_output=True, text=True, cwd=cwd)
     if r.returncode != 0:
-        log(f"⚠️ 命令失败: {cmd}")
+        log(f"⚠️ 命令失败: {' '.join(cmd)}")
         log(f"   stderr: {r.stderr.strip()}")
     return r.stdout.strip()
 
@@ -188,7 +188,7 @@ def handle_review(manifest: dict, task_dir: Path) -> str:
 def handle_passed(manifest: dict, task_dir: Path) -> str:
     """passed → closed: git push"""
     task_id = manifest.get("task_id", "?")
-    result = sh("git push origin main")
+    result = sh(["git", "push", "origin", "main"])
     if "Everything up-to-date" in result or not result:
         # 可能没有新 commit, 也可能 push 成功
         pass
@@ -290,7 +290,7 @@ def main():
 
     try:
         # 2. git pull
-        sh("git pull")
+        sh(["git", "pull"])
 
         # 3. 读取 manifest
         manifest, task_dir = load_manifest()
