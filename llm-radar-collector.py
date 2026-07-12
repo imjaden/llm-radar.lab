@@ -1021,8 +1021,12 @@ hotspots 数组中每个元素格式：
         pass
 
     # ===== Agent Loop: Think =====
-    def _think(self):
+    def _think(self, force=False):
         """采集策略决策：检查过短间隔和连续失败"""
+        if force:
+            self._print_info('--force 模式: 跳过间隔检查')
+            return True
+
         metrics_path = self.data_dir / 'metrics.json'
         if not metrics_path.exists():
             # 首次运行，允许
@@ -1335,7 +1339,7 @@ hotspots 数组中每个元素格式：
         self._print_info(f'指标已记录到 metrics.json')
 
     # ===== Run =====
-    def run(self, source_keys=None):
+    def run(self, source_keys=None, force=False):
         """完整流程：Think → Act → Verify → Observe"""
         self._print_info('=== LLM Radar 数据采集 ===')
         self._print_info(f'时间: {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}')
@@ -1343,7 +1347,7 @@ hotspots 数组中每个元素格式：
         print()
 
         # [Think] 采集策略决策
-        if not self._think():
+        if not self._think(force=force):
             return False
 
         # Step 1: Fetch
@@ -1589,7 +1593,7 @@ def main():
     """主函数"""
     if len(sys.argv) < 2:
         print('Usage: python3 llm-radar-collector.py <command> [args]')
-        print('Commands: fetch [source], merge, run [source], sources, help')
+        print('Commands: fetch [source], merge, run [source] [--force], sources, help')
         sys.exit(1)
 
     command = sys.argv[1]
@@ -1625,8 +1629,9 @@ def main():
                 print(f'⚠️ git pull 跳过: {r.stderr[:100]}')
         except Exception as e:
             print(f'⚠️ git pull 失败: {e}')
-        source_keys = args if args else None
-        collector.run(source_keys)
+        force = '--force' in args
+        source_keys = [a for a in args if a != '--force'] or None
+        collector.run(source_keys, force=force)
 
     elif command == 'selenium-check':
         collector.check_selenium()
@@ -1690,6 +1695,7 @@ def main():
         print('Examples:')
         print('  python3 llm-radar-collector.py run                    # 全量采集+推送')
         print('  python3 llm-radar-collector.py run qbitai             # 只采集量子位')
+        print('  python3 llm-radar-collector.py run --force            # 跳过 6h 间隔检查')
         print('  python3 llm-radar-collector.py commit                 # 仅 commit')
         print('  python3 llm-radar-collector.py auto-push              # 手动推送')
         print('  python3 llm-radar-collector.py crontab --add          # 每天9:00、21:00采集')
