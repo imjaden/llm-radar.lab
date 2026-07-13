@@ -33,6 +33,7 @@ import subprocess
 import platform
 import socket
 import requests
+import html
 from pathlib import Path
 from datetime import datetime, timedelta
 from openai import OpenAI
@@ -83,6 +84,15 @@ SOURCES = {
         'category': '研究',
         'search_queries': ['llm', 'language model', 'reasoning'],
     },
+}
+
+# 维度中文名
+DIM_LABELS = {
+    'providers': '厂商',
+    'people': '人物',
+    'tools': '工具',
+    'llms': '大模型',
+    'hotspots': '热点',
 }
 
 # Selenium 无头抓取配置：每源定义 CSS 选择器（title_sel → 标题, link_sel → 链接, date_sel → 日期）
@@ -816,13 +826,15 @@ hotspots 数组中每个元素格式：
                     existing[item_id] = updated
 
                     # 记录变更
-                    changes = self._diff_fields(old, updated)
-                    if changes:
+                    summary = self._format_changelog_summary(updated, old)
+                    if summary:
                         changelog.append({
                             'type': 'update',
                             'dimension': dimension,
                             'id': item_id,
-                            'summary': changes,
+                            'name': updated.get('name', ''),
+                            'dim_label': DIM_LABELS.get(dimension, dimension),
+                            'summary': summary,
                             'date': today,
                             'time': datetime.now().strftime('%H:%M:%S'),
                             'url': item.get('last_event_url') or item.get('recent_activity_url') or item.get('last_update_url') or '',
@@ -842,9 +854,16 @@ hotspots 数组中每个元素格式：
                         updated = self._merge_single(old, item)
                         updated['updated_at'] = now
                         existing[old['id']] = updated
-                        changes = self._diff_fields(old, updated)
-                        if changes:
-                            changelog.append({'type': 'update', 'dimension': dimension, 'id': old['id'], 'summary': changes, 'date': today, 'time': datetime.now().strftime('%H:%M:%S'), 'url': item.get('last_event_url') or item.get('recent_activity_url') or item.get('last_update_url') or ''})
+                        summary = self._format_changelog_summary(updated, old)
+                        if summary:
+                            changelog.append({
+                                'type': 'update', 'dimension': dimension, 'id': old['id'],
+                                'name': updated.get('name', ''),
+                                'dim_label': DIM_LABELS.get(dimension, dimension),
+                                'summary': summary, 'date': today,
+                                'time': datetime.now().strftime('%H:%M:%S'),
+                                'url': item.get('last_event_url') or item.get('recent_activity_url') or item.get('last_update_url') or '',
+                            })
                     else:
                         # 新增实体：日期有效性过滤（>14 天的新实体拒绝入库）
                         date_str = (item.get('last_event_date') or
@@ -865,11 +884,14 @@ hotspots 数组中每个元素格式：
 
                         item['updated_at'] = now
                         existing[item_id] = item
+                        summary = self._format_changelog_summary(item)
                         changelog.append({
                             'type': 'new',
                             'dimension': dimension,
                             'id': item_id,
-                            'summary': item.get('last_event') or item.get('recent_activity') or item.get('last_update') or f"{item.get('name','')} ({item_id})",
+                            'name': item.get('name', ''),
+                            'dim_label': DIM_LABELS.get(dimension, dimension),
+                            'summary': summary,
                             'date': today,
                             'time': datetime.now().strftime('%H:%M:%S'),
                             'url': item.get('last_event_url') or item.get('recent_activity_url') or item.get('last_update_url') or '',
@@ -1043,7 +1065,7 @@ hotspots 数组中每个元素格式：
         return '冷淡'
 
     def _diff_fields(self, old, new):
-        """对比两个实体的字段差异，返回变更摘要"""
+        """对比两个实体的字段差异，返回变更摘要（保留用于内部 diff）"""
         changes = []
         for key in ['name', 'title', 'hot_score', 'hot_level', 'last_event', 'recent_activity', 'last_update', 'status', 'tier']:
             old_val = old.get(key)
@@ -1051,6 +1073,34 @@ hotspots 数组中每个元素格式：
             if old_val != new_val and new_val is not None:
                 changes.append(f'{key}: {old_val} → {new_val}')
         return '; '.join(changes[:3]) if changes else ''
+
+    @staticmethod
+    def _sanitize_text(text, max_len=200):
+        """净化 LLM 输出：HTML 实体转义 + 截断 + 去控制字符"""
+        if not text:
+            return ''
+        text = ''.join(ch for ch in text if ch == '\n' or ch == '\t' or ord(ch) >= 32)
+        text = html.escape(text, quote=True)
+        if len(text) > max_len:
+            text = text[:max_len - 3] + '...'
+        return text
+
+    def _format_changelog_summary(self, item, old=None):
+        """生成人类可读的 changelog 摘要"""
+        event = self._sanitize_text(
+            item.get('last_event') or item.get('recent_activity') or
+            item.get('last_update') or '')
+        parts = [event] if event else []
+        score = item.get('hot_score', 0)
+        if old:
+            old_score = old.get('hot_score', 0)
+            if old_score != score:
+                delta = score - old_score
+                arrow = '↑' if delta > 0 else '↓'
+                parts.append(f'热度 {arrow}{abs(delta)} ({old_score}→{score})')
+        elif score > 0:
+            parts.append(f'热度 {score}')
+        return '  |  '.join(parts) if parts else self._sanitize_text(item.get('name', ''))
 
     def _load_snapshot(self):
         """加载现有快照"""

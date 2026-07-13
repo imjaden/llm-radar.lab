@@ -15,8 +15,14 @@
   })();
   </script>
   <style>
-    body{font-family:Inter,sans-serif;background:#0a0a14;color:#e0e0e0}
-    .badge{display:inline-block;padding:1px 6px;border-radius:4px;font-size:0.6rem;font-weight:600}
+    body{font-family:Inter,-apple-system,sans-serif;background:#0a0a14;color:#e0e0e0}
+    .badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:0.65rem;font-weight:600;text-transform:uppercase}
+    .row-new{border-left:3px solid #22c55e}
+    .row-update{border-left:3px solid #3b82f6}
+    .heat-up{color:#f59e0b}
+    .heat-down{color:#ef4444}
+    .arrow-up::before{content:'↑ '}
+    .arrow-down::before{content:'↓ '}
   </style>
 </head>
 <body class="min-h-screen p-6">
@@ -30,22 +36,10 @@
       <a href="./" class="text-xs text-cobalt-400 hover:text-cobalt-300">← 返回</a>
     </div>
     <p class="text-xs text-gray-500 mb-4" id="meta">加载中...</p>
-    <div class="overflow-x-auto" id="table-wrap">
-      <table class="w-full" id="log-table">
-        <thead>
-          <tr class="text-xs text-gray-500 uppercase">
-            <th class="p-2 text-left">日期</th>
-            <th class="p-2 text-left">类型</th>
-            <th class="p-2 text-left">维度</th>
-            <th class="p-2 text-left">摘要</th>
-          </tr>
-        </thead>
-        <tbody id="log-body"></tbody>
-      </table>
-    </div>
+    <div class="space-y-3" id="log-list"></div>
   </div>
+
   <script>
-  // Data sources (mirror from index.html)
   var SOURCES = [
     {name:'量子位', url:'https://www.qbitai.com'},
     {name:'机器之心', url:'https://www.jiqizhixin.com'},
@@ -55,40 +49,102 @@
     {name:'GitHub', url:'https://github.com/trending'},
     {name:'HuggingFace', url:'https://huggingface.co/papers'},
   ];
-  // Render source chips
   document.getElementById('changelog-sources').innerHTML = SOURCES.map(function(s) {
-    return '<a href="' + s.url + '" target="_blank" rel="noopener" class="inline-block px-1.5 py-0.5 rounded bg-gray-800 text-gray-400 hover:text-cobalt-400 hover:bg-gray-700 text-xs whitespace-nowrap">' + s.name + '</a>';
+    return '<a href="'+s.url+'" target="_blank" rel="noopener" class="inline-block px-1.5 py-0.5 rounded bg-gray-800 text-gray-400 hover:text-cobalt-400 hover:bg-gray-700 text-xs whitespace-nowrap">'+s.name+'</a>';
   }).join(' ');
+
+  function safeUrl(url) {
+    if (!url) return null;
+    if (/^https:\/\/.+/.test(url)) return url;
+    return null;
+  }
+
+  function heatClass(oldScore, newScore) {
+    var d = newScore - oldScore;
+    if (d > 0) return 'heat-up arrow-up';
+    if (d < 0) return 'heat-down arrow-down';
+    return '';
+  }
 
   fetch('data/snapshot.json?t='+Date.now()).then(function(r){return r.json()}).then(function(d){
     var log = d.changelog || [];
-    var tbody = document.getElementById('log-body');
+    var list = document.getElementById('log-list');
     var meta = document.getElementById('meta');
-    meta.textContent = '数据更新时间: ' + (d.generated_at ? new Date(d.generated_at).toLocaleString('zh-CN') : '-') + ' · 共 ' + log.length + ' 条记录';
-    var row, ctype, dim, summary, url, eid, bg, ext, i;
-    for(i = log.length - 1; i >= 0 && i >= log.length - 50; i--){
-      ctype = log[i].type || '';
-      dim = log[i].dimension || '';
-      summary = log[i].summary || '';
-      url = log[i].url || '';
-      eid = log[i].id || '';
+    meta.textContent = '数据更新时间: ' + (d.generated_at ? new Date(d.generated_at).toLocaleString('zh-CN') : '-') + ' · 最近 50 条记录';
+
+    var i, item, ctype, dim, name, dimLabel, summary, url, href, bg, rowClass;
+    var count = 0;
+    for (i = log.length - 1; i >= 0 && count < 50; i--, count++) {
+      item = log[i];
+      ctype = item.type || '';
+      dim = item.dimension || '';
+      name = item.name || item.id || '?';
+      dimLabel = item.dim_label || item.dimension || '?';
+      summary = item.summary || '';
+      url = item.url || '';
+      href = safeUrl(url);
+
       bg = ctype === 'new' ? 'bg-green-600' : ctype === 'update' ? 'bg-blue-600' : 'bg-red-600';
-      ext = '';
-      if(url && !/xxx|xxxx|example/.test(url)){
-        ext = ' <a href="' + url + '" target="_blank" rel="noopener" class="text-cobalt-400 hover:text-cobalt-300">↗</a>';
+      rowClass = ctype === 'new' ? 'row-new' : 'row-update';
+
+      var card = document.createElement('div');
+      card.className = 'bg-gray-900 rounded p-3 ' + rowClass;
+
+      // Row 1: date, type badge, dim label, entity name
+      var row1 = document.createElement('div');
+      row1.className = 'flex items-center gap-2 mb-1.5 flex-wrap';
+
+      var dateSpan = document.createElement('span');
+      dateSpan.className = 'text-xs text-gray-500';
+      dateSpan.textContent = (item.date||'') + ' ' + (item.time||'');
+      row1.appendChild(dateSpan);
+
+      var badge = document.createElement('span');
+      badge.className = 'badge ' + bg + ' text-white';
+      badge.textContent = ctype;
+      row1.appendChild(badge);
+
+      var dimSpan = document.createElement('span');
+      dimSpan.className = 'text-xs text-gray-400';
+      dimSpan.textContent = dimLabel;
+      row1.appendChild(dimSpan);
+
+      var nameSpan = document.createElement('span');
+      nameSpan.className = 'text-sm font-semibold text-white';
+      var nameLink = document.createElement('a');
+      nameLink.href = './#tab=' + dim + '&focus=' + (item.id||'');
+      nameLink.className = 'text-white hover:text-cobalt-300 underline decoration-dotted underline-offset-2';
+      nameLink.textContent = name;
+      nameSpan.appendChild(nameLink);
+      row1.appendChild(nameSpan);
+
+      card.appendChild(row1);
+
+      // Row 2: summary text
+      var sumDiv = document.createElement('div');
+      sumDiv.className = 'text-xs text-gray-300 leading-relaxed';
+      sumDiv.textContent = summary;
+      card.appendChild(sumDiv);
+
+      // Row 3: source link
+      if (href) {
+        var srcDiv = document.createElement('div');
+        srcDiv.className = 'text-xs text-gray-600 mt-1';
+        srcDiv.textContent = '来源: ';
+        var srcLink = document.createElement('a');
+        srcLink.href = href;
+        srcLink.target = '_blank';
+        srcLink.rel = 'noopener noreferrer';
+        srcLink.className = 'text-cobalt-400 hover:text-cobalt-300';
+        srcLink.textContent = '↗';
+        srcDiv.appendChild(srcLink);
+        card.appendChild(srcDiv);
       }
-      var summaryHtml = eid
-        ? '<a href="./#tab=' + dim + '&focus=' + eid + '" class="hover:text-cobalt-300 underline decoration-dotted underline-offset-2">' + summary + '</a>'
-        : '<span class="text-gray-300">' + summary + '</span>';
-      row = document.createElement('tr');
-      row.innerHTML = '<td class="p-2 border-b border-gray-800 text-xs text-gray-500 whitespace-nowrap">' + (log[i].date||'') + ' ' + (log[i].time||'') + '</td>' +
-        '<td class="p-2 border-b border-gray-800"><span class="badge ' + bg + ' text-white text-xs">' + ctype + '</span></td>' +
-        '<td class="p-2 border-b border-gray-800 text-xs text-gray-400">' + dim + '</td>' +
-        '<td class="p-2 border-b border-gray-800 text-xs text-white">' + summaryHtml + ext + '</td>';
-      tbody.appendChild(row);
+
+      list.appendChild(card);
     }
-    if(!log.length){
-      tbody.innerHTML = '<tr><td colspan="4" class="text-center text-gray-500 py-8 text-sm">暂无记录</td></tr>';
+    if (!count) {
+      list.innerHTML = '<div class="text-center text-gray-500 py-8 text-sm">暂无记录</div>';
     }
   }).catch(function(e){
     document.getElementById('meta').textContent = '❌ 加载失败: ' + e.message;
