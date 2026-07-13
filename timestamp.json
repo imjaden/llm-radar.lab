@@ -1,10 +1,10 @@
 {
-  "generated_at": "2026-07-13T08:44:56.897519",
-  "last_news_date": "2026-07-13",
-  "last_run_at": "2026-07-13T08:44:56.897552",
-  "last_run_status": "failed",
-  "last_run_detail": "空 URL: 8 条; key_people 缺失率 81%",
-  "entity_count": 3,
+  "generated_at": "2026-07-13T08:45:01.044731",
+  "last_news_date": "2026-06-28",
+  "last_run_at": "2026-07-13T08:45:01.045047",
+  "last_run_status": "success",
+  "last_run_detail": "",
+  "entity_count": 2,
   "period": "2026-07-06 ~ 2026-07-13",
   "version": "1.0"
 }
