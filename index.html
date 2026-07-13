@@ -493,6 +493,11 @@ function renderHotspots() {
   }).join('');
 }
 
+// === Emoji Mapping ===
+var EMOJI_M={providers:{openai:'🌀',anthropic:'🧬',google:'🔮','google-deepmind':'🔮',meta:'♾️',microsoft:'🪟',apple:'🍎',amazon:'📦',nvidia:'🎮',tesla:'⚡',spacex:'🚀','spacex-xai':'🚀',xai:'🚀','mistral-ai':'🌬️',groq:'⚙️',jetbrains:'✈️',gitlab:'🦊',cloudflare:'☁️',dropbox:'📁',netflix:'🎬',snowflake:'❄️',vercel:'▲',elastic:'🔍',slack:'💬',hubspot:'🎯',baidu:'🐾','alibaba-cloud':'🛒',tencent:'🐧','tencent-hunyuan':'🐧',bytedance:'🎵',huawei:'🪷',meituan:'🛵',xiaomi:'📱',kuaishou:'📹',deepseek:'🐋','zhipu-ai':'🏛️','z-ai':'🏛️','ant-group':'🐜','ant-linbot':'🐜','shengshu-tech':'🌱','kunlun-wanwei':'🏔️','moore-threads':'🧵',mobvoi:'🚪','netease-youdao':'📖',lenovo:'💻','kling-ai':'🎨',volcengine:'🌋','tiangong-ai':'🏔️','guangxiang-tech':'💡','robo-science':'🦾','wujie-robobrain':'🧠','xiehou-fashion-tech':'👗',haizhi:'📊',dingtalk:'💬',cursor:'🖱️','chen-yongchao-startup':'🚀',tsinghua:'🎓',mit:'🏛️',baai:'🧪','bai-yuan':'🧪',cas:'🔬',hku:'🏫'},people:{'sam-altman':'👔','greg-brockman':'💻','elon-musk':'🚀','demis-hassabis':'🧩','dario-amodei':'🧬',dario:'🧬','li-feifei':'👁️','andrew-ng':'🤖','ma-huateng':'🐧',leijun:'📱',liyanhong:'🐾','jia-yangqing':'📦',xiaochuan:'🔍','zhou-hongyi':'🛡️','luo-yonghao':'🔨','huang-renxun':'🎮','mark-zuckerberg':'♾️','liang-wenfeng':'🐋','kaifulee':'💰','kaiming-he':'🔬','yann-lecun':'🔬','terence-tao':'📐','mira-murati':'🌀','clement-delangue':'🦊','chen-yongchao':'🚀','yan-junjie':'🌬️',yangzhilin:'🏛️','claude-code-father':'🧬'},tools:{cursor:'🖱️','claude-code':'🧬','chatgpt-work':'🌀','agents-cli':'🤖','claude-fable-5':'🧬','fable-5':'🧬','claude-science':'🧬',vllm:'⚡','gpt-5-6':'🌀','gpt-live':'🔴','grok-4-20':'⚙️','grok-skills':'⚙️','gemini-3-x':'🔮',agentspace:'🤖','hyper3d-tool':'🎥','vidu-s1':'🎥','fun-asr-realtime':'🎵','vibevoice-realtime':'🎵','lingbot-vla-2':'🦾','lingbot-video':'🎥','visics-tool':'🦾',frontieror:'🛡️',trustedari:'🛡️','r3-embedding':'🔗',nvdock:'🎮',uv:'📦',bun:'🍞','ds4-rs-metal':'🐋','chrome-devtools-mcp':'🔍',ticnote:'📝',jalapeno:'🌶️'},llms:{'gpt-5-6':'🌀','gpt-5-5':'🌀','gpt-5.5-cyber':'🌀','gpt-5-5-pro':'🌀','gpt-5.4':'🌀',gpt5:'🌀','gpt-live':'🌀','chatgpt-work':'🌀',claude:'🧬','claude-sonnet-5':'🧬','claude-fable-5':'🧬','claude-mythos-5':'🧬','fable-5-model':'🧬','mythos-5':'🧬','sonnet-5':'🧬','gemini-3-1-ultra':'🔮','gemini-omni-flash':'🔮','gemma-4':'🔮',grok:'⚙️',deepseek:'🐋','deepseek-v4-flash':'🐋','deepseek-apple':'🐋',qwen3:'🛒','qwen3-4b':'🛒','qwen3-vl-8b':'🛒',qianwen:'🛒',glm:'🏛️','glm-5-2':'🏛️','hunyuan-hy3':'🐧',hy3:'🐧','seed-2-1':'🎵','seed-2.1':'🎵',kling:'🎨',tiangong:'🏔️','lingbot-world-model-2-0':'🐜','lingbot-world-model-2.0':'🐜','ant-lingbo-world-model-2-0':'🐜','lingbot-va-2-0':'🐜','lingbot-video':'🐜','lingbot-depth-2-0':'🐜','minimax-m1':'🌬️','vidu-s1':'🎥','meituan-trillion-llm':'🛵','meituan-zero-nvidia-trillion-model':'🛵','longcat-2.0':'🛵',alphafold:'🔬'}};
+var DIM_EM={providers:'🏢',people:'👤',tools:'🔧',llms:'🧠',hotspots:'🔥'};
+function entEmoji(dim,id){var m=EMOJI_M[dim];if(m&&m[id])return m[id];if(dim==='llms'&&m&&id){var pf=['gpt-','claude-','gemini-','grok','deepseek','qwen','glm-','hunyuan','seed-','lingbot-','meituan-'];for(var p=0;p<pf.length;p++)if(id.indexOf(pf[p])===0)for(var k in m)if(k.indexOf(pf[p])===0)return m[k];}return DIM_EM[dim]||'❓';}
+
 // ===== Render: Providers =====
 function renderProviders() {
   const s=sortState.providers||{col:'hot_score',dir:'desc'};
@@ -509,7 +514,7 @@ function renderProviders() {
   </tr></thead><tbody>${items.map(p=>{
     const ref=p.ref||{};
     return `<tr id="entity-${p.id}" data-id="${p.id}">
-      <td><div class="flex items-center gap-2"><div class="w-7 h-7 rounded bg-cobalt-900/50 border border-cobalt-800 flex items-center justify-center text-xs font-bold text-cobalt-400 flex-shrink-0">${p.name.charAt(0)}</div><div class="min-w-0" title="${p.id}"><div class="font-semibold text-white text-sm truncate">${p.name}${searchIcon(p.name, p.official_website)}</div><div class="text-xs text-gray-500 truncate">${p.country||''}</div></div></div></td>
+      <td><div class="flex items-center gap-2"><div class="w-7 h-7 rounded bg-cobalt-900/50 border border-cobalt-800 flex items-center justify-center text-sm flex-shrink-0">${entEmoji('providers',p.id)}</div><div class="min-w-0" title="${p.id}"><div class="font-semibold text-white text-sm truncate">${p.name}${searchIcon(p.name, p.official_website)}</div><div class="text-xs text-gray-500 truncate">${p.country||''}</div></div></div></td>
       <td>${hotScore(p.hot_score)}</td>
       <td class="hide-mobile">${smartEventCell(p.last_event,p.last_event_url,p.last_event_date,p.name)}</td>
       <td class="hide-mobile">${chips(p.flagship_models,'llms',3)}</td>
@@ -537,7 +542,7 @@ function renderPeople() {
   </tr></thead><tbody>${items.map(p=>{
     const employer=chip(p.employer_id,'providers');
     return `<tr id="entity-${p.id}" data-id="${p.id}">
-      <td><div class="flex items-center gap-2"><div class="w-7 h-7 rounded-full bg-pink-900/30 border border-pink-800/50 flex items-center justify-center text-xs flex-shrink-0">${p.name.charAt(0)}</div><div class="min-w-0" title="${p.id}"><div class="font-semibold text-white text-sm truncate">${p.name}${searchIcon(p.name, '')}</div>${p.name_en&&p.name_en!==p.name?`<div class="text-xs text-gray-500 truncate">${p.name_en}</div>`:''}</div></div></td>
+      <td><div class="flex items-center gap-2"><div class="w-7 h-7 rounded-full bg-pink-900/30 border border-pink-800/50 flex items-center justify-center text-sm flex-shrink-0">${entEmoji('people',p.id)}</div><div class="min-w-0" title="${p.id}"><div class="font-semibold text-white text-sm truncate">${p.name}${searchIcon(p.name, '')}</div>${p.name_en&&p.name_en!==p.name?`<div class="text-xs text-gray-500 truncate">${p.name_en}</div>`:''}</div></div></td>
       <td><span class="badge text-xs ${infl[p.influence_level]||''} bg-transparent border border-current/20">${p.influence_level||'—'}</span></td>
       <td>${hotScore(p.hot_score)}</td>
       <td><div class="truncate text-sm">${p.title||'—'}</div><div class="mt-0.5">${employer}</div></td>
@@ -566,7 +571,7 @@ function renderTools() {
   </tr></thead><tbody>${items.map(t=>{
     const ref=t.ref||{};
     return `<tr id="entity-${t.id}" data-id="${t.id}">
-      <td><div class="min-w-0" title="${t.id}"><div class="font-semibold text-white text-sm truncate">${t.website?`<a href="${t.website}" target="_blank" rel="noopener" class="hover:text-accent-400">${t.name}</a>${searchIcon(t.name, t.website)}`:t.name}</div><div class="text-xs text-gray-500 truncate">${t.description||''}</div></div></td>
+      <td><div class="min-w-0" title="${t.id}"><div class="font-semibold text-white text-sm truncate">${entEmoji('tools',t.id)} ${t.website?`<a href="${t.website}" target="_blank" rel="noopener" class="hover:text-accent-400">${t.name}</a>${searchIcon(t.name, t.website)}`:t.name}</div><div class="text-xs text-gray-500 truncate">${t.description||''}</div></div></td>
       <td><span class="badge ${catColors[t.category]||'bg-gray-700 text-gray-300'}">${t.category||''}</span></td>
       <td>${hotScore(t.hot_score)}</td>
       <td class="hide-mobile">${ref.stars?`<span class="font-mono text-xs">⭐${(ref.stars/1000).toFixed(1)}k</span>${ref.stars_weekly_delta?` <span class="text-green-400 text-xs">+${ref.stars_weekly_delta}</span>`:''}`:'<span class="text-gray-600">—</span>'}</td>
@@ -603,7 +608,7 @@ function renderLLMs() {
     const ctx=ref.context_window?(ref.context_window>=1000000?(ref.context_window/1000000)+'M':ref.context_window>=1024?Math.round(ref.context_window/1024)+'K':ref.context_window):'—';
     const mods=(ref.modalities_input||[]).map(x=>({text:'📝',image:'🖼️',audio:'🎵',video:'🎬',pdf:'📄'}[x]||x)).join('');
     return `<tr id="entity-${m.id}" data-id="${m.id}">
-      <td><div class="min-w-0" title="${m.id}"><div class="font-semibold text-white text-sm truncate">${m.name}${searchIcon(m.name, '')}</div><div class="text-xs text-gray-500 truncate">${m.family||''} ${m.version||ref.version||''}</div></div></td>
+      <td><div class="min-w-0" title="${m.id}"><div class="font-semibold text-white text-sm truncate">${entEmoji('llms',m.id)} ${m.name}${searchIcon(m.name, '')}</div><div class="text-xs text-gray-500 truncate">${m.family||''} ${m.version||ref.version||''}</div></div></td>
       <td>${chip(m.provider_id,'providers')}</td>
       <td>${hotScore(m.hot_score)}</td>
       <td><span class="badge badge-tier ${tierCls}">${m.tier||'—'}</span></td>

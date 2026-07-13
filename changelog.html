@@ -66,6 +66,93 @@
     return '';
   }
 
+  // === Emoji Mapping ===
+  var EMOJI_MAP = {
+    providers: {
+      openai:'🌀',anthropic:'🧬',google:'🔮','google-deepmind':'🔮',
+      meta:'♾️',microsoft:'🪟',apple:'🍎',amazon:'📦',nvidia:'🎮',
+      tesla:'⚡',spacex:'🚀','spacex-xai':'🚀',xai:'🚀',
+      'mistral-ai':'🌬️',groq:'⚙️',jetbrains:'✈️',gitlab:'🦊',
+      cloudflare:'☁️',dropbox:'📁',netflix:'🎬',snowflake:'❄️',
+      vercel:'▲',elastic:'🔍',slack:'💬',hubspot:'🎯',
+      baidu:'🐾','alibaba-cloud':'🛒',tencent:'🐧','tencent-hunyuan':'🐧',
+      bytedance:'🎵',huawei:'🪷',meituan:'🛵',xiaomi:'📱',
+      kuaishou:'📹',deepseek:'🐋','zhipu-ai':'🏛️','z-ai':'🏛️',
+      'ant-group':'🐜','ant-linbot':'🐜','shengshu-tech':'🌱',
+      'kunlun-wanwei':'🏔️','moore-threads':'🧵',mobvoi:'🚪',
+      'netease-youdao':'📖',lenovo:'💻','kling-ai':'🎨',
+      volcengine:'🌋','tiangong-ai':'🏔️','guangxiang-tech':'💡',
+      'robo-science':'🦾','wujie-robobrain':'🧠',
+      'xiehou-fashion-tech':'👗',haizhi:'📊',dingtalk:'💬',
+      cursor:'🖱️','chen-yongchao-startup':'🚀',
+      tsinghua-university:'🎓',mit:'🏛️',baai:'🧪','bai-yuan':'🧪',
+      'chinese-academy-of-sciences':'🔬',hku:'🏫',
+    },
+    people: {
+      'sam-altman':'👔','greg-brockman':'💻','elon-musk':'🚀',
+      'demis-hassabis':'🧩','dario-amodei':'🧬','daniela-amodei':'🧬',dario:'🧬',
+      'li-feifei':'👁️','andrew-ng':'🤖','ma-huateng':'🐧',leijun:'📱',
+      liyanhong:'🐾','jia-yangqing':'📦',xiaochuan:'🔍','zhou-hongyi':'🛡️',
+      'luo-yonghao':'🔨','huang-renxun':'🎮','mark-zuckerberg':'♾️',
+      'liang-wenfeng':'🐋','kaifulee':'💰','kaiming-he':'🔬',
+      'yann-lecun':'🔬','terence-tao':'📐',
+      'mira-murati':'🌀','clement-delangue':'🦊','chen-yongchao':'🚀',
+      'yan-junjie':'🌬️',yangzhilin:'🏛️',
+      'claude-code-father':'🧬',
+    },
+    tools: {
+      cursor:'🖱️','claude-code':'🧬','chatgpt-work':'🌀','agents-cli':'🤖',
+      'claude-fable-5':'🧬','fable-5':'🧬','claude-science':'🧬',
+      vllm:'⚡','gpt-5-6':'🌀','gpt-live':'🔴',
+      'grok-4-20':'⚙️','grok-skills':'⚙️','gemini-3-x':'🔮',
+      agentspace:'🤖','agents-a1':'🤖',
+      'hyper3d-tool':'🎥','vidu-s1':'🎥',
+      'fun-asr-realtime':'🎵','vibevoice-realtime':'🎵',
+      'lingbot-vla-2':'🦾','lingbot-video':'🎥','visics-tool':'🦾',
+      frontieror:'🛡️',trustedari:'🛡️',
+      'r3-embedding':'🔗',nvdock:'🎮',
+      uv:'📦',bun:'🍞','ds4-rs-metal':'🐋',
+      'chrome-devtools-mcp':'🔍',ticnote:'📝',jalapeno:'🌶️',
+      sonnet:'🧬',codestral:'🌬️',
+    },
+    llms: {
+      'gpt-5-6':'🌀','gpt-5-5':'🌀','gpt-5.5-cyber':'🌀','gpt-5-5-pro':'🌀',
+      'gpt-5.4':'🌀',gpt5:'🌀','gpt-live':'🌀','chatgpt-work':'🌀',
+      claude:'🧬','claude-sonnet-5':'🧬','claude-fable-5':'🧬',
+      'claude-mythos-5':'🧬','fable-5-model':'🧬','mythos-5':'🧬','sonnet-5':'🧬',
+      'gemini-3-1-ultra':'🔮','gemini-omni-flash':'🔮','gemma-4':'🔮',
+      grok:'⚙️',
+      deepseek:'🐋','deepseek-v4-flash':'🐋','deepseek-apple':'🐋',
+      qwen3:'🛒','qwen3-4b':'🛒','qwen3-vl-8b':'🛒',qianwen:'🛒',
+      glm:'🏛️','glm-5-2':'🏛️',
+      'hunyuan-hy3':'🐧',hy3:'🐧',
+      'seed-2-1':'🎵','seed-2.1':'🎵',
+      kling:'🎨',tiangong:'🏔️',
+      'lingbot-world-model-2-0':'🐜','lingbot-world-model-2.0':'🐜',
+      'ant-lingbo-world-model-2-0':'🐜','lingbot-va-2-0':'🐜',
+      'lingbot-video':'🐜','lingbot-depth-2-0':'🐜',
+      'minimax-m1':'🌬️','vidu-s1':'🎥',
+      'meituan-trillion-llm':'🛵','meituan-zero-nvidia-trillion-model':'🛵',
+      'longcat-2.0':'🛵',
+      alphafold:'🔬',
+    },
+  };
+  var DIM_EMOJI = {providers:'🏢',people:'👤',tools:'🔧',llms:'🧠',hotspots:'🔥'};
+
+  function entityEmoji(dim, id) {
+    var map = EMOJI_MAP[dim];
+    if (map && map[id]) return map[id];
+    if (dim === 'llms' && map && id) {
+      var prefixes = ['gpt-','claude-','gemini-','grok','deepseek','qwen','glm-','hunyuan','seed-','lingbot-','meituan-'];
+      for (var p = 0; p < prefixes.length; p++) {
+        if (id.indexOf(prefixes[p]) === 0) {
+          for (var k in map) { if (k.indexOf(prefixes[p]) === 0) return map[k]; }
+        }
+      }
+    }
+    return DIM_EMOJI[dim] || '❓';
+  }
+
   fetch('data/snapshot.json?t='+Date.now()).then(function(r){return r.json()}).then(function(d){
     var log = d.changelog || [];
     var list = document.getElementById('log-list');
@@ -114,7 +201,8 @@
       var nameLink = document.createElement('a');
       nameLink.href = './#tab=' + dim + '&focus=' + (item.id||'');
       nameLink.className = 'text-white hover:text-cobalt-300 underline decoration-dotted underline-offset-2';
-      nameLink.textContent = name;
+      var emoji = entityEmoji(dim, item.id);
+      nameLink.textContent = emoji + ' ' + name;
       nameSpan.appendChild(nameLink);
       row1.appendChild(nameSpan);
 
