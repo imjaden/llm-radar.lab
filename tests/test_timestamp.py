@@ -25,6 +25,8 @@ class TestTimestampJson:
         assert data['last_run_at']
         assert data['last_run_status'] in ('success', 'failed')
         assert 'last_run_detail' in data
+        assert data['server'] in ('mac', 'linux')
+        assert data['hostname']
 
     def test_last_news_date_is_max(self, temp_snapshot):
         """last_news_date 是所有实体中最新的事件日期"""

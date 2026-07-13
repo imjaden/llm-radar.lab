@@ -30,6 +30,8 @@ import json
 import sys
 import time
 import subprocess
+import platform
+import socket
 from pathlib import Path
 from datetime import datetime, timedelta
 from openai import OpenAI
@@ -1041,6 +1043,8 @@ hotspots 数组中每个元素格式：
             'last_run_at': datetime.now().isoformat(),
             'last_run_status': 'success' if quality_ok else 'failed',
             'last_run_detail': detail,
+            'server': 'mac' if platform.system() == 'Darwin' else 'linux',
+            'hostname': socket.gethostname(),
             'entity_count': len(all_ents),
             'period': snapshot.get('period', ''),
             'version': '1.0',
