@@ -200,10 +200,35 @@ class LLMRadarCollector:
             self._print_err(f'DeepSeek API 调用失败: {e}')
             return None
 
-    def _auto_push(self, changelog):
-        """有数据更新时自动 commit + push"""
+    def _auto_push(self, changelog, partial=False):
+        """自动 commit + push。partial=True 时仅推送 timestamp.json"""
+        # partial 模式：质量门禁失败，仅推送 timestamp.json 监控端点
+        if partial:
+            self._print_info('质量门禁未通过，仅推送 timestamp.json...')
+            try:
+                ts_path = self.project_root / 'timestamp.json'
+                subprocess.run(['git', 'add', str(ts_path)], cwd=self.project_root,
+                               check=True, capture_output=True)
+                msg = 'auto-push@llm-radar: timestamp.json (quality gate failed)'
+                r = subprocess.run(['git', 'commit', '-m', msg], cwd=self.project_root,
+                                   capture_output=True, text=True)
+                if r.returncode != 0:
+                    err = r.stderr.strip()
+                    if 'nothing to commit' in err:
+                        self._print_info('timestamp.json 无变更')
+                    else:
+                        self._print_err(f'commit 失败: {err}')
+                    return
+                subprocess.run(['git', 'push'], cwd=self.project_root,
+                               check=True, capture_output=True)
+                self._print_ok('timestamp.json 已推送')
+            except subprocess.CalledProcessError as e:
+                self._print_err(f'timestamp.json push 失败: {e}')
+            return
+
+        # 正常模式
         if getattr(self, '_skip_push', False):
-            self._print_info('质量门禁未通过，跳过 auto-push')
+            self._print_err('质量门禁未通过，跳过 auto-push')
             return
         if not changelog:
             self._print_info('无数据更新，跳过 auto-push')
@@ -704,8 +729,8 @@ hotspots 数组中每个元素格式：
             return None
 
     # ===== Merge =====
-    def merge_entities(self, new_entities):
-        """将新实体合并到 snapshot.json"""
+    def merge_entities(self, new_entities, quality_ok=True):
+        """将新实体合并到 snapshot.json。quality_ok=False 时跳过存档只写 timestamp。"""
         if not new_entities:
             self._print_warn('无新实体可合并')
             return None
@@ -878,11 +903,12 @@ hotspots 数组中每个元素格式：
         snapshot['generated_at'] = now
         snapshot['period'] = f'{(datetime.now() - timedelta(days=7)).strftime("%Y-%m-%d")} ~ {today}'
 
-        # 保存
-        self._save_snapshot(snapshot)
+        # 保存（质量门禁通过时才写盘）
+        if quality_ok:
+            self._save_snapshot(snapshot)
 
         # 生成 timestamp.json 健康检查端点（GitHub Pages 可访问）
-        self._write_timestamp(snapshot)
+        self._write_timestamp(snapshot, quality_ok=quality_ok)
 
         total_new = len([c for c in changelog if c['type'] == 'new'])
         total_update = len([c for c in changelog if c['type'] == 'update'])
@@ -894,8 +920,8 @@ hotspots 数组中每个元素格式：
         # changelog.html 为静态模板，数据通过 snapshot.json 加载
         # 无需额外生成操作
 
-        # auto-push
-        self._auto_push(changelog)
+        # auto-push（质量门禁失败时仅推送 timestamp.json）
+        self._auto_push(changelog, partial=not quality_ok)
 
         return snapshot
 
@@ -994,7 +1020,7 @@ hotspots 数组中每个元素格式：
             json.dump(snapshot, f, ensure_ascii=False, indent=2)
         self._print_ok(f'快照已保存: {self.snapshot_path}')
 
-    def _write_timestamp(self, snapshot):
+    def _write_timestamp(self, snapshot, quality_ok=True):
         """生成 timestamp.json 健康检查端点（GitHub Pages 直接 serve）"""
         # 收集所有实体中最新的事件日期
         all_ents = []
@@ -1008,9 +1034,13 @@ hotspots 数组中每个元素格式：
                 if d and d > last_date:
                     last_date = d
 
+        detail = getattr(self, '_quality_detail', '')
         ts_data = {
             'generated_at': snapshot.get('generated_at', ''),
             'last_news_date': last_date,
+            'last_run_at': datetime.now().isoformat(),
+            'last_run_status': 'success' if quality_ok else 'failed',
+            'last_run_detail': detail,
             'entity_count': len(all_ents),
             'period': snapshot.get('period', ''),
             'version': '1.0',
@@ -1018,7 +1048,8 @@ hotspots 数组中每个元素格式：
 
         ts_path = self.project_root / 'timestamp.json'
         ts_path.write_text(json.dumps(ts_data, ensure_ascii=False, indent=2))
-        self._print_info(f'timestamp.json 已生成: last_news_date={last_date}')
+        status = ts_data['last_run_status']
+        self._print_info(f'timestamp.json 已生成: status={status} news={last_date}')
 
     def _archive_snapshot(self, snapshot):
         """归档历史快照"""
@@ -1410,17 +1441,18 @@ hotspots 数组中每个元素格式：
 
         # [Verify] 质量门禁
         issues = self._verify(entities)
-        if issues:
-            self._print_warn(f'质量门禁: {"; ".join(issues)}')
-            self._skip_push = True
-        else:
-            self._skip_push = False
+        quality_ok = len(issues) == 0
+        if quality_ok:
             self._print_ok('质量门禁通过')
+            self._quality_detail = ''
+        else:
+            self._print_err(f'质量门禁未通过: {" / ".join(issues)}')
+            self._quality_detail = ' / '.join(issues)
         print()
 
         # Step 3: Merge
         self._print_info('[3/3] 合并到快照...')
-        snapshot = self.merge_entities(entities)
+        snapshot = self.merge_entities(entities, quality_ok=quality_ok)
         if not snapshot:
             self._print_err('合并失败')
             self._observe(False, fetch_results=source_results, entities=entities)
