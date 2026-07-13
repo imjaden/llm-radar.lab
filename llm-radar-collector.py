@@ -32,6 +32,7 @@ import time
 import subprocess
 import platform
 import socket
+import requests
 from pathlib import Path
 from datetime import datetime, timedelta
 from openai import OpenAI
@@ -729,6 +730,60 @@ hotspots 数组中每个元素格式：
             return json.loads(candidate)
         except json.JSONDecodeError:
             return None
+
+    def _enhance_hotspots(self, hotspots, max_count=5):
+        """对 Top-N 热点从原文 URL 抓取全文，用 LLM 生成高质量摘要。
+
+        - 跳过无 URL 的热点
+        - 抓取/LLM 失败时保留原始 summary
+        """
+        if not hotspots:
+            return hotspots
+
+        # 按 hot_score 降序，取 Top-N
+        sorted_hs = sorted(hotspots, key=lambda h: h.get('hot_score', 0), reverse=True)
+        targets = sorted_hs[:max_count]
+
+        enhanced = 0
+        for h in targets:
+            url = (h.get('url') or '').strip()
+            if not url or not url.startswith('http'):
+                continue
+
+            title = h.get('title', '')
+            try:
+                resp = requests.get(url, timeout=15, headers={
+                    'User-Agent': 'Mozilla/5.0 (compatible; LLMRadar/1.0)'
+                })
+                resp.raise_for_status()
+                text = re.sub(r'<[^>]+>', ' ', resp.text)
+                text = re.sub(r'\s+', ' ', text).strip()
+                content = text[:3000]
+            except Exception:
+                continue
+
+            if len(content) < 100:
+                continue
+
+            try:
+                sys_prompt = (
+                    '你是一个科技新闻编辑。基于以下文章全文，为目标标题生成一条 80 字以内的中文摘要。'
+                    '要求：包含谁+做了什么+为什么重要；不要重复标题；'
+                    '不要出现「本文」「据报道」等套话；一句话完成。'
+                )
+                user_prompt = f"标题：{title}\n\n全文：{content}"
+                result = self._call_deepseek(sys_prompt, user_prompt, max_tokens=200)
+                if result and not result.get('error'):
+                    new_summary = result.get('content', '').strip()
+                    if new_summary and len(new_summary) >= 10:
+                        h['summary'] = new_summary
+                        enhanced += 1
+            except Exception:
+                pass
+
+        if enhanced:
+            self._print_ok(f'热点摘要增强: {enhanced}/{len(targets)} 条已优化')
+        return hotspots
 
     # ===== Merge =====
     def merge_entities(self, new_entities, quality_ok=True):
@@ -1442,6 +1497,9 @@ hotspots 数组中每个元素格式：
             self._print_err('实体提取失败')
             self._observe(False, fetch_results=source_results)
             return False
+
+        # 热点摘要增强（抓原文 → LLM 重写高质量摘要）
+        entities['hotspots'] = self._enhance_hotspots(entities.get('hotspots', []))
 
         # [Verify] 质量门禁
         issues = self._verify(entities)
