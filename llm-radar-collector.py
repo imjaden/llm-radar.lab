@@ -1568,6 +1568,30 @@ hotspots 数组中每个元素格式：
         print(f'\n📰 新闻源 ({len(SOURCES)} 个)\n')
         print(table)
 
+    def reset_health(self):
+        """重置所有源的连续失败计数，恢复降级源"""
+        metrics_path = self.data_dir / 'metrics.json'
+        if not metrics_path.exists():
+            self._print_info('无 metrics.json，无需重置')
+            return
+
+        metrics = json.loads(metrics_path.read_text())
+        health = metrics.get('source_health', {})
+        if not health:
+            self._print_info('无 source_health 记录，无需重置')
+            return
+
+        for key, sh in health.items():
+            old = sh.get('consecutive_fails', 0)
+            sh['consecutive_fails'] = 0
+            sh['last_result'] = 'reset'
+            sh['last_time'] = datetime.now().isoformat()
+            self._print_ok(f'{key}: 连续失败 {old} → 0')
+
+        metrics['source_health'] = health
+        metrics_path.write_text(json.dumps(metrics, ensure_ascii=False, indent=2))
+        self._print_ok(f'已重置 {len(health)} 个源的健康状态')
+
 CRON_TAG = '# llm-radar-collector'
 RUN_SCRIPT = PROJECT_ROOT / 'llm-radar-run.sh'
 CRON_CMD = f'{RUN_SCRIPT} >> {DATA_DIR}/collector.log 2>&1'
@@ -1708,6 +1732,9 @@ def main():
     elif command == 'sources':
         collector.list_sources()
 
+    elif command == 'reset-health':
+        collector.reset_health()
+
     elif command == 'crontab':
         if not args or args[0] == '--status':
             crontab_status()
@@ -1758,6 +1785,7 @@ def main():
         print('  crontab --list           - 列出定时任务')
         print('  crontab --update [sched] - 更新定时任务')
         print('  crontab --status         - 查看定时任务状态')
+        print('  reset-health             - 重置所有源的连续失败计数')
         print('  commit [message]         - git add + commit（默认 message: manual@llm-radar）')
         print('  auto-push                - git add + commit + push')
         print('  help                     - 显示帮助信息\n')
