@@ -162,17 +162,21 @@ class LLMRadarCollector:
             self._print_err('DEEPSEEK_API_KEY 未配置，请在 .env 文件或环境变量中设置')
         return key
 
+    def _ts(self):
+        """返回当前时间戳字符串，用于日志前缀"""
+        return datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+
     def _print_ok(self, msg):
-        print(f'✅ {msg}')
+        print(f'{self._ts()} ✅ {msg}')
 
     def _print_err(self, msg):
-        print(f'❌ {msg}')
+        print(f'{self._ts()} ❌ {msg}')
 
     def _print_info(self, msg):
-        print(f'ℹ️ {msg}')
+        print(f'{self._ts()} ℹ️  {msg}')
 
     def _print_warn(self, msg):
-        print(f'⚠️ {msg}')
+        print(f'{self._ts()} ⚠️  {msg}')
 
     def _call_deepseek(self, system_content, user_content, model="deepseek-v4-flash", max_tokens=16000):
         """调用 DeepSeek API"""
@@ -877,6 +881,9 @@ hotspots 数组中每个元素格式：
         # 保存
         self._save_snapshot(snapshot)
 
+        # 生成 timestamp.json 健康检查端点（GitHub Pages 可访问）
+        self._write_timestamp(snapshot)
+
         total_new = len([c for c in changelog if c['type'] == 'new'])
         total_update = len([c for c in changelog if c['type'] == 'update'])
         self._print_ok(f'合并完成：新增 {total_new}，更新 {total_update}')
@@ -986,6 +993,32 @@ hotspots 数组中每个元素格式：
         with open(self.snapshot_path, 'w', encoding='utf-8') as f:
             json.dump(snapshot, f, ensure_ascii=False, indent=2)
         self._print_ok(f'快照已保存: {self.snapshot_path}')
+
+    def _write_timestamp(self, snapshot):
+        """生成 timestamp.json 健康检查端点（GitHub Pages 直接 serve）"""
+        # 收集所有实体中最新的事件日期
+        all_ents = []
+        for dim in ['providers', 'people', 'tools', 'llms']:
+            all_ents.extend(snapshot.get(dim, []))
+
+        last_date = ''
+        for item in all_ents:
+            for dk in ['last_event_date', 'recent_activity_date', 'last_update_date']:
+                d = item.get(dk, '')
+                if d and d > last_date:
+                    last_date = d
+
+        ts_data = {
+            'generated_at': snapshot.get('generated_at', ''),
+            'last_news_date': last_date,
+            'entity_count': len(all_ents),
+            'period': snapshot.get('period', ''),
+            'version': '1.0',
+        }
+
+        ts_path = self.project_root / 'timestamp.json'
+        ts_path.write_text(json.dumps(ts_data, ensure_ascii=False, indent=2))
+        self._print_info(f'timestamp.json 已生成: last_news_date={last_date}')
 
     def _archive_snapshot(self, snapshot):
         """归档历史快照"""
