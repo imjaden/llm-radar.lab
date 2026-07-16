@@ -1,9 +1,9 @@
 {
-  "generated_at": "2026-07-16T17:14:05.578738",
-  "last_news_date": "2026-06-28",
-  "last_run_at": "2026-07-16T17:14:05.578771",
+  "generated_at": "2026-07-16T17:14:10.922441",
+  "last_news_date": "2026-07-13",
+  "last_run_at": "2026-07-16T17:14:10.922531",
   "last_run_status": "failed",
-  "last_run_detail": "空 URL: 5 条",
+  "last_run_detail": "空 URL: 8 条; key_people 缺失率 81%",
   "server": "mac",
   "hostname": "Jaden.Tech",
   "entity_count": 3,
