@@ -13,9 +13,11 @@ class TestMergeEntities:
         assert len(new_providers) > 0
 
     def test_merge_existing_id(self, temp_snapshot):
+        import datetime
+        today = datetime.date.today().isoformat()
         new = {"providers": [{"id": "openai", "name": "OpenAI",
                               "country": "美国", "hot_score": 99,
-                              "last_event_date": "2026-07-11",
+                              "last_event_date": today,
                               "confidence": "high"}]}
         result = temp_snapshot.merge_entities(new)
         providers = result["providers"]

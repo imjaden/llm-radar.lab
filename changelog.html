@@ -153,6 +153,16 @@
     return DIM_EMOJI[dim] || '❓';
   }
 
+  // Load overview.json for quick banner
+  fetch('overview.json?t='+Date.now()).then(function(r){return r.json()}).then(function(o){
+    var meta = document.getElementById('meta');
+    var ts = o.t ? new Date(o.t).toLocaleString('zh-CN') : '-';
+    var statusText = o.r === 'success' ? '✅ 正常' : '❌ ' + (o.rd || '质量门禁未通过');
+    var hots = o.h ? o.h.map(function(h){return h.t;}).join(' · ') : '';
+    meta.textContent = '数据更新: ' + ts + ' · 状态: ' + statusText;
+    if (hots) meta.textContent += ' · 热点: ' + hots;
+  }).catch(function(){});
+
   fetch('data/snapshot.json?t='+Date.now()).then(function(r){return r.json()}).then(function(d){
     var log = d.changelog || [];
     var list = document.getElementById('log-list');

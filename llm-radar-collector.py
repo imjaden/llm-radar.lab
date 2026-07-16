@@ -986,8 +986,9 @@ hotspots 数组中每个元素格式：
         if quality_ok:
             self._save_snapshot(snapshot)
 
-        # 生成 timestamp.json 健康检查端点（GitHub Pages 可访问）
+        # 生成 timestamp.json + overview.json 健康检查端点
         self._write_timestamp(snapshot, quality_ok=quality_ok)
+        self._write_overview(snapshot, quality_ok=quality_ok)
 
         total_new = len([c for c in changelog if c['type'] == 'new'])
         total_update = len([c for c in changelog if c['type'] == 'update'])
@@ -1159,6 +1160,35 @@ hotspots 数组中每个元素格式：
         ts_path.write_text(json.dumps(ts_data, ensure_ascii=False, indent=2))
         status = ts_data['last_run_status']
         self._print_info(f'timestamp.json 已生成: status={status} news={last_date}')
+
+    def _write_overview(self, snapshot, quality_ok=True):
+        """生成 overview.json 轻量预览文件（<2KB，页面秒开）"""
+        # 各维度计数（单字母 key 压缩体积）
+        stats = {}
+        for dim, key in [('providers', 'pr'), ('people', 'pe'), ('tools', 'to'),
+                          ('llms', 'll'), ('hotspots', 'ho')]:
+            stats[key] = len(snapshot.get(dim, []))
+
+        # Top 3 热点（仅标题+日期）
+        hotspots = sorted(
+            snapshot.get('hotspots', []),
+            key=lambda h: (h.get('date', ''), h.get('hot_score', 0)),
+            reverse=True
+        )[:3]
+
+        overview = {
+            'v': 1,
+            't': snapshot.get('generated_at', ''),
+            'p': snapshot.get('period', ''),
+            's': stats,
+            'h': [{'d': h.get('date', ''), 't': h.get('title', '')} for h in hotspots],
+            'r': 'success' if quality_ok else 'failed',
+            'rd': getattr(self, '_quality_detail', ''),
+        }
+
+        path = self.project_root / 'overview.json'
+        path.write_text(json.dumps(overview, ensure_ascii=False, separators=(',', ':')))
+        self._print_info('overview.json 已生成')
 
     def _archive_snapshot(self, snapshot):
         """归档历史快照"""

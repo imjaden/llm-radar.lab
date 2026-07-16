@@ -189,6 +189,34 @@
     </div>
   </nav>
 
+  <!-- Overview preview: shows immediately via overview.json -->
+  <div id="overview-preview" class="max-w-[1400px] mx-auto px-4 sm:px-6 py-2 hidden">
+    <div class="flex items-center gap-4 flex-wrap text-xs text-gray-400">
+      <span class="text-gray-500">更新于</span>
+      <span id="ov-update" class="text-white font-mono"></span>
+      <span class="text-gray-600">·</span>
+      <span id="ov-status" class="px-1.5 py-0.5 rounded text-xs"></span>
+    </div>
+    <div id="ov-hotspots" class="flex items-center gap-3 mt-1.5 flex-wrap"></div>
+  </div>
+
+  <!-- Skeleton: placeholder while snapshot loads -->
+  <div id="skeleton" class="max-w-[1400px] mx-auto px-4 sm:px-6 py-4">
+    <div class="space-y-3">
+      <div class="h-4 w-1/3 bg-gray-800 animate-pulse rounded"></div>
+      <div class="h-4 w-1/2 bg-gray-800 animate-pulse rounded"></div>
+      <div class="h-4 w-2/3 bg-gray-800 animate-pulse rounded"></div>
+      <div class="h-4 w-1/4 bg-gray-800 animate-pulse rounded mt-4"></div>
+      <div class="h-4 w-3/4 bg-gray-800 animate-pulse rounded"></div>
+      <div class="h-4 w-2/5 bg-gray-800 animate-pulse rounded"></div>
+    </div>
+  </div>
+
+  <!-- Error message -->
+  <div id="error-msg" class="max-w-[1400px] mx-auto px-4 sm:px-6 py-20 text-center hidden">
+    <div class="text-red-400 text-lg">❌ 数据加载失败，请稍后刷新</div>
+  </div>
+
   <!-- Main -->
   <main class="max-w-[1400px] mx-auto px-4 sm:px-6 py-4">
     <div id="loading" class="flex items-center justify-center py-20">
@@ -774,18 +802,75 @@ function updateStats() {
   renderSourceChips();
 }
 
-// ===== Init =====
-async function init() {
+// ===== Init: two-stage loading =====
+var overviewReady = false, snapshotReady = false;
+
+function hideSkeleton() {
+  if (!overviewReady || !snapshotReady) return;
+  document.getElementById('skeleton').classList.add('hidden');
+}
+
+async function loadOverview() {
   try {
-    const r=await fetch('data/snapshot.json?t='+Date.now());
+    var r = await fetch('overview.json?t=' + Date.now());
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    var o = await r.json();
+    overviewReady = true;
+    // Update time
+    var t = document.getElementById('ov-update');
+    if (t) t.textContent = o.t ? new Date(o.t).toLocaleString('zh-CN') : '—';
+    // Update status
+    var st = document.getElementById('ov-status');
+    if (st) {
+      st.textContent = o.r === 'success' ? '✅ 正常' : '❌ ' + (o.rd || '质量门禁未通过');
+      st.className = 'px-1.5 py-0.5 rounded text-xs ' + (o.r === 'success' ? 'bg-green-900/50 text-green-400' : 'bg-red-900/50 text-red-400');
+    }
+    // Update hotspot preview
+    var hs = document.getElementById('ov-hotspots');
+    if (hs && o.h) {
+      hs.textContent = '';
+      o.h.forEach(function(h) {
+        var span = document.createElement('span');
+        span.className = 'text-xs text-gray-300';
+        span.textContent = '🔥 ' + h.t;
+        hs.appendChild(span);
+      });
+    }
+    // Update tab counts
+    if (o.s) {
+      // pr=厂商 pe=人物 to=工具 ll=模型 ho=热点
+      var map = {pr:'providers', pe:'people', to:'tools', ll:'llms', ho:'hotspots'};
+      Object.keys(o.s).forEach(function(k) {
+        var el = document.getElementById('tc-' + (map[k] || k));
+        if (el) el.textContent = o.s[k];
+      });
+    }
+    document.getElementById('overview-preview').classList.remove('hidden');
+    if (snapshotReady) hideSkeleton();
+  } catch(e) {
+    overviewReady = true;
+    console.warn('overview.json load failed:', e.message);
+  }
+}
+
+async function init() {
+  // 1. Kick off overview.json immediately
+  loadOverview();
+
+  // 2. Load full snapshot.json
+  try {
+    var r = await fetch('data/snapshot.json?t=' + Date.now());
     if(!r.ok) throw new Error('Not found');
-    DATA=await r.json();
+    DATA = await r.json();
+    snapshotReady = true;
   } catch(e) {
     document.getElementById('loading').classList.add('hidden');
-    document.getElementById('error-state').classList.remove('hidden');
+    document.getElementById('skeleton').classList.add('hidden');
+    document.getElementById('error-msg').classList.remove('hidden');
     return;
   }
   document.getElementById('loading').classList.add('hidden');
+  if (overviewReady) hideSkeleton();
   updateStats();
   checkRecentHotspots();
   // Restore auto-refresh preference
