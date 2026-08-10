@@ -1,12 +1,12 @@
 {
-  "generated_at": "2026-08-10T18:32:07.866776",
+  "generated_at": "2026-08-10T19:35:53.474982",
   "last_news_date": "2026-08-10",
-  "last_run_at": "2026-08-10T18:32:07.875077",
+  "last_run_at": "2026-08-10T19:35:53.496112",
   "last_run_status": "failed",
-  "last_run_detail": "空 URL: 12 条 / key_people 缺失率 81%",
+  "last_run_detail": "空 URL: 15 条 / key_people 缺失率 69%",
   "server": "mac",
   "hostname": "Jaden.Tech",
-  "entity_count": 280,
+  "entity_count": 277,
   "period": "2026-08-03 ~ 2026-08-10",
   "version": "1.0"
 }
