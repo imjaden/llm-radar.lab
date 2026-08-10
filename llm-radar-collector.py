@@ -191,8 +191,13 @@ class LLMRadarCollector:
     def _print_warn(self, msg):
         print(f'{self._ts()} ⚠️  {msg}')
 
-    def _call_deepseek(self, system_content, user_content, model="deepseek-v4-flash", max_tokens=8192):
-        """调用 DeepSeek API"""
+    def _call_deepseek(self, system_content, user_content, model="deepseek-chat", max_tokens=8192):
+        """调用 DeepSeek API
+
+        2026-08-10: 默认模型从 deepseek-v4-flash 改为 deepseek-chat —
+        v4-flash 对长 prompt(完整 schema + 新闻)稳定返回空 content(finish=length 计满 token),
+        deepseek-chat 同输入稳定输出完整 JSON(实测 12000 字符输入 + 5 类实体全解析)。
+        """
         if not self.api_key:
             self._print_err('API key 未配置')
             return None
@@ -548,8 +553,8 @@ class LLMRadarCollector:
         for r in fetch_results:
             combined += f'\n\n--- {r["name"]} ({r["url"]}) ---\n{r["content"]}'
 
-        # 截取避免 token 超限 (2026-08-10 调优: 12000→5000, DeepSeek 长 prompt 空输出率高)
-        combined = combined[:5000]
+        # 截取避免 token 超限 (deepseek-chat 支持长输入, 12000 字符实测稳定)
+        combined = combined[:12000]
 
         system_prompt = """你是一个 LLM 行业情报分析助手。从新闻内容中提取以下 5 类实体：厂商、人物、工具、大模型、热点。
 
@@ -641,7 +646,7 @@ hotspots 数组中每个元素格式：
                     continue
                 retry_content = retry_result.get('content', '')
                 if not retry_content:
-                    self._print_warn(f'重试 {retry_i}/3 返回空内容 (finish_reason=length 计满 token)，跳过解析')
+                    self._print_warn(f'重试 {retry_i}/5 返回空内容 (finish_reason=length 计满 token)，跳过解析')
                     continue
                 retry_entities = self._parse_json_output(retry_content)
                 if retry_entities:
