@@ -675,16 +675,6 @@
       "confidence": "high"
     },
     {
-      "id": "test-company",
-      "name": "测试公司",
-      "country": "中国",
-      "hot_score": 10,
-      "hot_level": "平稳",
-      "last_event": "发布测试产品",
-      "last_event_date": "2026-06-23",
-      "confidence": "high"
-    },
-    {
       "id": "z-ai",
       "name": "z.AI (智谱)",
       "country": "中国",
@@ -854,12 +844,6 @@
       "name": "TP",
       "confidence": "high",
       "updated_at": "2026-07-11T12:01:49.468757"
-    },
-    {
-      "id": "cl-test",
-      "name": "CLTest",
-      "confidence": "high",
-      "updated_at": "2026-07-11T12:00:11.950654"
     },
     {
       "id": "lenovo",
@@ -1830,13 +1814,6 @@
       ],
       "confidence": "medium",
       "updated_at": "2026-07-10T21:03:00.469886"
-    },
-    {
-      "id": "isolation-test",
-      "name": "IsolationTest",
-      "confidence": "high",
-      "hot_score": 99,
-      "updated_at": "2026-07-16T17:14:28.975013"
     },
     {
       "id": "mit",
@@ -7734,7 +7711,7 @@
     }
   ],
   "stats": {
-    "total_providers": 100,
+    "total_providers": 97,
     "total_people": 87,
     "total_tools": 22,
     "total_llms": 92,
