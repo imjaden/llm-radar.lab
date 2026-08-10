@@ -165,6 +165,8 @@ class LLMRadarCollector:
         self.fetch_cache_path = FETCH_CACHE_PATH
         self.api_key = self._load_api_key()
         self.base_url = "https://api.deepseek.com/v1"
+        self._quality_detail = ''
+        self._quality_warnings = []
 
     def _load_api_key(self):
         """从环境变量加载 DeepSeek API key"""
@@ -578,8 +580,10 @@ class LLMRadarCollector:
 7. **URL 硬规则**：
    - 必须填写完整可访问的文章链接（含协议和路径），如 https://www.qbitai.com/2026/07/12345.html
    - ❌ 禁止：裸域名（qbitai.com）、截断（.../article/...）、占位符（xxx/example/localhost）
-   - ❌ 禁止：门户首页 URL —— 必须指向具体文章页面
-   - 如果找不到具体文章 URL，留空字符串 ""
+   - 文章标题/列表中的实体，必须使用该文章的真实 URL
+   - 间接提及的头部实体（如腾讯、字节、OpenAI 等常在正文出现但不在文章标题的实体）：从新闻源首页 URL 中任选一个可访问的源 URL 填入（如 https://www.qbitai.com/ 或该源的文章列表 URL），【禁止留空】
+   - 实在无法关联任何源时，可填该实体在正文中出现的最相关新闻源的首页 URL 作为兜底
+   - 仅当完全没有可关联的源时才允许留空字符串 ""
 8. **时效硬规则**：
    - 日期字段必须使用新闻中明确出现的日期，禁止编造
    - 优先当前日期前后 48h 内的事件
@@ -588,7 +592,8 @@ class LLMRadarCollector:
 9. **key_people 强制规则**：
    - 只要新闻中提到该厂商的高管/创始人/核心研究人员，必须填写 key_people
    - key_people 格式：["姓名-头衔", ...]，如 ["Sam Altman-CEO", "Greg Brockman-董事长"]
-   - 头部厂商（OpenAI, Google, 微软, Meta, 阿里, 腾讯, 字节, 百度, 华为等）不要留空"""
+   - 头部厂商（OpenAI, Google, 微软, Meta, 阿里, 腾讯, 字节, 百度, 华为等）不要留空
+   - 新闻中未明确点名高管的厂商：从 context/已知信息中推断 1-2 位核心人物填入，如无法推断则填该厂商最知名创始人/CEO，并将该实体 confidence 标记为 low 级别"""
 
         user_prompt = f"""当前日期: {datetime.now().strftime('%Y-%m-%d')}
 
@@ -1275,8 +1280,14 @@ hotspots 数组中每个元素格式：
 
     # ===== Agent Loop: Verify =====
     def _verify(self, entities):
-        """质量门禁：检查提取结果的新鲜度和完整性"""
+        """质量门禁：检查提取结果的新鲜度和完整性
+
+        2026-08-10 方案D: URL/key_people 检查降级为警告(记入 self._quality_warnings,
+        不再阻断 auto-push); 仍阻断的硬指标: 新鲜度、热点数量。
+        """
         issues = []
+        warnings = []
+        self._quality_warnings = warnings
         if not entities:
             return ['实体提取为空']
         # 1. 计算事件新鲜度
@@ -1299,18 +1310,18 @@ hotspots 数组中每个元素格式：
         hotspots = entities.get('hotspots', [])
         if len(hotspots) < 3:
             issues.append(f'热点仅 {len(hotspots)} 条')
-        # 3. URL 质量
+        # 3. URL 质量 (2026-08-10 方案D: 降级为警告, 不再阻断 auto-push)
         url_stats = self._validate_entity_urls(entities)
         if url_stats.get('empty_urls', 0) > 5:
-            issues.append(f'空 URL: {url_stats["empty_urls"]} 条')
+            warnings.append(f'空 URL: {url_stats["empty_urls"]} 条')
         if url_stats.get('truncated_urls', 0) > 0:
-            issues.append(f'截断 URL: {url_stats["truncated_urls"]} 条')
+            warnings.append(f'截断 URL: {url_stats["truncated_urls"]} 条')
         if url_stats.get('bare_domain_urls', 0) > 2:
-            issues.append(f'裸域名 URL: {url_stats["bare_domain_urls"]} 条')
-        # 4. 数据完整性
+            warnings.append(f'裸域名 URL: {url_stats["bare_domain_urls"]} 条')
+        # 4. 数据完整性 (2026-08-10 方案D: 降级为警告)
         comp = self._validate_data_completeness(entities)
         if comp.get('key_people_empty_ratio', 0) > 0.5:
-            issues.append(f'key_people 缺失率 {comp["key_people_empty_ratio"]:.0%}')
+            warnings.append(f'key_people 缺失率 {comp["key_people_empty_ratio"]:.0%}')
         # 5. 去重比异常（仅当有存量数据时）
         return issues
 
@@ -1596,9 +1607,13 @@ hotspots 数组中每个元素格式：
         # [Verify] 质量门禁
         issues = self._verify(entities)
         quality_ok = len(issues) == 0
+        warnings = getattr(self, '_quality_warnings', [])
         if quality_ok:
             self._print_ok('质量门禁通过')
-            self._quality_detail = ''
+            detail = ' / '.join(warnings) if warnings else ''
+            self._quality_detail = detail
+            for w in warnings:
+                self._print_warn(f'[质量警告] {w}')
         else:
             self._print_err(f'质量门禁未通过: {" / ".join(issues)}')
             self._quality_detail = ' / '.join(issues)
