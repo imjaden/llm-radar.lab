@@ -1,0 +1,13 @@
+project: llm-radar.lab
+profiles:
+- name: dev
+sessions:
+- role: ops
+  profile: ops
+  title: llm-radar.lab-ops
+- role: dev
+  profile: dev
+  title: llm-radar.lab-dev
+- role: review
+  profile: review
+  title: llm-radar.lab-review
