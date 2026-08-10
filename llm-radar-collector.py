@@ -191,7 +191,7 @@ class LLMRadarCollector:
     def _print_warn(self, msg):
         print(f'{self._ts()} ⚠️  {msg}')
 
-    def _call_deepseek(self, system_content, user_content, model="deepseek-v4-flash", max_tokens=16000):
+    def _call_deepseek(self, system_content, user_content, model="deepseek-v4-flash", max_tokens=8192):
         """调用 DeepSeek API"""
         if not self.api_key:
             self._print_err('API key 未配置')
@@ -548,8 +548,8 @@ class LLMRadarCollector:
         for r in fetch_results:
             combined += f'\n\n--- {r["name"]} ({r["url"]}) ---\n{r["content"]}'
 
-        # 截取避免 token 超限
-        combined = combined[:12000]
+        # 截取避免 token 超限 (2026-08-10 调优: 12000→5000, DeepSeek 长 prompt 空输出率高)
+        combined = combined[:5000]
 
         system_prompt = """你是一个 LLM 行业情报分析助手。从新闻内容中提取以下 5 类实体：厂商、人物、工具、大模型、热点。
 
@@ -629,17 +629,25 @@ hotspots 数组中每个元素格式：
             self._print_ok(f'实体提取完成，耗时 {duration}s，共 {total} 个实体')
             return entities
         else:
-            # 重试 1 次：复用完整 prompt，末尾强调纯 JSON
-            self._print_warn('JSON 解析失败，重试...')
-            retry_prompt = user_prompt + '\n\n只输出 JSON，不要使用 markdown 代码块包裹，不要添加任何说明文字。'
-            retry_result = self._call_deepseek(system_prompt, retry_prompt)
-            if retry_result and not retry_result.get('error'):
+            # 重试最多 5 次：复用完整 prompt，末尾强调纯 JSON
+            # 2026-08-10 修复: DeepSeek 长 prompt 偶发返回空 content(finish=length 计满 token),
+            # 单次重试成功率低, 改为 5 次重试, 并对空输出/解析失败分别记录
+            for retry_i in range(1, 6):
+                self._print_warn(f'JSON 解析失败, 重试 {retry_i}/5...')
+                retry_prompt = user_prompt + '\n\n只输出 JSON，不要使用 markdown 代码块包裹，不要添加任何说明文字。'
+                retry_result = self._call_deepseek(system_prompt, retry_prompt)
+                if not retry_result or retry_result.get('error'):
+                    self._print_err(f'重试 {retry_i}/3 LLM 调用失败')
+                    continue
                 retry_content = retry_result.get('content', '')
+                if not retry_content:
+                    self._print_warn(f'重试 {retry_i}/3 返回空内容 (finish_reason=length 计满 token)，跳过解析')
+                    continue
                 retry_entities = self._parse_json_output(retry_content)
                 if retry_entities:
                     self._print_ok(f'重试成功，耗时 {round(time.time() - start_time, 1)}s')
                     return retry_entities
-            self._print_err(f'实体提取失败（已重试）')
+            self._print_err(f'实体提取失败（已重试 3 次）')
             self._print_info(f'LLM 输出前 500 字符: {content[:500]}')
             return None
 
@@ -982,9 +990,8 @@ hotspots 数组中每个元素格式：
         snapshot['generated_at'] = now
         snapshot['period'] = f'{(datetime.now() - timedelta(days=7)).strftime("%Y-%m-%d")} ~ {today}'
 
-        # 保存（质量门禁通过时才写盘）
-        if quality_ok:
-            self._save_snapshot(snapshot)
+        # 保存快照（始终写盘，数据新鲜度优先；质量门禁只控制 auto-push 是否完整推送）
+        self._save_snapshot(snapshot)
 
         # 生成 timestamp.json + overview.json 健康检查端点
         self._write_timestamp(snapshot, quality_ok=quality_ok)
