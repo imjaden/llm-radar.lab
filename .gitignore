@@ -15,3 +15,7 @@ data/dead-letter.json
 !AGENTS.md
 loop.md
 agent-todo.md
+
+# review-prep 生成物
+cache/
+logs/
