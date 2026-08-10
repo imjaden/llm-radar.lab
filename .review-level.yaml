@@ -39,3 +39,13 @@ review_history:
     findings_total: 7
     findings_open: 6
     tracking: LR-SEC-001 ~ LR-SEC-007
+    report: documents/reviews/llm-radar-security-review-v1.0-20260711.md
+  - date: 2026-08-10
+    reviewer: Security Reviewer (IRIS)
+    review_level: L2
+    verdict: CONDITIONAL_PASS
+    score: 80
+    findings_total: 4
+    findings_open: 4
+    tracking: governance — C-1, N-1, N-2, A-1
+    report: documents/reviews/llm-radar-governance-review-v1.0-20260810.md

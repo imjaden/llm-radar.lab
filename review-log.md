@@ -1,78 +1,30 @@
----
-name: review-log-template
-description: Append-only review log template for project root (review-log.md)
-version: 1.0
-author: IRIS
-tags: [template, review, governance]
-quality:
-  coverage: 0.60
-  depth: 0.50
-  maintainability: 0.85
-  cross_profile: 0.85
----
+# LLM Radar — review-log
 
-# {Project Name} — review-log
-
-> 产出文档的元信息必须遵循 `skills-governance/document-frontmatter.md` 规范。
-
-> 作用: review运行日志。由 ops profile 在review后 append，review profile 验证后更新状态。
->
-> 触发机制: ops profile 完成校准/review后写入条目（状态=⏳ AWAITING REVIEW）；
->         review profile 验证通过后将状态更新为 ✅ PASS。
+> 作用: review运行日志。由 review profile 在审查后 append。
 >
 > 文件命名: 固定为 `review-log.md`，放项目根目录。
 > 适用: 风格 B 文件（无版本号，持续 append），不可删除历史条目。
 
-- **reviewer**: {role}/{session-title}（如 ops/hermes-manager-ops）
+## 2026-08-10 — 治理规范审查 (5 commits)
 
-## {YYYY-MM-DD} — {review标题}
-
-- **review者**: {profile}/{session} ({agent version})
-- **范围**: {review范围描述}
-- **Tracking**: {PROJECT-CODE-SEC-NNN ~ SEC-MMM}（可选，对应详细报告中的发现编号）
-- **状态**: ✅ PASS / ⏳ AWAITING REVIEW / ❌ FAIL
-- **报告**: {path to full audit report}
-- **实现 prompt**: ✅ 已生成 / ⬜ 无需生成
+- **review者**: review/llm-radar.lab-review (hermes-1.2.0)
+- **范围**: 5 个未 push commit — d0aee7f, 2652160, a0fcc67, b3ce8de, 7ab70b7
+- **Tracking**: 无安全发现 (纯治理审查)
+- **状态**: ⏳ CONDITIONAL PASS — 80/100 (B)
+- **报告**: documents/reviews/llm-radar-governance-review-v1.0-20260810.md
+- **实现 prompt**: ⬜ 无需生成 (非 PASS)
 
 ### 发现摘要
 
-{简要列出关键发现项或分数变化}
-
-（可选: 详细表格）
-
-#### 发现摘要格式示例
-
-**安全审计型:**
-```
 | # | Severity | Title | Status |
 |---|----------|-------|--------|
-| HM-SEC-001 | 🔴 | Hardcoded credential in config.py | Fixed |
-| HM-SEC-002 | 🟡 | Missing input validation on --port | Open |
-```
+| C-1 | 🟡 | b3ce8de `chore@project:` type 不在项目既定类型集 | Open |
+| N-1 | 🟡 | features.md 前导 YAML 缺 type/version/date/author/tags | Open |
+| N-2 | 🟡 | review-log.md 模板未定制 (本条为首个实际条目) | Fixed |
+| A-1 | 🟡 | review-log 0 条目 vs .review-level.yaml 4 条目 gap | Open |
 
-**质量校准型:**
-```
-| Skill | Before | After (C/D/M/X) | Grade |
-|-------|--------|-------------------|-------|
-| spec-review | 0.42 | 0.85 (0.85/0.90/0.75/0.85) | 优秀 |
-```
+### 历史条目说明
+
+.review-level.yaml 中有 4 条 review_history (2026-07-11 ~ 2026-07-13)，对应 LR-SEC-001 ~ LR-SEC-010。此 review-log.md 由 7ab70b7 初始化，历史条目未回填。详见 .review-level.yaml。
 
 ---
-
-## 条目格式说明
-
-```
-## YYYY-MM-DD — Title
-
-- **review者**: <profile>/<session> (<agent-version>)
-- **范围**: <scope>
-- **Tracking**: <PROJECT-CODE-SEC-NNN ~ SEC-MMM>（可选）
-- **状态**: ✅ PASS | ⏳ AWAITING REVIEW | ❌ FAIL
-- **报告**: <path>
-- **实现 prompt**: ✅ 已生成 | ⬜ 无需生成
-
-### 发现摘要
-<summary>
-
----
-```
