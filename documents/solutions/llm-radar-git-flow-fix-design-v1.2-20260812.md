@@ -2,7 +2,7 @@
 title: llm-radar git 处理逻辑修复设计
 topic: llm-radar
 type: design
-version: 1.1
+version: 1.2
 date: 2026-08-12
 author: hermes-1.2.0
 tags: [llm-radar, git, cron, data-collection]
@@ -13,10 +13,10 @@ model: deepseek-v4-flash
 
 # llm-radar — run() git 处理逻辑修复设计
 
-> 版本: v1.1 | 日期: 2026-08-12
+> 版本: v1.2 | 日期: 2026-08-12
 > 作者: ops (hermes-1.2.0)
 > 数据来源: llm-radar-collector.py 实际运行日志、服务器/本机 git 状态取证
-> 变更: v1.0 → v1.1 记录确认项 A1 B1 C1 D2(2026-08-12)
+> 变更: v1.0 → v1.1 记录确认项 A1 B1 C1 D2(2026-08-12); v1.1 → v1.2 修复 review 4 项 🟡 (REA-1/RIG-1/RIG-2/RIG-3, 2026-08-12)
 
 ## 背景/动机
 
@@ -89,6 +89,7 @@ llm-radar 的采集器在两端运行(本机 macOS + 服务器 Linux 7×24),cron
 输入: 无
 流程:
 1. git fetch origin main
+   - fetch 失败(超时/网络中断/认证过期/远端不可达) → 记 warning "远端同步失败, 跳过, 本地优先", 直接返回(不 abort run)
 2. 判断分叉状态:
    - git merge-base --is-ancestor HEAD origin/main → 本地可快进 → git merge --ff-only origin/main
    - 否则(分叉): 保持本地 HEAD 不动, 记 warning "远端分叉, 本地优先, 稍后 auto-push 收敛"
@@ -102,6 +103,7 @@ llm-radar 的采集器在两端运行(本机 macOS + 服务器 Linux 7×24),cron
 - 用 `fetch + merge --ff-only` 替代 `pull --rebase`:快进不会冲突,失败即跳过
 - 分叉时**本地优先**:不强行 rebase 远端,保留本地最新采集结果,交给 auto-push 环节收敛
 - 每次进入先清理残留 rebase 状态(自愈 7/14 与 8/12 的现场)
+- **时序标注 (REA-1 修正)**: D1 仅负责同步, 不 commit、不 push。本地采集数据在 run() 后续流程写入磁盘后, 由 D2 `_auto_push()` 统一 commit + push。D1 结束时工作区保持原样(可能带上次 run 的未提交数据), 这些数据由本轮 D2 一并提交
 
 #### D2. auto-push 冲突自愈(`_auto_push()` 改造)
 
@@ -128,13 +130,18 @@ llm-radar 的采集器在两端运行(本机 macOS + 服务器 Linux 7×24),cron
 #### D3. 数据文件冲突标记防护(`_write_snapshot`/`_write_timestamp`/`_write_overview`)
 
 ```
-写盘前检查: 若目标文件内容包含冲突标记(<<<<<<< HEAD / ======= / >>>>>>>),
-          先 git checkout --theirs <file> 清理, 再写入
+写盘前检查: 若目标文件内容包含冲突标记(<<<<<<< HEAD / ======= / >>>>>>>), 先清理, 再写入
+清理逻辑 (RIG-1 修正):
+  1. 检查文件是否被 git 跟踪: git ls-files --error-unmatch <file>
+     - 已跟踪 → git checkout --theirs <file> (取远端版本为基)
+     - 未跟踪 (首次创建或 gitignored) → 直接删除该文件 (os.remove), 由本次写入全新内容
+  2. 任何清理命令失败 → warning, 直接用新内容覆盖写入
 ```
 
 要点:
 - 防止 8/12 那种"冲突标记文件被当正常数据写盘"的二次污染
 - checkout --theirs 取远端版本为基,本地 run 的合并结果会完整覆盖(数据以本机新采集为准)
+- 未跟踪文件不走 checkout(该命令对 untracked 无效),直接删除重建
 
 #### D4. 本机 cron 频率调整(配合 D1,独立决策项)
 
@@ -203,11 +210,19 @@ crontab: 0 * * * *(每小时)+ 保留 _think 6h 防抖
 4. 本机 crontab 改回每小时 + 保留 6h 防抖
 5. 验收:仅靠真实 cron 周期观察(7/14/21 + 本机每小时),确认无 rebase 残留、auto-push 成功
 
+**run() 调用顺序 (RIG-3 修正, 显式标注)**:
+```
+run() 顶部: _sync_remote()          # D1 仅同步, 不 commit
+    → 采集 fetch → LLM 提取 → 质量门禁
+    → D3 写盘函数 (snapshot/timestamp/overview)   # 冲突标记防护在写盘前
+    → _auto_push()                   # D2 统一 commit + push + 收敛分叉
+```
+
 ## 元信息
 
 | 项目 | 内容 |
 |:-----|:------|
-| 版本 | 1.1 |
+| 版本 | 1.2 |
 | 最后更新 | 2026-08-12 |
 | 作者 | hermes-1.2.0 |
 | Session | ops/llm-radar-git-fix |
