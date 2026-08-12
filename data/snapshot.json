@@ -1,24 +1,24 @@
 {
   "version": "1.0",
-  "generated_at": "2026-08-12T21:03:08.071529",
-  "period": "2026-08-05 ~ 2026-08-12",
+  "generated_at": "2026-08-13T07:02:29.874068",
+  "period": "2026-08-06 ~ 2026-08-13",
   "execution_mode": "semi-auto",
   "providers": [
     {
       "id": "google",
       "name": "谷歌",
       "country": "美国",
-      "hot_score": 85,
+      "hot_score": 90,
       "hot_level": "爆热",
       "last_event": "谷歌首席科学家 Jeff Dean 离职并创立 Discovery Loop；谷歌的告别：大模型正在进入车库时代",
-      "last_event_date": "2026-08-12",
+      "last_event_date": "2026-08-13",
       "confidence": "high",
       "last_event_url": "https://36kr.com/p/3928934646257289",
       "focus_areas": [
         "大模型",
         "AI研究"
       ],
-      "updated_at": "2026-08-12T21:03:08.071529",
+      "updated_at": "2026-08-13T07:02:29.874068",
       "flagship_models": [
         "gemini"
       ],
@@ -40,10 +40,10 @@
         "大模型",
         "AI应用"
       ],
-      "hot_score": 85,
+      "hot_score": 88,
       "hot_level": "爆热",
       "last_event": "OpenAI给10亿用户免费换上GPT-5.6；两位大模型核心负责人离开OpenAI卷下一代架构",
-      "last_event_date": "2026-08-12",
+      "last_event_date": "2026-08-13",
       "last_event_url": "https://36kr.com/p/3926235966945671",
       "confidence": "high",
       "ref": {
@@ -56,16 +56,16 @@
           "DPO"
         ]
       },
-      "updated_at": "2026-08-12T21:03:08.071529"
+      "updated_at": "2026-08-13T07:02:29.874068"
     },
     {
       "id": "tencent",
       "name": "腾讯",
       "country": "中国",
-      "hot_score": 75,
-      "hot_level": "高热",
-      "last_event": "腾讯云重构 Agent 沙箱；混元 ASR 语音识别服务内测；腾讯WorkBuddy升级多端同步",
-      "last_event_date": "2026-08-12",
+      "hot_score": 82,
+      "hot_level": "爆热",
+      "last_event": "腾讯云重构 Agent 沙箱；混元 ASR 推出新一代语音识别服务；腾讯WorkBuddy升级多端同步",
+      "last_event_date": "2026-08-13",
       "last_event_url": "https://www.infoq.cn/article/KwZX2bLcaHRjuLG95vHI",
       "flagship_models": [
         "hunyuan-asr"
@@ -74,12 +74,12 @@
         "马化腾-创始人"
       ],
       "focus_areas": [
+        "大模型",
         "云计算",
-        "语音识别",
         "Agent"
       ],
       "confidence": "high",
-      "updated_at": "2026-08-12T21:03:08.071529",
+      "updated_at": "2026-08-13T07:02:29.874068",
       "ref": {
         "founded": "1998",
         "valuation": "",
@@ -96,14 +96,14 @@
       "country": "中国",
       "hot_score": 95,
       "hot_level": "爆热",
-      "last_event": "DeepSeek 以 1.41 亿元认购宇树科技 IPO 战略配售；DeepSeek-V4-Flash-0731 发布，涨价30倍仍是最便宜的模型",
-      "last_event_date": "2026-08-12",
+      "last_event": "DeepSeek 以 1.41 亿元认购宇树科技 IPO 战略配售；涨价30倍仍是最便宜的模型",
+      "last_event_date": "2026-08-13",
       "last_event_url": "https://www.infoq.cn/article/FEcOI8kYoGuFYq39acEo",
       "flagship_models": [
         "deepseek-v4-flash"
       ],
       "key_people": [
-        "梁文锋-创始人兼CEO"
+        "梁文锋-创始人"
       ],
       "focus_areas": [
         "大模型",
@@ -111,16 +111,16 @@
         "推理优化"
       ],
       "confidence": "high",
-      "updated_at": "2026-08-12T21:03:08.071529"
+      "updated_at": "2026-08-13T07:02:29.874068"
     },
     {
       "id": "huawei",
       "name": "华为",
       "country": "中国",
-      "hot_score": 75,
+      "hot_score": 70,
       "hot_level": "高热",
-      "last_event": "华为开始重新定义存储的位置；前华为生成式大模型负责人创业获5亿融资",
-      "last_event_date": "2026-08-12",
+      "last_event": "AI推理规模上升后，华为开始重新定义存储的位置；前华为生成式大模型负责人创业获5亿融资",
+      "last_event_date": "2026-08-13",
       "last_event_url": "https://www.infoq.cn/article/qBHKWa0AabfP0Fs8rGrk",
       "flagship_models": [],
       "key_people": [
@@ -128,31 +128,30 @@
       ],
       "focus_areas": [
         "AI基础设施",
-        "存储",
-        "大模型"
+        "存储"
       ],
       "confidence": "high",
-      "updated_at": "2026-08-12T21:03:08.071529"
+      "updated_at": "2026-08-13T07:02:29.874068"
     },
     {
-      "id": "mete",
+      "id": "meta",
       "name": "Meta",
       "country": "美国",
       "flagship_models": [
         "llama"
       ],
       "key_people": [
-        "马克·扎克伯格-CEO"
+        "Mark Zuckerberg-CEO"
       ],
       "focus_areas": [
         "开源模型",
         "大模型"
       ],
-      "hot_score": 70,
+      "hot_score": 78,
       "hot_level": "高热",
       "last_event": "小扎万字长文炮轰闭源：蒸馏无罪，Meta 正式重回开源模型路线",
-      "last_event_date": "2026-08-12",
-      "last_event_url": "https://www.infoq.cn/article/YBCpst8secs3xWqZwWLe",
+      "last_event_date": "2026-08-13",
+      "last_event_url": "https://www.infoq.cn/article/FEcOI8kYoGuFYq39acEo",
       "confidence": "high",
       "ref": {
         "founded": "2004",
@@ -163,16 +162,16 @@
           "MoE"
         ]
       },
-      "updated_at": "2026-08-12T21:03:08.071529"
+      "updated_at": "2026-08-13T07:02:29.874068"
     },
     {
-      "id": "alibaba-cloud",
+      "id": "alibaba",
       "name": "阿里巴巴",
       "country": "中国",
-      "hot_score": 84,
+      "hot_score": 85,
       "hot_level": "爆热",
       "last_event": "阿里云开源的流存储Fluss 正式跻身 Apache 顶级项目",
-      "last_event_date": "2026-08-12",
+      "last_event_date": "2026-08-13",
       "last_event_url": "https://www.infoq.cn/article/7bo2icFyxY9lN0htzSZx",
       "flagship_models": [
         "qwen3-8-max"
@@ -181,12 +180,12 @@
         "吴泳铭-CEO"
       ],
       "focus_areas": [
+        "大模型",
         "云计算",
-        "开源",
-        "大模型"
+        "开源"
       ],
       "confidence": "high",
-      "updated_at": "2026-08-12T13:00:01.784874",
+      "updated_at": "2026-08-13T07:02:29.874068",
       "ref": {
         "founded": "1999",
         "valuation": "",
@@ -210,13 +209,13 @@
       ],
       "focus_areas": [
         "大模型",
-        "文生图",
-        "AI应用"
+        "AI应用",
+        "视频生成"
       ],
-      "hot_score": 90,
+      "hot_score": 92,
       "hot_level": "爆热",
-      "last_event": "字节拟训练超5万亿参数模型，张一鸣反对蒸馏；字节先造了个一级部门；豆包开始抽佣；字节Seed团队发现文生图Scaling新变量",
-      "last_event_date": "2026-08-12",
+      "last_event": "字节拟训练超5万亿参数模型，张一鸣反对蒸馏；10万亿参数大模型还没影，字节先造了个一级部门；豆包开始抽佣",
+      "last_event_date": "2026-08-13",
       "last_event_url": "https://36kr.com/p/3935748520459653",
       "confidence": "high",
       "ref": {
@@ -228,7 +227,7 @@
           "MoE"
         ]
       },
-      "updated_at": "2026-08-12T21:03:08.071529"
+      "updated_at": "2026-08-13T07:02:29.874068"
     },
     {
       "id": "tsinghua",
@@ -237,7 +236,7 @@
       "hot_score": 60,
       "hot_level": "高热",
       "last_event": "清华天眸芯团队再登Nature系列期刊封面；清华唐杰团队揭示大模型记忆全景；清华SIGS发布VeriLoop Coder-E1",
-      "last_event_date": "2026-08-12",
+      "last_event_date": "2026-08-13",
       "last_event_url": "https://36kr.com/p/3926253551679881",
       "flagship_models": [
         "veriloop-coder-e1"
@@ -246,12 +245,12 @@
         "唐杰-教授"
       ],
       "focus_areas": [
+        "AI研究",
         "类脑视觉",
-        "大模型记忆",
-        "AI科研"
+        "大模型"
       ],
       "confidence": "high",
-      "updated_at": "2026-08-12T21:03:08.071529"
+      "updated_at": "2026-08-13T07:02:29.874068"
     },
     {
       "id": "zhipu",
@@ -278,23 +277,23 @@
       "id": "minimax",
       "name": "MiniMax",
       "country": "中国",
-      "hot_score": 70,
+      "hot_score": 72,
       "hot_level": "高热",
-      "last_event": "MiniMax H3 团队 Reddit 被问爆：2K 要开源，图像模型在路上",
-      "last_event_date": "2026-08-12",
+      "last_event": "MiniMax H3 团队 Reddit 被问爆：2K 要开源，图像模型在路上，Apache-2.0 也在考虑了",
+      "last_event_date": "2026-08-13",
       "last_event_url": "https://www.infoq.cn/article/9C3eK9tJqDXbabbBy3aj",
       "flagship_models": [
-        "minimax-h3"
+        "h3"
       ],
       "key_people": [
-        "闫俊杰-CEO"
+        "闫俊杰-创始人"
       ],
       "focus_areas": [
         "大模型",
         "多模态"
       ],
       "confidence": "high",
-      "updated_at": "2026-08-12T21:03:08.071529"
+      "updated_at": "2026-08-13T07:02:29.874068"
     },
     {
       "id": "microsoft",
@@ -303,7 +302,7 @@
       "hot_score": 80,
       "hot_level": "爆热",
       "last_event": "微软正式发布 Agent Framework Harness 和 Hosted Agents",
-      "last_event_date": "2026-08-12",
+      "last_event_date": "2026-08-13",
       "last_event_url": "https://www.infoq.cn/article/aDEJegvNSKwvue2JZ0yI",
       "flagship_models": [
         "GPT-5.6"
@@ -312,50 +311,51 @@
         "Satya Nadella-CEO"
       ],
       "focus_areas": [
-        "Agent框架",
-        "企业AI"
+        "Agent",
+        "企业服务"
       ],
       "confidence": "high",
-      "updated_at": "2026-08-12T21:03:08.071529"
+      "updated_at": "2026-08-13T07:02:29.874068"
     },
     {
       "id": "netflix",
       "name": "Netflix",
       "country": "美国",
-      "hot_score": 50,
+      "hot_score": 35,
       "hot_level": "温热",
       "last_event": "Netflix CPTO 如何在 AI 乱流中进行人才重构",
-      "last_event_date": "2026-08-12",
+      "last_event_date": "2026-08-13",
       "last_event_url": "https://pro.jiqizhixin.com/reference/28cd676c-fe41-4c7f-94ec-37c748cce969",
       "flagship_models": [],
       "key_people": [],
       "focus_areas": [
         "AI人才",
-        "AI应用"
+        "流媒体"
       ],
       "confidence": "medium",
-      "updated_at": "2026-08-12T21:03:08.071529"
+      "updated_at": "2026-08-13T07:02:29.874068"
     },
     {
       "id": "xiaomi",
       "name": "小米",
       "country": "中国",
-      "hot_score": 50,
+      "hot_score": 55,
       "hot_level": "温热",
-      "last_event": "面壁智能正式启动IPO（小米生态链）",
-      "last_event_date": "2026-08-12",
-      "last_event_url": "https://www.infoq.cn/article/YBCpst8secs3xWqZwWLe",
+      "last_event": "小米大模型厂商启动IPO，估值200亿",
+      "last_event_date": "2026-08-13",
+      "last_event_url": "https://36kr.com/p/3936412212903048",
       "flagship_models": [
         "miLM"
       ],
       "key_people": [
-        "雷军-创始人兼CEO"
+        "雷军-创始人"
       ],
       "focus_areas": [
-        "端侧模型"
+        "大模型",
+        "端侧AI"
       ],
-      "confidence": "low",
-      "updated_at": "2026-08-12T21:03:08.071529"
+      "confidence": "medium",
+      "updated_at": "2026-08-13T07:02:29.874068"
     },
     {
       "id": "kuaishou",
@@ -380,13 +380,13 @@
       "updated_at": "2026-08-11T14:04:44.043104"
     },
     {
-      "id": "antgroup",
+      "id": "ant",
       "name": "蚂蚁集团",
       "country": "中国",
-      "hot_score": 70,
+      "hot_score": 75,
       "hot_level": "高热",
-      "last_event": "蚂蚁开源Avernet，为多智能体协作搭建操作系统",
-      "last_event_date": "2026-08-12",
+      "last_event": "蚂蚁开源Avernet，为多智能体协作搭建操作系统，内部跑通12大业务、任务完成率超90%",
+      "last_event_date": "2026-08-13",
       "last_event_url": "https://www.infoq.cn/article/iNvHOsahsYFYaE9ImZBV",
       "flagship_models": [
         "llada-moe-v2"
@@ -399,7 +399,7 @@
         "开源"
       ],
       "confidence": "high",
-      "updated_at": "2026-08-12T21:03:08.071529"
+      "updated_at": "2026-08-13T07:02:29.874068"
     },
     {
       "id": "baidu",
@@ -449,31 +449,30 @@
       "id": "snowflake",
       "name": "Snowflake",
       "country": "美国",
-      "hot_score": 70,
+      "hot_score": 68,
       "hot_level": "高热",
-      "last_event": "Snowflake 财报显示33%增速、126%留存；Snowflake Cortex Agents 本体驱动推理实践",
-      "last_event_date": "2026-08-12",
-      "last_event_url": "https://www.infoq.cn/article/lWRKAhlso9f7OobiGXDI",
+      "last_event": "Snowflake Cortex Agents 的本体驱动推理实践；33% 增速、126% 留存，Snowflake 财报亮眼",
+      "last_event_date": "2026-08-13",
+      "last_event_url": "https://www.infoq.cn/article/2NsA9FT1uhjmdRrwzOo3",
       "flagship_models": [],
       "key_people": [
         "Sridhar Ramaswamy-CEO"
       ],
       "focus_areas": [
         "数据云",
-        "Agent",
-        "企业AI"
+        "Agent"
       ],
       "confidence": "high",
-      "updated_at": "2026-08-12T21:03:08.071529"
+      "updated_at": "2026-08-13T07:02:29.874068"
     },
     {
       "id": "qianwen",
-      "name": "千问AI",
+      "name": "千问AI平台",
       "country": "中国",
       "hot_score": 65,
       "hot_level": "高热",
-      "last_event": "Qwen3.8-Max 发布，2.4万亿参数MoE旗舰模型",
-      "last_event_date": "2026-08-12",
+      "last_event": "Qwen3.8-Max 发布，2.4万亿参数 MoE 旗舰模型",
+      "last_event_date": "2026-08-13",
       "last_event_url": "https://www.jiqizhixin.com/",
       "flagship_models": [
         "qwen3-8-max"
@@ -486,54 +485,54 @@
         "MoE"
       ],
       "confidence": "medium",
-      "updated_at": "2026-08-12T21:03:08.071529"
+      "updated_at": "2026-08-13T07:02:29.874068"
     },
     {
       "id": "unitree",
       "name": "宇树科技",
       "country": "中国",
-      "hot_score": 65,
+      "hot_score": 75,
       "hot_level": "高热",
-      "last_event": "宇树科技 IPO 申购，DeepSeek 认购战略配售",
-      "last_event_date": "2026-08-12",
+      "last_event": "宇树科技 IPO 申购，DeepSeek 认购战略配售，或出一批90后千万富豪",
+      "last_event_date": "2026-08-13",
       "last_event_url": "https://www.infoq.cn/article/FEcOI8kYoGuFYq39acEo",
       "flagship_models": [],
       "key_people": [
-        "王兴兴-创始人兼CEO"
+        "王兴兴-创始人"
       ],
       "focus_areas": [
         "具身智能",
         "机器人"
       ],
       "confidence": "high",
-      "updated_at": "2026-08-12T21:03:08.071529"
+      "updated_at": "2026-08-13T07:02:29.874068"
     },
     {
-      "id": "fliggy",
+      "id": "feizhu",
       "name": "飞猪",
       "country": "中国",
-      "hot_score": 50,
+      "hot_score": 30,
       "hot_level": "温热",
       "last_event": "飞猪新一代 AI 产品 V10 探索消费Agent",
-      "last_event_date": "2026-08-12",
+      "last_event_date": "2026-08-13",
       "last_event_url": "https://www.infoq.cn/article/t0wslR8w8H7yeRD2MwO6",
       "flagship_models": [],
       "key_people": [],
       "focus_areas": [
         "消费Agent",
-        "旅游AI"
+        "旅游"
       ],
       "confidence": "medium",
-      "updated_at": "2026-08-12T21:03:08.071529"
+      "updated_at": "2026-08-13T07:02:29.874068"
     },
     {
       "id": "zhongkehuisi",
       "name": "中科慧思",
       "country": "中国",
-      "hot_score": 55,
+      "hot_score": 45,
       "hot_level": "温热",
-      "last_event": "中科慧思一口气发三款灵巧手新品",
-      "last_event_date": "2026-08-12",
+      "last_event": "中科慧思一口气发三款灵巧手新品，机器人也能组乐队现场演奏",
+      "last_event_date": "2026-08-13",
       "last_event_url": "https://www.infoq.cn/article/6EXTXyTt834kMGkiqqDT",
       "flagship_models": [],
       "key_people": [],
@@ -541,8 +540,8 @@
         "具身智能",
         "灵巧手"
       ],
-      "confidence": "high",
-      "updated_at": "2026-08-12T21:03:08.071529"
+      "confidence": "medium",
+      "updated_at": "2026-08-13T07:02:29.874068"
     },
     {
       "id": "liming-power",
@@ -566,11 +565,11 @@
       "id": "yonyou",
       "name": "用友",
       "country": "中国",
-      "hot_score": 50,
+      "hot_score": 30,
       "hot_level": "温热",
-      "last_event": "用友 iuap 全面升级企业 AI 底座，YonWork/YonData/YonCode 三大引擎亮相",
-      "last_event_date": "2026-08-12",
-      "last_event_url": "https://www.infoq.cn/article/YBCpst8secs3xWqZwWLe",
+      "last_event": "用友 iuap 全面升级企业 AI 底座，YonWork/YonData/YonCode 三大引擎亮相 GBIC 2026",
+      "last_event_date": "2026-08-13",
+      "last_event_url": "https://www.infoq.cn/article/FEcOI8kYoGuFYq39acEo",
       "flagship_models": [],
       "key_people": [
         "王文京-创始人"
@@ -580,26 +579,27 @@
         "ERP"
       ],
       "confidence": "medium",
-      "updated_at": "2026-08-12T21:03:08.071529"
+      "updated_at": "2026-08-13T07:02:29.874068"
     },
     {
       "id": "discovery-loop",
       "name": "Discovery Loop",
       "country": "美国",
-      "hot_score": 60,
-      "hot_level": "高热",
-      "last_event": "谷歌首席科学家 Jeff Dean 离职并创立 Discovery Loop",
-      "last_event_date": "2026-08-12",
+      "hot_score": 55,
+      "hot_level": "温热",
+      "last_event": "谷歌首席科学家 Jeff Dean 离职创立 Discovery Loop",
+      "last_event_date": "2026-08-13",
       "last_event_url": "https://www.jiqizhixin.com/",
       "flagship_models": [],
       "key_people": [
         "Jeff Dean-创始人"
       ],
       "focus_areas": [
-        "AI研究"
+        "AI研究",
+        "创业"
       ],
       "confidence": "medium",
-      "updated_at": "2026-08-12T21:03:08.071529"
+      "updated_at": "2026-08-13T07:02:29.874068"
     },
     {
       "id": "daimeng",
@@ -638,40 +638,40 @@
       "updated_at": "2026-08-11T14:04:44.043104"
     },
     {
-      "id": "openessa",
+      "id": "openessagent",
       "name": "OpenESSAgent",
       "country": "中国",
-      "hot_score": 45,
-      "hot_level": "温热",
+      "hot_score": 25,
+      "hot_level": "平稳",
       "last_event": "OpenESSAgent寻求300万天使轮融资，切入储能工程垂直大模型赛道",
-      "last_event_date": "2026-08-12",
+      "last_event_date": "2026-08-13",
       "last_event_url": "https://36kr.com/p/3926735456090505",
       "flagship_models": [],
       "key_people": [],
       "focus_areas": [
-        "储能工程",
+        "储能",
         "垂直大模型"
       ],
       "confidence": "medium",
-      "updated_at": "2026-08-12T21:03:08.071529"
+      "updated_at": "2026-08-13T07:02:29.874068"
     },
     {
-      "id": "dgbot",
+      "id": "dgp",
       "name": "地瓜机器人",
       "country": "中国",
-      "hot_score": 50,
+      "hot_score": 35,
       "hot_level": "温热",
       "last_event": "DGP地心引力集结机器人最强后浪，40余家资本现场爆灯",
-      "last_event_date": "2026-08-12",
+      "last_event_date": "2026-08-13",
       "last_event_url": "https://www.infoq.cn/article/CrdrxQXcaPcUPTFW8usa",
       "flagship_models": [],
       "key_people": [],
       "focus_areas": [
         "机器人",
-        "具身智能"
+        "生态孵化"
       ],
       "confidence": "medium",
-      "updated_at": "2026-08-12T21:03:08.071529"
+      "updated_at": "2026-08-13T07:02:29.874068"
     },
     {
       "id": "baichuan",
@@ -699,23 +699,23 @@
       "id": "moonshot",
       "name": "月之暗面",
       "country": "中国",
-      "hot_score": 80,
+      "hot_score": 85,
       "hot_level": "爆热",
-      "last_event": "Kimi K3 引爆价格战，中国大模型周调用量全球登顶；Kimi-K3 防蒸馏机制被攻破",
-      "last_event_date": "2026-08-12",
+      "last_event": "Kimi K3 引爆价格战；中国大模型周调用量全球登顶；防蒸馏机制全面告破，Kimi-K3重现概率异常",
+      "last_event_date": "2026-08-13",
       "last_event_url": "https://36kr.com/p/3926124303906946",
       "flagship_models": [
         "kimi-k3"
       ],
       "key_people": [
-        "杨植麟-创始人兼CEO"
+        "杨植麟-创始人"
       ],
       "focus_areas": [
         "大模型",
-        "AI应用"
+        "长上下文"
       ],
       "confidence": "high",
-      "updated_at": "2026-08-12T21:03:08.071529"
+      "updated_at": "2026-08-13T07:02:29.874068"
     },
     {
       "id": "netease",
@@ -763,20 +763,21 @@
       "id": "pragmatik-labs",
       "name": "Pragmatik Labs",
       "country": "中国",
-      "hot_score": 55,
+      "hot_score": 50,
       "hot_level": "温热",
       "last_event": "林俊旸官宣创业公司Pragmatik Labs",
-      "last_event_date": "2026-08-12",
+      "last_event_date": "2026-08-13",
       "last_event_url": "https://www.jiqizhixin.com/",
       "flagship_models": [],
       "key_people": [
         "林俊旸-创始人"
       ],
       "focus_areas": [
-        "大模型"
+        "大模型",
+        "创业"
       ],
       "confidence": "medium",
-      "updated_at": "2026-08-12T21:03:08.071529"
+      "updated_at": "2026-08-13T07:02:29.874068"
     },
     {
       "id": "xihu-university",
@@ -818,19 +819,21 @@
       "id": "meitu",
       "name": "美图",
       "country": "中国",
-      "hot_score": 55,
+      "hot_score": 40,
       "hot_level": "温热",
-      "last_event": "美图影像研究院11篇顶会论文，让大众爱用AI",
-      "last_event_date": "2026-08-12",
+      "last_event": "美图影像研究院11篇顶会论文之外，让大众爱用AI",
+      "last_event_date": "2026-08-13",
       "last_event_url": "https://www.jiqizhixin.com/",
       "flagship_models": [],
-      "key_people": [],
+      "key_people": [
+        "吴欣鸿-创始人"
+      ],
       "focus_areas": [
-        "AI影像",
-        "计算机视觉"
+        "AI应用",
+        "影像"
       ],
       "confidence": "medium",
-      "updated_at": "2026-08-12T21:03:08.071529"
+      "updated_at": "2026-08-13T07:02:29.874068"
     },
     {
       "id": "cuhk",
@@ -902,6 +905,26 @@
       ],
       "confidence": "medium",
       "updated_at": "2026-08-12T21:03:08.071529"
+    },
+    {
+      "id": "mianbi",
+      "name": "面壁智能",
+      "country": "中国",
+      "hot_score": 45,
+      "hot_level": "温热",
+      "last_event": "面壁智能正式启动IPO：中信证券辅导，端侧模型走向资本市场",
+      "last_event_date": "2026-08-13",
+      "last_event_url": "https://www.infoq.cn/article/FEcOI8kYoGuFYq39acEo",
+      "flagship_models": [],
+      "key_people": [
+        "李大海-CEO"
+      ],
+      "focus_areas": [
+        "端侧模型",
+        "大模型"
+      ],
+      "confidence": "medium",
+      "updated_at": "2026-08-13T07:02:29.874068"
     }
   ],
   "people": [
@@ -913,23 +936,22 @@
       "influence_level": "行业领袖",
       "hot_score": 85,
       "recent_activity": "OpenAI给10亿用户免费换上GPT-5.6",
-      "recent_activity_date": "2026-08-12",
+      "recent_activity_date": "2026-08-13",
       "confidence": "high",
       "hot_level": "爆热",
       "name_en": "Sam Altman",
-      "recent_activity_url": "https://www.infoq.cn/",
+      "recent_activity_url": "https://www.infoq.cn/article/FEcOI8kYoGuFYq39acEo",
       "known_for": [
         "OpenAI",
-        "Y Combinator",
-        "AGI"
+        "Y Combinator"
       ],
       "related_providers": [
         "openai"
       ],
       "related_llms": [
-        "gpt-5.6"
+        "gpt-5-6"
       ],
-      "updated_at": "2026-08-12T13:00:01.784874"
+      "updated_at": "2026-08-13T07:02:29.874068"
     },
     {
       "id": "dario-amodei",
@@ -965,28 +987,26 @@
       "id": "liang-wenfeng",
       "name": "梁文锋",
       "name_en": "Liang Wenfeng",
-      "title": "DeepSeek 创始人兼CEO",
+      "title": "DeepSeek 创始人",
       "employer_id": "deepseek",
       "known_for": [
         "DeepSeek",
-        "量化投资",
-        "开源大模型"
+        "幻方量化"
       ],
       "influence_level": "行业领袖",
-      "hot_score": 70,
-      "hot_level": "高热",
+      "hot_score": 85,
+      "hot_level": "爆热",
       "recent_activity": "DeepSeek 以 1.41 亿元认购宇树科技 IPO 战略配售",
-      "recent_activity_date": "2026-08-12",
-      "recent_activity_url": "https://www.jiqizhixin.com/",
+      "recent_activity_date": "2026-08-13",
+      "recent_activity_url": "https://www.infoq.cn/article/FEcOI8kYoGuFYq39acEo",
       "related_providers": [
-        "deepseek",
-        "unitree"
+        "deepseek"
       ],
       "related_llms": [
         "deepseek-v4-flash"
       ],
       "confidence": "high",
-      "updated_at": "2026-08-12T13:00:01.784874"
+      "updated_at": "2026-08-13T07:02:29.874068"
     },
     {
       "id": "demis-hassabis",
@@ -1027,21 +1047,20 @@
       "hot_level": "平稳"
     },
     {
-      "id": "yang-zhilin",
+      "id": "yang-zhiping",
       "name": "杨植麟",
       "name_en": "Yang Zhilin",
-      "title": "创始人兼CEO",
+      "title": "月之暗面创始人",
       "employer_id": "moonshot",
       "known_for": [
-        "月之暗面",
         "Kimi",
-        "Transformer-XL"
+        "大模型"
       ],
-      "influence_level": "核心人物",
-      "hot_score": 75,
-      "hot_level": "高热",
+      "influence_level": "行业领袖",
+      "hot_score": 80,
+      "hot_level": "爆热",
       "recent_activity": "Kimi K3 引爆价格战，中国大模型周调用量全球登顶",
-      "recent_activity_date": "2026-08-11",
+      "recent_activity_date": "2026-08-13",
       "recent_activity_url": "https://36kr.com/p/3926124303906946",
       "related_providers": [
         "moonshot"
@@ -1050,7 +1069,7 @@
         "kimi-k3"
       ],
       "confidence": "high",
-      "updated_at": "2026-08-11T21:04:01.255661"
+      "updated_at": "2026-08-13T07:02:29.874068"
     },
     {
       "id": "kaifulee",
@@ -1110,14 +1129,13 @@
       "employer_id": "tsinghua",
       "known_for": [
         "知识图谱",
-        "大模型",
-        "认知智能"
+        "大模型"
       ],
       "influence_level": "行业领袖",
       "hot_score": 65,
       "hot_level": "高热",
       "recent_activity": "清华唐杰团队揭示大模型记忆全景",
-      "recent_activity_date": "2026-08-12",
+      "recent_activity_date": "2026-08-13",
       "related_providers": [
         "tsinghua"
       ],
@@ -1125,7 +1143,7 @@
         "glm"
       ],
       "confidence": "high",
-      "updated_at": "2026-08-12T21:03:08.071529",
+      "updated_at": "2026-08-13T07:02:29.874068",
       "recent_activity_url": "https://36kr.com/p/3926253551679881"
     },
     {
@@ -1329,45 +1347,45 @@
       "updated_at": "2026-06-11T19:40:11+08:00"
     },
     {
-      "id": "lihaisong",
+      "id": "li-dahai",
       "name": "李大海",
       "name_en": "Li Dahai",
-      "title": "CEO, 面壁智能",
-      "employer_id": "facewall",
+      "title": "面壁智能 CEO",
+      "employer_id": "mianbi",
       "known_for": [
-        "面壁智能 CEO",
-        "MiniCPM 系列推动者",
-        "端侧 AI 倡导者"
+        "面壁智能",
+        "端侧模型"
       ],
-      "influence_level": "新锐",
-      "hot_score": 10,
-      "hot_level": "平稳",
-      "recent_activity": "MiniCPM 3 发布，2B 参数超越 Llama 3 8B",
-      "recent_activity_date": "2026-06-05",
+      "influence_level": "核心人物",
+      "hot_score": 35,
+      "hot_level": "温热",
+      "recent_activity": "面壁智能正式启动IPO",
+      "recent_activity_date": "2026-08-13",
       "related_providers": [
-        "facewall"
+        "mianbi"
       ],
       "related_llms": [
         "minicpm-3"
       ],
-      "confidence": "high",
-      "updated_at": "2026-06-11T19:40:11+08:00"
+      "confidence": "medium",
+      "updated_at": "2026-08-13T07:02:29.874068",
+      "recent_activity_url": "https://www.infoq.cn/article/FEcOI8kYoGuFYq39acEo"
     },
     {
       "id": "yan-junjie",
       "name": "闫俊杰",
       "name_en": "Yan Junjie",
-      "title": "MiniMax CEO",
+      "title": "MiniMax 创始人",
       "employer_id": "minimax",
       "known_for": [
         "MiniMax",
-        "商汤科技前副总裁"
+        "大模型"
       ],
       "influence_level": "核心人物",
-      "hot_score": 65,
+      "hot_score": 60,
       "hot_level": "高热",
-      "recent_activity": "MiniMax H3 团队 Reddit 被问爆",
-      "recent_activity_date": "2026-08-12",
+      "recent_activity": "MiniMax H3 团队 Reddit 被问爆：2K 要开源",
+      "recent_activity_date": "2026-08-13",
       "related_providers": [
         "minimax"
       ],
@@ -1375,7 +1393,7 @@
         "h3"
       ],
       "confidence": "high",
-      "updated_at": "2026-08-12T13:00:01.784874",
+      "updated_at": "2026-08-13T07:02:29.874068",
       "recent_activity_url": "https://www.infoq.cn/article/9C3eK9tJqDXbabbBy3aj"
     },
     {
@@ -1408,26 +1426,25 @@
       "name": "马克·扎克伯格",
       "name_en": "Mark Zuckerberg",
       "title": "Meta CEO",
-      "employer_id": "mete",
+      "employer_id": "meta",
       "known_for": [
         "Facebook",
-        "Meta",
-        "开源AI"
+        "Meta"
       ],
       "influence_level": "行业领袖",
-      "hot_score": 70,
-      "hot_level": "高热",
+      "hot_score": 80,
+      "hot_level": "爆热",
       "recent_activity": "万字长文炮轰闭源：蒸馏无罪，Meta 正式重回开源模型路线",
-      "recent_activity_date": "2026-08-12",
+      "recent_activity_date": "2026-08-13",
       "related_providers": [
-        "mete"
+        "meta"
       ],
       "related_llms": [
         "llama"
       ],
       "confidence": "high",
-      "updated_at": "2026-08-12T21:03:08.071529",
-      "recent_activity_url": "https://www.infoq.cn/article/YBCpst8secs3xWqZwWLe"
+      "updated_at": "2026-08-13T07:02:29.874068",
+      "recent_activity_url": "https://www.infoq.cn/article/FEcOI8kYoGuFYq39acEo"
     },
     {
       "id": "qingfeng",
@@ -1862,21 +1879,20 @@
       "title": "Pragmatik Labs 创始人",
       "employer_id": "pragmatik-labs",
       "influence_level": "核心人物",
-      "hot_score": 70,
+      "hot_score": 75,
       "hot_level": "高热",
       "recent_activity": "官宣创业公司Pragmatik Labs",
-      "recent_activity_date": "2026-08-12",
+      "recent_activity_date": "2026-08-13",
       "recent_activity_url": "https://www.jiqizhixin.com/",
       "known_for": [
-        "大模型",
-        "AI创业"
+        "大模型研究"
       ],
       "related_providers": [
         "pragmatik-labs"
       ],
       "related_llms": [],
       "confidence": "medium",
-      "updated_at": "2026-08-12T21:03:08.071529"
+      "updated_at": "2026-08-13T07:02:29.874068"
     },
     {
       "id": "zhu-guangquan",
@@ -2385,27 +2401,27 @@
     {
       "id": "ma-huateng",
       "name": "马化腾",
-      "name_en": "Pony Ma",
+      "name_en": "Ma Huateng",
       "title": "腾讯创始人",
-      "employer_id": "tencent-cloud",
+      "employer_id": "tencent",
       "influence_level": "行业领袖",
-      "hot_score": 45,
+      "hot_score": 55,
       "hot_level": "温热",
-      "recent_activity": "腾讯云推出混元 ASR 语音识别服务",
-      "recent_activity_date": "2026-08-11",
-      "recent_activity_url": "https://www.jiqizhixin.com/",
+      "recent_activity": "腾讯云重构 Agent 沙箱，混元 ASR 推出新一代语音识别服务",
+      "recent_activity_date": "2026-08-13",
+      "recent_activity_url": "https://www.infoq.cn/article/KwZX2bLcaHRjuLG95vHI",
       "known_for": [
         "腾讯",
         "微信"
       ],
       "related_providers": [
-        "tencent-cloud"
+        "tencent"
       ],
       "related_llms": [
-        "混元 ASR"
+        "hunyuan-asr"
       ],
-      "confidence": "low",
-      "updated_at": "2026-08-11T14:04:44.043104"
+      "confidence": "high",
+      "updated_at": "2026-08-13T07:02:29.874068"
     },
     {
       "id": "lei-jun",
@@ -2416,19 +2432,19 @@
       "influence_level": "行业领袖",
       "hot_score": 40,
       "hot_level": "温热",
-      "recent_activity": "行业动态提及",
-      "recent_activity_date": "2026-08-11",
-      "recent_activity_url": "https://www.jiqizhixin.com/",
+      "recent_activity": "小米大模型厂商启动IPO，估值200亿",
+      "recent_activity_date": "2026-08-13",
+      "recent_activity_url": "https://36kr.com/p/3936412212903048",
       "known_for": [
         "小米",
-        "金山软件"
+        "金山"
       ],
       "related_providers": [
         "xiaomi"
       ],
       "related_llms": [],
-      "confidence": "low",
-      "updated_at": "2026-08-11T14:04:44.043104"
+      "confidence": "medium",
+      "updated_at": "2026-08-13T07:02:29.874068"
     },
     {
       "id": "google-ai-studio-head",
@@ -2804,16 +2820,15 @@
       "id": "jeff-dean",
       "name": "杰夫·迪恩",
       "name_en": "Jeff Dean",
-      "title": "前谷歌首席科学家、Discovery Loop创始人",
+      "title": "前谷歌首席科学家、Discovery Loop 创始人",
       "employer_id": "discovery-loop",
       "influence_level": "行业领袖",
-      "hot_score": 90,
+      "hot_score": 95,
       "hot_level": "爆热",
       "recent_activity": "离职谷歌，创立 Discovery Loop",
-      "recent_activity_date": "2026-08-12",
+      "recent_activity_date": "2026-08-13",
       "recent_activity_url": "https://www.jiqizhixin.com/",
       "known_for": [
-        "谷歌大脑",
         "TensorFlow",
         "大规模分布式系统"
       ],
@@ -2823,7 +2838,7 @@
       ],
       "related_llms": [],
       "confidence": "high",
-      "updated_at": "2026-08-12T21:03:08.071529"
+      "updated_at": "2026-08-13T07:02:29.874068"
     },
     {
       "id": "zhang-yiming",
@@ -2832,15 +2847,14 @@
       "title": "字节跳动创始人",
       "employer_id": "bytedance",
       "influence_level": "行业领袖",
-      "hot_score": 85,
+      "hot_score": 90,
       "hot_level": "爆热",
       "recent_activity": "反对蒸馏，字节拟训练超5万亿参数模型",
-      "recent_activity_date": "2026-08-12",
+      "recent_activity_date": "2026-08-13",
       "recent_activity_url": "https://36kr.com/p/3935748520459653",
       "known_for": [
         "字节跳动",
-        "抖音",
-        "TikTok"
+        "抖音"
       ],
       "related_providers": [
         "bytedance"
@@ -2849,7 +2863,7 @@
         "doubao"
       ],
       "confidence": "high",
-      "updated_at": "2026-08-12T21:03:08.071529"
+      "updated_at": "2026-08-13T07:02:29.874068"
     },
     {
       "id": "kishorekumar-pattabiraman",
@@ -2878,25 +2892,24 @@
       "id": "wang-xingxing",
       "name": "王兴兴",
       "name_en": "Wang Xingxing",
-      "title": "宇树科技创始人兼CEO",
+      "title": "宇树科技创始人",
       "employer_id": "unitree",
       "influence_level": "核心人物",
-      "hot_score": 72,
+      "hot_score": 70,
       "hot_level": "高热",
-      "recent_activity": "宇树科技IPO申购，或出一批90后千万富豪",
-      "recent_activity_date": "2026-08-12",
-      "recent_activity_url": "https://www.infoq.cn/",
+      "recent_activity": "宇树科技 IPO 申购，DeepSeek 认购战略配售",
+      "recent_activity_date": "2026-08-13",
+      "recent_activity_url": "https://www.infoq.cn/article/FEcOI8kYoGuFYq39acEo",
       "known_for": [
         "宇树科技",
-        "四足机器人",
-        "具身智能"
+        "四足机器人"
       ],
       "related_providers": [
         "unitree"
       ],
       "related_llms": [],
       "confidence": "high",
-      "updated_at": "2026-08-12T13:00:01.784874"
+      "updated_at": "2026-08-13T07:02:29.874068"
     },
     {
       "id": "karpathy",
@@ -2950,10 +2963,10 @@
       "title": "微软 CEO",
       "employer_id": "microsoft",
       "influence_level": "行业领袖",
-      "hot_score": 70,
+      "hot_score": 60,
       "hot_level": "高热",
       "recent_activity": "微软正式发布 Agent Framework Harness 和 Hosted Agents",
-      "recent_activity_date": "2026-08-11",
+      "recent_activity_date": "2026-08-13",
       "recent_activity_url": "https://www.infoq.cn/article/aDEJegvNSKwvue2JZ0yI",
       "known_for": [
         "微软",
@@ -2964,7 +2977,7 @@
       ],
       "related_llms": [],
       "confidence": "high",
-      "updated_at": "2026-08-11T14:04:44.043104"
+      "updated_at": "2026-08-13T07:02:29.874068"
     },
     {
       "id": "sridhar-ramaswamy",
@@ -2975,67 +2988,67 @@
       "influence_level": "核心人物",
       "hot_score": 55,
       "hot_level": "温热",
-      "recent_activity": "Snowflake 财报显示33%增速、126%留存",
-      "recent_activity_date": "2026-08-12",
+      "recent_activity": "Snowflake 财报亮眼，33% 增速、126% 留存",
+      "recent_activity_date": "2026-08-13",
       "recent_activity_url": "https://www.infoq.cn/article/lWRKAhlso9f7OobiGXDI",
       "known_for": [
         "Snowflake",
-        "Google Ads 前负责人"
+        "Google Ads"
       ],
       "related_providers": [
         "snowflake"
       ],
       "related_llms": [],
       "confidence": "high",
-      "updated_at": "2026-08-12T13:00:01.784874"
+      "updated_at": "2026-08-13T07:02:29.874068"
     },
     {
       "id": "wu-yongming",
       "name": "吴泳铭",
       "name_en": "Wu Yongming",
-      "title": "阿里云 CEO",
-      "employer_id": "alibaba-cloud",
+      "title": "阿里巴巴 CEO",
+      "employer_id": "alibaba",
       "influence_level": "核心人物",
-      "hot_score": 60,
-      "hot_level": "高热",
-      "recent_activity": "阿里云 Fluss 跻身 Apache 顶级项目",
-      "recent_activity_date": "2026-08-11",
+      "hot_score": 50,
+      "hot_level": "温热",
+      "recent_activity": "阿里云开源 Fluss 跻身 Apache 顶级项目",
+      "recent_activity_date": "2026-08-13",
       "recent_activity_url": "https://www.infoq.cn/article/7bo2icFyxY9lN0htzSZx",
       "known_for": [
         "阿里巴巴",
         "阿里云"
       ],
       "related_providers": [
-        "alibaba-cloud"
+        "alibaba"
       ],
       "related_llms": [
-        "qwen3.8-max"
+        "qwen3-8-max"
       ],
       "confidence": "high",
-      "updated_at": "2026-08-11T14:04:44.043104"
+      "updated_at": "2026-08-13T07:02:29.874068"
     },
     {
       "id": "jing-xian-dong",
       "name": "井贤栋",
       "name_en": "Jing Xiandong",
       "title": "蚂蚁集团董事长",
-      "employer_id": "ant-group",
+      "employer_id": "ant",
       "influence_level": "核心人物",
-      "hot_score": 55,
+      "hot_score": 35,
       "hot_level": "温热",
-      "recent_activity": "蚂蚁开源 Avernet，为多智能体协作搭建操作系统",
-      "recent_activity_date": "2026-08-11",
+      "recent_activity": "蚂蚁开源Avernet，为多智能体协作搭建操作系统",
+      "recent_activity_date": "2026-08-13",
       "recent_activity_url": "https://www.infoq.cn/article/iNvHOsahsYFYaE9ImZBV",
       "known_for": [
         "蚂蚁集团",
         "支付宝"
       ],
       "related_providers": [
-        "ant-group"
+        "ant"
       ],
       "related_llms": [],
       "confidence": "high",
-      "updated_at": "2026-08-11T14:04:44.043104"
+      "updated_at": "2026-08-13T07:02:29.874068"
     },
     {
       "id": "cheng-yixiao",
@@ -3070,18 +3083,17 @@
       "hot_score": 45,
       "hot_level": "温热",
       "recent_activity": "华为重新定义存储的位置",
-      "recent_activity_date": "2026-08-11",
+      "recent_activity_date": "2026-08-13",
       "recent_activity_url": "https://www.infoq.cn/article/qBHKWa0AabfP0Fs8rGrk",
       "known_for": [
-        "华为",
-        "5G"
+        "华为"
       ],
       "related_providers": [
         "huawei"
       ],
       "related_llms": [],
-      "confidence": "low",
-      "updated_at": "2026-08-11T14:04:44.043104"
+      "confidence": "high",
+      "updated_at": "2026-08-13T07:02:29.874068"
     },
     {
       "id": "shen-yujun",
@@ -3134,13 +3146,13 @@
       "id": "hao-jianye",
       "name": "郝建业",
       "name_en": "Hao Jianye",
-      "title": "创业者",
+      "title": "大模型记忆创业者",
       "employer_id": "",
       "influence_level": "核心人物",
-      "hot_score": 60,
+      "hot_score": 70,
       "hot_level": "高热",
       "recent_activity": "给大模型做记忆，半年融三轮",
-      "recent_activity_date": "2026-08-12",
+      "recent_activity_date": "2026-08-13",
       "recent_activity_url": "https://36kr.com/p/3935837932518536",
       "known_for": [
         "大模型记忆"
@@ -3148,30 +3160,75 @@
       "related_providers": [],
       "related_llms": [],
       "confidence": "medium",
-      "updated_at": "2026-08-12T21:03:08.071529"
+      "updated_at": "2026-08-13T07:02:29.874068"
+    },
+    {
+      "id": "wang-wenjing",
+      "name": "王文京",
+      "name_en": "Wang Wenjing",
+      "title": "用友创始人",
+      "employer_id": "yonyou",
+      "influence_level": "核心人物",
+      "hot_score": 30,
+      "hot_level": "温热",
+      "recent_activity": "用友 iuap 全面升级企业 AI 底座",
+      "recent_activity_date": "2026-08-13",
+      "recent_activity_url": "https://www.infoq.cn/article/FEcOI8kYoGuFYq39acEo",
+      "known_for": [
+        "用友",
+        "ERP"
+      ],
+      "related_providers": [
+        "yonyou"
+      ],
+      "related_llms": [],
+      "confidence": "medium",
+      "updated_at": "2026-08-13T07:02:29.874068"
+    },
+    {
+      "id": "wu-xinhong",
+      "name": "吴欣鸿",
+      "name_en": "Wu Xinhong",
+      "title": "美图创始人",
+      "employer_id": "meitu",
+      "influence_level": "核心人物",
+      "hot_score": 25,
+      "hot_level": "平稳",
+      "recent_activity": "美图影像研究院让大众爱用AI",
+      "recent_activity_date": "2026-08-13",
+      "recent_activity_url": "https://www.jiqizhixin.com/",
+      "known_for": [
+        "美图"
+      ],
+      "related_providers": [
+        "meitu"
+      ],
+      "related_llms": [],
+      "confidence": "medium",
+      "updated_at": "2026-08-13T07:02:29.874068"
     }
   ],
   "tools": [
     {
       "id": "agent-framework-harness",
       "name": "Agent Framework Harness",
-      "category": "Agent框架",
+      "category": "Agent 框架",
       "website": "https://www.infoq.cn/article/aDEJegvNSKwvue2JZ0yI",
       "github": "",
-      "description": "微软发布的 Agent Framework 生产运行时，将 Agent Framework 从 SDK 阶段推进至受支持的生产运行时",
+      "description": "微软正式发布的 Agent Framework 生产运行时，从 SDK 阶段推进至受支持的生产运行时",
       "pricing_model": "商业",
       "maturity": "生产就绪",
-      "hot_score": 75,
+      "hot_score": 68,
       "hot_level": "高热",
       "last_update": "微软正式发布 Agent Framework Harness 和 Hosted Agents",
-      "last_update_date": "2026-08-12",
+      "last_update_date": "2026-08-13",
       "last_update_url": "https://www.infoq.cn/article/aDEJegvNSKwvue2JZ0yI",
       "related_providers": [
         "microsoft"
       ],
       "related_llms": [],
       "confidence": "high",
-      "updated_at": "2026-08-12T21:03:08.071529"
+      "updated_at": "2026-08-13T07:02:29.874068"
     },
     {
       "id": "avernet",
@@ -3179,20 +3236,20 @@
       "category": "多智能体协作平台",
       "website": "https://www.infoq.cn/article/iNvHOsahsYFYaE9ImZBV",
       "github": "",
-      "description": "蚂蚁开源的多智能体协作操作系统，支持不同智能体之间的发现、共识、跨团队协作与治理，内部跑通12大业务、任务完成率超90%",
+      "description": "蚂蚁开源的多智能体协作操作系统，支持智能体发现、共识、跨团队协作与治理，内部跑通12大业务、任务完成率超90%",
       "pricing_model": "开源免费",
       "maturity": "生产就绪",
-      "hot_score": 70,
+      "hot_score": 72,
       "hot_level": "高热",
-      "last_update": "蚂蚁开源Avernet，为多智能体协作搭建操作系统",
-      "last_update_date": "2026-08-12",
+      "last_update": "蚂蚁开源Avernet",
+      "last_update_date": "2026-08-13",
       "last_update_url": "https://www.infoq.cn/article/iNvHOsahsYFYaE9ImZBV",
       "related_providers": [
-        "antgroup"
+        "ant"
       ],
       "related_llms": [],
       "confidence": "high",
-      "updated_at": "2026-08-12T21:03:08.071529"
+      "updated_at": "2026-08-13T07:02:29.874068"
     },
     {
       "id": "muse-code",
@@ -3223,13 +3280,13 @@
       "category": "自动化代理构建工具",
       "website": "https://www.jiqizhixin.com/",
       "github": "",
-      "description": "自动化代理构建工具，输入一句话即可生成完整代理应用，支持代理自我进化，深度优化 DeepSeek 等开放模型，成本仅为 Claude Code 的 1/70",
+      "description": "自动化代理构建工具，输入一句话即可生成完整代理应用，深度优化 DeepSeek 等开放模型，成本仅为 Claude Code 的 1/70",
       "pricing_model": "开源免费",
       "maturity": "可用",
-      "hot_score": 55,
+      "hot_score": 45,
       "hot_level": "温热",
-      "last_update": "PenguinHarness 自动化代理构建工具发布",
-      "last_update_date": "2026-08-12",
+      "last_update": "发布",
+      "last_update_date": "2026-08-13",
       "last_update_url": "https://www.jiqizhixin.com/",
       "related_providers": [
         "deepseek"
@@ -3238,7 +3295,7 @@
         "deepseek-v4-flash"
       ],
       "confidence": "medium",
-      "updated_at": "2026-08-12T21:03:08.071529"
+      "updated_at": "2026-08-13T07:02:29.874068"
     },
     {
       "id": "forgestencil",
@@ -3246,41 +3303,41 @@
       "category": "自主智能体系统",
       "website": "https://www.jiqizhixin.com/",
       "github": "",
-      "description": "LLM 驱动的自主智能体系统，自动完成 stencil 优化从研究到部署的全闭环，在100个端到端验证应用中实现中位数1.41倍加速",
+      "description": "LLM 驱动的自主智能体系统，自动完成 stencil 优化从研究到部署的全闭环，在 100 个端到端验证应用中实现中位数 1.41 倍加速",
       "pricing_model": "开源免费",
       "maturity": "可用",
-      "hot_score": 50,
+      "hot_score": 40,
       "hot_level": "温热",
-      "last_update": "ForgeStencil 自主智能体系统发布",
-      "last_update_date": "2026-08-12",
+      "last_update": "发布",
+      "last_update_date": "2026-08-13",
       "last_update_url": "https://www.jiqizhixin.com/",
       "related_providers": [],
       "related_llms": [],
       "confidence": "medium",
-      "updated_at": "2026-08-12T21:03:08.071529"
+      "updated_at": "2026-08-13T07:02:29.874068"
     },
     {
       "id": "veriloop-coder-e1",
       "name": "VeriLoop Coder-E1",
-      "category": "编码智能系统",
+      "category": "代码智能系统",
       "website": "https://www.jiqizhixin.com/",
       "github": "",
       "description": "清华大学 SIGS 机器人实验室开发的编码智能系统开放模型组件，基于 Qwen3.5 多模态基座（27B），引入证据治理修正设计",
       "pricing_model": "开源免费",
       "maturity": "可用",
-      "hot_score": 50,
+      "hot_score": 35,
       "hot_level": "温热",
-      "last_update": "VeriLoop Coder-E1 开放模型组件发布",
-      "last_update_date": "2026-08-12",
+      "last_update": "发布",
+      "last_update_date": "2026-08-13",
       "last_update_url": "https://www.jiqizhixin.com/",
       "related_providers": [
         "tsinghua"
       ],
       "related_llms": [
-        "qwen3-8-max"
+        "qwen3-5"
       ],
       "confidence": "medium",
-      "updated_at": "2026-08-12T21:03:08.071529"
+      "updated_at": "2026-08-13T07:02:29.874068"
     },
     {
       "id": "dwarfstar",
@@ -3288,13 +3345,13 @@
       "category": "本地推理引擎",
       "website": "https://www.jiqizhixin.com/",
       "github": "",
-      "description": "专为 DeepSeek V4 Flash 等先进开放权重模型设计的小型原生本地推理引擎，支持 Apple Silicon Metal、NVIDIA CUDA、AMD ROCm 后端",
+      "description": "专为 DeepSeek V4 Flash 等先进开放权重模型设计的小型原生本地推理引擎，支持 Apple Silicon、CUDA、ROCm 后端",
       "pricing_model": "开源免费",
       "maturity": "可用",
-      "hot_score": 50,
+      "hot_score": 35,
       "hot_level": "温热",
-      "last_update": "DwarfStar 本地推理引擎发布",
-      "last_update_date": "2026-08-12",
+      "last_update": "发布",
+      "last_update_date": "2026-08-13",
       "last_update_url": "https://www.jiqizhixin.com/",
       "related_providers": [
         "deepseek"
@@ -3303,7 +3360,7 @@
         "deepseek-v4-flash"
       ],
       "confidence": "medium",
-      "updated_at": "2026-08-12T21:03:08.071529"
+      "updated_at": "2026-08-13T07:02:29.874068"
     },
     {
       "id": "barunlm-35m",
@@ -3314,15 +3371,15 @@
       "description": "仅 35M 参数的基础语言模型，在 100M 参数以下模型中取得最佳零样本性能（41.01% 宏准确率），模型权重、推理代码及基准结果均已开源",
       "pricing_model": "开源免费",
       "maturity": "可用",
-      "hot_score": 45,
+      "hot_score": 30,
       "hot_level": "温热",
-      "last_update": "BarunLM-35M 发布",
-      "last_update_date": "2026-08-12",
+      "last_update": "发布",
+      "last_update_date": "2026-08-13",
       "last_update_url": "https://www.jiqizhixin.com/",
       "related_providers": [],
       "related_llms": [],
       "confidence": "medium",
-      "updated_at": "2026-08-12T21:03:08.071529"
+      "updated_at": "2026-08-13T07:02:29.874068"
     },
     {
       "id": "hunyuan-asr",
@@ -3330,13 +3387,13 @@
       "category": "语音识别服务",
       "website": "https://www.jiqizhixin.com/",
       "github": "",
-      "description": "腾讯云推出的新一代语音识别服务（内测版），基于大模型2.0引擎，核心算法 Hy-ASR-3.0-preview 支持中文普通话、英语及20种方言混合识别",
+      "description": "腾讯云推出的新一代语音识别服务（内测版），基于大模型2.0引擎，支持中文普通话、英语及20种方言的混合识别",
       "pricing_model": "Freemium",
-      "maturity": "实验",
-      "hot_score": 55,
+      "maturity": "可用",
+      "hot_score": 45,
       "hot_level": "温热",
-      "last_update": "混元 ASR 语音识别服务内测",
-      "last_update_date": "2026-08-12",
+      "last_update": "混元 ASR 推出内测版",
+      "last_update_date": "2026-08-13",
       "last_update_url": "https://www.jiqizhixin.com/",
       "related_providers": [
         "tencent"
@@ -3344,8 +3401,8 @@
       "related_llms": [
         "hunyuan-asr"
       ],
-      "confidence": "medium",
-      "updated_at": "2026-08-12T21:03:08.071529"
+      "confidence": "high",
+      "updated_at": "2026-08-13T07:02:29.874068"
     },
     {
       "id": "fliggy-v10",
@@ -3617,17 +3674,17 @@
       "description": "阿里云开源的流存储，正式跻身 Apache 顶级项目，被称为 Agentic lake 的最强底座",
       "pricing_model": "开源免费",
       "maturity": "生产就绪",
-      "hot_score": 70,
+      "hot_score": 75,
       "hot_level": "高热",
-      "last_update": "阿里云开源的流存储Fluss 正式跻身 Apache 顶级项目",
-      "last_update_date": "2026-08-12",
+      "last_update": "正式跻身 Apache 顶级项目",
+      "last_update_date": "2026-08-13",
       "last_update_url": "https://www.infoq.cn/article/7bo2icFyxY9lN0htzSZx",
       "related_providers": [
         "alibaba"
       ],
       "related_llms": [],
       "confidence": "high",
-      "updated_at": "2026-08-12T21:03:08.071529"
+      "updated_at": "2026-08-13T07:02:29.874068"
     },
     {
       "id": "qqworld",
@@ -3691,23 +3748,23 @@
     {
       "id": "langalpha",
       "name": "LangAlpha",
-      "category": "金融AI工作流",
+      "category": "金融 AI 工具",
       "website": "",
       "github": "",
-      "description": "开源金融领域的 Claude Code，用自然语言驱动投研工作流，从一句投资直觉到一套可验证、可回溯、可持续运行的金融工作流",
+      "description": "开源金融领域的 Claude Code，用自然语言驱动投研工作流",
       "pricing_model": "开源免费",
       "maturity": "可用",
-      "hot_score": 45,
+      "hot_score": 50,
       "hot_level": "温热",
       "last_update": "开源LangAlpha正式发布",
-      "last_update_date": "2026-08-12",
-      "last_update_url": "https://www.infoq.cn/article/YBCpst8secs3xWqZwWLe",
+      "last_update_date": "2026-08-13",
+      "last_update_url": "https://www.infoq.cn/article/FEcOI8kYoGuFYq39acEo",
       "related_providers": [
         "langalpha"
       ],
       "related_llms": [],
       "confidence": "medium",
-      "updated_at": "2026-08-12T21:03:08.071529"
+      "updated_at": "2026-08-13T07:02:29.874068"
     },
     {
       "id": "mcp-http",
@@ -3792,23 +3849,23 @@
     {
       "id": "yonwork",
       "name": "YonWork",
-      "category": "企业AI底座",
+      "category": "企业 AI 底座",
       "website": "",
       "github": "",
-      "description": "用友 iuap 全面升级企业 AI 底座，YonWork/YonData/YonCode 三大引擎亮相用友 GBIC 2026",
+      "description": "用友 iuap 全面升级企业 AI 底座，YonWork/YonData/YonCode 三大引擎亮相 GBIC 2026",
       "pricing_model": "商业",
       "maturity": "生产就绪",
-      "hot_score": 45,
+      "hot_score": 30,
       "hot_level": "温热",
-      "last_update": "用友 iuap 全面升级企业 AI 底座",
-      "last_update_date": "2026-08-12",
-      "last_update_url": "https://www.infoq.cn/article/YBCpst8secs3xWqZwWLe",
+      "last_update": "用友 GBIC 2026 亮相",
+      "last_update_date": "2026-08-13",
+      "last_update_url": "https://www.infoq.cn/article/FEcOI8kYoGuFYq39acEo",
       "related_providers": [
         "yonyou"
       ],
       "related_llms": [],
       "confidence": "medium",
-      "updated_at": "2026-08-12T21:03:08.071529"
+      "updated_at": "2026-08-13T07:02:29.874068"
     },
     {
       "id": "yondata",
@@ -3876,42 +3933,42 @@
     {
       "id": "ponytail",
       "name": "Ponytail",
-      "category": "AI编码代理技能",
+      "category": "AI 编码代理技能",
       "website": "",
       "github": "",
       "description": "开源技能，指导 AI 编码代理像房间里最懒的资深开发者那样行事，在贡献者提出质疑后修正了自身的基准测试结果",
       "pricing_model": "开源免费",
       "maturity": "可用",
-      "hot_score": 60,
-      "hot_level": "高热",
-      "last_update": "代理技能 Ponytail 在贡献者提出质疑后修正了自身的基准测试结果",
-      "last_update_date": "2026-08-12",
+      "hot_score": 55,
+      "hot_level": "温热",
+      "last_update": "修正了自身的基准测试结果",
+      "last_update_date": "2026-08-13",
       "last_update_url": "https://www.infoq.cn/article/uHECxUzeafk9Nbzpxi25",
       "related_providers": [],
       "related_llms": [],
       "confidence": "high",
-      "updated_at": "2026-08-12T21:03:08.071529"
+      "updated_at": "2026-08-13T07:02:29.874068"
     },
     {
       "id": "workbuddy",
       "name": "腾讯WorkBuddy",
-      "category": "企业AI助手",
+      "category": "企业 AI 助手",
       "website": "",
       "github": "",
-      "description": "腾讯企业AI助手，升级多端同步，支持手机远程授权和停止电脑端任务，PC、APP 和小程序之间同步任务、对话记录、工作空间分组及任务产物",
+      "description": "腾讯企业 AI 助手，升级多端同步，支持手机远程授权和停止电脑端任务",
       "pricing_model": "商业",
       "maturity": "生产就绪",
-      "hot_score": 50,
+      "hot_score": 40,
       "hot_level": "温热",
-      "last_update": "腾讯WorkBuddy升级多端同步",
-      "last_update_date": "2026-08-12",
-      "last_update_url": "https://www.infoq.cn/article/YBCpst8secs3xWqZwWLe",
+      "last_update": "升级多端同步",
+      "last_update_date": "2026-08-13",
+      "last_update_url": "https://www.infoq.cn/article/FEcOI8kYoGuFYq39acEo",
       "related_providers": [
         "tencent"
       ],
       "related_llms": [],
       "confidence": "medium",
-      "updated_at": "2026-08-12T21:03:08.071529"
+      "updated_at": "2026-08-13T07:02:29.874068"
     },
     {
       "id": "cortex-agents",
@@ -4062,13 +4119,13 @@
       "category": "Agentic RL 后训练资源分配",
       "website": "",
       "github": "",
-      "description": "港中文、恒生大学提出的 Agentic RL 后训练资源分配方案，吞吐最高提升 3 倍",
+      "description": "港中文、恒生大学提出，Agentic RL 后训练资源分配方案，吞吐最高提升 3 倍",
       "pricing_model": "开源免费",
       "maturity": "实验",
-      "hot_score": 45,
+      "hot_score": 30,
       "hot_level": "温热",
-      "last_update": "港中文、恒生大学提出 Libra",
-      "last_update_date": "2026-08-12",
+      "last_update": "发布",
+      "last_update_date": "2026-08-13",
       "last_update_url": "https://www.jiqizhixin.com/",
       "related_providers": [
         "cuhk",
@@ -4076,7 +4133,28 @@
       ],
       "related_llms": [],
       "confidence": "medium",
-      "updated_at": "2026-08-12T21:03:08.071529"
+      "updated_at": "2026-08-13T07:02:29.874068"
+    },
+    {
+      "id": "feizhu-v10",
+      "name": "飞猪 AI 产品 V10",
+      "category": "消费 Agent",
+      "website": "",
+      "github": "",
+      "description": "飞猪新一代 AI 产品 V10，探索消费 Agent 从回答问题到把事办完",
+      "pricing_model": "商业",
+      "maturity": "可用",
+      "hot_score": 25,
+      "hot_level": "平稳",
+      "last_update": "发布",
+      "last_update_date": "2026-08-13",
+      "last_update_url": "https://www.infoq.cn/article/t0wslR8w8H7yeRD2MwO6",
+      "related_providers": [
+        "feizhu"
+      ],
+      "related_llms": [],
+      "confidence": "medium",
+      "updated_at": "2026-08-13T07:02:29.874068"
     }
   ],
   "llms": [
@@ -4137,28 +4215,27 @@
       "id": "gpt-5-6",
       "name": "GPT-5.6",
       "provider_id": "openai",
-      "family": "GPT-5",
-      "type": "闭源大模型",
+      "family": "GPT",
+      "type": "通用大模型",
       "open_weights": false,
       "tier": "旗舰",
       "capabilities": [
         "对话",
         "推理",
-        "编码",
         "多模态"
       ],
       "status": "发布",
-      "hot_score": 85,
+      "hot_score": 90,
       "hot_level": "爆热",
-      "hot_reason": "OpenAI给10亿用户免费换上GPT-5.6",
+      "hot_reason": "OpenAI给10亿用户免费换上GPT-5.6；防蒸馏机制全面告破",
       "last_event": "OpenAI给10亿用户免费换上GPT-5.6",
-      "last_event_date": "2026-08-12",
-      "last_event_url": "https://www.infoq.cn/article/YBCpst8secs3xWqZwWLe",
+      "last_event_date": "2026-08-13",
+      "last_event_url": "https://www.infoq.cn/article/FEcOI8kYoGuFYq39acEo",
       "related_people": [
         "sam-altman"
       ],
       "confidence": "high",
-      "updated_at": "2026-08-12T21:03:08.071529"
+      "updated_at": "2026-08-13T07:02:29.874068"
     },
     {
       "id": "gpt-5-5",
@@ -5115,29 +5192,29 @@
     },
     {
       "id": "deepseek-v4-flash",
-      "name": "DeepSeek-V4-Flash-0731",
+      "name": "DeepSeek V4 Flash",
       "provider_id": "deepseek",
-      "family": "DeepSeek V4",
-      "type": "MoE",
+      "family": "DeepSeek",
+      "type": "开放权重模型",
       "open_weights": true,
-      "tier": "旗舰",
+      "tier": "主力",
       "capabilities": [
         "推理",
         "编程",
-        "多模态"
+        "数据分析"
       ],
       "status": "发布",
-      "hot_score": 98,
+      "hot_score": 85,
       "hot_level": "爆热",
-      "hot_reason": "DeepSeek V4 Flash 发布，涨价 30 倍仍是最便宜模型，以 1.41 亿元认购宇树科技 IPO 战略配售",
-      "last_event": "DeepSeek V4 Flash 发布，涨价 30 倍仍是最便宜模型",
-      "last_event_date": "2026-08-12",
+      "hot_reason": "涨价30倍仍是最便宜的模型，DeepSeek可能有这个底气",
+      "last_event": "涨价30倍仍是最便宜的模型",
+      "last_event_date": "2026-08-13",
       "last_event_url": "https://www.infoq.cn/article/FEcOI8kYoGuFYq39acEo",
       "related_people": [
         "liang-wenfeng"
       ],
       "confidence": "high",
-      "updated_at": "2026-08-12T21:03:08.071529"
+      "updated_at": "2026-08-13T07:02:29.874068"
     },
     {
       "id": "nano-banana-2-lite",
@@ -5995,8 +6072,8 @@
       "id": "qwen3-8-max",
       "name": "Qwen3.8-Max",
       "provider_id": "qianwen",
-      "family": "Qwen3",
-      "type": "MoE大模型",
+      "family": "Qwen",
+      "type": "MoE 旗舰模型",
       "open_weights": false,
       "tier": "旗舰",
       "capabilities": [
@@ -6007,17 +6084,17 @@
         "长视频"
       ],
       "status": "发布",
-      "hot_score": 75,
-      "hot_level": "高热",
-      "hot_reason": "2.4万亿参数MoE旗舰模型，编程与办公能力全面跃升",
+      "hot_score": 80,
+      "hot_level": "爆热",
+      "hot_reason": "2.4万亿参数 MoE 旗舰模型，编程与办公能力全面跃升",
       "last_event": "Qwen3.8-Max 发布",
-      "last_event_date": "2026-08-12",
+      "last_event_date": "2026-08-13",
       "last_event_url": "https://www.jiqizhixin.com/",
       "related_people": [
         "wu-yongming"
       ],
       "confidence": "medium",
-      "updated_at": "2026-08-12T21:03:08.071529"
+      "updated_at": "2026-08-13T07:02:29.874068"
     },
     {
       "id": "muse-spark-1.2",
@@ -6123,27 +6200,26 @@
       "name": "Kimi K3",
       "provider_id": "moonshot",
       "family": "Kimi",
-      "type": "闭源大模型",
+      "type": "通用大模型",
       "open_weights": false,
       "tier": "旗舰",
       "capabilities": [
-        "对话",
+        "长上下文",
         "推理",
-        "编码",
-        "长文本"
+        "编程"
       ],
       "status": "发布",
-      "hot_score": 85,
+      "hot_score": 95,
       "hot_level": "爆热",
-      "hot_reason": "Kimi K3 引爆价格战，中国大模型周调用量全球登顶；防蒸馏机制被攻破",
-      "last_event": "Kimi K3 引爆价格战，防蒸馏机制被攻破",
-      "last_event_date": "2026-08-12",
+      "hot_reason": "引爆价格战，中国大模型周调用量全球登顶；防蒸馏机制全面告破，Kimi-K3重现概率异常",
+      "last_event": "Kimi K3 引爆价格战，中国大模型周调用量全球登顶",
+      "last_event_date": "2026-08-13",
       "last_event_url": "https://36kr.com/p/3926124303906946",
       "related_people": [
-        "yang-zhilin"
+        "yang-zhiping"
       ],
       "confidence": "high",
-      "updated_at": "2026-08-12T21:03:08.071529"
+      "updated_at": "2026-08-13T07:02:29.874068"
     },
     {
       "id": "barunlm-35m",
@@ -6172,25 +6248,24 @@
       "id": "qwen3-5",
       "name": "Qwen3.5",
       "provider_id": "alibaba",
-      "family": "Qwen3",
+      "family": "Qwen",
       "type": "多模态基座",
       "open_weights": true,
       "tier": "主力",
       "capabilities": [
         "多模态",
-        "推理",
-        "编码"
+        "代码推理"
       ],
       "status": "发布",
-      "hot_score": 50,
+      "hot_score": 40,
       "hot_level": "温热",
-      "hot_reason": "作为 VeriLoop Coder-E1 的基座模型被提及",
-      "last_event": "VeriLoop Coder-E1 基于 Qwen3.5 多模态基座（27B）",
-      "last_event_date": "2026-08-12",
+      "hot_reason": "作为 VeriLoop Coder-E1 的基座模型",
+      "last_event": "VeriLoop Coder-E1 基于 Qwen3.5 多模态基座",
+      "last_event_date": "2026-08-13",
       "last_event_url": "https://www.jiqizhixin.com/",
       "related_people": [],
       "confidence": "medium",
-      "updated_at": "2026-08-12T21:03:08.071529"
+      "updated_at": "2026-08-13T07:02:29.874068"
     },
     {
       "id": "hunyuan",
@@ -6270,34 +6345,33 @@
       "id": "h3",
       "name": "H3",
       "provider_id": "minimax",
-      "family": "H系列",
+      "family": "MiniMax",
       "type": "通用大模型",
       "open_weights": false,
       "tier": "旗舰",
       "capabilities": [
         "对话",
-        "推理",
-        "多模态"
+        "推理"
       ],
       "status": "发布",
-      "hot_score": 78,
+      "hot_score": 70,
       "hot_level": "高热",
-      "hot_reason": "MiniMax H3 团队 Reddit 被问爆，2K 要开源，图像模型在路上",
+      "hot_reason": "MiniMax H3 团队 Reddit 被问爆：2K 要开源，图像模型在路上",
       "last_event": "MiniMax H3 团队 Reddit 被问爆",
-      "last_event_date": "2026-08-12",
+      "last_event_date": "2026-08-13",
       "last_event_url": "https://www.infoq.cn/article/9C3eK9tJqDXbabbBy3aj",
       "related_people": [
         "yan-junjie"
       ],
       "confidence": "high",
-      "updated_at": "2026-08-12T13:00:01.784874"
+      "updated_at": "2026-08-13T07:02:29.874068"
     },
     {
       "id": "doubao",
       "name": "豆包",
       "provider_id": "bytedance",
       "family": "豆包",
-      "type": "闭源大模型",
+      "type": "通用大模型",
       "open_weights": false,
       "tier": "旗舰",
       "capabilities": [
@@ -6306,43 +6380,43 @@
         "多模态"
       ],
       "status": "发布",
-      "hot_score": 70,
+      "hot_score": 75,
       "hot_level": "高热",
       "hot_reason": "豆包开始抽佣，国产大模型终于跑通了最难的那条路",
       "last_event": "豆包开始抽佣",
-      "last_event_date": "2026-08-12",
+      "last_event_date": "2026-08-13",
       "last_event_url": "https://36kr.com/p/3934657998198403",
       "related_people": [
         "zhang-yiming"
       ],
       "confidence": "high",
-      "updated_at": "2026-08-12T21:03:08.071529"
+      "updated_at": "2026-08-13T07:02:29.874068"
     },
     {
       "id": "llama",
       "name": "Llama",
       "provider_id": "meta",
       "family": "Llama",
-      "type": "通用大模型",
+      "type": "开源大模型",
       "open_weights": true,
       "tier": "旗舰",
       "capabilities": [
         "对话",
         "推理",
-        "代码"
+        "编程"
       ],
       "status": "发布",
-      "hot_score": 58,
-      "hot_level": "温热",
-      "hot_reason": "Meta 正式重回开源模型路线，新模型打出更低骨折价",
+      "hot_score": 65,
+      "hot_level": "高热",
+      "hot_reason": "Meta 正式重回开源模型路线，小扎万字长文炮轰闭源",
       "last_event": "Meta 正式重回开源模型路线",
-      "last_event_date": "2026-08-12",
-      "last_event_url": "https://www.infoq.cn/article/5DEAabOIcvRrEMhAbCyz",
+      "last_event_date": "2026-08-13",
+      "last_event_url": "https://www.infoq.cn/article/FEcOI8kYoGuFYq39acEo",
       "related_people": [
         "mark-zuckerberg"
       ],
       "confidence": "high",
-      "updated_at": "2026-08-12T13:00:01.784874"
+      "updated_at": "2026-08-13T07:02:29.874068"
     },
     {
       "id": "gemini",
@@ -6393,702 +6467,34 @@
       "related_people": [],
       "confidence": "low",
       "updated_at": "2026-08-12T13:00:01.784874"
+    },
+    {
+      "id": "hunyuan-asr-model",
+      "name": "Hy-ASR-3.0-preview",
+      "provider_id": "tencent",
+      "family": "混元",
+      "type": "语音识别模型",
+      "open_weights": false,
+      "tier": "专用",
+      "capabilities": [
+        "语音识别",
+        "方言识别"
+      ],
+      "status": "内测",
+      "hot_score": 45,
+      "hot_level": "温热",
+      "hot_reason": "腾讯混元 ASR 推出新一代语音识别服务",
+      "last_event": "混元 ASR 推出内测版",
+      "last_event_date": "2026-08-13",
+      "last_event_url": "https://www.jiqizhixin.com/",
+      "related_people": [
+        "ma-huateng"
+      ],
+      "confidence": "high",
+      "updated_at": "2026-08-13T07:02:29.874068"
     }
   ],
   "changelog": [
-    {
-      "type": "update",
-      "dimension": "providers",
-      "id": "pragmatik-labs",
-      "name": "Pragmatik Labs",
-      "dim_label": "厂商",
-      "summary": "林俊旸官宣创业公司Pragmatik Labs  |  热度 ↓1 (45→44)",
-      "date": "2026-08-12",
-      "time": "13:00:01",
-      "url": "https://www.jiqizhixin.com/"
-    },
-    {
-      "type": "update",
-      "dimension": "providers",
-      "id": "discovery-loop",
-      "name": "Discovery Loop",
-      "dim_label": "厂商",
-      "summary": "谷歌首席科学家 Jeff Dean 离职并创立 Discovery Loop  |  热度 ↓3 (45→42)",
-      "date": "2026-08-12",
-      "time": "13:00:01",
-      "url": "https://www.jiqizhixin.com/"
-    },
-    {
-      "type": "update",
-      "dimension": "people",
-      "id": "jeff-dean",
-      "name": "杰夫·迪恩",
-      "dim_label": "人物",
-      "summary": "离职谷歌，创立 Discovery Loop  |  热度 ↑5 (90→95)",
-      "date": "2026-08-12",
-      "time": "13:00:01",
-      "url": "https://www.jiqizhixin.com/"
-    },
-    {
-      "type": "update",
-      "dimension": "people",
-      "id": "zhang-yiming",
-      "name": "张一鸣",
-      "dim_label": "人物",
-      "summary": "反对蒸馏，字节拟训练超5万亿参数模型  |  热度 ↑20 (70→90)",
-      "date": "2026-08-12",
-      "time": "13:00:01",
-      "url": "https://www.infoq.cn/"
-    },
-    {
-      "type": "update",
-      "dimension": "people",
-      "id": "mark-zuckerberg",
-      "name": "马克·扎克伯格",
-      "dim_label": "人物",
-      "summary": "万字长文炮轰闭源，Meta 正式重回开源模型路线  |  热度 ↑8 (80→88)",
-      "date": "2026-08-12",
-      "time": "13:00:01",
-      "url": "https://www.infoq.cn/article/5DEAabOIcvRrEMhAbCyz"
-    },
-    {
-      "type": "update",
-      "dimension": "people",
-      "id": "sam-altman",
-      "name": "山姆·奥特曼",
-      "dim_label": "人物",
-      "summary": "OpenAI给10亿用户免费换上GPT-5.6  |  热度 ↑10 (75→85)",
-      "date": "2026-08-12",
-      "time": "13:00:01",
-      "url": "https://www.infoq.cn/"
-    },
-    {
-      "type": "update",
-      "dimension": "people",
-      "id": "lin-junyang",
-      "name": "林俊旸",
-      "dim_label": "人物",
-      "summary": "官宣创业公司Pragmatik Labs  |  热度 ↑20 (60→80)",
-      "date": "2026-08-12",
-      "time": "13:00:01",
-      "url": "https://www.jiqizhixin.com/"
-    },
-    {
-      "type": "update",
-      "dimension": "people",
-      "id": "tang-jie",
-      "name": "唐杰",
-      "dim_label": "人物",
-      "summary": "清华唐杰团队揭示大模型记忆全景  |  热度 ↑10 (65→75)",
-      "date": "2026-08-12",
-      "time": "13:00:01",
-      "url": "https://36kr.com/p/3926253551679881"
-    },
-    {
-      "type": "update",
-      "dimension": "people",
-      "id": "wang-xingxing",
-      "name": "王兴兴",
-      "dim_label": "人物",
-      "summary": "宇树科技IPO申购，或出一批90后千万富豪  |  热度 ↓3 (75→72)",
-      "date": "2026-08-12",
-      "time": "13:00:01",
-      "url": "https://www.infoq.cn/"
-    },
-    {
-      "type": "update",
-      "dimension": "people",
-      "id": "liang-wenfeng",
-      "name": "梁文锋",
-      "dim_label": "人物",
-      "summary": "DeepSeek 以 1.41 亿元认购宇树科技 IPO 战略配售  |  热度 ↓20 (90→70)",
-      "date": "2026-08-12",
-      "time": "13:00:01",
-      "url": "https://www.jiqizhixin.com/"
-    },
-    {
-      "type": "update",
-      "dimension": "people",
-      "id": "yan-junjie",
-      "name": "闫俊杰",
-      "dim_label": "人物",
-      "summary": "MiniMax H3 团队 Reddit 被问爆  |  热度 ↓5 (70→65)",
-      "date": "2026-08-12",
-      "time": "13:00:01",
-      "url": "https://www.infoq.cn/article/9C3eK9tJqDXbabbBy3aj"
-    },
-    {
-      "type": "new",
-      "dimension": "people",
-      "id": "zhang-peng",
-      "name": "张鹏",
-      "dim_label": "人物",
-      "summary": "智谱公司瞄准山顶  |  热度 60",
-      "date": "2026-08-12",
-      "time": "13:00:01",
-      "url": "https://36kr.com/p/3924625732221059"
-    },
-    {
-      "type": "update",
-      "dimension": "people",
-      "id": "sridhar-ramaswamy",
-      "name": "斯里达尔·拉马斯瓦米",
-      "dim_label": "人物",
-      "summary": "Snowflake 财报显示33%增速、126%留存  |  热度 ↓10 (65→55)",
-      "date": "2026-08-12",
-      "time": "13:00:01",
-      "url": "https://www.infoq.cn/article/lWRKAhlso9f7OobiGXDI"
-    },
-    {
-      "type": "update",
-      "dimension": "people",
-      "id": "shen-yujun",
-      "name": "沈宇军",
-      "dim_label": "人物",
-      "summary": "在 WAIC 现场接受专访，讨论机器人大脑之争  |  热度 ↑10 (40→50)",
-      "date": "2026-08-12",
-      "time": "13:00:01",
-      "url": "https://www.infoq.cn/article/rcSr7bVQFB9Uskadg74T"
-    },
-    {
-      "type": "new",
-      "dimension": "tools",
-      "id": "agent-framework",
-      "name": "Agent Framework",
-      "dim_label": "工具",
-      "summary": "微软正式发布 Agent Framework Harness 和 Hosted Agents  |  热度 85",
-      "date": "2026-08-12",
-      "time": "13:00:01",
-      "url": "https://www.infoq.cn/article/aDEJegvNSKwvue2JZ0yI"
-    },
-    {
-      "type": "update",
-      "dimension": "tools",
-      "id": "avernet",
-      "name": "Avernet",
-      "dim_label": "工具",
-      "summary": "蚂蚁开源Avernet，为多智能体协作搭建操作系统  |  热度 ↑7 (75→82)",
-      "date": "2026-08-12",
-      "time": "13:00:01",
-      "url": "https://www.infoq.cn/article/iNvHOsahsYFYaE9ImZBV"
-    },
-    {
-      "type": "update",
-      "dimension": "tools",
-      "id": "fluss",
-      "name": "Fluss",
-      "dim_label": "工具",
-      "summary": "阿里云开源的流存储Fluss 正式跻身 Apache 顶级项目  |  热度 ↑10 (70→80)",
-      "date": "2026-08-12",
-      "time": "13:00:01",
-      "url": "https://www.infoq.cn/article/7bo2icFyxY9lN0htzSZx"
-    },
-    {
-      "type": "new",
-      "dimension": "tools",
-      "id": "computer",
-      "name": "Computer",
-      "dim_label": "工具",
-      "summary": "Cloudflare computer 登上 GitHub Trending  |  热度 75",
-      "date": "2026-08-12",
-      "time": "13:00:01",
-      "url": "https://github.com/cloudflare/computer"
-    },
-    {
-      "type": "new",
-      "dimension": "tools",
-      "id": "skills",
-      "name": "Skills",
-      "dim_label": "工具",
-      "summary": "Google skills 登上 GitHub Trending  |  热度 72",
-      "date": "2026-08-12",
-      "time": "13:00:01",
-      "url": "https://github.com/google/skills"
-    },
-    {
-      "type": "new",
-      "dimension": "tools",
-      "id": "comfyui",
-      "name": "ComfyUI",
-      "dim_label": "工具",
-      "summary": "ComfyUI 登上 GitHub Trending  |  热度 70",
-      "date": "2026-08-12",
-      "time": "13:00:01",
-      "url": "https://github.com/Comfy-Org/ComfyUI"
-    },
-    {
-      "type": "update",
-      "dimension": "tools",
-      "id": "penguinharness",
-      "name": "PenguinHarness",
-      "dim_label": "工具",
-      "summary": "PenguinHarness 发布  |  热度 ↑18 (50→68)",
-      "date": "2026-08-12",
-      "time": "13:00:01",
-      "url": "https://www.jiqizhixin.com/"
-    },
-    {
-      "type": "update",
-      "dimension": "tools",
-      "id": "forgestencil",
-      "name": "ForgeStencil",
-      "dim_label": "工具",
-      "summary": "ForgeStencil 发布  |  热度 ↑20 (45→65)",
-      "date": "2026-08-12",
-      "time": "13:00:01",
-      "url": "https://www.jiqizhixin.com/"
-    },
-    {
-      "type": "update",
-      "dimension": "tools",
-      "id": "veriloop-coder-e1",
-      "name": "VeriLoop Coder-E1",
-      "dim_label": "工具",
-      "summary": "VeriLoop Coder-E1 发布  |  热度 ↑17 (45→62)",
-      "date": "2026-08-12",
-      "time": "13:00:01",
-      "url": "https://www.jiqizhixin.com/"
-    },
-    {
-      "type": "update",
-      "dimension": "tools",
-      "id": "barunlm-35m",
-      "name": "BarunLM-35M",
-      "dim_label": "工具",
-      "summary": "BarunLM-35M 发布  |  热度 ↑20 (40→60)",
-      "date": "2026-08-12",
-      "time": "13:00:01",
-      "url": "https://www.jiqizhixin.com/"
-    },
-    {
-      "type": "update",
-      "dimension": "tools",
-      "id": "dwarfstar",
-      "name": "DwarfStar",
-      "dim_label": "工具",
-      "summary": "DwarfStar 发布  |  热度 ↑13 (45→58)",
-      "date": "2026-08-12",
-      "time": "13:00:01",
-      "url": "https://www.jiqizhixin.com/"
-    },
-    {
-      "type": "update",
-      "dimension": "tools",
-      "id": "refcaptioner",
-      "name": "RefCaptioner",
-      "dim_label": "工具",
-      "summary": "RefCaptioner 发布  |  热度 ↑15 (40→55)",
-      "date": "2026-08-12",
-      "time": "13:00:01",
-      "url": "https://www.jiqizhixin.com/"
-    },
-    {
-      "type": "update",
-      "dimension": "tools",
-      "id": "openjiuwen",
-      "name": "openJiuwen",
-      "dim_label": "工具",
-      "summary": "openJiuwen 发布  |  热度 ↑12 (40→52)",
-      "date": "2026-08-12",
-      "time": "13:00:01",
-      "url": "https://www.jiqizhixin.com/"
-    },
-    {
-      "type": "update",
-      "dimension": "tools",
-      "id": "langalpha",
-      "name": "LangAlpha",
-      "dim_label": "工具",
-      "summary": "开源LangAlpha正式发布  |  热度 ↑5 (45→50)",
-      "date": "2026-08-12",
-      "time": "13:00:01",
-      "url": "https://www.infoq.cn/"
-    },
-    {
-      "type": "update",
-      "dimension": "tools",
-      "id": "workbuddy",
-      "name": "WorkBuddy",
-      "dim_label": "工具",
-      "summary": "腾讯WorkBuddy升级多端同步  |  热度 ↓2 (50→48)",
-      "date": "2026-08-12",
-      "time": "13:00:01",
-      "url": "https://www.infoq.cn/"
-    },
-    {
-      "type": "update",
-      "dimension": "tools",
-      "id": "tencentdb-agent-memory",
-      "name": "TencentDB-Agent-Memory",
-      "dim_label": "工具",
-      "summary": "TencentDB-Agent-Memory 登上 GitHub Trending  |  热度 ↓10 (55→45)",
-      "date": "2026-08-12",
-      "time": "13:00:01",
-      "url": "https://github.com/TencentCloud/TencentDB-Agent-Memory"
-    },
-    {
-      "type": "update",
-      "dimension": "tools",
-      "id": "semantica",
-      "name": "Semantica",
-      "dim_label": "工具",
-      "summary": "Semantica 登上 GitHub Trending  |  热度 ↓8 (50→42)",
-      "date": "2026-08-12",
-      "time": "13:00:01",
-      "url": "https://github.com/semantica-agi/semantica"
-    },
-    {
-      "type": "update",
-      "dimension": "tools",
-      "id": "deepseek-reasonix",
-      "name": "DeepSeek-Reasonix",
-      "dim_label": "工具",
-      "summary": "DeepSeek-Reasonix 登上 GitHub Trending  |  热度 ↓15 (55→40)",
-      "date": "2026-08-12",
-      "time": "13:00:01",
-      "url": "https://github.com/esengine/DeepSeek-Reasonix"
-    },
-    {
-      "type": "new",
-      "dimension": "tools",
-      "id": "code-graph-rag",
-      "name": "Code-Graph-RAG",
-      "dim_label": "工具",
-      "summary": "Code-Graph-RAG 登上 GitHub Trending  |  热度 38",
-      "date": "2026-08-12",
-      "time": "13:00:01",
-      "url": "https://github.com/vitali87/code-graph-rag"
-    },
-    {
-      "type": "update",
-      "dimension": "tools",
-      "id": "swarm-forge",
-      "name": "Swarm-Forge",
-      "dim_label": "工具",
-      "summary": "Swarm-Forge 登上 GitHub Trending  |  热度 ↓15 (50→35)",
-      "date": "2026-08-12",
-      "time": "13:00:01",
-      "url": "https://github.com/unclebob/swarm-forge"
-    },
-    {
-      "type": "update",
-      "dimension": "tools",
-      "id": "drawdb",
-      "name": "DrawDB",
-      "dim_label": "工具",
-      "summary": "DrawDB 登上 GitHub Trending  |  热度 ↓17 (50→33)",
-      "date": "2026-08-12",
-      "time": "13:00:01",
-      "url": "https://github.com/drawdb-io/drawdb"
-    },
-    {
-      "type": "update",
-      "dimension": "tools",
-      "id": "airllm",
-      "name": "AirLLM",
-      "dim_label": "工具",
-      "summary": "AirLLM 登上 GitHub Trending  |  热度 ↓20 (50→30)",
-      "date": "2026-08-12",
-      "time": "13:00:01",
-      "url": "https://github.com/lyogavin/airllm"
-    },
-    {
-      "type": "update",
-      "dimension": "llms",
-      "id": "deepseek-v4-flash",
-      "name": "DeepSeek V4 Flash",
-      "dim_label": "大模型",
-      "summary": "DeepSeek宣布涨价30倍仍是最便宜的模型  |  热度 ↑13 (75→88)",
-      "date": "2026-08-12",
-      "time": "13:00:01",
-      "url": "https://www.infoq.cn/article/FEcOI8kYoGuFYq39acEo"
-    },
-    {
-      "type": "update",
-      "dimension": "llms",
-      "id": "kimi-k3",
-      "name": "Kimi K3",
-      "dim_label": "大模型",
-      "summary": "Kimi K3引爆价格战  |  热度 ↑2 (80→82)",
-      "date": "2026-08-12",
-      "time": "13:00:01",
-      "url": "https://36kr.com/p/3926124303906946"
-    },
-    {
-      "type": "update",
-      "dimension": "llms",
-      "id": "h3",
-      "name": "H3",
-      "dim_label": "大模型",
-      "summary": "MiniMax H3 团队 Reddit 被问爆  |  热度 ↑18 (60→78)",
-      "date": "2026-08-12",
-      "time": "13:00:01",
-      "url": "https://www.infoq.cn/article/9C3eK9tJqDXbabbBy3aj"
-    },
-    {
-      "type": "update",
-      "dimension": "llms",
-      "id": "llada-moe-v2",
-      "name": "LLaDA MoE v2",
-      "dim_label": "大模型",
-      "summary": "人大高瓴团队与蚂蚁集团发布LLaDA MoE v2  |  热度 ↑20 (55→75)",
-      "date": "2026-08-12",
-      "time": "13:00:01",
-      "url": "https://www.jiqizhixin.com/"
-    },
-    {
-      "type": "update",
-      "dimension": "llms",
-      "id": "doubao",
-      "name": "豆包",
-      "dim_label": "大模型",
-      "summary": "豆包开始抽佣  |  热度 ↓3 (75→72)",
-      "date": "2026-08-12",
-      "time": "13:00:01",
-      "url": "https://36kr.com/p/3934657998198403"
-    },
-    {
-      "type": "update",
-      "dimension": "llms",
-      "id": "hunyuan-asr",
-      "name": "混元 ASR",
-      "dim_label": "大模型",
-      "summary": "混元 ASR 内测发布  |  热度 ↑15 (55→70)",
-      "date": "2026-08-12",
-      "time": "13:00:01",
-      "url": "https://www.jiqizhixin.com/"
-    },
-    {
-      "type": "update",
-      "dimension": "llms",
-      "id": "glm",
-      "name": "GLM",
-      "dim_label": "大模型",
-      "summary": "智谱公司瞄准山顶  |  热度 ↑50 (10→60)",
-      "date": "2026-08-12",
-      "time": "13:00:01",
-      "url": "https://36kr.com/p/3924625732221059"
-    },
-    {
-      "type": "update",
-      "dimension": "llms",
-      "id": "llama",
-      "name": "Llama",
-      "dim_label": "大模型",
-      "summary": "Meta 正式重回开源模型路线  |  热度 ↓12 (70→58)",
-      "date": "2026-08-12",
-      "time": "13:00:01",
-      "url": "https://www.infoq.cn/article/5DEAabOIcvRrEMhAbCyz"
-    },
-    {
-      "type": "new",
-      "dimension": "llms",
-      "id": "gemini",
-      "name": "Gemini",
-      "dim_label": "大模型",
-      "summary": "谷歌首席科学家 Jeff Dean 离职  |  热度 55",
-      "date": "2026-08-12",
-      "time": "13:00:01",
-      "url": "https://www.jiqizhixin.com/"
-    },
-    {
-      "type": "new",
-      "dimension": "llms",
-      "id": "ernie",
-      "name": "文心一言",
-      "dim_label": "大模型",
-      "summary": "百度文心大模型相关动态  |  热度 50",
-      "date": "2026-08-12",
-      "time": "13:00:01",
-      "url": "https://www.jiqizhixin.com/"
-    },
-    {
-      "type": "new",
-      "dimension": "hotspots",
-      "id": "bytedance-10t-model",
-      "name": "",
-      "dim_label": "热点",
-      "summary": "",
-      "date": "2026-08-12",
-      "time": "13:00:01",
-      "url": ""
-    },
-    {
-      "type": "update",
-      "dimension": "providers",
-      "id": "deepseek",
-      "name": "深度求索",
-      "dim_label": "厂商",
-      "summary": "DeepSeek 以 1.41 亿元认购宇树科技 IPO 战略配售；DeepSeek-V4-Flash-0731 发布，涨价30倍仍是最便宜的模型",
-      "date": "2026-08-12",
-      "time": "21:03:08",
-      "url": "https://www.infoq.cn/article/FEcOI8kYoGuFYq39acEo"
-    },
-    {
-      "type": "update",
-      "dimension": "providers",
-      "id": "bytedance",
-      "name": "字节跳动",
-      "dim_label": "厂商",
-      "summary": "字节拟训练超5万亿参数模型，张一鸣反对蒸馏；字节先造了个一级部门；豆包开始抽佣；字节Seed团队发现文生图Scaling新变量  |  热度 ↓2 (92→90)",
-      "date": "2026-08-12",
-      "time": "21:03:08",
-      "url": "https://36kr.com/p/3935748520459653"
-    },
-    {
-      "type": "update",
-      "dimension": "providers",
-      "id": "google",
-      "name": "谷歌",
-      "dim_label": "厂商",
-      "summary": "谷歌首席科学家 Jeff Dean 离职并创立 Discovery Loop；谷歌的告别：大模型正在进入车库时代  |  热度 ↓5 (90→85)",
-      "date": "2026-08-12",
-      "time": "21:03:08",
-      "url": "https://36kr.com/p/3928934646257289"
-    },
-    {
-      "type": "update",
-      "dimension": "providers",
-      "id": "openai",
-      "name": "OpenAI",
-      "dim_label": "厂商",
-      "summary": "OpenAI给10亿用户免费换上GPT-5.6；两位大模型核心负责人离开OpenAI卷下一代架构  |  热度 ↓2 (87→85)",
-      "date": "2026-08-12",
-      "time": "21:03:08",
-      "url": "https://36kr.com/p/3926235966945671"
-    },
-    {
-      "type": "update",
-      "dimension": "providers",
-      "id": "microsoft",
-      "name": "微软",
-      "dim_label": "厂商",
-      "summary": "微软正式发布 Agent Framework Harness 和 Hosted Agents  |  热度 ↓5 (85→80)",
-      "date": "2026-08-12",
-      "time": "21:03:08",
-      "url": "https://www.infoq.cn/article/aDEJegvNSKwvue2JZ0yI"
-    },
-    {
-      "type": "update",
-      "dimension": "providers",
-      "id": "tencent",
-      "name": "腾讯",
-      "dim_label": "厂商",
-      "summary": "腾讯云重构 Agent 沙箱；混元 ASR 语音识别服务内测；腾讯WorkBuddy升级多端同步  |  热度 ↓7 (82→75)",
-      "date": "2026-08-12",
-      "time": "21:03:08",
-      "url": "https://www.infoq.cn/article/KwZX2bLcaHRjuLG95vHI"
-    },
-    {
-      "type": "update",
-      "dimension": "providers",
-      "id": "huawei",
-      "name": "华为",
-      "dim_label": "厂商",
-      "summary": "华为开始重新定义存储的位置；前华为生成式大模型负责人创业获5亿融资  |  热度 ↓5 (80→75)",
-      "date": "2026-08-12",
-      "time": "21:03:08",
-      "url": "https://www.infoq.cn/article/qBHKWa0AabfP0Fs8rGrk"
-    },
-    {
-      "type": "update",
-      "dimension": "providers",
-      "id": "moonshot",
-      "name": "月之暗面",
-      "dim_label": "厂商",
-      "summary": "Kimi K3 引爆价格战，中国大模型周调用量全球登顶；Kimi-K3 防蒸馏机制被攻破  |  热度 ↑5 (75→80)",
-      "date": "2026-08-12",
-      "time": "21:03:08",
-      "url": "https://36kr.com/p/3926124303906946"
-    },
-    {
-      "type": "update",
-      "dimension": "providers",
-      "id": "minimax",
-      "name": "MiniMax",
-      "dim_label": "厂商",
-      "summary": "MiniMax H3 团队 Reddit 被问爆：2K 要开源，图像模型在路上  |  热度 ↓6 (76→70)",
-      "date": "2026-08-12",
-      "time": "21:03:08",
-      "url": "https://www.infoq.cn/article/9C3eK9tJqDXbabbBy3aj"
-    },
-    {
-      "type": "update",
-      "dimension": "providers",
-      "id": "snowflake",
-      "name": "Snowflake",
-      "dim_label": "厂商",
-      "summary": "Snowflake 财报显示33%增速、126%留存；Snowflake Cortex Agents 本体驱动推理实践  |  热度 ↓5 (75→70)",
-      "date": "2026-08-12",
-      "time": "21:03:08",
-      "url": "https://www.infoq.cn/article/lWRKAhlso9f7OobiGXDI"
-    },
-    {
-      "type": "update",
-      "dimension": "providers",
-      "id": "unitree",
-      "name": "宇树科技",
-      "dim_label": "厂商",
-      "summary": "宇树科技 IPO 申购，DeepSeek 认购战略配售  |  热度 ↓9 (74→65)",
-      "date": "2026-08-12",
-      "time": "21:03:08",
-      "url": "https://www.infoq.cn/article/FEcOI8kYoGuFYq39acEo"
-    },
-    {
-      "type": "update",
-      "dimension": "providers",
-      "id": "baidu",
-      "name": "百度",
-      "dim_label": "厂商",
-      "summary": "估值200亿，北京又一大模型厂商启动IPO（百度系）  |  热度 ↓10 (70→60)",
-      "date": "2026-08-12",
-      "time": "21:03:08",
-      "url": "https://36kr.com/p/3936412212903048"
-    },
-    {
-      "type": "update",
-      "dimension": "providers",
-      "id": "zhipu",
-      "name": "智谱AI",
-      "dim_label": "厂商",
-      "summary": "估值200亿，北京又一大模型厂商启动IPO  |  热度 ↓12 (72→60)",
-      "date": "2026-08-12",
-      "time": "21:03:08",
-      "url": "https://36kr.com/p/3936412212903048"
-    },
-    {
-      "type": "new",
-      "dimension": "providers",
-      "id": "meitu",
-      "name": "美图",
-      "dim_label": "厂商",
-      "summary": "美图影像研究院11篇顶会论文，让大众爱用AI  |  热度 55",
-      "date": "2026-08-12",
-      "time": "21:03:08",
-      "url": "https://www.jiqizhixin.com/"
-    },
-    {
-      "type": "update",
-      "dimension": "providers",
-      "id": "tsinghua",
-      "name": "清华大学",
-      "dim_label": "厂商",
-      "summary": "清华天眸芯团队再登Nature系列期刊封面；清华唐杰团队揭示大模型记忆全景；清华SIGS发布VeriLoop Coder-E1  |  热度 ↓8 (68→60)",
-      "date": "2026-08-12",
-      "time": "21:03:08",
-      "url": "https://36kr.com/p/3926253551679881"
-    },
-    {
-      "type": "update",
-      "dimension": "providers",
-      "id": "discovery-loop",
-      "name": "Discovery Loop",
-      "dim_label": "厂商",
-      "summary": "谷歌首席科学家 Jeff Dean 离职并创立 Discovery Loop  |  热度 ↑18 (42→60)",
-      "date": "2026-08-12",
-      "time": "21:03:08",
-      "url": "https://www.jiqizhixin.com/"
-    },
     {
       "type": "update",
       "dimension": "providers",
@@ -7143,17 +6549,6 @@
       "date": "2026-08-12",
       "time": "21:03:08",
       "url": "https://www.infoq.cn/article/YBCpst8secs3xWqZwWLe"
-    },
-    {
-      "type": "update",
-      "dimension": "providers",
-      "id": "fliggy",
-      "name": "飞猪",
-      "dim_label": "厂商",
-      "summary": "飞猪新一代 AI 产品 V10 探索消费Agent  |  热度 ↓2 (52→50)",
-      "date": "2026-08-12",
-      "time": "21:03:08",
-      "url": "https://www.infoq.cn/article/t0wslR8w8H7yeRD2MwO6"
     },
     {
       "type": "new",
@@ -7495,24 +6890,728 @@
       "date": "2026-08-12",
       "time": "21:03:08",
       "url": ""
+    },
+    {
+      "type": "update",
+      "dimension": "providers",
+      "id": "deepseek",
+      "name": "深度求索",
+      "dim_label": "厂商",
+      "summary": "DeepSeek 以 1.41 亿元认购宇树科技 IPO 战略配售；涨价30倍仍是最便宜的模型",
+      "date": "2026-08-13",
+      "time": "07:02:29",
+      "url": "https://www.infoq.cn/article/FEcOI8kYoGuFYq39acEo"
+    },
+    {
+      "type": "update",
+      "dimension": "providers",
+      "id": "bytedance",
+      "name": "字节跳动",
+      "dim_label": "厂商",
+      "summary": "字节拟训练超5万亿参数模型，张一鸣反对蒸馏；10万亿参数大模型还没影，字节先造了个一级部门；豆包开始抽佣  |  热度 ↑2 (90→92)",
+      "date": "2026-08-13",
+      "time": "07:02:29",
+      "url": "https://36kr.com/p/3935748520459653"
+    },
+    {
+      "type": "update",
+      "dimension": "providers",
+      "id": "google",
+      "name": "谷歌",
+      "dim_label": "厂商",
+      "summary": "谷歌首席科学家 Jeff Dean 离职并创立 Discovery Loop；谷歌的告别：大模型正在进入车库时代  |  热度 ↑5 (85→90)",
+      "date": "2026-08-13",
+      "time": "07:02:29",
+      "url": "https://36kr.com/p/3928934646257289"
+    },
+    {
+      "type": "update",
+      "dimension": "providers",
+      "id": "openai",
+      "name": "OpenAI",
+      "dim_label": "厂商",
+      "summary": "OpenAI给10亿用户免费换上GPT-5.6；两位大模型核心负责人离开OpenAI卷下一代架构  |  热度 ↑3 (85→88)",
+      "date": "2026-08-13",
+      "time": "07:02:29",
+      "url": "https://36kr.com/p/3926235966945671"
+    },
+    {
+      "type": "update",
+      "dimension": "providers",
+      "id": "tencent",
+      "name": "腾讯",
+      "dim_label": "厂商",
+      "summary": "腾讯云重构 Agent 沙箱；混元 ASR 推出新一代语音识别服务；腾讯WorkBuddy升级多端同步  |  热度 ↑7 (75→82)",
+      "date": "2026-08-13",
+      "time": "07:02:29",
+      "url": "https://www.infoq.cn/article/KwZX2bLcaHRjuLG95vHI"
+    },
+    {
+      "type": "update",
+      "dimension": "providers",
+      "id": "microsoft",
+      "name": "微软",
+      "dim_label": "厂商",
+      "summary": "微软正式发布 Agent Framework Harness 和 Hosted Agents",
+      "date": "2026-08-13",
+      "time": "07:02:29",
+      "url": "https://www.infoq.cn/article/aDEJegvNSKwvue2JZ0yI"
+    },
+    {
+      "type": "update",
+      "dimension": "providers",
+      "id": "moonshot",
+      "name": "月之暗面",
+      "dim_label": "厂商",
+      "summary": "Kimi K3 引爆价格战；中国大模型周调用量全球登顶；防蒸馏机制全面告破，Kimi-K3重现概率异常  |  热度 ↑5 (80→85)",
+      "date": "2026-08-13",
+      "time": "07:02:29",
+      "url": "https://36kr.com/p/3926124303906946"
+    },
+    {
+      "type": "update",
+      "dimension": "providers",
+      "id": "minimax",
+      "name": "MiniMax",
+      "dim_label": "厂商",
+      "summary": "MiniMax H3 团队 Reddit 被问爆：2K 要开源，图像模型在路上，Apache-2.0 也在考虑了  |  热度 ↑2 (70→72)",
+      "date": "2026-08-13",
+      "time": "07:02:29",
+      "url": "https://www.infoq.cn/article/9C3eK9tJqDXbabbBy3aj"
+    },
+    {
+      "type": "update",
+      "dimension": "providers",
+      "id": "huawei",
+      "name": "华为",
+      "dim_label": "厂商",
+      "summary": "AI推理规模上升后，华为开始重新定义存储的位置；前华为生成式大模型负责人创业获5亿融资  |  热度 ↓5 (75→70)",
+      "date": "2026-08-13",
+      "time": "07:02:29",
+      "url": "https://www.infoq.cn/article/qBHKWa0AabfP0Fs8rGrk"
+    },
+    {
+      "type": "update",
+      "dimension": "providers",
+      "id": "snowflake",
+      "name": "Snowflake",
+      "dim_label": "厂商",
+      "summary": "Snowflake Cortex Agents 的本体驱动推理实践；33% 增速、126% 留存，Snowflake 财报亮眼  |  热度 ↓2 (70→68)",
+      "date": "2026-08-13",
+      "time": "07:02:29",
+      "url": "https://www.infoq.cn/article/2NsA9FT1uhjmdRrwzOo3"
+    },
+    {
+      "type": "update",
+      "dimension": "providers",
+      "id": "unitree",
+      "name": "宇树科技",
+      "dim_label": "厂商",
+      "summary": "宇树科技 IPO 申购，DeepSeek 认购战略配售，或出一批90后千万富豪  |  热度 ↑10 (65→75)",
+      "date": "2026-08-13",
+      "time": "07:02:29",
+      "url": "https://www.infoq.cn/article/FEcOI8kYoGuFYq39acEo"
+    },
+    {
+      "type": "update",
+      "dimension": "providers",
+      "id": "qianwen",
+      "name": "千问AI平台",
+      "dim_label": "厂商",
+      "summary": "Qwen3.8-Max 发布，2.4万亿参数 MoE 旗舰模型",
+      "date": "2026-08-13",
+      "time": "07:02:29",
+      "url": "https://www.jiqizhixin.com/"
+    },
+    {
+      "type": "update",
+      "dimension": "providers",
+      "id": "tsinghua",
+      "name": "清华大学",
+      "dim_label": "厂商",
+      "summary": "清华天眸芯团队再登Nature系列期刊封面；清华唐杰团队揭示大模型记忆全景；清华SIGS发布VeriLoop Coder-E1",
+      "date": "2026-08-13",
+      "time": "07:02:29",
+      "url": "https://36kr.com/p/3926253551679881"
+    },
+    {
+      "type": "update",
+      "dimension": "providers",
+      "id": "xiaomi",
+      "name": "小米",
+      "dim_label": "厂商",
+      "summary": "小米大模型厂商启动IPO，估值200亿  |  热度 ↑5 (50→55)",
+      "date": "2026-08-13",
+      "time": "07:02:29",
+      "url": "https://36kr.com/p/3936412212903048"
+    },
+    {
+      "type": "update",
+      "dimension": "providers",
+      "id": "pragmatik-labs",
+      "name": "Pragmatik Labs",
+      "dim_label": "厂商",
+      "summary": "林俊旸官宣创业公司Pragmatik Labs  |  热度 ↓5 (55→50)",
+      "date": "2026-08-13",
+      "time": "07:02:29",
+      "url": "https://www.jiqizhixin.com/"
+    },
+    {
+      "type": "update",
+      "dimension": "providers",
+      "id": "discovery-loop",
+      "name": "Discovery Loop",
+      "dim_label": "厂商",
+      "summary": "谷歌首席科学家 Jeff Dean 离职创立 Discovery Loop  |  热度 ↓5 (60→55)",
+      "date": "2026-08-13",
+      "time": "07:02:29",
+      "url": "https://www.jiqizhixin.com/"
+    },
+    {
+      "type": "update",
+      "dimension": "providers",
+      "id": "zhongkehuisi",
+      "name": "中科慧思",
+      "dim_label": "厂商",
+      "summary": "中科慧思一口气发三款灵巧手新品，机器人也能组乐队现场演奏  |  热度 ↓10 (55→45)",
+      "date": "2026-08-13",
+      "time": "07:02:29",
+      "url": "https://www.infoq.cn/article/6EXTXyTt834kMGkiqqDT"
+    },
+    {
+      "type": "update",
+      "dimension": "providers",
+      "id": "meitu",
+      "name": "美图",
+      "dim_label": "厂商",
+      "summary": "美图影像研究院11篇顶会论文之外，让大众爱用AI  |  热度 ↓15 (55→40)",
+      "date": "2026-08-13",
+      "time": "07:02:29",
+      "url": "https://www.jiqizhixin.com/"
+    },
+    {
+      "type": "update",
+      "dimension": "providers",
+      "id": "netflix",
+      "name": "Netflix",
+      "dim_label": "厂商",
+      "summary": "Netflix CPTO 如何在 AI 乱流中进行人才重构  |  热度 ↓15 (50→35)",
+      "date": "2026-08-13",
+      "time": "07:02:29",
+      "url": "https://pro.jiqizhixin.com/reference/28cd676c-fe41-4c7f-94ec-37c748cce969"
+    },
+    {
+      "type": "update",
+      "dimension": "providers",
+      "id": "yonyou",
+      "name": "用友",
+      "dim_label": "厂商",
+      "summary": "用友 iuap 全面升级企业 AI 底座，YonWork/YonData/YonCode 三大引擎亮相 GBIC 2026  |  热度 ↓20 (50→30)",
+      "date": "2026-08-13",
+      "time": "07:02:29",
+      "url": "https://www.infoq.cn/article/FEcOI8kYoGuFYq39acEo"
+    },
+    {
+      "type": "new",
+      "dimension": "providers",
+      "id": "mianbi",
+      "name": "面壁智能",
+      "dim_label": "厂商",
+      "summary": "面壁智能正式启动IPO：中信证券辅导，端侧模型走向资本市场  |  热度 45",
+      "date": "2026-08-13",
+      "time": "07:02:29",
+      "url": "https://www.infoq.cn/article/FEcOI8kYoGuFYq39acEo"
+    },
+    {
+      "type": "update",
+      "dimension": "people",
+      "id": "jeff-dean",
+      "name": "杰夫·迪恩",
+      "dim_label": "人物",
+      "summary": "离职谷歌，创立 Discovery Loop  |  热度 ↑5 (90→95)",
+      "date": "2026-08-13",
+      "time": "07:02:29",
+      "url": "https://www.jiqizhixin.com/"
+    },
+    {
+      "type": "update",
+      "dimension": "people",
+      "id": "zhang-yiming",
+      "name": "张一鸣",
+      "dim_label": "人物",
+      "summary": "反对蒸馏，字节拟训练超5万亿参数模型  |  热度 ↑5 (85→90)",
+      "date": "2026-08-13",
+      "time": "07:02:29",
+      "url": "https://36kr.com/p/3935748520459653"
+    },
+    {
+      "type": "update",
+      "dimension": "people",
+      "id": "lin-junyang",
+      "name": "林俊旸",
+      "dim_label": "人物",
+      "summary": "官宣创业公司Pragmatik Labs  |  热度 ↑5 (70→75)",
+      "date": "2026-08-13",
+      "time": "07:02:29",
+      "url": "https://www.jiqizhixin.com/"
+    },
+    {
+      "type": "update",
+      "dimension": "people",
+      "id": "hao-jianye",
+      "name": "郝建业",
+      "dim_label": "人物",
+      "summary": "给大模型做记忆，半年融三轮  |  热度 ↑10 (60→70)",
+      "date": "2026-08-13",
+      "time": "07:02:29",
+      "url": "https://36kr.com/p/3935837932518536"
+    },
+    {
+      "type": "update",
+      "dimension": "people",
+      "id": "tang-jie",
+      "name": "唐杰",
+      "dim_label": "人物",
+      "summary": "清华唐杰团队揭示大模型记忆全景",
+      "date": "2026-08-13",
+      "time": "07:02:29",
+      "url": "https://36kr.com/p/3926253551679881"
+    },
+    {
+      "type": "update",
+      "dimension": "people",
+      "id": "mark-zuckerberg",
+      "name": "马克·扎克伯格",
+      "dim_label": "人物",
+      "summary": "万字长文炮轰闭源：蒸馏无罪，Meta 正式重回开源模型路线  |  热度 ↑10 (70→80)",
+      "date": "2026-08-13",
+      "time": "07:02:29",
+      "url": "https://www.infoq.cn/article/FEcOI8kYoGuFYq39acEo"
+    },
+    {
+      "type": "update",
+      "dimension": "people",
+      "id": "sam-altman",
+      "name": "山姆·奥特曼",
+      "dim_label": "人物",
+      "summary": "OpenAI给10亿用户免费换上GPT-5.6",
+      "date": "2026-08-13",
+      "time": "07:02:29",
+      "url": "https://www.infoq.cn/article/FEcOI8kYoGuFYq39acEo"
+    },
+    {
+      "type": "update",
+      "dimension": "people",
+      "id": "wang-xingxing",
+      "name": "王兴兴",
+      "dim_label": "人物",
+      "summary": "宇树科技 IPO 申购，DeepSeek 认购战略配售  |  热度 ↓2 (72→70)",
+      "date": "2026-08-13",
+      "time": "07:02:29",
+      "url": "https://www.infoq.cn/article/FEcOI8kYoGuFYq39acEo"
+    },
+    {
+      "type": "update",
+      "dimension": "people",
+      "id": "liang-wenfeng",
+      "name": "梁文锋",
+      "dim_label": "人物",
+      "summary": "DeepSeek 以 1.41 亿元认购宇树科技 IPO 战略配售  |  热度 ↑15 (70→85)",
+      "date": "2026-08-13",
+      "time": "07:02:29",
+      "url": "https://www.infoq.cn/article/FEcOI8kYoGuFYq39acEo"
+    },
+    {
+      "type": "update",
+      "dimension": "people",
+      "id": "yan-junjie",
+      "name": "闫俊杰",
+      "dim_label": "人物",
+      "summary": "MiniMax H3 团队 Reddit 被问爆：2K 要开源  |  热度 ↓5 (65→60)",
+      "date": "2026-08-13",
+      "time": "07:02:29",
+      "url": "https://www.infoq.cn/article/9C3eK9tJqDXbabbBy3aj"
+    },
+    {
+      "type": "update",
+      "dimension": "people",
+      "id": "sridhar-ramaswamy",
+      "name": "斯里达尔·拉马斯瓦米",
+      "dim_label": "人物",
+      "summary": "Snowflake 财报亮眼，33% 增速、126% 留存",
+      "date": "2026-08-13",
+      "time": "07:02:29",
+      "url": "https://www.infoq.cn/article/lWRKAhlso9f7OobiGXDI"
+    },
+    {
+      "type": "update",
+      "dimension": "people",
+      "id": "satya-nadella",
+      "name": "萨提亚·纳德拉",
+      "dim_label": "人物",
+      "summary": "微软正式发布 Agent Framework Harness 和 Hosted Agents  |  热度 ↓10 (70→60)",
+      "date": "2026-08-13",
+      "time": "07:02:29",
+      "url": "https://www.infoq.cn/article/aDEJegvNSKwvue2JZ0yI"
+    },
+    {
+      "type": "update",
+      "dimension": "people",
+      "id": "ma-huateng",
+      "name": "马化腾",
+      "dim_label": "人物",
+      "summary": "腾讯云重构 Agent 沙箱，混元 ASR 推出新一代语音识别服务  |  热度 ↑10 (45→55)",
+      "date": "2026-08-13",
+      "time": "07:02:29",
+      "url": "https://www.infoq.cn/article/KwZX2bLcaHRjuLG95vHI"
+    },
+    {
+      "type": "update",
+      "dimension": "people",
+      "id": "wu-yongming",
+      "name": "吴泳铭",
+      "dim_label": "人物",
+      "summary": "阿里云开源 Fluss 跻身 Apache 顶级项目  |  热度 ↓10 (60→50)",
+      "date": "2026-08-13",
+      "time": "07:02:29",
+      "url": "https://www.infoq.cn/article/7bo2icFyxY9lN0htzSZx"
+    },
+    {
+      "type": "update",
+      "dimension": "people",
+      "id": "ren-zhengfei",
+      "name": "任正非",
+      "dim_label": "人物",
+      "summary": "华为重新定义存储的位置",
+      "date": "2026-08-13",
+      "time": "07:02:29",
+      "url": "https://www.infoq.cn/article/qBHKWa0AabfP0Fs8rGrk"
+    },
+    {
+      "type": "update",
+      "dimension": "people",
+      "id": "lei-jun",
+      "name": "雷军",
+      "dim_label": "人物",
+      "summary": "小米大模型厂商启动IPO，估值200亿",
+      "date": "2026-08-13",
+      "time": "07:02:29",
+      "url": "https://36kr.com/p/3936412212903048"
+    },
+    {
+      "type": "new",
+      "dimension": "people",
+      "id": "wang-wenjing",
+      "name": "王文京",
+      "dim_label": "人物",
+      "summary": "用友 iuap 全面升级企业 AI 底座  |  热度 30",
+      "date": "2026-08-13",
+      "time": "07:02:29",
+      "url": "https://www.infoq.cn/article/FEcOI8kYoGuFYq39acEo"
+    },
+    {
+      "type": "new",
+      "dimension": "people",
+      "id": "wu-xinhong",
+      "name": "吴欣鸿",
+      "dim_label": "人物",
+      "summary": "美图影像研究院让大众爱用AI  |  热度 25",
+      "date": "2026-08-13",
+      "time": "07:02:29",
+      "url": "https://www.jiqizhixin.com/"
+    },
+    {
+      "type": "update",
+      "dimension": "people",
+      "id": "jing-xian-dong",
+      "name": "井贤栋",
+      "dim_label": "人物",
+      "summary": "蚂蚁开源Avernet，为多智能体协作搭建操作系统  |  热度 ↓20 (55→35)",
+      "date": "2026-08-13",
+      "time": "07:02:29",
+      "url": "https://www.infoq.cn/article/iNvHOsahsYFYaE9ImZBV"
+    },
+    {
+      "type": "update",
+      "dimension": "tools",
+      "id": "fluss",
+      "name": "Fluss",
+      "dim_label": "工具",
+      "summary": "正式跻身 Apache 顶级项目  |  热度 ↑5 (70→75)",
+      "date": "2026-08-13",
+      "time": "07:02:29",
+      "url": "https://www.infoq.cn/article/7bo2icFyxY9lN0htzSZx"
+    },
+    {
+      "type": "update",
+      "dimension": "tools",
+      "id": "avernet",
+      "name": "Avernet",
+      "dim_label": "工具",
+      "summary": "蚂蚁开源Avernet  |  热度 ↑2 (70→72)",
+      "date": "2026-08-13",
+      "time": "07:02:29",
+      "url": "https://www.infoq.cn/article/iNvHOsahsYFYaE9ImZBV"
+    },
+    {
+      "type": "update",
+      "dimension": "tools",
+      "id": "agent-framework-harness",
+      "name": "Agent Framework Harness",
+      "dim_label": "工具",
+      "summary": "微软正式发布 Agent Framework Harness 和 Hosted Agents  |  热度 ↓7 (75→68)",
+      "date": "2026-08-13",
+      "time": "07:02:29",
+      "url": "https://www.infoq.cn/article/aDEJegvNSKwvue2JZ0yI"
+    },
+    {
+      "type": "update",
+      "dimension": "tools",
+      "id": "ponytail",
+      "name": "Ponytail",
+      "dim_label": "工具",
+      "summary": "修正了自身的基准测试结果  |  热度 ↓5 (60→55)",
+      "date": "2026-08-13",
+      "time": "07:02:29",
+      "url": "https://www.infoq.cn/article/uHECxUzeafk9Nbzpxi25"
+    },
+    {
+      "type": "update",
+      "dimension": "tools",
+      "id": "langalpha",
+      "name": "LangAlpha",
+      "dim_label": "工具",
+      "summary": "开源LangAlpha正式发布  |  热度 ↑5 (45→50)",
+      "date": "2026-08-13",
+      "time": "07:02:29",
+      "url": "https://www.infoq.cn/article/FEcOI8kYoGuFYq39acEo"
+    },
+    {
+      "type": "update",
+      "dimension": "tools",
+      "id": "penguinharness",
+      "name": "PenguinHarness",
+      "dim_label": "工具",
+      "summary": "发布  |  热度 ↓10 (55→45)",
+      "date": "2026-08-13",
+      "time": "07:02:29",
+      "url": "https://www.jiqizhixin.com/"
+    },
+    {
+      "type": "update",
+      "dimension": "tools",
+      "id": "forgestencil",
+      "name": "ForgeStencil",
+      "dim_label": "工具",
+      "summary": "发布  |  热度 ↓10 (50→40)",
+      "date": "2026-08-13",
+      "time": "07:02:29",
+      "url": "https://www.jiqizhixin.com/"
+    },
+    {
+      "type": "update",
+      "dimension": "tools",
+      "id": "veriloop-coder-e1",
+      "name": "VeriLoop Coder-E1",
+      "dim_label": "工具",
+      "summary": "发布  |  热度 ↓15 (50→35)",
+      "date": "2026-08-13",
+      "time": "07:02:29",
+      "url": "https://www.jiqizhixin.com/"
+    },
+    {
+      "type": "update",
+      "dimension": "tools",
+      "id": "barunlm-35m",
+      "name": "BarunLM-35M",
+      "dim_label": "工具",
+      "summary": "发布  |  热度 ↓15 (45→30)",
+      "date": "2026-08-13",
+      "time": "07:02:29",
+      "url": "https://www.jiqizhixin.com/"
+    },
+    {
+      "type": "update",
+      "dimension": "tools",
+      "id": "dwarfstar",
+      "name": "DwarfStar",
+      "dim_label": "工具",
+      "summary": "发布  |  热度 ↓15 (50→35)",
+      "date": "2026-08-13",
+      "time": "07:02:29",
+      "url": "https://www.jiqizhixin.com/"
+    },
+    {
+      "type": "update",
+      "dimension": "tools",
+      "id": "libra",
+      "name": "Libra",
+      "dim_label": "工具",
+      "summary": "发布  |  热度 ↓15 (45→30)",
+      "date": "2026-08-13",
+      "time": "07:02:29",
+      "url": "https://www.jiqizhixin.com/"
+    },
+    {
+      "type": "update",
+      "dimension": "tools",
+      "id": "hunyuan-asr",
+      "name": "混元 ASR",
+      "dim_label": "工具",
+      "summary": "混元 ASR 推出内测版  |  热度 ↓10 (55→45)",
+      "date": "2026-08-13",
+      "time": "07:02:29",
+      "url": "https://www.jiqizhixin.com/"
+    },
+    {
+      "type": "update",
+      "dimension": "tools",
+      "id": "workbuddy",
+      "name": "腾讯WorkBuddy",
+      "dim_label": "工具",
+      "summary": "升级多端同步  |  热度 ↓10 (50→40)",
+      "date": "2026-08-13",
+      "time": "07:02:29",
+      "url": "https://www.infoq.cn/article/FEcOI8kYoGuFYq39acEo"
+    },
+    {
+      "type": "update",
+      "dimension": "tools",
+      "id": "yonwork",
+      "name": "YonWork",
+      "dim_label": "工具",
+      "summary": "用友 GBIC 2026 亮相  |  热度 ↓15 (45→30)",
+      "date": "2026-08-13",
+      "time": "07:02:29",
+      "url": "https://www.infoq.cn/article/FEcOI8kYoGuFYq39acEo"
+    },
+    {
+      "type": "new",
+      "dimension": "tools",
+      "id": "feizhu-v10",
+      "name": "飞猪 AI 产品 V10",
+      "dim_label": "工具",
+      "summary": "发布  |  热度 25",
+      "date": "2026-08-13",
+      "time": "07:02:29",
+      "url": "https://www.infoq.cn/article/t0wslR8w8H7yeRD2MwO6"
+    },
+    {
+      "type": "update",
+      "dimension": "llms",
+      "id": "kimi-k3",
+      "name": "Kimi K3",
+      "dim_label": "大模型",
+      "summary": "Kimi K3 引爆价格战，中国大模型周调用量全球登顶  |  热度 ↑10 (85→95)",
+      "date": "2026-08-13",
+      "time": "07:02:29",
+      "url": "https://36kr.com/p/3926124303906946"
+    },
+    {
+      "type": "update",
+      "dimension": "llms",
+      "id": "gpt-5-6",
+      "name": "GPT-5.6",
+      "dim_label": "大模型",
+      "summary": "OpenAI给10亿用户免费换上GPT-5.6  |  热度 ↑5 (85→90)",
+      "date": "2026-08-13",
+      "time": "07:02:29",
+      "url": "https://www.infoq.cn/article/FEcOI8kYoGuFYq39acEo"
+    },
+    {
+      "type": "update",
+      "dimension": "llms",
+      "id": "qwen3-8-max",
+      "name": "Qwen3.8-Max",
+      "dim_label": "大模型",
+      "summary": "Qwen3.8-Max 发布  |  热度 ↑5 (75→80)",
+      "date": "2026-08-13",
+      "time": "07:02:29",
+      "url": "https://www.jiqizhixin.com/"
+    },
+    {
+      "type": "update",
+      "dimension": "llms",
+      "id": "deepseek-v4-flash",
+      "name": "DeepSeek V4 Flash",
+      "dim_label": "大模型",
+      "summary": "涨价30倍仍是最便宜的模型  |  热度 ↓13 (98→85)",
+      "date": "2026-08-13",
+      "time": "07:02:29",
+      "url": "https://www.infoq.cn/article/FEcOI8kYoGuFYq39acEo"
+    },
+    {
+      "type": "update",
+      "dimension": "llms",
+      "id": "h3",
+      "name": "H3",
+      "dim_label": "大模型",
+      "summary": "MiniMax H3 团队 Reddit 被问爆  |  热度 ↓8 (78→70)",
+      "date": "2026-08-13",
+      "time": "07:02:29",
+      "url": "https://www.infoq.cn/article/9C3eK9tJqDXbabbBy3aj"
+    },
+    {
+      "type": "update",
+      "dimension": "llms",
+      "id": "doubao",
+      "name": "豆包",
+      "dim_label": "大模型",
+      "summary": "豆包开始抽佣  |  热度 ↑5 (70→75)",
+      "date": "2026-08-13",
+      "time": "07:02:29",
+      "url": "https://36kr.com/p/3934657998198403"
+    },
+    {
+      "type": "update",
+      "dimension": "llms",
+      "id": "llama",
+      "name": "Llama",
+      "dim_label": "大模型",
+      "summary": "Meta 正式重回开源模型路线  |  热度 ↑7 (58→65)",
+      "date": "2026-08-13",
+      "time": "07:02:29",
+      "url": "https://www.infoq.cn/article/FEcOI8kYoGuFYq39acEo"
+    },
+    {
+      "type": "update",
+      "dimension": "llms",
+      "id": "qwen3-5",
+      "name": "Qwen3.5",
+      "dim_label": "大模型",
+      "summary": "VeriLoop Coder-E1 基于 Qwen3.5 多模态基座  |  热度 ↓10 (50→40)",
+      "date": "2026-08-13",
+      "time": "07:02:29",
+      "url": "https://www.jiqizhixin.com/"
+    },
+    {
+      "type": "new",
+      "dimension": "llms",
+      "id": "hunyuan-asr-model",
+      "name": "Hy-ASR-3.0-preview",
+      "dim_label": "大模型",
+      "summary": "混元 ASR 推出内测版  |  热度 45",
+      "date": "2026-08-13",
+      "time": "07:02:29",
+      "url": "https://www.jiqizhixin.com/"
     }
   ],
   "stats": {
-    "total_providers": 42,
-    "total_people": 96,
-    "total_tools": 45,
-    "total_llms": 98,
+    "total_providers": 43,
+    "total_people": 98,
+    "total_tools": 46,
+    "total_llms": 99,
     "total_hotspots": 20,
-    "new_this_period": 9,
-    "updated_this_period": 55,
+    "new_this_period": 5,
+    "updated_this_period": 67,
     "removed_this_period": 0
   },
   "hotspots": [
     {
       "id": "jeff-dean-leaves-google",
       "title": "谷歌首席科学家 Jeff Dean 离职创立 Discovery Loop",
-      "summary": "谷歌首席科学家Jeff Dean离职创办Discovery Loop，专注AI驱动的科学发现，标志其从巨头核心研发转向独立前沿探索。",
-      "date": "2026-08-12",
+      "summary": "谷歌首席科学家Jeff Dean离职创办Discovery Loop，专注AI驱动科学发现，标志其从巨头核心研发转向独立前沿探索。",
+      "date": "2026-08-13",
       "source": "机器之心",
       "url": "https://www.jiqizhixin.com/",
       "related_providers": [
@@ -7524,7 +7623,7 @@
       ],
       "related_tools": [],
       "related_llms": [],
-      "updated_at": "2026-08-12T12:57:06.870962"
+      "updated_at": "2026-08-13T07:02:29.874068"
     },
     {
       "id": "deepseek-v4-flash-release",
@@ -7688,21 +7787,21 @@
     {
       "id": "kimi-k3-price-war",
       "title": "Kimi K3 引爆价格战，中国大模型周调用量全球登顶",
-      "summary": "Kimi K3以低价策略引发行业价格战，推动中国大模型周调用量首次超越全球其他市场，凸显国产模型规模化落地与成本优势。",
-      "date": "2026-08-11",
+      "summary": "Kimi K3以低价策略冲击市场，推动中国大模型周调用量首次超越全球其他地区，凸显国产AI竞争力跃升。",
+      "date": "2026-08-13",
       "source": "36氪",
       "url": "https://36kr.com/p/3926124303906946",
       "related_providers": [
         "moonshot"
       ],
       "related_people": [
-        "yang-zhilin"
+        "yang-zhiping"
       ],
       "related_tools": [],
       "related_llms": [
         "kimi-k3"
       ],
-      "updated_at": "2026-08-11T21:04:01.255661"
+      "updated_at": "2026-08-13T07:02:29.874068"
     },
     {
       "id": "deepseek-v4-flash-price",
@@ -7808,10 +7907,10 @@
     {
       "id": "deepseek-unitree-ipo",
       "title": "DeepSeek 认购宇树科技 IPO 战略配售",
-      "summary": "DeepSeek参与宇树科技IPO战略配售，以资本绑定强化AI与机器人产业链协同，凸显其低价模型策略下的生态扩张野心。",
-      "date": "2026-08-12",
-      "source": "InfoQ",
-      "url": "https://www.infoq.cn/article/FEcOI8kYoGuFYq39acEo",
+      "summary": "DeepSeek参与宇树科技IPO战略配售，以资本纽带强化AI与机器人产业协同，凸显头部大模型厂商加速布局具身智能赛道。",
+      "date": "2026-08-13",
+      "source": "机器之心",
+      "url": "https://www.jiqizhixin.com/",
       "related_providers": [
         "deepseek",
         "unitree"
@@ -7824,26 +7923,28 @@
       "related_llms": [
         "deepseek-v4-flash"
       ],
-      "updated_at": "2026-08-12T21:03:08.071529"
+      "updated_at": "2026-08-13T07:02:29.874068"
     },
     {
       "id": "meta-open-source-return",
       "title": "Meta 正式重回开源模型路线",
-      "summary": "Meta宣布回归开源模型路线，重新发布可公开获取的AI模型权重，此举旨在重塑行业生态，推动开发者社区创新，并挑战闭源竞争对手的市场主导地位。",
-      "date": "2026-08-12",
+      "summary": "Meta宣布回归开源模型路线，重新发布开放权重模型，旨在重塑AI生态竞争力，此举或影响行业开源与闭源格局走向。",
+      "date": "2026-08-13",
       "source": "InfoQ",
-      "url": "https://www.infoq.cn/article/YBCpst8secs3xWqZwWLe",
+      "url": "https://www.infoq.cn/article/FEcOI8kYoGuFYq39acEo",
       "related_providers": [
-        "mete"
+        "meta",
+        "mianbi"
       ],
       "related_people": [
-        "mark-zuckerberg"
+        "mark-zuckerberg",
+        "li-dahai"
       ],
       "related_tools": [],
       "related_llms": [
         "llama"
       ],
-      "updated_at": "2026-08-12T21:03:08.071529"
+      "updated_at": "2026-08-13T07:02:29.874068"
     },
     {
       "id": "openai-gpt56-free",
@@ -7867,8 +7968,8 @@
     {
       "id": "bytedance-10t-model",
       "title": "字节拟训练超5万亿参数模型，张一鸣反对蒸馏",
-      "summary": "字节跳动计划训练参数超5万亿的下一代大模型，创始人张一鸣明确反对采用蒸馏技术，主张自主创新以突破算力瓶颈，此举或重塑国内AI研发路径。",
-      "date": "2026-08-12",
+      "summary": "字节跳动计划训练参数超5万亿的下一代大模型，创始人张一鸣明确反对采用蒸馏技术，主张自主创新以突破能力上限。",
+      "date": "2026-08-13",
       "source": "36氪",
       "url": "https://36kr.com/p/3935748520459653",
       "related_providers": [
@@ -7881,7 +7982,7 @@
       "related_llms": [
         "doubao"
       ],
-      "updated_at": "2026-08-12T21:03:08.071529"
+      "updated_at": "2026-08-13T07:02:29.874068"
     },
     {
       "id": "kimi-k3-distillation-break",
