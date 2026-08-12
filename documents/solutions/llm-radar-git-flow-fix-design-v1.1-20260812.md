@@ -2,7 +2,7 @@
 title: llm-radar git 处理逻辑修复设计
 topic: llm-radar
 type: design
-version: 1.0
+version: 1.1
 date: 2026-08-12
 author: hermes-1.2.0
 tags: [llm-radar, git, cron, data-collection]
@@ -13,9 +13,10 @@ model: deepseek-v4-flash
 
 # llm-radar — run() git 处理逻辑修复设计
 
-> 版本: v1.0 | 日期: 2026-08-12
+> 版本: v1.1 | 日期: 2026-08-12
 > 作者: ops (hermes-1.2.0)
 > 数据来源: llm-radar-collector.py 实际运行日志、服务器/本机 git 状态取证
+> 变更: v1.0 → v1.1 记录确认项 A1 B1 C1 D2(2026-08-12)
 
 ## 背景/动机
 
@@ -185,33 +186,28 @@ crontab: 0 * * * *(每小时)+ 保留 _think 6h 防抖
 
 这些已提交并通过验证(见 git log 63de4b3/03ab565/0058fcb/3dbcb96)。
 
-## 待确认清单
+## 待确认清单(已确认 2026-08-12, 用户回复: A1 B1 C1 D2)
 
-A. 本机 cron 频率:
-  A1 每小时 + 6h 防抖(推荐,错过窗口最小)
-  A2 保持 7/14/21(依赖服务器兜底)
-  A3 本次不做
+| 项 | 决策 | 确认结果 |
+|----|------|---------|
+| A 本机 cron 频率 | A1 每小时 + 6h 防抖 | ✅ 采用(错过窗口最小) |
+| B auto-push 分叉收敛 | B1 fetch/merge + rebase + force-with-lease | ✅ 采用(全链自愈) |
+| C 冲突文件防护范围 | C1 三个写盘函数都加 | ✅ 采用 |
+| D 实施后验证方式 | D2 仅靠真实 cron 周期观察 | ✅ 采用(不手动制造分叉) |
 
-B. auto-push 分叉收敛方式:
-  B1 fetch/merge --ff-only + rejected 时 rebase,仍失败 force-with-lease(推荐)
-  B2 只 rebase 重试,不用 force-with-lease(更保守)
-  B3 本次不做
+### 确认后实施范围
 
-C. 冲突文件防护范围:
-  C1 三个写盘函数都加(snapshot/timestamp/overview,推荐)
-  C2 只加 snapshot(主数据文件)
-  C3 本次不做
-
-D. 实施后验证方式:
-  D1 手动制造分叉+冲突标记场景验证(推荐)
-  D2 仅靠真实 cron 周期观察
-  D3 本次不做
+1. 新增 `_sync_remote()`:pre-run fetch + merge --ff-only,分叉时本地优先,先清理残留 rebase
+2. 改造 `_auto_push()`:rejected → rebase 重试 → force-with-lease → dead-letter,结束清理残留
+3. `_write_snapshot`/`_write_timestamp`/`_write_overview` 加冲突标记防护(checkout --theirs 清理)
+4. 本机 crontab 改回每小时 + 保留 6h 防抖
+5. 验收:仅靠真实 cron 周期观察(7/14/21 + 本机每小时),确认无 rebase 残留、auto-push 成功
 
 ## 元信息
 
 | 项目 | 内容 |
 |:-----|:------|
-| 版本 | 1.0 |
+| 版本 | 1.1 |
 | 最后更新 | 2026-08-12 |
 | 作者 | hermes-1.2.0 |
 | Session | ops/llm-radar-git-fix |
