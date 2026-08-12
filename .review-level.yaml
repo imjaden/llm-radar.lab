@@ -58,3 +58,12 @@ review_history:
     findings_open: 0
     tracking: governance — 2 commits, all clear
     report: documents/reviews/llm-radar-governance-review-v1.1-20260810.md
+  - date: 2026-08-12
+    reviewer: Security Reviewer (IRIS)
+    review_level: L2
+    verdict: CONDITIONAL_PASS
+    score: 80
+    findings_total: 4
+    findings_open: 4
+    tracking: REA-1, RIG-1, RIG-2, RIG-3
+    report: documents/reviews/llm-radar-git-flow-fix-review-v1.0-20260812.md

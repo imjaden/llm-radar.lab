@@ -72,3 +72,31 @@
   2. 修正后通知 review profile 复查
 
 ---
+
+## 2026-08-12 — git flow fix 设计评审 v1.1
+
+- **review者**: review/llm-radar.lab-review (hermes-1.2.0)
+- **范围**: 设计文档 v1.1 + 2 个 commit — db8d792 (v1.0), 5254ea4 (v1.1)
+- **Tracking**: REA-1, RIG-1, RIG-2, RIG-3
+- **状态**: ⏳ CONDITIONAL PASS — 80/100 (B)
+- **报告**: documents/reviews/llm-radar-git-flow-fix-review-v1.0-20260812.md
+- **实现 prompt**: ⬜ 无需生成 (非 PASS)
+
+### 发现摘要
+
+| # | Severity | Title | Status |
+|---|----------|-------|--------|
+| REA-1 | 🟡 | D1 时序依赖 "本地优先→auto-push 收敛" 未显式标注 | Open |
+| RIG-1 | 🟡 | checkout --theirs 对 untracked 文件未覆盖 | Open |
+| RIG-2 | 🟡 | fetch 失败场景未覆盖 | Open |
+| RIG-3 | 🟡 | 写盘函数调用时序未在文档中显式标注 | Open |
+
+### 3D 评分
+
+| 维度 | 评级 | 说明 |
+|:-----|:----:|:-----|
+| 合理性 | 🟢 | 根因链完整, 方案对比充分, 确认项集成到位 |
+| 严格性 | 🟡 | 3 个边界/时序遗漏 |
+| 安全性 | 🟢 | subprocess list-form, force-with-lease, 0 注入面 |
+
+---
