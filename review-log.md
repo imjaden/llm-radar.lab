@@ -78,18 +78,18 @@
 - **review者**: review/llm-radar.lab-review (hermes-1.2.0)
 - **范围**: 设计文档 v1.1 + 2 个 commit — db8d792 (v1.0), 5254ea4 (v1.1)
 - **Tracking**: REA-1, RIG-1, RIG-2, RIG-3
-- **状态**: ⏳ CONDITIONAL PASS — 80/100 (B)
+- **状态**: ✅ RESOLVED — 见 2026-08-12 re-review v1.2 (PASS 100/100)
 - **报告**: documents/reviews/llm-radar-git-flow-fix-review-v1.0-20260812.md
-- **实现 prompt**: ⬜ 无需生成 (非 PASS)
+- **实现 prompt**: ✅ 已生成 (v1.2 PASS)
 
 ### 发现摘要
 
 | # | Severity | Title | Status |
 |---|----------|-------|--------|
-| REA-1 | 🟡 | D1 时序依赖 "本地优先→auto-push 收敛" 未显式标注 | Open |
-| RIG-1 | 🟡 | checkout --theirs 对 untracked 文件未覆盖 | Open |
-| RIG-2 | 🟡 | fetch 失败场景未覆盖 | Open |
-| RIG-3 | 🟡 | 写盘函数调用时序未在文档中显式标注 | Open |
+| REA-1 | 🟡 | D1 时序依赖 "本地优先→auto-push 收敛" 未显式标注 | ✅ Fixed (v1.2) |
+| RIG-1 | 🟡 | checkout --theirs 对 untracked 文件未覆盖 | ✅ Fixed (v1.2) |
+| RIG-2 | 🟡 | fetch 失败场景未覆盖 | ✅ Fixed (v1.2) |
+| RIG-3 | 🟡 | 写盘函数调用时序未在文档中显式标注 | ✅ Fixed (v1.2) |
 
 ### 3D 评分
 
@@ -98,5 +98,26 @@
 | 合理性 | 🟢 | 根因链完整, 方案对比充分, 确认项集成到位 |
 | 严格性 | 🟡 | 3 个边界/时序遗漏 |
 | 安全性 | 🟢 | subprocess list-form, force-with-lease, 0 注入面 |
+
+---
+
+## 2026-08-12 — git flow fix 设计复审 v1.2
+
+- **review者**: review/llm-radar.lab-review (hermes-1.2.0)
+- **范围**: 设计文档 v1.2 + 1 个 commit — 117e382 (修复 v1.1 4 项 🟡)
+- **Tracking**: REA-1/RIG-1/RIG-2/RIG-3 ✅ all fixed; O-1 🟢 (optional)
+- **状态**: ✅ PASS — 100/100 (A)
+- **报告**: documents/reviews/llm-radar-git-flow-fix-rereview-v1.2-20260812.md
+- **实现 prompt**: ✅ 已生成
+
+### 发现摘要
+
+| # | Severity | Title | Status |
+|---|----------|-------|--------|
+| REA-1 | 🟡 | D1 时序标注 | ✅ Fixed — §D1 要点 + 底部调用顺序图 |
+| RIG-1 | 🟡 | checkout --theirs untracked | ✅ Fixed — git ls-files 分叉 + os.remove |
+| RIG-2 | 🟡 | fetch 失败 | ✅ Fixed — D1 步骤 1 新增 fetch 失败→warning |
+| RIG-3 | 🟡 | 写盘时序 | ✅ Fixed — 底部 run() 调用顺序图 |
+| O-1 | 🟢 | os.remove 原子性 | 建议实施时用 tempfile + rename |
 
 ---
