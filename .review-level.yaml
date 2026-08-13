@@ -95,3 +95,13 @@ review_history:
     findings_open: 4
     tracking: REA-1, REA-2, RIG-1, RIG-2
     report: documents/reviews/llm-radar-health-probe-review-v1.0-20260813.md
+    resolved_by: re-review v1.2 (2026-08-13) — PASS 100/100
+  - date: 2026-08-13
+    reviewer: Security Reviewer (IRIS)
+    review_level: L2
+    verdict: PASS
+    score: 100
+    findings_total: 2
+    findings_open: 0
+    tracking: re-review — REA-1/REA-2/RIG-1/RIG-2 all fixed; O-1/O-2 🟢 (optional)
+    report: documents/reviews/llm-radar-health-probe-rereview-v1.2-20260813.md

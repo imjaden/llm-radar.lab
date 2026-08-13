@@ -153,23 +153,45 @@
 - **review者**: review/llm-radar.lab-review (hermes-1.2.0)
 - **范围**: 设计文档 v1.1 + 2 个 commit — 203c62a (v1.0), b6d7335 (v1.1)
 - **Tracking**: REA-1, REA-2, RIG-1, RIG-2
-- **状态**: ⏳ CONDITIONAL PASS — 80/100 (B)
+- **状态**: ✅ RESOLVED — 见 2026-08-13 re-review v1.2 (PASS 100/100)
 - **报告**: documents/reviews/llm-radar-health-probe-review-v1.0-20260813.md
-- **实现 prompt**: ⬜ 无需生成 (非 PASS)
+- **实现 prompt**: ✅ 已生成 (v1.2 PASS)
 
 ### 发现摘要
 
 | # | Severity | Title | Status |
 |---|----------|-------|--------|
-| REA-1 | 🟡 | B1 脚本路径 (~/.hermes) 与 C2 确认 (项目 scripts/) 矛盾 | Open |
-| REA-2 | 🟡 | status==success 混入质量门禁语义 (待确认) | Open |
-| RIG-1 | 🟡 | last_run_at 无时区后缀, 新鲜度计算歧义 | Open |
-| RIG-2 | 🟡 | 探针 fetch 无 cache-busting, CDN 陈旧副本未覆盖 | Open |
+| REA-1 | 🟡 | B1 脚本路径 (~/.hermes) 与 C2 确认 (项目 scripts/) 矛盾 | ✅ Fixed (v1.2) |
+| REA-2 | 🟡 | status==success 混入质量门禁语义 (待确认) | ✅ Fixed (v1.2) |
+| RIG-1 | 🟡 | last_run_at 无时区后缀, 新鲜度计算歧义 | ✅ Fixed (v1.2) |
+| RIG-2 | 🟡 | 探针 fetch 无 cache-busting, CDN 陈旧副本未覆盖 | ✅ Fixed (v1.2) |
 
 ### 数据验证要点
 
 - 字段名 last_run_at/last_run_status/last_news_date 与 collector `_write_timestamp` schema 一致 ✅
 - 线上实测 last_run_at=2026-07-13 (30 天陈旧), 探针需求真实存在
 - last_run_at 为 `datetime.now().isoformat()` 无时区 — RIG-1 根因
+
+---
+
+## 2026-08-13 — health probe 设计复审 v1.2
+
+- **review者**: review/llm-radar.lab-review (hermes-1.2.0)
+- **范围**: 设计文档 v1.2 + 1 个 commit — 81ddac2 (修复 v1.1 4 项 🟡)
+- **Tracking**: REA-1/REA-2/RIG-1/RIG-2 ✅ all fixed; O-1/O-2 🟢 (optional)
+- **状态**: ✅ PASS — 100/100 (A)
+- **报告**: documents/reviews/llm-radar-health-probe-rereview-v1.2-20260813.md
+- **实现 prompt**: ✅ 已生成
+
+### 发现摘要
+
+| # | Severity | Title | Status |
+|---|----------|-------|--------|
+| REA-1 | 🟡 | 脚本路径统一 scripts/ | ✅ Fixed — 0 残留 ~/.hermes |
+| REA-2 | 🟡 | 告警语义分离 | ✅ Fixed — 新鲜度 exit1 / 质量 exit0 |
+| RIG-1 | 🟡 | 时区契约 | ✅ Fixed — +08:00 显式声明 |
+| RIG-2 | 🟡 | cache-busting | ✅ Fixed — ?t=<epoch> |
+| O-1 | 🟢 | 三态 exit code 契约注释 | 实施时写入脚本注释 |
+| O-2 | 🟢 | 时区假设固化 | 实施时脚本顶部注释 |
 
 ---
