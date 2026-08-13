@@ -220,8 +220,147 @@ class LLMRadarCollector:
             self._print_err(f'DeepSeek API 调用失败: {e}')
             return None
 
+    # ===== Git 同步与推送 =====
+    # 所有 git 操作均用 subprocess.run(['git', ...]) list-form，禁止 shell=True。
+
+    def _git_run(self, *args, timeout=60):
+        """统一 git 子进程封装。返回 CompletedProcess，不抛异常。"""
+        try:
+            return subprocess.run(['git', *args], cwd=self.project_root,
+                                  capture_output=True, text=True, timeout=timeout)
+        except subprocess.TimeoutExpired:
+            return subprocess.CompletedProcess(['git', *args], 124, '', 'git timeout')
+        except OSError as e:
+            return subprocess.CompletedProcess(['git', *args], 125, '', str(e))
+
+    def _has_rebase_state(self):
+        """检测 .git 是否残留 rebase 状态（rebase-merge / rebase-apply）"""
+        git_dir = self.project_root / '.git'
+        if not git_dir.exists():
+            return False
+        return (git_dir / 'rebase-merge').exists() or (git_dir / 'rebase-apply').exists()
+
+    def _abort_rebase(self):
+        """清理残留 rebase 状态（自愈 7/14 与 8/12 现场）"""
+        if self._has_rebase_state():
+            self._print_warn('检测到残留 rebase 状态，执行 git rebase --abort 清理')
+            self._git_run('rebase', '--abort')
+
+    def _sync_remote(self):
+        """pre-run 同步：fetch + merge --ff-only，分叉时本地优先，先清理残留 rebase。
+
+        仅同步，不 commit、不 push；本地采集数据由 _auto_push 统一 commit + push。
+        所有 git 失败仅 warning，不阻断采集。
+        """
+        try:
+            self._abort_rebase()
+
+            r = self._git_run('fetch', 'origin', 'main', timeout=90)
+            if r.returncode != 0:
+                self._print_warn(f'远端同步失败，跳过，本地优先: {(r.stderr or "").strip()[:100]}')
+                return
+
+            r = self._git_run('merge-base', '--is-ancestor', 'HEAD', 'origin/main')
+            if r.returncode == 0:
+                # 本地落后且可快进 → fast-forward
+                m = self._git_run('merge', '--ff-only', 'origin/main')
+                if m.returncode == 0:
+                    self._print_ok('remote 已同步（fast-forward）')
+                else:
+                    self._print_warn(f'fast-forward 合并失败，跳过: {(m.stderr or "").strip()[:100]}')
+            else:
+                # 分叉：本地优先，稍后 auto-push 收敛
+                self._print_warn('远端分叉，本地优先，稍后 auto-push 收敛')
+        except Exception as e:
+            self._print_warn(f'远端同步异常，跳过: {e}')
+
+    def _clean_conflict_file(self, path):
+        """写盘前清理冲突标记污染的文件。
+
+        tracked → git checkout --theirs（取远端为基）；untracked → os.remove。
+        任何清理失败仅 warning，调用方随后用新内容覆盖写入。
+        """
+        markers = ('<<<<<<< HEAD', '=======', '>>>>>>>')
+        try:
+            if not path.exists():
+                return
+            if not any(m in path.read_text(encoding='utf-8', errors='replace') for m in markers):
+                return
+        except Exception:
+            return
+
+        self._print_warn(f'检测到冲突标记，清理文件: {path.name}')
+        try:
+            rel = str(path.resolve().relative_to(self.project_root.resolve()))
+        except ValueError:
+            rel = str(path)
+        r = self._git_run('ls-files', '--error-unmatch', rel)
+        if r.returncode == 0:
+            # git 已跟踪 → 取远端版本为基（本地 run 的合并结果随后完整覆盖）
+            c = self._git_run('checkout', '--theirs', '--', rel)
+            if c.returncode != 0:
+                self._print_warn(f'checkout --theirs 失败: {(c.stderr or "").strip()[:100]}')
+        else:
+            # untracked（首次创建 / gitignored）→ 直接删除，由本次写入全新内容
+            try:
+                os.remove(path)
+            except OSError as e:
+                self._print_warn(f'删除冲突文件失败: {e}')
+
+    def _write_dead_letter(self, changelog, error):
+        """推送失败数据存档（保留最近 10 次），不抛异常。"""
+        dead_path = self.data_dir / 'dead-letter.json'
+        try:
+            dead = json.loads(dead_path.read_text()) if dead_path.exists() else []
+            dead.append({
+                'time': datetime.now().isoformat(),
+                'changelog_count': len(changelog),
+                'error': error[:500],
+                'changelog_snapshot': changelog[:20],  # 最多保留 20 条避免失控
+            })
+            dead = dead[-10:]  # 保留最近 10 次
+            dead_path.write_text(json.dumps(dead, ensure_ascii=False, indent=2))
+            self._print_info('推送失败数据已存档到 dead-letter.json')
+        except Exception as dl_err:
+            self._print_warn(f'dead letter 写入失败: {dl_err}')
+
+    def _push_with_recovery(self, changelog, msg):
+        """push 冲突自愈：push rejected → rebase 重试 → force-with-lease → dead-letter。
+
+        结束始终清理残留 rebase 状态；任何失败不抛异常。
+        """
+        try:
+            r = self._git_run('push', 'origin', 'main', timeout=120)
+            if r.returncode == 0:
+                self._print_ok(f'auto-push 完成: {msg}')
+                return
+
+            stderr = (r.stderr or '').strip()
+            self._print_warn(f'push rejected，尝试收敛: {stderr[:150]}')
+
+            # 尝试 1: pull --rebase（远端有新增）
+            r = self._git_run('pull', '--rebase', 'origin', 'main', timeout=120)
+            if r.returncode == 0:
+                # 尝试 2: rebase 成功后 force-with-lease 收敛分叉（带 lease 保护）
+                r2 = self._git_run('push', '--force-with-lease', 'origin', 'main', timeout=120)
+                if r2.returncode == 0:
+                    self._print_ok('auto-push 完成（rebase + force-with-lease 收敛分叉）')
+                    return
+                self._print_warn(f'force-with-lease push 失败: {(r2.stderr or "").strip()[:150]}')
+            else:
+                self._print_warn(f'pull --rebase 失败/冲突: {(r.stderr or "").strip()[:150]}')
+                self._abort_rebase()
+
+            # 仍失败 → dead-letter（不抛异常）
+            self._write_dead_letter(changelog, stderr)
+        finally:
+            self._abort_rebase()
+
     def _auto_push(self, changelog, partial=False):
         """自动 commit + push。partial=True 时仅推送 timestamp.json"""
+        # 测试/降级保护：_skip_push 时跳过一切 git 操作（含 partial 模式，防止测试污染历史）
+        if getattr(self, '_skip_push', False):
+            return
         # partial 模式：质量门禁失败，仅推送 timestamp.json 监控端点
         if partial:
             self._print_info('质量门禁未通过，仅推送 timestamp.json...')
@@ -247,9 +386,6 @@ class LLMRadarCollector:
             return
 
         # 正常模式
-        if getattr(self, '_skip_push', False):
-            self._print_err('质量门禁未通过，跳过 auto-push')
-            return
         if not changelog:
             self._print_info('无数据更新，跳过 auto-push')
             return
@@ -260,40 +396,25 @@ class LLMRadarCollector:
         self._print_info(f'检测到 {count} 条变更，执行 auto-push...')
         try:
             subprocess.run(['git', 'add', '-A'], cwd=self.project_root, check=True, capture_output=True)
-            msg = f'auto-push@llm-radar: update data ({count} changes)'
-            r = subprocess.run(['git', 'commit', '-m', msg], cwd=self.project_root, capture_output=True, text=True)
-            if r.returncode != 0:
-                err = r.stderr.strip()
-                if 'nothing to commit' in err:
-                    self._print_info('无变更需要提交')
-                    return
-                if 'please tell me who you are' in err.lower() or 'user.name' in err:
-                    self._print_err('git 未配置 user 信息，请执行:')
-                    self._print_err('  git config user.name "admin"')
-                    self._print_err('  git config user.email "admin@llm-radar"')
-                    return
-                self._print_warn(f'commit 失败: {err[:200]}')
-                return
-            subprocess.run(['git', 'push'], cwd=self.project_root, check=True, capture_output=True)
-            self._print_ok(f'auto-push 完成: {msg}')
         except subprocess.CalledProcessError as e:
-            stderr = e.stderr.decode() if e.stderr else ''
-            self._print_warn(f'auto-push 跳过: {stderr[:200]}')
-            # Dead letter: 保存推送失败数据
-            dead_path = self.data_dir / 'dead-letter.json'
-            try:
-                dead = json.loads(dead_path.read_text()) if dead_path.exists() else []
-                dead.append({
-                    'time': datetime.now().isoformat(),
-                    'changelog_count': len(changelog),
-                    'error': stderr[:500],
-                    'changelog_snapshot': changelog[:20],  # 最多保留 20 条避免失控
-                })
-                dead = dead[-10:]  # 保留最近 10 次
-                dead_path.write_text(json.dumps(dead, ensure_ascii=False, indent=2))
-                self._print_info(f'推送失败数据已存档到 dead-letter.json')
-            except Exception as dl_err:
-                self._print_warn(f'dead letter 写入失败: {dl_err}')
+            stderr = e.stderr.decode() if e.stderr else str(e)
+            self._print_warn(f'git add 失败: {stderr[:200]}')
+            return
+        msg = f'auto-push@llm-radar: update data ({count} changes)'
+        r = subprocess.run(['git', 'commit', '-m', msg], cwd=self.project_root, capture_output=True, text=True)
+        if r.returncode != 0:
+            err = r.stderr.strip()
+            if 'nothing to commit' in err:
+                self._print_info('无变更需要提交')
+                return
+            if 'please tell me who you are' in err.lower() or 'user.name' in err:
+                self._print_err('git 未配置 user 信息，请执行:')
+                self._print_err('  git config user.name "admin"')
+                self._print_err('  git config user.email "admin@llm-radar"')
+                return
+            self._print_warn(f'commit 失败: {err[:200]}')
+            return
+        self._push_with_recovery(changelog, msg)
 
     # ===== Fetch =====
 
@@ -1141,6 +1262,7 @@ hotspots 数组中每个元素格式：
     def _save_snapshot(self, snapshot):
         """保存快照"""
         self.data_dir.mkdir(parents=True, exist_ok=True)
+        self._clean_conflict_file(self.snapshot_path)
         with open(self.snapshot_path, 'w', encoding='utf-8') as f:
             json.dump(snapshot, f, ensure_ascii=False, indent=2)
         self._print_ok(f'快照已保存: {self.snapshot_path}')
@@ -1174,6 +1296,7 @@ hotspots 数组中每个元素格式：
         }
 
         ts_path = self.project_root / 'timestamp.json'
+        self._clean_conflict_file(ts_path)
         ts_path.write_text(json.dumps(ts_data, ensure_ascii=False, indent=2))
         status = ts_data['last_run_status']
         self._print_info(f'timestamp.json 已生成: status={status} news={last_date}')
@@ -1204,6 +1327,7 @@ hotspots 数组中每个元素格式：
         }
 
         path = self.project_root / 'overview.json'
+        self._clean_conflict_file(path)
         path.write_text(json.dumps(overview, ensure_ascii=False, separators=(',', ':')))
         self._print_info('overview.json 已生成')
 
@@ -1572,6 +1696,9 @@ hotspots 数组中每个元素格式：
         self._print_info(f'数据目录: {self.data_dir}')
         print()
 
+        # [Sync] pre-run 同步（fetch + merge --ff-only，分叉本地优先，先清理残留 rebase）
+        self._sync_remote()
+
         # [Think] 采集策略决策
         if not self._think(force=force):
             return False
@@ -1760,7 +1887,8 @@ hotspots 数组中每个元素格式：
 CRON_TAG = '# llm-radar-collector'
 RUN_SCRIPT = PROJECT_ROOT / 'llm-radar-run.sh'
 CRON_CMD = f'{RUN_SCRIPT} >> {DATA_DIR}/collector.log 2>&1'
-CRON_SCHEDULE = '0 7,14,21 * * *'  # 每天 7:00、14:00、21:00
+# 本机(macOS)每小时 + 6h 防抖（错过窗口从"一天"缩到"几小时"）；服务器(Linux 7×24)保持 7/14/21
+CRON_SCHEDULE = '0 * * * *' if platform.system() == 'Darwin' else '0 7,14,21 * * *'
 CRON_HELP = f'crontab --add [schedule] - 添加定时任务（默认 {CRON_SCHEDULE}）'
 
 def crontab_add(schedule=None):
@@ -1874,19 +2002,7 @@ def main():
             collector._print_err('无 fetch 缓存，请先执行 fetch')
 
     elif command == 'run':
-        # 先检查 remote 更新
-        try:
-            r = subprocess.run(['git', 'pull', '--rebase'], cwd=PROJECT_ROOT, capture_output=True, text=True, timeout=30)
-            if r.returncode == 0:
-                out = r.stdout.strip()
-                if 'Already up to date' in out:
-                    print('ℹ️ remote 无更新')
-                else:
-                    print('✅ remote 已同步')
-            else:
-                print(f'⚠️ git pull 跳过: {r.stderr[:100]}')
-        except Exception as e:
-            print(f'⚠️ git pull 失败: {e}')
+        # pre-run 同步已由 run() 内部 _sync_remote() 处理
         force = '--force' in args
         source_keys = [a for a in args if a != '--force'] or None
         collector.run(source_keys, force=force)
