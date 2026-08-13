@@ -86,3 +86,12 @@ review_history:
     findings_open: 0
     tracking: implementation audit — D1-D4 verified; O-2/O-3 🟢 (non-blocking)
     report: documents/reviews/llm-radar-git-flow-fix-impl-audit-v1.0-20260813.md
+  - date: 2026-08-13
+    reviewer: Security Reviewer (IRIS)
+    review_level: L2
+    verdict: CONDITIONAL_PASS
+    score: 80
+    findings_total: 4
+    findings_open: 4
+    tracking: REA-1, REA-2, RIG-1, RIG-2
+    report: documents/reviews/llm-radar-health-probe-review-v1.0-20260813.md
