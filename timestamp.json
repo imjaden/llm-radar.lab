@@ -1,12 +1,12 @@
 {
-  "generated_at": "2026-08-13T21:05:42.489316",
-  "last_news_date": "2026-08-13",
-  "last_run_at": "2026-08-13T21:05:42.503183",
-  "last_run_status": "failed",
-  "last_run_detail": "热点仅 0 条",
-  "server": "linux",
-  "hostname": "iZ2ze0mvn4qle5b5jp7ndlZ",
-  "entity_count": 221,
-  "period": "2026-08-06 ~ 2026-08-13",
+  "generated_at": "2026-08-14T00:02:19.116143",
+  "last_news_date": "2026-08-14",
+  "last_run_at": "2026-08-14T00:02:19.128906",
+  "last_run_status": "success",
+  "last_run_detail": "",
+  "server": "mac",
+  "hostname": "Jaden.Tech",
+  "entity_count": 220,
+  "period": "2026-08-07 ~ 2026-08-14",
   "version": "1.0"
 }
