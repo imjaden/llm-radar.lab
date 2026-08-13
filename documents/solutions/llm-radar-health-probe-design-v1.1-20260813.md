@@ -2,7 +2,7 @@
 title: llm-radar 线上数据新鲜度探针设计
 topic: llm-radar
 type: design
-version: 1.0
+version: 1.1
 date: 2026-08-13
 author: hermes-1.2.0
 tags: [llm-radar, cron, watchdog, monitoring, health]
@@ -13,9 +13,10 @@ model: deepseek-v4-flash
 
 # llm-radar — 线上数据新鲜度探针(health watchdog)设计
 
-> 版本: v1.0 | 日期: 2026-08-13
+> 版本: v1.1 | 日期: 2026-08-13
 > 作者: ops (hermes-1.2.0)
 > 数据来源: hermes cron 现有 job 配置、llm-radar 采集任务 cron、用户需求确认
+> 变更: v1.0 → v1.1 记录确认项 A1 B1 C2(2026-08-13)
 
 ## 背景/动机
 
@@ -162,28 +163,26 @@ deliver:   local(告警投递暂忽略, 仅存档, 可后续改为平台)
 | 本机睡眠错过探针触发 | 低 | macOS cron 睡眠不触发(同采集问题);服务器为常开主源,采集数据仍在,且用户已知此限制 |
 | 7h 阈值与 6h 采集间隔竞态 | 低 | 探针 6h 间隔 < 阈值 7h,任何过期必然被捕获 |
 
-## 待确认清单
+## 待确认清单(已确认 2026-08-13, 用户回复: A1 B1 C2)
 
-A. 触发频率:
-  A1 每 6h(`0 3,9,15,21 * * *`)——与采集 6h 防抖对齐【倾向】
-  A2 每小时——更敏感但 7h 阈值下冗余
-  A3 每 12h——更省但可能漏过 7h 阈值边界
+| 项 | 决策 | 确认结果 |
+|----|------|---------|
+| A 触发频率 | A1 每 6h(`0 3,9,15,21 * * *`) | ✅ 采用(与采集 6h 防抖对齐) |
+| B 阈值 | B1 7h(用户指定) | ✅ 采用 |
+| C 探针脚本放置 | C2 项目内 scripts/ 目录(随 repo 版本化) | ✅ 采用 |
 
-B. 阈值:
-  B1 7h(用户指定)【倾向】
-  B2 12h(更宽松)
-  B3 3h(更严格,配合每小时探针)
+### 确认后实施范围
 
-C. 探针脚本放置:
-  C1 ~/.hermes/profiles/ops/scripts/(与现有 cron 脚本同目录)【倾向】
-  C2 项目内 scripts/ 目录(随 repo 版本化)
-  C3 本次不做
+1. 项目内新增 `scripts/llm-radar-health.py`(随 repo 版本化, 与采集器同仓)
+2. hermes cron 注册 job `llm-radar-freshness`(no_agent=true, schedule `0 3,9,15,21 * * *`, deliver=local, script 指向项目内脚本绝对路径)
+3. 阈值常量 `STALE_HOURS = 7` 写入脚本顶部
+4. 验收:手动执行 exit 0 静默 / 构造过期场景 exit 1 告警;cron list 可见且 last_status=ok
 
 ## 元信息
 
 | 项目 | 内容 |
 |:-----|:------|
-| 版本 | 1.0 |
+| 版本 | 1.1 |
 | 最后更新 | 2026-08-13 |
 | 作者 | hermes-1.2.0 |
 | Session | ops/llm-radar-health-probe |
