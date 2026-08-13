@@ -2,7 +2,7 @@
 title: llm-radar 线上数据新鲜度探针设计
 topic: llm-radar
 type: design
-version: 1.1
+version: 1.2
 date: 2026-08-13
 author: hermes-1.2.0
 tags: [llm-radar, cron, watchdog, monitoring, health]
@@ -13,10 +13,10 @@ model: deepseek-v4-flash
 
 # llm-radar — 线上数据新鲜度探针(health watchdog)设计
 
-> 版本: v1.1 | 日期: 2026-08-13
+> 版本: v1.2 | 日期: 2026-08-13
 > 作者: ops (hermes-1.2.0)
 > 数据来源: hermes cron 现有 job 配置、llm-radar 采集任务 cron、用户需求确认
-> 变更: v1.0 → v1.1 记录确认项 A1 B1 C2(2026-08-13)
+> 变更: v1.0 → v1.1 记录确认项 A1 B1 C2(2026-08-13); v1.1 → v1.2 修复 review 4 项 🟡 (REA-1/REA-2/RIG-1/RIG-2, 2026-08-13)
 
 ## 背景/动机
 
@@ -85,15 +85,22 @@ watchdog(看门狗)是 no_agent 脚本的经典设计模式,核心规则:
 ```
 #!/usr/bin/env python3
 逻辑:
-1. 请求 https://llm-radar.lab.jaden.tech/timestamp.json (timeout 15s)
+1. 请求 https://llm-radar.lab.jaden.tech/timestamp.json?t=<epoch> (timeout 15s)
+   - 加 cache-busting 参数绕过 CDN 陈旧副本 (RIG-2 修正)
 2. 解析 last_run_at / last_run_status / last_news_date
-3. 计算新鲜度: now - last_run_at
-   - 新鲜度 ≤ 阈值(默认 7h) 且 status == success → 静默, exit 0
-   - 新鲜度 > 阈值 或 status != success → 输出告警, exit 1
-4. 网络失败/JSON 解析失败 → 输出错误告警, exit 1
+3. 新鲜度计算 (RIG-1 修正 — 时区契约):
+   - last_run_at 为采集器写盘时的本地时间 (naive, 无时区后缀)
+   - 探针以「与 last_run_at 同机器时区」的 now 计算 (服务器/本机均为 +08:00, 差异 <1h 可接受)
+   - 实际实现: datetime.fromisoformat(last_run_at) 直接解析, 与本机 now 相减
+4. 告警语义分离 (REA-2 修正 — 新鲜度 vs 质量互不混淆):
+   - 新鲜度检查 (主): now - last_run_at > 阈值(7h) → 新鲜度告警 "数据过期", exit 1
+   - 质量检查 (辅): last_run_status != 'success' 但数据新鲜 → 质量告警 "最近一轮质量门禁失败", exit 0
+     (质量告警不阻断 — status=failed 但数据可能仍新鲜, 不误报 stale)
+   - 两者都健康 → 静默, exit 0
+5. 网络失败/JSON 解析失败 → 错误告警, exit 1
 ```
 
-放置位置:`~/.hermes/profiles/ops/scripts/llm-radar-health.py`(与现有 cron 脚本同目录)
+放置位置:`scripts/llm-radar-health.py`(项目内, 随 repo 版本化; cron 注册时 script 字段指向项目内脚本绝对路径)
 
 ### B2. cron job 注册
 
@@ -131,7 +138,8 @@ deliver:   local(告警投递暂忽略, 仅存档, 可后续改为平台)
 ### B4. 阈值参数
 
 - 新鲜度阈值:7h(用户指定:"至少最新数据时间控制在 7 小时内")
-- 判断:`last_run_status == 'success'` 且 `now - last_run_at <= 7h`
+- 判断:`now - last_run_at <= 7h` 为新鲜(主检查, 与 status 解耦)
+- `last_run_status` 单独作为质量告警(辅检查, 不阻断 exit 0)
 - 可配置化(脚本顶部常量 `STALE_HOURS = 7`),便于后续调整
 
 ## 非目标
@@ -145,7 +153,7 @@ deliver:   local(告警投递暂忽略, 仅存档, 可后续改为平台)
 
 | 文件 | 改动 |
 |------|------|
-| ~/.hermes/profiles/ops/scripts/llm-radar-health.py | 新增探针脚本 |
+| scripts/llm-radar-health.py | 新增探针脚本(项目内, 随 repo 版本化) |
 | hermes cron | 注册 job `llm-radar-freshness`(no_agent=true, schedule `0 3,9,15,21 * * *`, deliver=local) |
 
 ## 验收标准
@@ -158,7 +166,8 @@ deliver:   local(告警投递暂忽略, 仅存档, 可后续改为平台)
 
 | 风险 | 等级 | 缓解 |
 |------|------|------|
-| GitHub Pages CDN 缓存延迟导致误报 | 低 | 阈值 7h 充裕,部署延迟通常 <1h |
+| GitHub Pages CDN 缓存陈旧副本导致误报 | 低 | 探针请求加 `?t=<epoch>` cache-busting 绕过缓存; 阈值 7h 充裕 (RIG-2 修正) |
+| last_run_at 时区歧义 | 低 | 契约: last_run_at 为采集机器本地时间(naive); 探针同机时区解析, 服务器/本机均为 +08:00 (RIG-1 修正) |
 | 脚本依赖网络(本机离线) | 低 | 网络失败输出错误告警(而非静默),可区分"探针自身问题"与"数据过期" |
 | 本机睡眠错过探针触发 | 低 | macOS cron 睡眠不触发(同采集问题);服务器为常开主源,采集数据仍在,且用户已知此限制 |
 | 7h 阈值与 6h 采集间隔竞态 | 低 | 探针 6h 间隔 < 阈值 7h,任何过期必然被捕获 |
@@ -182,7 +191,7 @@ deliver:   local(告警投递暂忽略, 仅存档, 可后续改为平台)
 
 | 项目 | 内容 |
 |:-----|:------|
-| 版本 | 1.1 |
+| 版本 | 1.2 |
 | 最后更新 | 2026-08-13 |
 | 作者 | hermes-1.2.0 |
 | Session | ops/llm-radar-health-probe |
