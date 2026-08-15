@@ -350,6 +350,13 @@ class LLMRadarCollector:
             else:
                 self._print_warn(f'pull --rebase 失败/冲突: {(r.stderr or "").strip()[:150]}')
                 self._abort_rebase()
+                # v1.3 补: rebase 冲突说明本地确实领先(有未 push commit) + 远端有新增,
+                # 双向分叉正是 force-with-lease 的适用场景(lease 保证不覆盖他人新 push)
+                r3 = self._git_run('push', '--force-with-lease', 'origin', 'main', timeout=120)
+                if r3.returncode == 0:
+                    self._print_ok('auto-push 完成（rebase 冲突后 force-with-lease 收敛）')
+                    return
+                self._print_warn(f'force-with-lease push 失败(冲突分支): {(r3.stderr or "").strip()[:150]}')
 
             # 仍失败 → dead-letter（不抛异常）
             self._write_dead_letter(changelog, stderr)
