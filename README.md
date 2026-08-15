@@ -151,3 +151,14 @@ mcp_servers:
 详见 [documents/hermes-integration-v1.0-20260624.md](documents/hermes-integration-v1.0-20260624.md) 和 [documents/mcp-protocol-design-v1.0-20260623.md](documents/mcp-protocol-design-v1.0-20260623.md)。
 
 ## 功能清单
+
+## 开发验证 (2026-08-15)
+
+- CI: GitHub Actions 在每次 push 到 main 时运行 `pytest tests/`
+- 前端文件 (`index.html` / `changelog.html` / `tests/test_html.py`) 改动后, 提交前必须跑:
+  ```bash
+  python3 -m pytest tests/ -m "not selenium" --ignore=tests/test_cli.py --ignore=tests/test_selenium.py -q
+  ```
+- 后端/collector 改动: `python3 -m pytest tests/test_gitflow.py -q` (14 用例)
+- 全量测试会写脏 `timestamp.json` / `overview.json` / `data/snapshot.json`, 跑完需 `git checkout --` 还原
+- 详细验证要求与防假阳性原则见 `AGENTS.md` § No Tests

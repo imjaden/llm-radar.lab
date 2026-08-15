@@ -140,7 +140,24 @@ Cross-platform launcher: auto-detects Mac (system Python) vs Linux (conda `llm-r
 
 ## No Tests
 
-The project has no test suite. Verification is via the embedded quality gate (`_verify()`) and manual inspection of `snapshot.json`.
+The project has no formal test suite, but CI (GitHub Actions) runs `pytest tests/` on every push to main. Tests cover collector logic, git-flow recovery, HTML JS-syntax, and timestamp/overview generation.
+
+### 前端文件变更验证要求 (2026-08-15 起, 机制 2/3)
+
+- 任何对 `index.html` / `changelog.html` / `tests/test_html.py` 的改动, 提交前必须跑:
+  ```bash
+  python3 -m pytest tests/ -m "not selenium" --ignore=tests/test_cli.py --ignore=tests/test_selenium.py -q
+  ```
+- 浏览器 Selenium 渲染验证是**补充**, 不能替代 pytest — 它标记了 `@pytest.mark.selenium`, CI 上可能因 chromedriver 缺失而 skip
+- 本地验证命令集合必须覆盖 CI 会跑的非 selenium 部分 (CI: `pytest tests/`; 本地至少跑同一集合去掉 selenium/cli)
+- 测试断言必须精确匹配意图: `test_html.py` 只扫 `<script>` 块, 排除 `<style>` 块 (CSS 属性不带引号是合法写法, 不属于 JS key 检查范围)
+- 防假阳性: 测试通过 ≠ 行为正确。当断言依赖被检查对象的巧合形态时 (如带引号恰好绕过正则), 要警惕 — 测试可能在保护一个不存在的保证。改动实现时必须同步审视测试是否仍成立
+
+### 后端/数据文件变更验证要求
+
+- collector / git-flow 改动: `python3 -m pytest tests/test_gitflow.py -q` (14 用例)
+- 全量回归: 同上非 selenium 命令
+- 注意: 全量测试会写脏 `timestamp.json` / `overview.json` / `data/snapshot.json` (test_timestamp 用真实 project_root), 跑完需 `git checkout --` 还原
 
 ## Deployment
 

@@ -19,3 +19,24 @@ agent-todo.md
 # review-prep 生成物
 cache/
 logs/
+
+# 临时文件 / 文件夹 (2026-08-15)
+*.tmp
+*.bak
+*.swp
+*~
+.DS_Store
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+htmlcov/
+.coverage
+*.egg-info/
+build/
+dist/
+node_modules/
+.venv/
+venv/
+*.log
+tmp/
+temp/
