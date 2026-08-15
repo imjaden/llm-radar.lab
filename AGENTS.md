@@ -72,6 +72,17 @@ run() ordered as:
 - Click ago-label on localhost → copies `run` command; on production → navigates to `changelog.html`.
 - Version: v1.5 in footer.
 
+### Console 规范 (2026-08-15 起)
+
+- **必要性分级**:
+  - `error`: 仅异常终止路径（数据加载彻底失败）
+  - `warn`: 可恢复异常（如 overview.json 加载失败回退 snapshot）
+  - `info`/`log`: 有意义的里程碑（如"数据加载完成 N 实体"）
+  - `debug`: 开发调试用 — 生产代码**不保留**调试 log（历史 423/424 行已删）
+- **格式**: 统一前缀 `[llm-radar] `，如 `console.warn('[llm-radar] overview.json load failed:', e.message)`
+- 对象展开打印，不用字符串拼接；不打印敏感信息（token/key）
+- CSS 规则：属性**不得用引号包裹**（`'font-size':0.7rem` 是无效 CSS，浏览器丢弃该声明 — 2026-08-15 修复 52 处）
+
 ## `_verify()` Quality Gate
 
 - Event median freshness: extracted entity `last_event_date` median must be < 7 days old. If older, quality gate fails (skips auto-push).
