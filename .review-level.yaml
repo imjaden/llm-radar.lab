@@ -114,3 +114,13 @@ review_history:
     findings_open: 1
     tracking: RIG-1 (数据覆盖语义低估, 文档澄清)
     report: documents/reviews/llm-radar-git-flow-fix-v1.3-review-v1.0-20260815.md
+    resolved_by: re-review + impl audit (2026-08-15) — PASS 100/100
+  - date: 2026-08-15
+    reviewer: Security Reviewer (IRIS)
+    review_level: L2
+    verdict: PASS
+    score: 100
+    findings_total: 0
+    findings_open: 0
+    tracking: re-review + impl audit — RIG-1 fixed; A1/B1 确认; 14/14 单测
+    report: documents/reviews/llm-radar-git-flow-fix-v1.3-rereview-v1.1-20260815.md

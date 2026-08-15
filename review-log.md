@@ -224,3 +224,28 @@
 `_push_with_recovery()` else 分支 (collector.py:350-355) abort 后未尝试 force-with-lease, 直接 dead-letter — 与设计描述一致 ✅
 
 ---
+
+## 2026-08-15 — git flow fix v1.3 re-review + 实现审计
+
+- **review者**: review/llm-radar.lab-review (hermes-1.2.0)
+- **范围**: RIG-1 修复 (a16e0d5) + 实现 (3d2c991) — force-with-lease path + 2 单测
+- **Tracking**: RIG-1 ✅ fixed; A1/B1 ✅ 确认; 实现逐项 verified
+- **状态**: ✅ PASS — 100/100 (A)
+- **报告**: documents/reviews/llm-radar-git-flow-fix-v1.3-rereview-v1.1-20260815.md
+- **实现 prompt**: ⬜ 无需生成 (实现已完成)
+
+### 发现摘要
+
+| # | Severity | Title | Status |
+|---|----------|-------|--------|
+| RIG-1 | 🟡 | 数据覆盖语义 | ✅ Fixed — 风险表改「临时丢失对方本轮新实体, 下轮重新合并」 |
+| A | — | force-with-lease 用法 | ✅ A1 采用 |
+| B | — | 测试覆盖 | ✅ B1 采用 |
+
+### 实现验证
+
+- else 分支 +7 行 force-with-lease 与设计逐项对应 ✅
+- 14/14 单测通过 (12 原 + 2 新) ✅
+- 无新安全发现 ✅
+
+---
