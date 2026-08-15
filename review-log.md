@@ -195,3 +195,32 @@
 | O-2 | 🟢 | 时区假设固化 | 实施时脚本顶部注释 |
 
 ---
+
+## 2026-08-15 — git flow fix v1.3 设计评审
+
+- **review者**: review/llm-radar.lab-review (hermes-1.2.0)
+- **范围**: 设计文档 v1.3 + 1 个 commit — 3acce2b (补 D2 rebase 冲突后 force-with-lease 路径)
+- **Tracking**: RIG-1
+- **状态**: ✅ PASS — 95/100 (A)
+- **报告**: documents/reviews/llm-radar-git-flow-fix-v1.3-review-v1.0-20260815.md
+- **实现 prompt**: ✅ 已生成
+
+### 发现摘要
+
+| # | Severity | Title | Status |
+|---|----------|-------|--------|
+| RIG-1 | 🟡 | 数据覆盖语义低估 (并发覆盖对方新实体, 非仅旧数据) | Open (待文档澄清) |
+
+### 3D 评分
+
+| 维度 | 评级 | 说明 |
+|:-----|:----:|:-----|
+| 合理性 | 🟢 | 根因代码级成立, force-with-lease 安全边界清晰 |
+| 严格性 | 🟡 | 1 处数据覆盖语义低估 |
+| 安全性 | 🟢 | --force-with-lease lease 保护, list-form, 0 注入面 |
+
+### 根因验证
+
+`_push_with_recovery()` else 分支 (collector.py:350-355) abort 后未尝试 force-with-lease, 直接 dead-letter — 与设计描述一致 ✅
+
+---
