@@ -11,3 +11,7 @@ sessions:
 - role: review
   profile: review
   title: llm-radar.lab-review
+handoff:
+  enabled: true
+  doc: documents/handoff/handoff-llm-radar.lab-review.md
+  updated_at: '2026-08-15'
