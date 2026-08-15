@@ -8,23 +8,31 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent
 
 
 def _check_js_syntax(html_path):
-    """Check HTML for obvious JavaScript syntax errors without browser."""
+    """Check HTML for obvious JavaScript syntax errors without browser.
+
+    仅检查 <script> 块(JS 对象字面量);排除 <style> 块 —— CSS 属性
+    (如 font-size:0.7rem) 不带引号是合法写法, 不属于 JS 语法检查范围。
+    2026-08-15 修复: 此前正则扫描整个文件, 把 CSS 属性/伪类误判为 unquoted key。
+    """
     content = html_path.read_text()
     errors = []
 
-    # 1. Unquoted object keys with hyphens
-    import re
-    for i, line in enumerate(content.split('\n'), 1):
-        # Find unquoted keys with hyphens in object literals
-        matches = re.findall(r"(?<!['\"\w])([a-zA-Z0-9]+(?:-[a-zA-Z0-9]+)+)\s*:", line)
-        for m in matches:
-            # Skip if inside string literal or comment
-            errors.append(f"L{i}: unquoted hyphen key '{m}'")
+    # 剔除 <style>...</style> 块, 仅保留 <script> 块内容供扫描
+    js_blocks = re.findall(r"<script(?![^>]*src=)[^>]*>(.*?)</script>", content, re.S)
 
-    # 2. Trailing commas in object literals
-    for i, line in enumerate(content.split('\n'), 1):
-        if re.search(r",\s*}", line.strip()):
-            errors.append(f"L{i}: trailing comma before }}")
+    # 1. Unquoted object keys with hyphens
+    for bi, block in enumerate(js_blocks, 1):
+        for i, line in enumerate(block.split('\n'), 1):
+            # Find unquoted keys with hyphens in object literals
+            matches = re.findall(r"(?<!['\"\w])([a-zA-Z0-9]+(?:-[a-zA-Z0-9]+)+)\s*:", line)
+            for m in matches:
+                errors.append(f"L{bi}:{i}: unquoted hyphen key '{m}'")
+
+    # 2. Trailing commas in object literals (仅 script 块)
+    for bi, block in enumerate(js_blocks, 1):
+        for i, line in enumerate(block.split('\n'), 1):
+            if re.search(r",\s*}", line.strip()):
+                errors.append(f"L{bi}:{i}: trailing comma before }}")
 
     return errors
 
@@ -46,12 +54,15 @@ class TestHtmlJsSyntax:
         """EMOJI_MAP 中所有含连字符的 key 都已加引号"""
         for html_file in ['changelog.html', 'index.html']:
             content = (PROJECT_ROOT / html_file).read_text()
-            matches = list(re.finditer(
-                r"(?<!['\"\w])([a-zA-Z0-9]+(?:-[a-zA-Z0-9]+)+)\s*:",
-                content
-            ))
-            bad = [m.group(1) for m in matches
-                   if not content[max(0, m.start()-1):m.start()].endswith(("'", '"'))]
+            # 仅扫描 <script> 块(排除 <style> 块: CSS 属性不带引号合法)
+            js_blocks = re.findall(r"<script(?![^>]*src=)[^>]*>(.*?)</script>", content, re.S)
+            bad = []
+            for block in js_blocks:
+                for m in re.finditer(
+                        r"(?<!['\"\w])([a-zA-Z0-9]+(?:-[a-zA-Z0-9]+)+)\s*:",
+                        block):
+                    if not block[max(0, m.start()-1):m.start()].endswith(("'", '"')):
+                        bad.append(m.group(1))
             assert not bad, f"{html_file}: unquoted keys: {bad}"
 
 
