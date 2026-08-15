@@ -105,8 +105,8 @@ description: LLM Radar 行业情报仪表盘 — 采集管线/LLM 交互/数据�
 
 ## 待定/规划
 
-1. hotspot enhance 剩余项（3/5 已完成: 摘要增强 + 时间衰减 + 排序）🚧 — d0aee7f
-2. 旧功能清单（documents/archive/features.md）迁移核对 🚧
+1. hotspot enhance 全部完成（摘要增强 + 时间衰减 + 排序 + 模糊去重 + URL 校验, 见各功能域 ✅）✅ — 2026-08-15 核对
+2. 旧功能清单（documents/archive/features.md）迁移核对完成: 53/54 项已覆盖, 2 项旧功能（1h 自动重定向、hover 唯一索引）已在代码中移除 ✅ — 2026-08-15
 
 ---
 
@@ -114,8 +114,8 @@ description: LLM Radar 行业情报仪表盘 — 采集管线/LLM 交互/数据�
 
 | 项目 | 内容 |
 |:-----|:------|
-| 版本 | 1.0 |
-| 最后更新 | 2026-08-10 |
+| 版本 | 1.1 |
+| 最后更新 | 2026-08-15 |
 | 作者 | hermes-1.2.0 |
-| Session | ops/features-update |
+| Session | ops/llm-radar.lab-ops |
 | Model | deepseek-v4-flash |
