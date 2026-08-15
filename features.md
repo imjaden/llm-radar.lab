@@ -70,12 +70,17 @@ description: LLM Radar 行业情报仪表盘 — 采集管线/LLM 交互/数据�
 
 1. 提交: `commit [msg]`（默认带时间戳）✅
 2. 自动推送: `auto-push` + `_auto_push`（质量门禁通过才 push）✅
-3. 同步: run 前 `git pull --rebase` ✅
+3. 同步: `_sync_remote`（run 前 fetch + merge --ff-only，分叉本地优先）✅ — llm-radar-collector.py
+4. 推送自愈: `_push_with_recovery`（rejected → rebase 重试 → --force-with-lease → dead-letter）✅
+5. 冲突标记防护: `_clean_conflict_file`（tracked → checkout --theirs；untracked → os.remove）✅
+6. 失败隔离: data/dead-letter.json（push 失败最后 10 条）✅
 
 ## 定时任务
 
 1. crontab 管理: `crontab --add|--remove|--list|--update|--status` ✅
 2. 跨平台执行: llm-radar-run.sh（Mac 系统 Python / Linux conda env）✅
+3. 平台感知调度: CRON_SCHEDULE Darwin 每小时 / Linux 7,14,21（配合 6h 防抖）✅
+4. 数据新鲜度探针: scripts/llm-radar-health.py + hermes cron llm-radar-freshness（每 6h watchdog，三态退出）✅
 
 ## 前端展示
 
@@ -114,8 +119,8 @@ description: LLM Radar 行业情报仪表盘 — 采集管线/LLM 交互/数据�
 
 | 项目 | 内容 |
 |:-----|:------|
-| 版本 | 1.1 |
+| 版本 | 1.2 |
 | 最后更新 | 2026-08-15 |
 | 作者 | hermes-1.2.0 |
-| Session | ops/llm-radar.lab-ops |
-| Model | deepseek-v4-flash |
+| Session | dev/llm-radar.lab-dev |
+| Model | deepseek-v4-pro |

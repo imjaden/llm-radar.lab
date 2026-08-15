@@ -131,16 +131,16 @@ run() ordered as:
 
 - Commit messages use `type@scope: subject` format.
 - Auto-push uses `auto-push@llm-radar: update data (N changes)`.
-- `run` does `git pull --rebase` first, then auto-commits+pushes if quality gate passes.
+- `run` 前先 `_sync_remote()` 同步（fetch + `merge --ff-only`，分叉时本地优先），质量门禁通过后 auto-commit+push；push rejected 时走 `_push_with_recovery()`（rebase 重试 → `--force-with-lease` → dead-letter）。
 - Push failures go to `data/dead-letter.json` (last 10).
 
 ## `llm-radar-run.sh`
 
 Cross-platform launcher: auto-detects Mac (system Python) vs Linux (conda `llm-radar` env). Sources `.env` file. Used by crontab.
 
-## No Tests
+## Tests
 
-The project has no formal test suite, but CI (GitHub Actions) runs `pytest tests/` on every push to main. Tests cover collector logic, git-flow recovery, HTML JS-syntax, and timestamp/overview generation.
+Test suite under `tests/`, run by CI (GitHub Actions) via `pytest tests/` on every push to main. Covers collector logic, git-flow recovery, HTML JS-syntax, and timestamp/overview generation.
 
 ### 前端文件变更验证要求 (2026-08-15 起, 机制 2/3)
 
