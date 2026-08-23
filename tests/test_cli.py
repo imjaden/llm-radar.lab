@@ -64,6 +64,25 @@ def test_cli_run_help_intercepted():
     assert "用法" in r.stdout
 
 
+def test_cli_run_force_help_intercepted():
+    """LR-SEC-011: run --force help 绕过首位检查, 全 args 扫描仍拦截"""
+    r = subprocess.run(
+        ["python3", COLLECTOR, "run", "--force", "help"],
+        capture_output=True, text=True, timeout=10)
+    assert r.returncode == 0
+    assert "用法" in r.stdout
+    assert "DEEPSEEK" not in r.stdout  # 未触发采集
+
+
+def test_cli_fetch_source_help_intercepted():
+    """LR-SEC-011: fetch qbitai help 非首位参数, 仍拦截"""
+    r = subprocess.run(
+        ["python3", COLLECTOR, "fetch", "qbitai", "help"],
+        capture_output=True, text=True, timeout=10)
+    assert r.returncode == 0
+    assert "用法" in r.stdout
+
+
 def test_cli_fetch_help_intercepted():
     r = subprocess.run(
         ["python3", COLLECTOR, "fetch", "help"],

@@ -2211,7 +2211,10 @@ def main():
     args = sys.argv[2:]
 
     # positional help 拦截: 带参子命令 (fetch/run/commit/crontab) 的 HELP 禁止当参数执行
-    if command in ('fetch', 'run', 'commit', 'crontab') and args and args[0].upper() == 'HELP':
+    # 全 args 扫描 (LR-SEC-011): 防 `run --force help` / `fetch qbitai help` 绕过首位检查
+    if command in ('fetch', 'run', 'commit', 'crontab') and any(
+        a.upper() == 'HELP' for a in args
+    ):
         print_command_usage(command)
         sys.exit(0)
 
