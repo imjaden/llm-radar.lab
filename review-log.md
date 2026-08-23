@@ -316,4 +316,33 @@
 
 ---
 
+## 2026-08-23 — CLI 治理与全局注册实现审计 (CL-SEC11)
+
+- **review者**: review/llm-radar.lab-review (hermes-1.2.0)
+- **范围**: 实施 commit 26219ba (feat@cli) 最终审计 — 实现 vs 设计 v1.1 一致性 + 测试质量 + 治理合规 + 安全性; 全量 pytest 复跑 120 passed
+- **Tracking**: LR-SEC-011 (🟡) 1 项; LR-SEC-012/013/014 (🟢 确认项); O-1~O-5 🟢 观察
+- **状态**: ✅ PASS — 95/100 (A)
+- **报告**: documents/reviews/llm-radar-cli-governance-implementation-review-v1.0-20260823.md
+
+### 审计结论
+
+- 实现与设计 v1.1 一致性 C1~C11 全 ✅: 分组 help / 空入参 exit=0 / positional help 拦截 (实测 run help 0.24s 秒回) / status --json 七字段 / 四态评估 / 数据源全只读 / STALE_HOURS=7 + CRITICAL_HOURS=48 env 可配 (实测 override 生效) / .cli-registry.yaml 入 git / wrapper fork 模板去 calls.log + exec 前 .env (实测 wrapper L81-83)。
+- 测试: tests/test_status.py 四态+边界+fixture 隔离 (patch project_root → tmp, 不触真实项目根), test_cli.py 拦截+空入参; 独立复跑 120 passed。
+- 治理: commit type@scope 全合规, AGENTS.md 已更新, wrapper 生成物在 gitignored cache/。
+- 安全: status 全只读 (rev-list 不 fetch, 测试断言), actions cmd 静态, user-level symlink 无提权面。
+
+### 发现
+
+| # | Severity | Title | Status |
+|---|----------|-------|--------|
+| LR-SEC-011 | 🟡 | `run --force help` 绕过 positional help 拦截 (help 非首位), 实测触发 run 流水线副作用 (git fetch + metrics 写入, 'help' 非合法源快速失败, 有界) | Open — 建议 fetch/run 扩展全 args HELP 扫描 |
+
+### 数据验证要点
+
+- 16 项全部实测/读取, 含 stdout 纯净性 (JSON 可 json.loads)、双命令 help/status 输出 diff 为空、敏感信息扫描 0 hits。
+- pytest 写脏数据文件已 git checkout 还原; 唯一遗留 .hermes-project.yaml 修改为会话前既有, 不动。
+- 待 push 实况: 仅 5830b5b + 26219ba 两个 ahead (prompt 所列 6 个中 4 个已在 origin/main)。
+
+---
+
 
