@@ -161,3 +161,12 @@ review_history:
     findings_open: 0
     tracking: 尾项复核 (90b5aa5, 59c8b92, CL-SEC11) — LR-SEC-011 ✅ Resolved; O-5 ✅ Resolved
     report: documents/reviews/llm-radar-cli-governance-recheck-v1.0-20260823.md
+  - date: 2026-08-23
+    reviewer: Security Reviewer (IRIS)
+    review_level: L2
+    verdict: PASS
+    score: 90
+    findings_total: 3
+    findings_open: 2
+    tracking: 收敛复核 13 commits (CL-SEC11) — LR-SEC-015/016 🟡 待修 (非阻塞); LR-SEC-017 🟢
+    report: documents/reviews/llm-radar-cli-governance-convergence-review-v1.0-20260823.md

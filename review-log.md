@@ -374,4 +374,35 @@
 
 ---
 
+## 2026-08-23 — 收敛复核 + CL-SEC11 链批量审计 (13 commits, 9d88886→21b50c5)
+
+- **review者**: review/llm-radar.lab-review (hermes-1.2.0)
+- **范围**: 双机分叉 rebase 收敛后的 13 个已 push commit — 收敛正确性 / CL-SEC11 8 步链完整性 / CLI 代码质量 / mcp-server 重构正确性 / commit 治理合规
+- **Tracking**: LR-SEC-015 (🟡 待修), LR-SEC-016 (🟡 待修), LR-SEC-017 (🟢)
+- **状态**: ✅ PASS — 90/100 (A)
+- **报告**: documents/reviews/llm-radar-cli-governance-convergence-review-v1.0-20260823.md
+
+### 结论摘要
+
+- 收敛正确性 ✅: 13 commits 全为功能/文档/审计, 无本地旧数据 auto-push 混入; HEAD snapshot = 远端最新 21:02 (server=linux, 324 entities), isolation-test 0 hits; 148774b 被 skip 符合设计。
+- CL-SEC11 链 ✅: 9d09745(设计)→3d38e18(修复)→b8ebbf2(复审)→f371d49(dev)→53608b4(核查)→3926f65(审计)→2f827ac+9897d6c(尾项)→77840ff(尾项复核) 全齐, 双轨记录完整。
+- 代码质量 ✅: status 全只读四态评估, help 全 args 扫描拦截; pytest 32 (CLI) + 122 (全量非 selenium) passed。
+- 重构 ⚠️: mcp-server → scripts/ 移动正确 (PROJECT_ROOT parent→parent.parent), 但遗漏 2 个消费者路径 → LR-SEC-015。
+
+### 发现
+
+| # | Severity | Title | Status |
+|---|----------|-------|--------|
+| LR-SEC-015 | 🟡 | mcp-server 重构遗漏: scripts/mcp_submit_update.py:13 + scripts/mcp-protocol-demo.py:44 仍指向项目根 | Open (待修) |
+| LR-SEC-016 | 🟡 | README.md:139 config 示例 + integ 文档 L230 路径未同步 scripts/ | Open (待修) |
+| LR-SEC-017 | 🟢 | 审计记录 SHA 为 rebase 前 (90b5aa5/59c8b92/26219ba), 当前历史为 2f827ac/9897d6c/f371d49 | 记录 |
+
+### 数据验证要点
+
+- git rev-list origin/main...HEAD = 0/0; git log fec3c58..21b50c5 = 恰好 13。
+- pytest tests/test_cli.py + tests/test_status.py = 32 passed; 全量非 selenium = 122 passed, 2 deselected。
+- pytest 写脏数据文件已还原 (git checkout --), .hermes-project.yaml 为并发会话修改, 不动。
+
+---
+
 
