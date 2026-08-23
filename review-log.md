@@ -378,8 +378,8 @@
 
 - **review者**: review/llm-radar.lab-review (hermes-1.2.0)
 - **范围**: 双机分叉 rebase 收敛后的 13 个已 push commit — 收敛正确性 / CL-SEC11 8 步链完整性 / CLI 代码质量 / mcp-server 重构正确性 / commit 治理合规
-- **Tracking**: LR-SEC-015 (🟡 待修), LR-SEC-016 (🟡 待修), LR-SEC-017 (🟢)
-- **状态**: ✅ PASS — 90/100 (A)
+- **Tracking**: LR-SEC-015/016 → ✅ Resolved (6b69de8/b55c8fb); LR-SEC-017 → 注记/Closed; findings_open 0
+- **状态**: ✅ PASS — 90/100 (A); 尾项修复复核见 2026-08-23 recheck v1.1 (PASS 100/100)
 - **报告**: documents/reviews/llm-radar-cli-governance-convergence-review-v1.0-20260823.md
 
 ### 结论摘要
@@ -393,9 +393,9 @@
 
 | # | Severity | Title | Status |
 |---|----------|-------|--------|
-| LR-SEC-015 | 🟡 | mcp-server 重构遗漏: scripts/mcp_submit_update.py:13 + scripts/mcp-protocol-demo.py:44 仍指向项目根 | Open (待修) |
-| LR-SEC-016 | 🟡 | README.md:139 config 示例 + integ 文档 L230 路径未同步 scripts/ | Open (待修) |
-| LR-SEC-017 | 🟢 | 审计记录 SHA 为 rebase 前 (90b5aa5/59c8b92/26219ba), 当前历史为 2f827ac/9897d6c/f371d49 | 记录 |
+| LR-SEC-015 | 🟡 | mcp-server 重构遗漏: scripts/mcp_submit_update.py:13 + scripts/mcp-protocol-demo.py:44 仍指向项目根 | ✅ Resolved (6b69de8) |
+| LR-SEC-016 | 🟡 | README.md:139 config 示例 + integ 文档 L230 路径未同步 scripts/ | ✅ Resolved (b55c8fb) |
+| LR-SEC-017 | 🟢 | 审计记录 SHA 为 rebase 前 (90b5aa5/59c8b92/26219ba), 当前历史为 2f827ac/9897d6c/f371d49 | 注记/Closed (映射见 recheck v1.1) |
 
 ### 数据验证要点
 
@@ -404,5 +404,34 @@
 - pytest 写脏数据文件已还原 (git checkout --), .hermes-project.yaml 为并发会话修改, 不动。
 
 ---
+
+## 2026-08-23 — 收敛审计尾项复核 (LR-SEC-015/016/017, recheck v1.1)
+
+- **review者**: review/llm-radar.lab-review (hermes-1.2.0)
+- **范围**: 收敛复核 (be7464d, PASS 90/A) 尾项修复复核 — 6b69de8 fix@cli (LR-SEC-015), b55c8fb docs@llm-radar (LR-SEC-016), LR-SEC-017 SHA 映射注记
+- **Tracking**: LR-SEC-015 → ✅ Resolved; LR-SEC-016 → ✅ Resolved; LR-SEC-017 → 注记/Closed; findings_open 0
+- **状态**: ✅ PASS — 100/100 (A)
+- **报告**: documents/reviews/llm-radar-cli-governance-recheck-v1.1-20260823.md
+
+### 复核结论
+
+- **LR-SEC-015 ✅**: 两脚本路径补 `'scripts'` 段 — mcp_submit_update.py:13 `SERVER = str(_PROJECT_ROOT / 'scripts' / 'llm-radar-mcp-server.py')`, mcp-protocol-demo.py:44 同理 + L18 依赖注释同步。复算解析为项目根/scripts/llm-radar-mcp-server.py 且文件存在 (30KB); Popen (demo:191-192) 用 `str(MCP_SERVER)` 变量非裸文件名; py_compile 3 脚本 OK; scripts/ + tests/ 全量 grep 0 残留根路径引用。
+- **LR-SEC-016 ✅**: 2 文件 5 处 — README.md:139 config 示例补 `scripts/`; integ 文档 L230/L239/L266/L304 共 4 处。残留裸引用仅 documents/archive/ (历史修复计划, 不改写) + documents/reviews/ (审计记录本身) + requirements-spec.md:38 文件名提及 (非路径消费者)。
+- **LR-SEC-017 注记**: SHA 映射逐条验证 — 90b5aa5→2f827ac (fix@cli help 全 args 扫描), 59c8b92→9897d6c (docs@design O-5 边界标注), 26219ba→f371d49 (feat@cli 全局注册), 提交信息匹配无歧义。按 append-only 原则不改写历史条目, 仅注记。
+
+### 发现
+
+| # | Severity | Title | Status |
+|---|----------|-------|--------|
+| LR-SEC-015 | 🟡 | mcp-server 重构消费者断链 | ✅ Resolved (6b69de8) |
+| LR-SEC-016 | 🟡 | 文档路径未同步 scripts/ | ✅ Resolved (b55c8fb) |
+| LR-SEC-017 | 🟢 | 审计记录 SHA 为 rebase 前 | 注记/Closed |
+
+### 数据验证要点
+
+- git show 两 commit diff / Python 复算路径解析 / grep 残留扫描 / git log 对照 SHA 映射 / pytest tests/test_security.py + tests/test_gitflow.py = 19 passed (test_security 直接覆盖 mcp_server 路径 3 处)。
+- 待 push 实况: git log origin/main..HEAD = 恰好 6b69de8 + b55c8fb 两个。
+- pytest 写脏数据文件为 test_timestamp 已知问题, 已还原; .hermes-project.yaml 为会话前既有修改, 不动。
+
 
 
