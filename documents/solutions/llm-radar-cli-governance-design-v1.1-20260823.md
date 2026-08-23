@@ -2,7 +2,7 @@
 title: llm-radar CLI 治理与全局注册设计
 topic: llm-radar
 type: design
-version: 1.0
+version: 1.1
 date: 2026-08-23
 author: hermes-1.2.0
 tags: [llm-radar, cli, governance, cli-registry, checkpoint]
@@ -11,10 +11,17 @@ provider: deepseek
 model: deepseek-v4-flash
 ---
 
-# llm-radar CLI 治理与全局注册设计 v1.0
+# llm-radar CLI 治理与全局注册设计 v1.1
 
 > 探讨确认(2026-08-23): 1A 协议闭环, 决策 6+1 项全部锁定。
 > 上游(dev 实施)先行, 下游 daily-checkin 接入后续单独推进。
+
+## 修订记录
+
+- v1.1 (2026-08-23) — 评审修正 6 🟡 + 3 🟢: REA-11 文件名修正; RIG-1 锁定 CRITICAL_HOURS;
+  RIG-2 wrapper .env 加载路径; RIG-3 install.py 模板耦合处理; RIG-4 测试隔离方案;
+  RIG-5 连续失败级别锁定; RIG-6/7/9 timestamp 路径/分叉语义/文本输出定义。
+  (评审: documents/reviews/llm-radar-cli-governance-review-v1.0-20260823.md, 70/B CONDITIONAL)
 
 ---
 
@@ -111,24 +118,35 @@ llm-radar 数据收集器目前只能 `python3 llm-radar-collector.py <cmd>` 调
 |:---|:---|
 | ok | last_run_at < 7h 且质量门禁 success |
 | warning | 7h-48h 或 git 分叉(非 0/0)或质量门禁 failed |
-| critical | > 48h 或 snapshot 缺失或连续失败 ≥3 |
+| critical | > 48h 或 snapshot 缺失或全局 consecutive_fails ≥3(run 级, 非 source_health 任一源) |
 | info | checks 附属信息项(实体数/数据日期) |
 
 ### 4.3 数据源(全部只读, 不触发采集副作用)
 
-- timestamp.json: last_run_at / last_run_status / entity_count。
-- metrics.json: source_health 连续失败计数。
+- timestamp.json(项目根, 非 data/): last_run_at / last_run_status / entity_count。
+- metrics.json: 全局 `consecutive_fails` 字段(run 级, 对齐 _think 语义)。
+  ⚠️ 不采用 source_health.<src>.consecutive_fails —— 单源 37 连败是常态(被 fetch_all 自动跳过),
+  若按任一源判定 status 将永久 critical, 面板失去区分度。
 - git rev-list: 分叉检测(0 ahead / 0 behind 之外 → warning)。
+  ⚠️ 基于本地 origin/main ref, 不主动 git fetch("全部只读"约束); 本地 ref 过期时 ahead/behind 可能不准,
+  但 status 本身不触发网络副作用, 可接受并记录该语义。
 - snapshot.json: 各维度实体数。
 
-### 4.4 STALE_HOURS 常量
+### 4.4 阈值常量(锁定)
 
 ```python
-STALE_HOURS = int(os.environ.get('LLM_RADAR_STALE_HOURS', '7'))
+STALE_HOURS = int(os.environ.get('LLM_RADAR_STALE_HOURS', '7'))     # warning 阈值
+CRITICAL_HOURS = int(os.environ.get('LLM_RADAR_CRITICAL_HOURS', '48'))  # critical 阈值
 ```
 
-- 对齐 scripts/llm-radar-health.py 的 STALE_HOURS=7 语义。
-- 48h 阈值 = STALE_HOURS * 7 近似(或独立 CRITICAL_HOURS = 48, 实施时二选一, 默认独立常量)。
+- STALE_HOURS 对齐 scripts/llm-radar-health.py 的 STALE_HOURS=7 语义。
+- CRITICAL_HOURS 为独立常量 = 48(不采用 STALE_HOURS*7=49 的近似, 避免 48-49h 区间状态闪变)。
+
+### 4.5 无 --json 时输出(文本)
+
+`lr status`(无 --json)输出单行人类可读摘要, 对齐 dt-status 先例:
+`LLM Radar: 数据新鲜 2026-08-20 10:02 (1.0h 前) | 质量 success | 0 ahead/0 behind`
+(格式实施时以可读为准, 不含 emoji 前缀; --json 才是 checkpoint 消费格式。)
 
 ## 5. 全局注册(cli-registry)
 
@@ -151,19 +169,35 @@ commands:
 
 ### 5.2 注册步骤
 
+⚠️ install.py 模板耦合(RIG-3): cli-registry 原 wrapper.sh.tmpl 硬编码
+`mkdir -p ~/CodeSpace/script-miner/cache/cli-registry; echo ... >> calls.log`
+(script-miner 专用调用统计)。llm-radar 复用会写脏 script-miner 目录。
+处理: fork 模板到项目内 `cache/cli-registry/wrapper.sh.tmpl`, 移除 calls.log 统计段
+(或改写到本项目 cache/cli-registry/calls.log), 用 install.py --template 指向 fork 模板。
+
+
 1. 项目根建 .cli-registry.yaml(入 git)。
 2. 用 cli-registry install.py 生成 wrapper → ln -sf ~/.local/bin/llm-radar 和 lr。
 3. wrapper 需处理: 项目根定位(PROJECT_ROOT 以脚本位置推导, 已内建)、
-   .env 加载(参考 llm-radar-run.sh 的 set -a 模式)。
+   .env 加载。实现路径(RIG-2): fork 项目内模板 `cache/cli-registry/wrapper.sh.tmpl`,
+   在 exec 前加 `set -a; [ -f "<PROJECT_ROOT>/.env" ] && source "<PROJECT_ROOT>/.env"; set +a`
+   (与 llm-radar-run.sh 的 set -a 模式一致); 不用 cli-registry 原模板的 .env 逻辑
+   (原模板无 .env, 非交互环境 `lr run` 会报 DEEPSEEK_API_KEY 未配置)。
 4. 验证: `llm-radar help` / `lr help` 输出一致且非 --version 误判。
 
 ## 6. 边界与不做
 
 - ❌ 不做完整 repair 封装(决策 D3, 仅 run --force)。
-- ❌ 不修改 mcp-server.py 的 CLI(那是独立入口, 不在本次范围)。
+- ❌ 不修改 llm-radar-mcp-server.py 的 CLI(那是独立入口, 不在本次范围)。
 - ❌ 不做下游 daily-checkin 接入(决策 D4, 后续单独推进)。
 - ❌ 不改 snapshot 数据 schema(仅 CLI 层)。
-- ⚠️ 实施时注意: 数据文件为 cron 并行写入, 测试须隔离(temp_snapshot 需连 project_root 一起隔离)。
+- ⚠️ 实施时注意: 数据文件为 cron 并行写入, 测试必须隔离。已知污染源(08-15 事故):
+  现有 temp_snapshot fixture 只隔离 snapshot_path/data_dir, project_root 不变,
+  test_timestamp.py 直接读写真实 project_root/timestamp.json(5 处)。
+  方案(RIG-4): status 测试新建 fixture 将 `collector.project_root` patch 到 tmp_path,
+  并在 tmp 下预置 timestamp.json / data/metrics.json / data/snapshot.json 三文件,
+  status 读取全部走 patch 后路径; 既有 test_timestamp 的 project_root 写入问题
+  作为已知边界保留(不扩本方案范围), 但 status 测试绝不触碰真实项目根。
 
 ## 7. 变更清单
 
