@@ -30,6 +30,21 @@ python3 llm-radar-collector.py auto-push        # git add + commit + push
 python3 -m http.server 8080                     # local preview
 ```
 
+CLI 治理 (2026-08-23 起): 全局注册 `llm-radar` 主名 + `lr` 别名 (`.cli-registry.yaml`, wrapper 生成物在 gitignored `cache/system-command/`)。
+
+```bash
+lr help                           # hm-style 分组帮助 (llm-radar / lr 输出一致)
+lr status [--json]                # checkpoint 七字段协议 (ok/warning/critical, 全只读)
+lr run --force                    # 绕过 6h 节流
+lr run help / lr crontab help     # 单命令用法 (positional help 拦截, exit=0 无副作用)
+```
+
+- 空入参 → 打印分组帮助 exit=0 (原 exit=1)。
+- `lr status` 阈值: STALE_HOURS=7 (LLM_RADAR_STALE_HOURS 可配) / CRITICAL_HOURS=48 (LLM_RADAR_CRITICAL_HOURS 可配)。
+- 数据源全只读: timestamp.json (项目根) + data/metrics.json 全局 `consecutive_fails` + git rev-list 本地 ref (不 fetch) + snapshot.json。
+- wrapper fork 模板: `cache/cli-registry/wrapper.sh.tmpl` (移除 script-miner calls.log 段, exec 前加载项目 .env)。
+- Linux 主机部署: `.cli-registry.yaml` 的 `env.conda` 需从 `py3.12` 改为 `llm-radar`。
+
 ## Dependencies
 
 ```bash

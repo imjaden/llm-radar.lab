@@ -45,6 +45,11 @@ DATA_DIR = PROJECT_ROOT / 'data'
 SNAPSHOT_PATH = DATA_DIR / 'snapshot.json'
 FETCH_CACHE_PATH = DATA_DIR / 'fetch-cache.json'
 
+# ===== Status 阈值 (lr status checkpoint 协议) =====
+# STALE_HOURS 对齐 scripts/llm-radar-health.py 语义 (7h); CRITICAL_HOURS 独立常量 (48, 非 STALE*7 近似)
+STALE_HOURS = int(os.environ.get('LLM_RADAR_STALE_HOURS', '7'))        # warning 阈值
+CRITICAL_HOURS = int(os.environ.get('LLM_RADAR_CRITICAL_HOURS', '48'))  # critical 阈值
+
 # ===== News Sources =====
 SOURCES = {
     'qbitai': {
@@ -1769,6 +1774,151 @@ hotspots 数组中每个元素格式：
         self._print_ok(f'完成！当前数据: {stats.get("total_providers",0)} 厂商 / {stats.get("total_people",0)} 人物 / {stats.get("total_tools",0)} 工具 / {stats.get("total_llms",0)} 模型 / {stats.get("total_hotspots",0)} 热点')
         return True
 
+    # ===== Status (checkpoint 协议) =====
+    def _read_json_quiet(self, path):
+        """只读 JSON 文件, 任何失败返回 {} (status 全只读, 不抛异常)"""
+        try:
+            return json.loads(path.read_text(encoding='utf-8'))
+        except Exception:
+            return {}
+
+    def _git_divergence(self):
+        """本地 origin/main ref 分叉检测 (不 fetch, 纯只读)。
+
+        返回 (ahead, behind, status); status ∈ ok / warning / info。
+        非 git 仓库或无本地 ref (rev-list 失败) → (None, None, 'info'), 不升级整体状态。
+        """
+        ahead_r = self._git_run('rev-list', '--count', 'origin/main..HEAD')
+        behind_r = self._git_run('rev-list', '--count', 'HEAD..origin/main')
+        if ahead_r.returncode != 0 or behind_r.returncode != 0:
+            return None, None, 'info'
+        try:
+            ahead = int((ahead_r.stdout or '').strip())
+            behind = int((behind_r.stdout or '').strip())
+        except (ValueError, TypeError):
+            return None, None, 'info'
+        status = 'ok' if ahead == 0 and behind == 0 else 'warning'
+        return ahead, behind, status
+
+    def status(self, json_mode=False):
+        """lr status [--json] — 数据新鲜度 + 质量门禁 + Git 分叉状态 (全只读)。
+
+        数据源 (全部只读, 不触发采集副作用):
+          - <project_root>/timestamp.json: last_run_at / last_run_status / entity_count
+          - <project_root>/data/metrics.json: 全局 consecutive_fails (run 级, 非 source_health)
+          - git rev-list (本地 origin/main ref, 不 fetch)
+          - <project_root>/data/snapshot.json: 各维度实体数
+
+        四态评估: ok / warning / critical / info (info 仅用于 checks 附属项)。
+        """
+        project_root = self.project_root
+        ts_path = project_root / 'timestamp.json'
+        metrics_path = project_root / 'data' / 'metrics.json'
+        snapshot_path = project_root / 'data' / 'snapshot.json'
+
+        ts_data = self._read_json_quiet(ts_path)
+        if not isinstance(ts_data, dict):
+            ts_data = {}
+        metrics = self._read_json_quiet(metrics_path)
+        if not isinstance(metrics, dict):
+            metrics = {}
+        snapshot = self._read_json_quiet(snapshot_path)
+        if not isinstance(snapshot, dict):
+            snapshot = {}
+
+        now = datetime.now()
+        last_run_at = ts_data.get('last_run_at', '')
+        quality = ts_data.get('last_run_status', '')
+        consec_fails = metrics.get('consecutive_fails', 0)
+
+        # 新鲜度评估
+        age_hours = None
+        freshness = 'ok'
+        if not last_run_at:
+            freshness = 'critical'
+        else:
+            try:
+                last_dt = datetime.fromisoformat(last_run_at)
+                age_hours = (now - last_dt).total_seconds() / 3600
+                if age_hours > CRITICAL_HOURS:
+                    freshness = 'critical'
+                elif age_hours > STALE_HOURS:
+                    freshness = 'warning'
+            except (ValueError, TypeError):
+                freshness = 'critical'
+
+        # 质量门禁评估
+        quality_status = 'ok' if quality == 'success' else ('warning' if quality == 'failed' else 'info')
+
+        # Git 分叉评估 (本地 ref, 不 fetch)
+        ahead, behind, git_status = self._git_divergence()
+
+        # 四态评估: critical > warning > ok
+        if not snapshot or freshness == 'critical' or consec_fails >= 3:
+            status_str, icon = 'critical', '🔴'
+        elif freshness == 'warning' or quality_status == 'warning' or git_status == 'warning':
+            status_str, icon = 'warning', '🟡'
+        else:
+            status_str, icon = 'ok', '🟢'
+
+        # message (无 emoji)
+        display_time = last_run_at[:19].replace('T', ' ') if last_run_at else ''
+        if not snapshot:
+            message = '快照缺失 (data/snapshot.json)'
+        elif not last_run_at:
+            message = '数据缺失 (timestamp.json 无 last_run_at)'
+        elif age_hours is not None and age_hours > CRITICAL_HOURS:
+            message = f'数据过期 {age_hours:.1f}h 前'
+        elif consec_fails >= 3:
+            message = f'连续失败 {consec_fails} 次'
+        elif age_hours is not None and age_hours > STALE_HOURS:
+            message = f'数据偏旧 {display_time} ({age_hours:.1f}h 前)'
+        elif quality_status == 'warning':
+            detail = (ts_data.get('last_run_detail') or 'failed')[:80]
+            message = f'质量门禁失败: {detail}'
+        elif git_status == 'warning':
+            message = f'Git 分叉 {ahead} ahead / {behind} behind'
+        else:
+            message = f'数据新鲜 {display_time} ({age_hours:.1f}h 前)' if age_hours is not None else '数据新鲜'
+
+        # checks
+        dims = ['providers', 'people', 'tools', 'llms', 'hotspots']
+        if snapshot:
+            dim_counts = [len(snapshot.get(d, [])) for d in dims]
+            entity_value = f'{sum(dim_counts)} ({"/".join(str(c) for c in dim_counts)})'
+        else:
+            entity_value = 'n/a'
+        git_value = f'{ahead} ahead / {behind} behind' if git_status != 'info' else 'n/a'
+
+        checks = [
+            {'label': '数据日期', 'value': display_time or 'n/a', 'status': freshness},
+            {'label': '实体数', 'value': entity_value, 'status': 'info'},
+            {'label': '质量门禁', 'value': quality or 'n/a', 'status': quality_status},
+            {'label': 'Git 同步', 'value': git_value, 'status': git_status},
+        ]
+
+        actions = [
+            {'id': 'run', 'label': '立即采集+推送', 'type': 'shell', 'cmd': 'lr run --force'},
+            {'id': 'push', 'label': '同步推送', 'type': 'shell', 'cmd': 'lr auto-push'},
+            {'id': 'repair', 'label': '修复数据更新', 'type': 'shell', 'cmd': 'lr run --force'},
+        ]
+
+        result = {
+            'id': 'llm-radar',
+            'label': 'LLM Radar 数据更新',
+            'status': status_str,
+            'icon': icon,
+            'message': message,
+            'checks': checks,
+            'actions': actions,
+        }
+
+        if json_mode:
+            print(json.dumps(result, ensure_ascii=False, indent=2))
+        else:
+            print(f'LLM Radar: {message} | 质量 {quality or "n/a"} | {git_value}')
+        return result
+
     # ===== Selenium Check =====
     def check_selenium(self):
         """检查 Selenium 环境是否满足抓取要求"""
@@ -1982,17 +2132,99 @@ def crontab_status():
         print('⚪ 定时任务: 未启用')
 
 
+# ===== CLI 治理: 分组 help / positional 拦截 (2026-08-23) =====
+def print_grouped_help():
+    """hm-style 分组帮助 (📖 标题 + 【】分类 + 2/10 空格缩进)"""
+    print('============================================================')
+    print('📖 LLM Radar (llm-radar / lr) 使用说明')
+    print('============================================================')
+    print('【功能概述】')
+    print('  LLM 行业情报采集与数据管理（抓取 → 提取 → 合并 → 推送）')
+    print()
+    print('【采集执行】')
+    print('  run [source] [--force]')
+    print('          采集+提取+合并+推送一步完成（默认 6h 节流，--force 绕过）')
+    print('  fetch [source]')
+    print('          抓取新闻源（默认全部源；Selenium 无头 → requests 降级）')
+    print('  merge')
+    print('          从 fetch 缓存提取实体并合并到 snapshot')
+    print('  sources')
+    print('          列出所有新闻源')
+    print('  reset-health')
+    print('          重置源连续失败计数')
+    print('  selenium-check')
+    print('          检查 Chrome/ChromeDriver 环境')
+    print()
+    print('【数据管理】')
+    print('  status [--json]')
+    print('          数据新鲜度 + 质量门禁 + Git 分叉状态（checkpoint 协议）')
+    print()
+    print('【Git 集成】')
+    print('  commit [msg]')
+    print('          git add + commit（默认 message: manual@llm-radar）')
+    print('  auto-push')
+    print('          git add + commit + push')
+    print()
+    print('【定时任务】')
+    print('  crontab --add|--remove|--list|--update|--status [schedule]')
+    print(f'          管理定时任务（默认 schedule: {CRON_SCHEDULE}）')
+    print('  crontab help')
+    print('          定时任务子指令帮助')
+    print()
+    print('【其他】')
+    print('  help')
+    print('          显示本帮助')
+    print('  <cmd> help')
+    print('          各子指令帮助（fetch/run/commit/crontab，禁止当参数执行）')
+    print()
+
+
+def print_command_usage(command):
+    """打印单命令用法 (positional help 拦截, exit=0 无副作用)"""
+    usages = {
+        'fetch': '用法: lr fetch [source]  — 抓取新闻源（默认全部源）',
+        'run': '用法: lr run [source] [--force]  — 采集+提取+合并+推送（6h 节流, --force 绕过）',
+        'commit': '用法: lr commit [message]  — git add + commit',
+        'crontab': '用法: lr crontab --add|--remove|--list|--update|--status [schedule]',
+    }
+    print(usages.get(command, f'用法: lr {command}'))
+
+
+def _silent_collector():
+    """实例化 LLMRadarCollector 并抑制构造期日志 (status --json 需要纯 JSON stdout)"""
+    import io
+    old = sys.stdout
+    sys.stdout = io.StringIO()
+    try:
+        return LLMRadarCollector()
+    finally:
+        sys.stdout = old
+
+
 def main():
     """主函数"""
     if len(sys.argv) < 2:
-        print('Usage: python3 llm-radar-collector.py <command> [args]')
-        print('Commands: fetch [source], merge, run [source] [--force], sources, help')
-        sys.exit(1)
+        print_grouped_help()
+        sys.exit(0)
 
     command = sys.argv[1]
     args = sys.argv[2:]
 
-    collector = LLMRadarCollector()
+    # positional help 拦截: 带参子命令 (fetch/run/commit/crontab) 的 HELP 禁止当参数执行
+    if command in ('fetch', 'run', 'commit', 'crontab') and args and args[0].upper() == 'HELP':
+        print_command_usage(command)
+        sys.exit(0)
+
+    # help 无需实例化 collector (避免构造期 API key 日志噪音)
+    if command == 'help':
+        print_grouped_help()
+        sys.exit(0)
+
+    # status 是只读查询: 抑制构造期日志, 保持输出纯净 (--json 纯 JSON / 文本单行摘要)
+    if command == 'status':
+        collector = _silent_collector()
+    else:
+        collector = LLMRadarCollector()
 
     if command == 'fetch':
         source_keys = args if args else None
@@ -2022,6 +2254,9 @@ def main():
 
     elif command == 'reset-health':
         collector.reset_health()
+
+    elif command == 'status':
+        collector.status(json_mode='--json' in args)
 
     elif command == 'crontab':
         if not args or args[0] == '--status':
@@ -2058,32 +2293,6 @@ def main():
             print('✅ auto-push 完成')
         except subprocess.CalledProcessError as e:
             print(f'ℹ️ auto-push 跳过: {e.stderr.decode()[:200] if e.stderr else str(e)}')
-
-    elif command == 'help':
-        print('\n📖 LLM Radar 数据采集脚本\n')
-        print('Usage: python3 llm-radar-collector.py <command> [args]\n')
-        print('Commands:')
-        print('  fetch [source]           - 抓取新闻并提取实体（默认全部源）')
-        print('  merge                    - 将 fetch 结果合并到 snapshot.json')
-        print('  run [source]             - fetch + merge 一步完成（含 auto-push）')
-        print('  selenium-check           - 检查 Selenium 环境是否满足要求')
-        print('  sources                  - 列出所有新闻源')
-        print(f'  {CRON_HELP}')
-        print('  crontab --remove         - 移除定时任务')
-        print('  crontab --list           - 列出定时任务')
-        print('  crontab --update [sched] - 更新定时任务')
-        print('  crontab --status         - 查看定时任务状态')
-        print('  reset-health             - 重置所有源的连续失败计数')
-        print('  commit [message]         - git add + commit（默认 message: manual@llm-radar）')
-        print('  auto-push                - git add + commit + push')
-        print('  help                     - 显示帮助信息\n')
-        print('Examples:')
-        print('  python3 llm-radar-collector.py run                    # 全量采集+推送')
-        print('  python3 llm-radar-collector.py run qbitai             # 只采集量子位')
-        print('  python3 llm-radar-collector.py run --force            # 跳过 6h 间隔检查')
-        print('  python3 llm-radar-collector.py commit                 # 仅 commit')
-        print('  python3 llm-radar-collector.py auto-push              # 手动推送')
-        print('  python3 llm-radar-collector.py crontab --add          # 每天9:00、21:00采集')
 
     else:
         collector._print_err(f'未知命令: {command}')

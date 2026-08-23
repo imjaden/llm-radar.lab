@@ -1,0 +1,13 @@
+bin_dir: ~/.local/bin
+cache_dir: cache/system-command
+python: python3
+
+env:
+  conda: py3.12
+  # NOTE: 本 Mac 用 py3.12; Linux 主机部署时需改为 conda llm-radar (见 AGENTS.md)
+
+commands:
+  - name: llm-radar
+    script: llm-radar-collector.py
+    description: "LLM 行业情报采集/数据管理"
+    alias_list: [lr]
