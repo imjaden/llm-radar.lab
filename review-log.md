@@ -433,5 +433,31 @@
 - 待 push 实况: git log origin/main..HEAD = 恰好 6b69de8 + b55c8fb 两个。
 - pytest 写脏数据文件为 test_timestamp 已知问题, 已还原; .hermes-project.yaml 为会话前既有修改, 不动。
 
+---
+
+## 2026-08-23 — 目录改名旧路径清理审计 (4d7095b/ae05a70/1d8699c)
+
+- **review者**: review/llm-radar.lab-review (hermes-1.2.0)
+- **范围**: 3 个未 push commit — 4d7095b fix@llm-radar (5 文件路径修正), ae05a70 docs@llm-radar (handoff/README/data-flow + 旧命名归档 rename), 1d8699c chore@project (.hermes-project.yaml 命名规范)
+- **Tracking**: LR-SEC-018 (commit subject 语义) + LR-SEC-019 (handoff 文件名命名漂移), 均 🟢 注记; findings_open 0
+- **状态**: ✅ PASS — 100/100 (A)
+- **报告**: documents/reviews/llm-radar-path-refs-review-v1.0-20260823.md
+- **实现 prompt**: ✅ 无需生成 (纯路径清理, 无新功能)
+
+### 发现
+
+| # | Severity | Title | Status |
+|---|----------|-------|--------|
+| LR-SEC-018 | 🟢 | 1d8699c subject "fix handoff doc pointer" 描述的动作不在 diff (指针自 530f875 即 lab-review); 实际变更 = 命名去 .lab 化 + updated_at | 注记 |
+| LR-SEC-019 | 🟢 | session title (llm-radar-*) 与 handoff 文件名 (handoff-llm-radar.lab-*) 命名漂移, 无功能影响 | 注记 |
+
+### 数据验证要点
+
+- 活跃层 grep `llm-radar.jaden.tech` + 变体 `llm-radar[\.-]jaden` (排除 reviews/archive/mcp/ops/integ/loop/cache/audit-log/review-log/logs/data-*.log/pyc) = 0 文本命中; tests/*.py 源码 0 命中; 仅 gitignored 运行时产物 (pyc/collector.log/mcp-server.log) 含旧路径, 非源码残留。
+- al-scanner.py:93 与 agents-teamwork.yaml:3 聚合常量一致 (`llm-radar`); index.html:788 复制命令 cd 路径 = llm-radar.lab 与现目录一致。
+- CNAME = llm-radar.lab.jaden.tech, 活跃层域名引用全部为现域名 (prompt 背景"域名不变"已过时, 代码侧无矛盾)。
+- pytest tests/ -m "not selenium" --ignore=tests/test_cli.py --ignore=tests/test_selenium.py = 109 passed, 2 deselected, 0 failed; 测试污染 (snapshot/overview/timestamp) 已 git checkout 还原, 工作区 clean。
+- git log origin/main..HEAD 复核 = 恰好 3 commit, 与 prompt 一致。
+
 
 
