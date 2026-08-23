@@ -116,7 +116,7 @@ llm-radar 数据收集器目前只能 `python3 llm-radar-collector.py <cmd>` 调
 
 | status | 条件 |
 |:---|:---|
-| ok | last_run_at < 7h 且质量门禁 success |
+| ok | last_run_at < 7h 且质量门禁 success (严格小于; 恰 7h 判 ok, 实现 `> STALE_HOURS` 才 warning) |
 | warning | 7h-48h 或 git 分叉(非 0/0)或质量门禁 failed |
 | critical | > 48h 或 snapshot 缺失或全局 consecutive_fails ≥3(run 级, 非 source_health 任一源) |
 | info | checks 附属信息项(实体数/数据日期) |
