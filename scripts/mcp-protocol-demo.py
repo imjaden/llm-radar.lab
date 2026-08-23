@@ -15,7 +15,7 @@ LLM-Radar MCP Protocol 手工测试验证脚本
   python3 scripts/mcp-protocol-demo.py
 
 依赖：
-  - llm-radar-mcp-server.py 在项目根目录
+  - scripts/llm-radar-mcp-server.py
 
 流程:
 scripts/mcp-protocol-demo.py
@@ -41,7 +41,7 @@ from pathlib import Path
 
 SCRIPT_DIR = Path(__file__).resolve().parent
 PROJECT_ROOT = SCRIPT_DIR.parent
-MCP_SERVER = PROJECT_ROOT / 'llm-radar-mcp-server.py'
+MCP_SERVER = PROJECT_ROOT / 'scripts' / 'llm-radar-mcp-server.py'
 API_KEY = os.environ.get('LLM_RADAR_MCP_KEY', '')
 if not API_KEY:
     API_KEY = secrets.token_hex(32)

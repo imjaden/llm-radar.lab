@@ -10,7 +10,7 @@ import subprocess, json, os, sys, signal
 from pathlib import Path
 
 _PROJECT_ROOT = Path(__file__).resolve().parent.parent
-SERVER = str(_PROJECT_ROOT / 'llm-radar-mcp-server.py')
+SERVER = str(_PROJECT_ROOT / 'scripts' / 'llm-radar-mcp-server.py')
 API_KEY=os.environ.get('LLM_RADAR_MCP_KEY', '')
 if not API_KEY:
     print('ERROR: LLM_RADAR_MCP_KEY 环境变量未设置', file=sys.stderr)
