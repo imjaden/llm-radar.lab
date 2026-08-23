@@ -335,13 +335,42 @@
 
 | # | Severity | Title | Status |
 |---|----------|-------|--------|
-| LR-SEC-011 | 🟡 | `run --force help` 绕过 positional help 拦截 (help 非首位), 实测触发 run 流水线副作用 (git fetch + metrics 写入, 'help' 非合法源快速失败, 有界) | Open — 建议 fetch/run 扩展全 args HELP 扫描 |
+| LR-SEC-011 | 🟡 | `run --force help` 绕过 positional help 拦截 (help 非首位), 实测触发 run 流水线副作用 (git fetch + metrics 写入, 'help' 非合法源快速失败, 有界) | ✅ Closed (90b5aa5 全 args 扫描 + 2 测试, 实测拦截) |
 
 ### 数据验证要点
 
 - 16 项全部实测/读取, 含 stdout 纯净性 (JSON 可 json.loads)、双命令 help/status 输出 diff 为空、敏感信息扫描 0 hits。
 - pytest 写脏数据文件已 git checkout 还原; 唯一遗留 .hermes-project.yaml 修改为会话前既有, 不动。
 - 待 push 实况: 仅 5830b5b + 26219ba 两个 ahead (prompt 所列 6 个中 4 个已在 origin/main)。
+
+---
+
+## 2026-08-23 — CLI 治理实现审计尾项复核 (CL-SEC11)
+
+- **review者**: review/llm-radar.lab-review (hermes-1.2.0)
+- **范围**: 尾项复核 — 90b5aa5 fix@cli (LR-SEC-011), 59c8b92 docs@design (O-5); 独立实测 + pytest tests/test_cli.py 13 passed
+- **Tracking**: LR-SEC-011 → Resolved; O-5 → Resolved; findings_open 0
+- **状态**: ✅ PASS — 100/100 (A)
+- **报告**: documents/reviews/llm-radar-cli-governance-recheck-v1.0-20260823.md
+
+### 复核结论
+
+- 90b5aa5: `any(a.upper()=='HELP' for a in args)` 全 args 扫描替换 `args[0]` 首位检查 (collector.py:2213-2220), 防 `run --force help` / `fetch qbitai help` 绕过; 拦截作用域仍限 fetch/run/commit/crontab 四子命令, 无扩大。
+- 59c8b92: 设计 v1.1 §4.2 ok 行补 "严格小于; 恰 7h 判 ok, 实现 `> STALE_HOURS` 才 warning" — 与实现 collector.py:1845 (`age_hours > STALE_HOURS` → warning, `>` 非 `>=`) 一致, 恰 7h 保持 ok, 无 off-by-one。
+- 实测: `run --force help` → stdout 仅"用法:" 一行, exit=0, 无采集副作用; `crontab --list` → exit=0 正常输出 cron 行。
+- pytest tests/test_cli.py → 13 passed in 3.79s (原 11 + 新 2)。
+
+### 发现
+
+| # | Severity | Title | Status |
+|---|----------|-------|--------|
+| LR-SEC-011 | 🟡 | help 拦截仅检查 args[0], `run --force help` 可绕过 | ✅ Resolved (90b5aa5) |
+| O-5 | 🟢 | 设计 §4.2 ok 行边界标注缺失 | ✅ Resolved (59c8b92) |
+
+### 数据验证要点
+
+- 全部独立实测: git show 两 commit diff / `run --force help` / `crontab --list` / 读 collector.py:1843-1846 边界逻辑 / pytest 13 passed。
+- pytest 写脏数据文件为 test_timestamp 已知问题, 已还原, 非本次引入; .hermes-project.yaml 为会话前既有修改, 不动。
 
 ---
 

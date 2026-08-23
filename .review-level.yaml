@@ -149,6 +149,15 @@ review_history:
     verdict: PASS
     score: 95
     findings_total: 4
-    findings_open: 1
-    tracking: 实现审计 (26219ba, CL-SEC11) — LR-SEC-011 🟡 (help 拦截仅 args[0]); LR-SEC-012~014 🟢 确认; O-1~O-5 🟢
+    findings_open: 0
+    tracking: 实现审计 (26219ba, CL-SEC11) — LR-SEC-011 🟡 ✅ Closed (90b5aa5); LR-SEC-012~014 🟢 确认; O-1~O-5 🟢 (O-5 ✅ Closed 59c8b92)
     report: documents/reviews/llm-radar-cli-governance-implementation-review-v1.0-20260823.md
+  - date: 2026-08-23
+    reviewer: Security Reviewer (IRIS)
+    review_level: L2
+    verdict: PASS
+    score: 100
+    findings_total: 2
+    findings_open: 0
+    tracking: 尾项复核 (90b5aa5, 59c8b92, CL-SEC11) — LR-SEC-011 ✅ Resolved; O-5 ✅ Resolved
+    report: documents/reviews/llm-radar-cli-governance-recheck-v1.0-20260823.md
