@@ -1,17 +1,17 @@
-project: llm-radar.lab
+project: llm-radar
 profiles:
 - name: dev
 sessions:
 - role: ops
   profile: ops
-  title: llm-radar.lab-ops
+  title: llm-radar-ops
 - role: dev
   profile: dev
-  title: llm-radar.lab-dev
+  title: llm-radar-dev
 - role: review
   profile: review
-  title: llm-radar.lab-review
+  title: llm-radar-review
 handoff:
   enabled: true
   doc: documents/handoff/handoff-llm-radar.lab-review.md
-  updated_at: '2026-08-15'
+  updated_at: '2026-08-23'
