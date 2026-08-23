@@ -52,7 +52,7 @@ else:
         stream=sys.stderr,
     )
     log = logging.getLogger('mcp-llm-radar')
-PROJECT_ROOT = Path(os.environ.get('LLM_RADAR_DIR', __file__)).resolve().parent
+PROJECT_ROOT = Path(os.environ.get('LLM_RADAR_DIR', __file__)).resolve().parent.parent
 DATA_DIR = PROJECT_ROOT / 'data'
 SNAPSHOT_PATH = DATA_DIR / 'snapshot.json'
 

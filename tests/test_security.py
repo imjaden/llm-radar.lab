@@ -17,7 +17,7 @@ class TestMCPApiKey:
 
         # 重新导入以获取新 key
         spec = importlib.util.spec_from_file_location(
-            "mcp_server", str(PROJECT_ROOT / "llm-radar-mcp-server.py"))
+            "mcp_server", str(PROJECT_ROOT / "scripts" / "llm-radar-mcp-server.py"))
         # monkeypatch stdin 避免阻塞
         import io
         monkeypatch.setattr(sys, 'stdin', io.StringIO(""))
@@ -39,7 +39,7 @@ class TestMCPApiKey:
         monkeypatch.setattr(sys, 'stderr', io.StringIO())
 
         spec = importlib.util.spec_from_file_location(
-            "mcp_server2", str(PROJECT_ROOT / "llm-radar-mcp-server.py"))
+            "mcp_server2", str(PROJECT_ROOT / "scripts" / "llm-radar-mcp-server.py"))
         mod = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(mod)
 
@@ -60,7 +60,7 @@ class TestMCPApiKey:
         monkeypatch.setattr(sys, 'stderr', io.StringIO())
 
         spec = importlib.util.spec_from_file_location(
-            "mcp_server3", str(PROJECT_ROOT / "llm-radar-mcp-server.py"))
+            "mcp_server3", str(PROJECT_ROOT / "scripts" / "llm-radar-mcp-server.py"))
         mod = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(mod)
 
