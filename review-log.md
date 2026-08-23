@@ -249,3 +249,71 @@
 - 无新安全发现 ✅
 
 ---
+
+## 2026-08-23 — CLI 治理与全局注册设计 v1.0 (CL-SEC11)
+
+- **review者**: review/llm-radar.lab-review (hermes-1.2.0)
+- **范围**: documents/solutions/llm-radar-cli-governance-design-v1.0-20260823.md (commit a714a7c) — 设计评审 (合理性/严格性/安全性 + 治理合规)
+- **Tracking**: REA-11, RIG-1~5 待修 (6 findings); GOV-1~6 合规
+- **状态**: ⏳ CONDITIONAL PASS — 70/100 (B)
+- **报告**: documents/reviews/llm-radar-cli-governance-review-v1.0-20260823.md
+- **实现 prompt**: ⬜ 未生成 (非 PASS, 修复后重审)
+
+### 发现摘要
+
+| # | Severity | Title | Status |
+|---|----------|-------|--------|
+| REA-11 | 🟡 | §6 引用 mcp-server.py, 实际文件为 llm-radar-mcp-server.py | Open |
+| RIG-1 | 🟡 | §4.4 48h 阈值"实施时二选一"未锁定 (STALE_HOURS*7=49h ≠ 48h 与 §4.2 表格矛盾) | Open |
+| RIG-2 | 🟡 | wrapper .env 加载无实现路径 (install.py 模板不含 .env, collector 不读 .env) | Open |
+| RIG-3 | 🟡 | cli-registry install.py 模板硬编码 script-miner calls.log 路径, 复用会写脏 | Open |
+| RIG-4 | 🟡 | §6 测试隔离仅提示无方案 (temp_snapshot 不隔离 project_root, 08-15 污染源仍在) | Open |
+| RIG-5 | 🟡 | §4.2 "连续失败 ≥3" 级别未明确 (全局 consecutive_fails vs source_health, qbitai=37 会永久 critical) | Open |
+
+### 数据验证要点
+
+- 现状评估全部属实: main() 1985-2101, 空入参 exit=1 (实测), help 平铺, 无 --json, 10 命令。
+- checkpoint 协议与 dt-status 一致 (七字段/四态/icon emoji/message 无 emoji/shell action 用 cmd 字段)。
+- STALE_HOURS=7 与 llm-radar-health.py:38 一致; _think force 绕过已内建 (1377-1379)。
+- cli-registry 结构与 script-miner 先例一致, 但 wrapper.sh.tmpl 无 .env + script-miner 耦合。
+- 无 🔴 安全发现: status 全只读, actions cmd 静态, help 拦截防误执行。
+
+---
+
+## 2026-08-23 — CLI 治理与全局注册设计 v1.1 re-review (CL-SEC11)
+
+- **review者**: review/llm-radar.lab-review (hermes-1.2.0)
+- **范围**: documents/solutions/llm-radar-cli-governance-design-v1.1-20260823.md (commit 7bd8f26) — 设计复审 (6 🟡 + 3 🟢 修复核验 + 新问题扫描)
+- **Tracking**: REA-11, RIG-1~5, RIG-6/7/9 已修复 ✅; RIG-10 (新 🟡) 并入 impl prompt #5; O-2~O-5 🟢
+- **状态**: ✅ PASS — 95/100 (A)
+- **报告**: documents/reviews/llm-radar-cli-governance-rereview-v1.1-20260823.md
+- **实现 prompt**: ✅ 已生成 (cache/review-prep/prompt-llm-radar-cli-governance-impl-20260823.md)
+
+### 修复核验
+
+| # | v1.0 问题 | v1.1 验证 |
+|---|----------|---------|
+| REA-11 | mcp-server.py 文件名 | ✅ L191 llm-radar-mcp-server.py, 无残留 |
+| RIG-1 | 48h 二选一 | ✅ CRITICAL_HOURS=48 独立常量 (L139), 无二选一残留 |
+| RIG-2 | .env 无实现路径 | ✅ fork 模板 + set -a source .env (L182-185) |
+| RIG-3 | calls.log 模板耦合 | ⚠️ fork+移除 ✅; 但 install.py 无 --template → RIG-10 |
+| RIG-4 | 测试隔离无方案 | ✅ fixture patch project_root + 预置 3 文件 (L194-200) |
+| RIG-5 | 连续失败级别未明确 | ✅ 全局 run 级 consecutive_fails (L121,127-129) |
+| RIG-6/7/9 | 🟢 三项 | ✅ 路径标注 / 不主动 fetch 语义 / §4.5 文本输出 |
+
+### 新增发现
+
+- 🟡 RIG-10: §5.2 "用 install.py --template 指向 fork 模板" — install.py 无此标志 (TEMPLATE 硬编码 install.py:20, main() 仅 --dry-run/--force/uninstall, 未知参数静默忽略 → 照字面执行会静默回用硬编码模板, calls.log 污染重现)。修法 ② 手工从 fork 模板生成 wrapper, 已并入 impl prompt 核心变更 #5。
+- 🟢 RIG-8 残留: §4.1 示例数字仍为占位符未标注 (实测 stats 100/50/100/55/61)。
+- 🟢 O-2: 页脚 L225 仍写 "版本: 1.0" (frontmatter 1.1)。
+- 🟢 O-4: DATA_DIR/SNAPSHOT_PATH 为模块常量 (collector.py:43-45), status 读取须走 project_root 派生路径, fixture 防御性 patch data_dir/snapshot_path。
+- 🟢 O-5: .cli-registry.yaml 示例 env.conda: py3.12 本 Mac 可用 (env 存在且含依赖); Linux 主机按 AGENTS.md 需改 conda `llm-radar` env。
+
+### 数据验证要点
+
+- 9 项修复逐项 grep/read 核验, 8.5/9 完全落地; 实测 conda py3.12 存在且含 openai/selenium/requests/bs4/prettytable。
+- 验收标准 8 条可测; 命名 kebab-case / frontmatter v1.1 / commit 7bd8f26 docs@design 合规。
+
+---
+
+

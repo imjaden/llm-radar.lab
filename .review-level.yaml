@@ -124,3 +124,22 @@ review_history:
     findings_open: 0
     tracking: re-review + impl audit — RIG-1 fixed; A1/B1 确认; 14/14 单测
     report: documents/reviews/llm-radar-git-flow-fix-v1.3-rereview-v1.1-20260815.md
+  - date: 2026-08-23
+    reviewer: Security Reviewer (IRIS)
+    review_level: L2
+    verdict: CONDITIONAL PASS
+    score: 70
+    findings_total: 6
+    findings_open: 6
+    tracking: REA-11, RIG-1~5 待修 (设计 v1.0, CL-SEC11); GOV-1~6 合规; 修复后重审
+    report: documents/reviews/llm-radar-cli-governance-review-v1.0-20260823.md
+    resolved_by: re-review v1.1 (2026-08-23) — PASS 95/A
+  - date: 2026-08-23
+    reviewer: Security Reviewer (IRIS)
+    review_level: L2
+    verdict: PASS
+    score: 95
+    findings_total: 6
+    findings_open: 1
+    tracking: re-review v1.1 — REA-11/RIG-1~5/RIG-6/7/9 fixed; RIG-10 (新 🟡, 并入 impl prompt #5); O-2~O-5 🟢
+    report: documents/reviews/llm-radar-cli-governance-rereview-v1.1-20260823.md
