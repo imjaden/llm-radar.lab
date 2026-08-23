@@ -136,7 +136,7 @@ python3 llm-radar-collector.py cron --add # 添加定时任务
 mcp_servers:
   llm-radar:
     command: "python3"
-    args: ["/path/to/llm-radar.jaden.tech/scripts/llm-radar-mcp-server.py"]
+    args: ["/path/to/llm-radar.lab/scripts/llm-radar-mcp-server.py"]
     env:
       LLM_RADAR_MCP_KEY: "llm-radar-mcp-2026"
 ```

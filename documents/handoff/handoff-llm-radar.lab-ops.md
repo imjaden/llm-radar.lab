@@ -22,12 +22,12 @@ source_session: 20260810_180152_89e4b9
 - /Users/jadenli/CodeSpace/hermes-manager/skills-governance/document-frontmatter.md
 - /Users/jadenli/CodeSpace/hermes-manager/skills-governance/feature-spec.md
 - /Users/jadenli/CodeSpace/hermes-manager/skills-governance/features-template.md
-- /Users/jadenli/CodeSpace/llm-radar.jaden.tech
-- /Users/jadenli/CodeSpace/llm-radar.jaden.tech(2026-08-10
-- /Users/jadenli/CodeSpace/llm-radar.jaden.tech)**
-- /Users/jadenli/CodeSpace/llm-radar.jaden.tech/cache/review-prep/prompt-llm-radar-git-fix-rereview-2026-08-12.md
-- /Users/jadenli/CodeSpace/llm-radar.jaden.tech/cache/review-prep/prompt-llm-radar-git-fix-review-2026-08-12.md
-- /Users/jadenli/CodeSpace/llm-radar.jaden.tech/cache/review-prep/prompt-llm-radar-health-probe-rereview-2026-08-13.md
+- /Users/jadenli/CodeSpace/llm-radar.lab
+- /Users/jadenli/CodeSpace/llm-radar.lab(2026-08-10
+- /Users/jadenli/CodeSpace/llm-radar.lab)**
+- /Users/jadenli/CodeSpace/llm-radar.lab/cache/review-prep/prompt-llm-radar-git-fix-rereview-2026-08-12.md
+- /Users/jadenli/CodeSpace/llm-radar.lab/cache/review-prep/prompt-llm-radar-git-fix-review-2026-08-12.md
+- /Users/jadenli/CodeSpace/llm-radar.lab/cache/review-prep/prompt-llm-radar-health-probe-rereview-2026-08-13.md
 
 ## 边界
 - started: 1786356126.3879511, messages: 566
@@ -54,9 +54,9 @@ source_session: 20260810_180152_89e4b9
 - e1de781
 - d0aee7f
 - 2652160
-- /Users/jadenli/CodeSpace/llm-radar.jaden.tech/documents/solutions/llm-radar-git-flow-fix-design-v1.0-20260812.md
-- /Users/jadenli/CodeSpace/llm-radar.jaden.tech/documents/reviews/llm-radar-health-probe-ops-verify-v1.0-20260814.md(commit
-- /Users/jadenli/CodeSpace/llm-radar.jaden.tech（2026-08-11
+- /Users/jadenli/CodeSpace/llm-radar.lab/documents/solutions/llm-radar-git-flow-fix-design-v1.0-20260812.md
+- /Users/jadenli/CodeSpace/llm-radar.lab/documents/reviews/llm-radar-health-probe-ops-verify-v1.0-20260814.md(commit
+- /Users/jadenli/CodeSpace/llm-radar.lab（2026-08-11
 
 ## 下一步清单
 1. 继续: 1. 功能项: 本 session 完成的功能均已实现 + 验证 + 审计?

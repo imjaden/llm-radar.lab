@@ -50,7 +50,7 @@ profile: review
 
 ## 关键路径
 
-- 项目根: /Users/jadenli/CodeSpace/llm-radar.jaden.tech
+- 项目根: /Users/jadenli/CodeSpace/llm-radar.lab
 - 设计文档: documents/solutions/
 - 审查报告: documents/reviews/
 - 治理日志: review-log.md（Style B append-only）

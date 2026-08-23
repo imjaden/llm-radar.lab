@@ -89,7 +89,7 @@
 llm-radar-run.sh >> data/collector.log 2>&1
 
 # 手动执行
-cd ~/CodeSpace/llm-radar.jaden.tech
+cd ~/CodeSpace/llm-radar.lab
 python3 llm-radar-collector.py run
 ```
 
@@ -265,7 +265,7 @@ data/snapshot.json
 
 | 环境 | 位置 | Python | 触发 |
 |:---|:---|:---|:---|
-| Mac 本地 | `~/CodeSpace/llm-radar.jaden.tech` | 系统 Python 3.11 | crontab 9:00/21:00 |
+| Mac 本地 | `~/CodeSpace/llm-radar.lab` | 系统 Python 3.11 | crontab 9:00/21:00 |
 | 阿里云 Linux | `/home/admin/codespace/llm-radar.lab` | conda `llm-radar` 环境 | crontab 9:00/21:00 |
 
 ---
