@@ -227,7 +227,7 @@ Step 5: 向用户报告结果
 mcp_servers:
   llm-radar:
     command: "python3"
-    args: ["/Users/jadenli/CodeSpace/llm-radar.jaden.tech/llm-radar-mcp-server.py"]
+    args: ["/Users/jadenli/CodeSpace/llm-radar.jaden.tech/scripts/llm-radar-mcp-server.py"]
     env:
       LLM_RADAR_MCP_KEY: "llm-radar-mcp-2026"
 ```
@@ -236,7 +236,7 @@ mcp_servers:
 | 参数 | 值 | 说明 |
 |:---|:---|:---|
 | `command` | `python3` | 运行 MCP Server 的解释器 |
-| `args` | 脚本路径 | 指向 `llm-radar-mcp-server.py` |
+| `args` | 脚本路径 | 指向 `scripts/llm-radar-mcp-server.py` |
 | `env.LLM_RADAR_MCP_KEY` | API Key | 与 MCP Server 鉴权一致 |
 | 默认 Tool 命名 | `mcp_llm_radar_submit_entities` | Hermes 自动加 `mcp_{server}_{tool}` 前缀 |
 
@@ -263,7 +263,7 @@ Agent: ✅ 状态正常，当前 390 条实体
 
 ### ✅ 已完成
 
-- [x] `llm-radar-mcp-server.py` — MCP Server（JSON-RPC 2.0 over stdio）
+- [x] `scripts/llm-radar-mcp-server.py` — MCP Server（JSON-RPC 2.0 over stdio）
 - [x] 质量检验（5 项拒绝规则：必填字段、置信度、日期、空提交、鉴权）
 - [x] `scripts/mcp-protocol-demo.py` — 测试脚本（5 TC 全部通过）
 - [x] `documents/mcp-protocol-design-v1.0-20260623.md` — MCP 协议设计文档
@@ -301,7 +301,7 @@ Agent: ✅ 状态正常，当前 390 条实体
 
 | 文件 | 说明 |
 |:---|:---|
-| `llm-radar-mcp-server.py` | MCP Server 实现 |
+| `scripts/llm-radar-mcp-server.py` | MCP Server 实现 |
 | `scripts/mcp-protocol-demo.py` | MCP 协议测试脚本 |
 | `documents/mcp-protocol-design-v1.0-20260623.md` | MCP 协议设计 |
 | `documents/search-tips-v1.0-20260622.md` | 搜索技巧参考（用于构造查询） |
