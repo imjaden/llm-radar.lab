@@ -785,7 +785,7 @@ function updateStats() {
     if (host.includes('127.0.0.1') || host.includes('localhost')) {
       ago.style.cursor = 'pointer'; ago.title = '点击复制采集命令';
       ago.onclick = () => {
-        navigator.clipboard.writeText('cd ~/CodeSpace/llm-radar.jaden.tech && python3 llm-radar-collector.py run').then(() => {
+        navigator.clipboard.writeText('cd ~/CodeSpace/llm-radar.lab && python3 llm-radar-collector.py run').then(() => {
           ago.innerHTML = '已复制 ✓ <span class="text-gray-600 text-xs">🔗</span>';
           setTimeout(() => { ago.innerHTML = label + ' <span class="text-gray-600 text-xs">🔗</span>'; }, 1500);
         });

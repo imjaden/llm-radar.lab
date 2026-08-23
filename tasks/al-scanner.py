@@ -90,7 +90,7 @@ def update_teamwork(manifest: dict, task_id: str):
 
     if "tasks" not in tw:
         tw = {
-            "project": "llm-radar.jaden.tech",
+            "project": "llm-radar",
             "task_count": 0,
             "open_task_count": 0,
             "escalated_tasks": [],

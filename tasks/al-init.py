@@ -22,7 +22,7 @@ from datetime import datetime, timezone, timedelta
 
 # Hermes profile 会覆盖 HOME 环境变量，使用真实用户目录
 REAL_HOME = pwd.getpwuid(os.getuid()).pw_dir
-PROJECT = Path(REAL_HOME) / "CodeSpace/llm-radar.jaden.tech"
+PROJECT = Path(REAL_HOME) / "CodeSpace/llm-radar.lab"
 TASKS = PROJECT / "tasks"
 REQUIREMENTS = PROJECT / "requirements.md"
 TZ = timezone(timedelta(hours=8))

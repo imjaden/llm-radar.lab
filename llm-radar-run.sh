@@ -12,7 +12,7 @@
 #   2. 系统环境变量 DEEPSEEK_API_KEY
 #
 # 路径说明（适配 Mac 与本 Linux 服务器）：
-#   Mac:    ~/CodeSpace/llm-radar.jaden.tech
+#   Mac:    ~/CodeSpace/llm-radar.lab
 #   Linux:  /home/admin/codespace/llm-radar.lab
 
 set -e
