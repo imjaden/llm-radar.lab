@@ -14,7 +14,7 @@ Hermes Agent (LLM News SKILL)
         │
         ▼
 ┌───────────────────────────────────────┐
-│  MCP Server (llm-radar-mcp-server.py) │
+│  MCP Server (scripts/llm-radar-mcp-server.py) │
 │                                       │
 │  1. Auth (API Key)                    │
 │  2. Data quality check                │
@@ -116,7 +116,7 @@ MCP 工具名：`mcp_llm_radar_health_check`
 mcp_servers:
   llm-radar:
     command: "python3"
-    args: ["/path/to/llm-radar.jaden.tech/llm-radar-mcp-server.py"]
+    args: ["/path/to/llm-radar.jaden.tech/scripts/llm-radar-mcp-server.py"]
     env:
       LLM_RADAR_MCP_KEY: "llm-radar-mcp-2026"
 ```
@@ -132,7 +132,7 @@ mcp_servers:
 mcp_servers:
   llm-radar:
     command: "python3"
-    args: ["/Users/jadenli/CodeSpace/llm-radar.jaden.tech/llm-radar-mcp-server.py"]
+    args: ["/Users/jadenli/CodeSpace/llm-radar.jaden.tech/scripts/llm-radar-mcp-server.py"]
     env:
       LLM_RADAR_MCP_KEY: "llm-radar-mcp-2026"
 ```
@@ -189,7 +189,7 @@ LLM 资讯 SKILL 会：
 
 | 文件 | 说明 |
 |:---|:---|
-| `llm-radar-mcp-server.py` | MCP Server 实现（JSON-RPC 2.0 over stdio） |
+| `scripts/llm-radar-mcp-server.py` | MCP Server 实现（JSON-RPC 2.0 over stdio） |
 | `scripts/mcp-protocol-demo.py` | 手工验证脚本（模拟 Hermes Agent 调用 MCP Server） |
 
 ---

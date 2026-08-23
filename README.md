@@ -76,7 +76,7 @@ python3 llm-radar-collector.py fetch [source_key]
 ├── index.html                 # 单体前端（表格布局，Vanilla JS）
 ├── changelog.html             # 更新日志（静态模板，JS 动态加载渲染）
 ├── llm-radar-collector.py     # 数据采集脚本（Agent Loop）
-├── llm-radar-mcp-server.py    # MCP Server（Hermes 对接）
+├── scripts/llm-radar-mcp-server.py    # MCP Server（Hermes 对接）
 ├── llm-radar-run.sh           # 跨平台执行器（自动识别 Mac/Linux）
 ├── llm-news-prompt.md         # 数据规范文档
 ├── features.md                # 功能清单
