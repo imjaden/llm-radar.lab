@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="Content-Security-Policy"
-        content="default-src 'self'; script-src 'self' 'unsafe-inline' cdn.tailwindcss.com; style-src 'self' 'unsafe-inline' fonts.googleapis.com; font-src fonts.gstatic.com; img-src 'self' data:; connect-src 'self';">
+        content="default-src 'self'; script-src 'self' 'unsafe-inline' cdn.tailwindcss.com; style-src 'self' 'unsafe-inline' fonts.googleapis.com; font-src fonts.gstatic.com; img-src 'self' data: https://pbs.twimg.com; connect-src 'self';">
   <title>LLM Radar — 行业情报仪表盘</title>
   <link rel="icon" href="static/favicon.png">
   <script src="https://cdn.tailwindcss.com"></script>
@@ -60,6 +60,33 @@
     .filter-chip { padding:2px 10px; border-radius:9999px; font-size:0.7rem; font-weight:500; cursor:pointer; transition:all 0.15s; border:1px solid #2a2a3e; color:#9ca3af; background:transparent; }
     .filter-chip:hover { border-color:#4f46e5; color:#e0e0e0; }
     .filter-chip.active { border-color:#facc15; color:#facc15; background:rgba(250,204,21,0.08); }
+    /* 国家过滤对 X 热点 tab 不适用 (tweet 无 country 字段, O-6): 置灰, 仅源 chips 生效 */
+    .filter-chip.disabled { opacity:0.35; cursor:not-allowed; pointer-events:none; }
+
+    /* Split preview (X 热点分栏详情, §5.3) */
+    .split-backdrop { position:fixed; inset:0; z-index:70; background:rgba(0,0,0,0.5); display:none; }
+    .split-backdrop.show { display:block; }
+    .split-preview { position:fixed; top:100px; right:16px; z-index:80; width:420px; max-width:92vw; max-height:calc(100vh - 130px); background:#1e1e2e; border:1px solid #2a2a3e; border-radius:12px; box-shadow:0 8px 32px rgba(0,0,0,0.5); display:none; flex-direction:column; overflow:hidden; }
+    .split-preview.show { display:flex; }
+    .split-preview-header { display:flex; align-items:center; gap:6px; padding:10px 12px; border-bottom:1px solid #2a2a3e; }
+    .split-preview-header .sp-title { flex:1; font-size:0.75rem; color:#9ca3af; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    .sp-nav-btn, .sp-close-btn { background:transparent; border:1px solid #2a2a3e; color:#9ca3af; border-radius:6px; cursor:pointer; width:26px; height:26px; font-size:0.75rem; line-height:1; }
+    .sp-nav-btn:hover, .sp-close-btn:hover { color:#facc15; border-color:#4f46e5; }
+    .split-preview-body { padding:14px; overflow-y:auto; }
+    .sp-full-text { font-size:0.9rem; line-height:1.6; color:#e0e0e0; white-space:pre-wrap; word-break:break-word; margin-bottom:10px; }
+    .sp-meta { font-size:0.7rem; color:#9ca3af; font-family:'JetBrains Mono',monospace; margin-bottom:12px; }
+    .sp-metrics { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin-bottom:12px; }
+    .sp-metric { background:#16161f; border:1px solid #2a2a3e; border-radius:8px; padding:8px; text-align:center; }
+    .sp-metric-v { font-family:'JetBrains Mono',monospace; font-size:0.95rem; color:#facc15; font-weight:600; }
+    .sp-metric-k { font-size:0.6rem; color:#9ca3af; margin-top:2px; }
+    .sp-images { display:flex; gap:8px; overflow-x:auto; margin-bottom:12px; }
+    .sp-img-wrap { flex-shrink:0; }
+    .sp-img-wrap img { max-width:260px; max-height:220px; border-radius:8px; border:1px solid #2a2a3e; display:block; }
+    .sp-img-fail { width:140px; height:90px; border:1px dashed #2a2a3e; border-radius:8px; display:flex; align-items:center; justify-content:center; color:#6b7280; font-size:0.7rem; }
+    .sp-link { display:none; color:#818cf8; font-size:0.75rem; text-decoration:none; }
+    .sp-link:hover { color:#facc15; }
+    .sp-row-btn { display:none; padding:2px 8px; border-radius:6px; font-size:0.7rem; cursor:pointer; background:transparent; border:1px solid #4f46e5; color:#818cf8; }
+    .sp-row-btn:hover { background:rgba(79,70,229,0.15); color:#facc15; }
 
     /* Highlight */
     @keyframes hl-pulse { 0%{background:rgba(250,204,21,0.3)} 50%{background:rgba(250,204,21,0.15)} 100%{background:rgba(250,204,21,0.08)} }
@@ -134,6 +161,9 @@
     /* Responsive: hide source chips and filter chips on mid screens */
     @media (max-width:1200px) {
       .hide-1200 { display:none !important; }
+      /* 窄屏: 分栏变全屏抽屉 (底部滑出, ~85vh, §5.5); 行内"详情"按钮显示 (7C) */
+      .split-preview { top:auto; bottom:0; left:0; right:0; width:100%; max-width:100%; max-height:85vh; border-radius:12px 12px 0 0; }
+      .sp-row-btn { display:inline-flex; }
     }
     /* GitHub icon */
     .github-icon { display: inline-flex; vertical-align: middle; opacity: 0.7; transition: opacity 0.15s; }
@@ -180,6 +210,7 @@
         <button class="tab-btn px-4 py-2.5 text-sm font-medium whitespace-nowrap transition-colors hover:text-white" data-tab="providers">🏢 厂商 <span class="ml-1 text-xs opacity-60" id="tc-providers">0</span></button>
         <button class="tab-btn px-4 py-2.5 text-sm font-medium whitespace-nowrap transition-colors hover:text-white" data-tab="people">👤 人物 <span class="ml-1 text-xs opacity-60" id="tc-people">0</span></button>
         <button class="tab-btn px-4 py-2.5 text-sm font-medium whitespace-nowrap transition-colors hover:text-white" data-tab="hotspots">🔥 热点 <span class="ml-1 text-xs opacity-60" id="tc-hotspots">0</span></button>
+        <button class="tab-btn px-4 py-2.5 text-sm font-medium whitespace-nowrap transition-colors hover:text-white" data-tab="xhotspots">X热点 <span class="ml-1 text-xs opacity-60" id="tc-xhotspots">0</span></button>
         <div class="hide-1200 flex items-center gap-1.5 ml-auto pl-4">
           <button class="filter-chip active" data-filter="all" onclick="setFilter('all')">全部</button>
           <button class="filter-chip" data-filter="cn" onclick="setFilter('cn')">🇨🇳 中国</button>
@@ -230,6 +261,7 @@
       <p class="text-gray-600 text-sm">请确保 <code class="font-mono bg-gray-800 px-2 py-0.5 rounded">data/snapshot.json</code> 存在</p>
     </div>
     <div id="panel-hotspots" class="tab-panel hidden"></div>
+    <div id="panel-xhotspots" class="tab-panel hidden"></div>
     <div id="panel-providers" class="tab-panel hidden"></div>
     <div id="panel-people" class="tab-panel hidden"></div>
     <div id="panel-tools" class="tab-panel hidden"></div>
@@ -249,6 +281,24 @@
       <button class="text-gray-400 hover:text-white text-xs ml-auto" onclick="toggleHotspotPanel()">✕</button>
     </div>
     <div class="hotspot-panel-body" id="hotspot-panel-body"></div>
+  </div>
+
+  <!-- X 热点分栏详情 (split-preview, 仅 X热点 tab 生效 §5.3) -->
+  <div id="split-backdrop" class="split-backdrop" onclick="closeSplitPreview()"></div>
+  <div id="split-preview" class="split-preview">
+    <div class="split-preview-header">
+      <button class="sp-nav-btn" onclick="spNav(-1)" title="上一条">←</button>
+      <button class="sp-nav-btn" onclick="spNav(1)" title="下一条">→</button>
+      <span class="sp-title" id="sp-title"></span>
+      <button class="sp-close-btn" onclick="closeSplitPreview()" title="关闭">✕</button>
+    </div>
+    <div class="split-preview-body">
+      <div class="sp-full-text" id="sp-full-text"></div>
+      <div class="sp-meta" id="sp-meta"></div>
+      <div class="sp-metrics" id="sp-metrics"></div>
+      <div class="sp-images" id="sp-images"></div>
+      <a class="sp-link" id="sp-link" href="#" target="_blank" rel="noopener noreferrer">打开原文 ↗</a>
+    </div>
   </div>
 
   <footer class="border-t border-gray-800 mt-8 py-4 text-center text-xs text-gray-600">
@@ -274,7 +324,7 @@
 })();
 
 let DATA = null;
-const TABS = ['tools','llms','providers','people','hotspots'];
+const TABS = ['tools','llms','providers','people','hotspots','xhotspots'];
 let activeTab = 'llms';
 let sortState = {}; // { tab: { col, dir } }
 let filterMode = 'all'; // 'all' | 'cn' | 'global'
@@ -289,6 +339,7 @@ const SOURCES = [
   {name:'TechCrunch', url:'https://techcrunch.com/category/artificial-intelligence/'},
   {name:'GitHub', url:'https://github.com/trending'},
   {name:'HuggingFace', url:'https://huggingface.co/papers'},
+  {name:'X', url:'https://x.com'},
 ];
 
 // ===== Filters =====
@@ -320,7 +371,10 @@ function matchesSource(entity, srcName) {
   const srcDomain = src.url.replace(/^https?:\/\/(?:www\.)?([^\/]+).*/,'$1');
   // Hotspots have a direct source field
   if (entity.source && entity.source === srcName) return true;
-  if (entity.source && entity.source.toLowerCase().includes(srcName.toLowerCase())) return true;
+  // X 是单字母, includes('x') 过宽 → 精确匹配 (O-6)
+  if (entity.source && (srcName === 'X'
+    ? entity.source === 'X'
+    : entity.source.toLowerCase().includes(srcName.toLowerCase()))) return true;
   // Check URLs
   const urls = [entity.website, entity.official_website, entity.last_event_url, entity.recent_activity_url, entity.last_update_url];
   for (const u of urls) {
@@ -381,6 +435,7 @@ async function refreshData() {
   renderTab(activeTab);
   updateStats();
   checkRecentHotspots();
+  loadTwitterData();
 }
 
 function saveState() {
@@ -409,6 +464,11 @@ function restoreState() {
 // ===== Helpers =====
 function hl(s) { return s>=80?5:s>=60?4:s>=40?3:s>=20?2:1; }
 function he(l) { return {5:'🔥',4:'🟠',3:'🟡',2:'🔵',1:'⚪'}[l]||'⚪'; }
+// XSS 输出编码 (SEC-1): 转义 & < > " ' ` ; 渲染路径全字段强制转义
+function esc(s) {
+  if (s == null) return '';
+  return String(s).replace(/[&<>"'`]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;','`':'&#96;'}[c]));
+}
 // Search icon: 基于 Bing 搜索操作符，参考 search-tips.md 的 site: 限定
 // 格式: https://cn.bing.com/search?q=keyword+site%3Adomain.com
 function searchIcon(name, site) {
@@ -420,14 +480,14 @@ function searchIcon(name, site) {
     if (d && !/localhost|example|xxx|xxxx/.test(d)) q += '+site%3A' + d;
   }
   // encodeURIComponent(q) 确保特殊字符如 + 被正确编码
-  return `<a href="https://cn.bing.com/search?q=${q}" target="_blank" rel="noopener" class="inline-block ml-1 text-gray-600 hover:text-accent-400 text-xs" title="Bing 搜索「${name}」">🔍</a>`;
+  return `<a href="https://cn.bing.com/search?q=${q}" target="_blank" rel="noopener" class="inline-block ml-1 text-gray-600 hover:text-accent-400 text-xs" title="Bing 搜索「${esc(name)}」">🔍</a>`;
 }
 // Event cell enhanced: 事件链接旁加搜索图标
 function smartEventCell(text, url, date, searchName) {
   if(!text) return '<span class="text-gray-600">—</span>';
-  let h=`<div class="event-text">${text}`;
+  let h=`<div class="event-text">${esc(text)}`;
   if(url && !/xxx|xxxx|example|localhost|0\.0\.0\.0/.test(url)) {
-    h+=` <a href="${url}" target="_blank" rel="noopener" class="text-cobalt-400 hover:text-accent-400">↗</a>`;
+    h+=` <a href="${esc(url)}" target="_blank" rel="noopener" class="text-cobalt-400 hover:text-accent-400">↗</a>`;
     if(searchName) h+=searchIcon(searchName, url);
   }
   if(date) h+=` <span class="text-gray-500 text-xs ml-1">${dateAgo(date)}</span>`;
@@ -445,7 +505,7 @@ function chip(id,dim) {
   const r=findEntity(id); if(!r) return '';
   const cls={providers:'chip-provider',people:'chip-person',tools:'chip-tool',llms:'chip-llm'}[dim]||'chip-llm';
   const label=r.entity.name||r.entity.name_en||id;
-  return `<span class="chip ${cls}" onclick="nav('${dim}','${id}')" title="${label}">${label}</span>`;
+  return `<span class="chip ${cls}" onclick="nav('${dim}','${esc(id)}')" title="${esc(label)}">${esc(label)}</span>`;
 }
 function chips(arr,dim,max) {
   if(!arr||!arr.length) return '<span class="text-gray-600">—</span>';
@@ -465,8 +525,8 @@ function dateAgo(d) {
 }
 function eventCell(text,url,date) {
   if(!text) return '<span class="text-gray-600">—</span>';
-  let h=`<div class="event-text">${text}`;
-  if(url && !/xxx|xxxx|example|localhost|0\.0\.0\.0/.test(url)) h+=` <a href="${url}" target="_blank" rel="noopener">↗</a>`;
+  let h=`<div class="event-text">${esc(text)}`;
+  if(url && !/xxx|xxxx|example|localhost|0\.0\.0\.0/.test(url)) h+=` <a href="${esc(url)}" target="_blank" rel="noopener">↗</a>`;
   if(date) h+=` <span class="text-gray-500 text-xs ml-1">${dateAgo(date)}</span>`;
   return h+'</div>';
 }
@@ -501,19 +561,19 @@ function renderHotspots() {
     const llms = (h.related_llms||[]).map(id => chip(id,'llms')).join(' ');
     const related = [providers,people,tools,llms].filter(Boolean).join(' ');
     return `
-    <div class="entity-card p-4 mb-3" id="entity-${h.id}">
+    <div class="entity-card p-4 mb-3" id="entity-${esc(h.id)}">
       <div class="flex items-start justify-between mb-2">
         <div class="min-w-0 flex-1">
           <div class="flex items-center gap-2 mb-1">
-            <span class="font-mono text-xs text-gray-500">${h.date||''}</span>
-            ${h.source?`<span class="badge bg-gray-800 text-gray-400">${h.source}</span>`:''}
+            <span class="font-mono text-xs text-gray-500">${esc(h.date||'')}</span>
+            ${h.source?`<span class="badge bg-gray-800 text-gray-400">${esc(h.source)}</span>`:''}
           </div>
-          <h3 class="font-semibold text-white text-sm mb-1">${h.title||''}</h3>
-          <p class="text-sm text-gray-400 leading-relaxed">${h.summary||''}</p>
+          <h3 class="font-semibold text-white text-sm mb-1">${esc(h.title||'')}</h3>
+          <p class="text-sm text-gray-400 leading-relaxed">${esc(h.summary||'')}</p>
         </div>
       </div>
       ${related?`<div class="flex flex-wrap gap-1.5 mt-2 pt-2 border-t border-gray-800">${related}</div>`:''}
-      ${h.url?`<a href="${h.url}" target="_blank" rel="noopener" class="text-xs text-cobalt-400 hover:text-cobalt-300 mt-2 inline-block">阅读原文 ↗</a>`:''}
+      ${h.url?`<a href="${esc(h.url)}" target="_blank" rel="noopener" class="text-xs text-cobalt-400 hover:text-cobalt-300 mt-2 inline-block">阅读原文 ↗</a>`:''}
       ${searchIcon(h.title||'', h.url)}
     </div>`;
   }).join('');
@@ -655,7 +715,7 @@ function getProviderName(id) {
 
 // ===== Tab Navigation =====
 function renderTab(tab) {
-  const renderers={hotspots:renderHotspots,providers:renderProviders,people:renderPeople,tools:renderTools,llms:renderLLMs};
+  const renderers={hotspots:renderHotspots,providers:renderProviders,people:renderPeople,tools:renderTools,llms:renderLLMs,xhotspots:renderXHotspots};
   const panel=document.getElementById(`panel-${tab}`);
   panel.innerHTML=renderers[tab]();
   // Update tab counts with filter
@@ -664,6 +724,7 @@ function renderTab(tab) {
   document.getElementById('tc-tools').textContent=filterItems(DATA.tools).length;
   document.getElementById('tc-llms').textContent=filterItems(DATA.llms).length;
   document.getElementById('tc-hotspots').textContent=filterItems(DATA.hotspots).length;
+  document.getElementById('tc-xhotspots').textContent=xTweetCount();
 }
 
 function switchTab(tab,focusId) {
@@ -676,6 +737,8 @@ function switchTab(tab,focusId) {
   document.querySelectorAll('.tab-panel').forEach(p=>p.classList.add('hidden'));
   const panel=document.getElementById(`panel-${tab}`);
   panel.classList.remove('hidden');
+  // 国家过滤对 X tab 置灰 (O-6): 仅源 chips 生效
+  document.querySelectorAll('.filter-chip').forEach(b=>b.classList.toggle('disabled',tab==='xhotspots'));
   renderTab(tab);
   if(focusId) {
     requestAnimationFrame(()=>{
@@ -730,9 +793,9 @@ function checkRecentHotspots() {
 function renderHotspotPanel(items) {
   const body = document.getElementById('hotspot-panel-body');
   body.innerHTML = items.map(h => `
-    <div class="hotspot-item" onclick="jumpToHotspot('${h.id}')">
-      <div class="hotspot-item-title">${h.title || ''}</div>
-      <div class="hotspot-item-time">${h.date || ''} · ${h.source || ''}</div>
+    <div class="hotspot-item" onclick="jumpToHotspot('${esc(h.id)}')">
+      <div class="hotspot-item-title">${esc(h.title || '')}</div>
+      <div class="hotspot-item-time">${esc(h.date || '')} · ${esc(h.source || '')}</div>
     </div>
   `).join('');
 }
@@ -758,6 +821,150 @@ function jumpToHotspot(id) {
   });
 }
 
+// ===== X 热点 (data/twitter.json, §5.1) =====
+let X_DATA = null;   // twitter.json 原始文档
+let X_FLAT = [];     // 展平后的推文引用 [{targetIndex, target, tweet}]
+let X_ITEMS = [];    // 当前渲染顺序的展平列表 (分栏索引基于此)
+let X_CUR = null;    // 当前分栏索引
+
+function xTweetCount() {
+  if (!X_DATA) return 0;
+  if (sourceFilter && sourceFilter !== 'X') return 0;
+  return X_FLAT.length;
+}
+
+function flattenTwitter(data) {
+  const out = [];
+  (data.targets || []).forEach((tg, ti) => {
+    (tg.tweets || []).forEach(tw => {
+      out.push({ targetIndex: ti, target: tg, tweet: tw });
+    });
+  });
+  return out;
+}
+
+// 时间显示 MM-DD HH:MM (UTC → 本地, §5.2)
+function fmtMMDD(iso) {
+  if (!iso) return '—';
+  const d = new Date(iso);
+  if (isNaN(d.getTime())) return '—';
+  const p = n => String(n).padStart(2, '0');
+  return p(d.getMonth() + 1) + '-' + p(d.getDate()) + ' ' + p(d.getHours()) + ':' + p(d.getMinutes());
+}
+
+async function loadTwitterData() {
+  try {
+    const r = await fetch('data/twitter.json?t=' + Date.now());
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    X_DATA = await r.json();
+    X_FLAT = flattenTwitter(X_DATA);
+  } catch(e) {
+    X_DATA = null;
+    X_FLAT = [];
+    console.warn('[llm-radar] twitter.json load failed:', e.message);
+  }
+  if (activeTab === 'xhotspots') renderTab('xhotspots');
+  updateStats();
+}
+
+// ===== Render: X 热点表格 (§5.2) =====
+function renderXHotspots() {
+  const countEl = document.getElementById('tc-xhotspots');
+  if (!X_DATA) {
+    if (countEl) countEl.textContent = 0;
+    return '<div class="text-center text-gray-500 py-12">暂无 X 数据</div>';
+  }
+  // 国家过滤对 X tab 不适用 (tweet 无 country 字段, O-6): 仅源 chips 生效
+  if (sourceFilter && sourceFilter !== 'X') {
+    if (countEl) countEl.textContent = 0;
+    return '<div class="text-center text-gray-500 py-12">当前源筛选下无 X 数据</div>';
+  }
+  const items = X_FLAT.slice().sort((a, b) =>
+    (b.tweet.posted_at || '') < (a.tweet.posted_at || '') ? -1 :
+    (b.tweet.posted_at || '') > (a.tweet.posted_at || '') ? 1 : 0);
+  X_ITEMS = items;
+  if (countEl) countEl.textContent = items.length;
+  if (!items.length) return '<div class="text-center text-gray-500 py-12">暂无 X 热点数据</div>';
+  const rows = items.map((f, i) => {
+    const t = f.tweet, tg = f.target;
+    const raw = t.text || '';
+    const text = raw.length > 120 ? esc(raw.slice(0, 120)) + '…' : esc(raw);
+    return `<tr id="x-tweet-${i}" onclick="openSplitPreview(${i})" title="点击查看详情">
+      <td class="font-mono text-xs">${fmtMMDD(t.posted_at)}</td>
+      <td><div class="truncate" title="${esc(tg.name)}">${esc(tg.name)}</div></td>
+      <td><div class="truncate" title="${esc(raw)}">${text || '—'}</div></td>
+      <td class="font-mono text-xs">${num(t.views)}</td>
+      <td class="font-mono text-xs">${num(t.replies)}</td>
+      <td class="font-mono text-xs">${num(t.likes)}</td>
+      <td><button class="sp-row-btn" onclick="event.stopPropagation(); openSplitPreview(${i})">详情</button></td>
+    </tr>`;
+  }).join('');
+  return `<table class="data-table"><thead><tr>
+    <th style="width:110px">时间</th>
+    <th style="width:130px">人物</th>
+    <th>推文摘要</th>
+    <th style="width:70px">浏览</th>
+    <th style="width:60px">回复</th>
+    <th style="width:60px">点赞</th>
+    <th style="width:56px"></th>
+  </tr></thead><tbody>${rows}</tbody></table>`;
+}
+
+// ===== Split Preview 分栏详情 (§5.3) =====
+function openSplitPreview(i) {
+  if (!X_ITEMS[i]) return;
+  X_CUR = i;
+  const f = X_ITEMS[i], t = f.tweet, tg = f.target;
+  document.getElementById('sp-title').textContent = '@' + tg.handle + ' · ' + fmtMMDD(t.posted_at);
+  document.getElementById('sp-full-text').textContent = t.text || '—';
+  document.getElementById('sp-meta').textContent = '@' + tg.handle + ' · ' + (t.posted_at || '');
+  // 指标 kv 卡片 (null → —)
+  const metrics = [['浏览', t.views], ['回复', t.replies], ['转推', t.retweets], ['点赞', t.likes]];
+  document.getElementById('sp-metrics').innerHTML = metrics.map(m =>
+    `<div class="sp-metric"><div class="sp-metric-v">${num(m[1])}</div><div class="sp-metric-k">${m[0]}</div></div>`
+  ).join('');
+  // 图片: 前端二次校验 https:// 前缀 (SEC-1, 双保险) + onerror 占位 (§5.4)
+  const imgs = (t.images || []).filter(s => typeof s === 'string' && s.startsWith('https://'));
+  document.getElementById('sp-images').innerHTML = imgs.length
+    ? imgs.map(src => `<div class="sp-img-wrap"><img src="${esc(src)}" loading="lazy" onerror="imgFail(this)" alt="推文图片"><div class="sp-img-fail" style="display:none">图片加载失败</div></div>`).join('')
+    : '';
+  // 原文链接: 协议白名单 https:// + rel=noopener
+  const link = document.getElementById('sp-link');
+  if (t.url && /^https:\/\//.test(t.url)) { link.href = t.url; link.style.display = 'inline-block'; }
+  else { link.style.display = 'none'; }
+  document.getElementById('split-preview').classList.add('show');
+  document.getElementById('split-backdrop').classList.add('show');
+  document.addEventListener('keydown', onSplitKey);
+}
+
+// nav 上一/下一条: 同人物内循环切换 (§5.3)
+function spNav(delta) {
+  if (X_CUR == null || !X_ITEMS.length) return;
+  const same = [];
+  X_ITEMS.forEach((f, i) => { if (f.targetIndex === X_ITEMS[X_CUR].targetIndex) same.push(i); });
+  const pos = same.indexOf(X_CUR);
+  if (pos < 0) return;
+  const next = (pos + delta + same.length) % same.length;
+  openSplitPreview(same[next]);
+}
+
+function closeSplitPreview() {
+  document.getElementById('split-preview').classList.remove('show');
+  document.getElementById('split-backdrop').classList.remove('show');
+  document.removeEventListener('keydown', onSplitKey);
+}
+
+function onSplitKey(e) {
+  if (e.key === 'Escape') closeSplitPreview();
+}
+
+// 图片加载失败 → 占位块, 不破版 (§5.4)
+function imgFail(img) {
+  img.style.display = 'none';
+  const fail = img.nextElementSibling;
+  if (fail) fail.style.display = 'flex';
+}
+
 // ===== Stats =====
 function updateStats() {
   document.getElementById('tc-hotspots').textContent=(DATA.hotspots||[]).length;
@@ -765,6 +972,7 @@ function updateStats() {
   document.getElementById('tc-people').textContent=DATA.people.length;
   document.getElementById('tc-tools').textContent=DATA.tools.length;
   document.getElementById('tc-llms').textContent=DATA.llms.length;
+  document.getElementById('tc-xhotspots').textContent=X_DATA?(X_DATA.targets||[]).reduce((n,t)=>n+(t.tweets||[]).length,0):0;
 
   // Update time + ago label
   const ua = document.getElementById('updated-at');
@@ -871,6 +1079,7 @@ async function init() {
   if (overviewReady) hideSkeleton();
   updateStats();
   checkRecentHotspots();
+  loadTwitterData(); // X 热点独立数据 (失败不阻断页面, §5.1)
   // Restore auto-refresh preference
   if (localStorage.getItem('llm-radar-auto-refresh') === '1') { toggleAutoRefresh(); }
   // Restore state or parse hash
