@@ -530,3 +530,37 @@
 - 未 commit / 未 push (1A 约束, commit 由 ops 处理); 本评审仅新增报告 + review-log + .review-level.yaml 三件 + cache/review-prep/ 实现 prompt。
 
 ---
+
+## 2026-08-26 — X热点实现审计 v1.0 (CL-SEC19 闭环)
+
+- **review者**: review/llm-radar.lab-review (hermes-1.2.0)
+- **范围**: 实现 commit 04b7866→23e3401 (11 CL-SEC19 + 2 auto-push 交错) — 采集器/前端/测试/AGENTS.md/cron 包装脚本 vs 设计 v1.1 一致性 + 测试质量 + 治理合规 + 安全性 + 运维闭环
+- **Tracking**: 无 🔴🟡; IMPL-OBS-1~3 🟢 注记; 注记项 Q5(5A→--attach)/Chrome151/D1A/D4 已确认
+- **状态**: ✅ PASS — 100/100 (A)
+- **报告**: documents/reviews/x-hotspot-impl-audit-v1.0-20260826.md
+- **实现 prompt**: ⬜ 无需生成 (实现已完成, 闭环)
+
+### 审计结论
+
+- 一致性 ✅: CLI 签名 (默认/--collect/--login/--dry-run + --attach 注记) / 退出码四场景 / schema UTC Z / esc() 转义 + 既有渲染点回填 / 分栏 + 抽屉 / chips / crontab 全落地。
+- 测试 ✅: test_twitter_collector.py (配置/36h 容差/去重截断/DOM/写盘/退出码映射/O-12) + test_html.py TestXHotspotFrontend (11 断言); 复跑 184 passed。
+- 治理 ✅: commit type@scope 合规; AGENTS.md 补 PyYAML (X-REV-3); §3.6 改 9:20/21:20 (X-REV-1); console 前缀/CSS 无引号。
+- 安全 ✅: esc() 全字段 + textContent + URL/https 白名单 + CSP img-src; 无敏感入库 (git ls-files 0 命中); profile 登录态 gitignored; subprocess list-form。
+- 运维 ✅: cron 包装 D1A 自动拉起; ProfileLock 互斥 (O-5); 原子写盘 + 去重幂等; git add 限定 twitter.json (X-REV-2); D4 attach 友好提示。
+
+### 发现 (🟢, 不扣分)
+
+| # | Severity | Title | Status |
+|---|----------|-------|--------|
+| IMPL-OBS-1 | 🟢 | prompt 所列 commit SHA 与仓库不符 (subjects 1:1 匹配, rebase 前记录残留, 同 LR-SEC-017 类) | 注记 |
+| IMPL-OBS-2 | 🟢 | 指标字段 num() 直通未 esc() (int 类型保证, 非攻击者可控; 文本已全 esc) | 注记 |
+| IMPL-OBS-3 | 🟢 | 图片 src 前端仅 https:// 前缀校验 (CSP img-src 为权威白名单, 三层闭合无风险) | 注记 |
+
+### 数据验证要点
+
+- git rev-parse HEAD origin/main = 6219fe1 双端一致, status clean; 实现 commit 全部已推送 (prompt "origin 0/0" 属实)。
+- pytest 184 passed 复跑; 测试污染 (snapshot/overview/timestamp) 已 git checkout 还原。
+- --attach 引入点 git log -S = 275918d (混入"首屏先抓再滚动" fix commit, 注记确认可接受)。
+- 遗留注记项: O-9 (健康度入 metrics.json, 后续迭代), O-13 (主采集 cron 指向核对, ops 侧)。
+
+---
