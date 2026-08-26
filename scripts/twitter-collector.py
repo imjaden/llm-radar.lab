@@ -456,7 +456,14 @@ def start_driver(profile_dir, headed=False, cdp_port=None):
     opts = Options()
     if cdp_port:
         opts.debugger_address = f'127.0.0.1:{cdp_port}'
-        return webdriver.Chrome(options=opts)
+        try:
+            return webdriver.Chrome(options=opts)
+        except Exception as e:
+            raise FetchError(
+                f'无法连接调试 Chrome (127.0.0.1:{cdp_port}): '
+                f'{str(e)[:120]}. 请先启动: bash scripts/twitter-collector-cron.sh '
+                f'(或手动: Chrome --remote-debugging-port=9222 '
+                f'--user-data-dir=~/chrome-twitter-cdp)')
     opts.add_argument(f'--user-data-dir={Path(profile_dir)}')
     if not headed:
         opts.add_argument('--headless=new')
@@ -665,7 +672,11 @@ def cmd_collect(targets, profile_dir, cdp_port=None):
         return 1
     driver = None
     try:
-        driver = start_driver(profile_dir, headed=False, cdp_port=cdp_port)
+        try:
+            driver = start_driver(profile_dir, headed=False, cdp_port=cdp_port)
+        except FetchError as e:
+            print(f'[twitter-collector] ❌ {e}', file=sys.stderr)
+            return 1
         results = []
         login_wall = False
         for t in targets:
