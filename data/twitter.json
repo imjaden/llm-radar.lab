@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-26T03:56:09Z",
+  "generated_at": "2026-08-26T05:03:48Z",
   "window_hours": 36,
   "targets": [
     {
@@ -12,21 +12,10 @@
           "text": "This week.",
           "posted_at": "2026-08-25T16:52:46Z",
           "url": "https://x.com/steipete/status/2092294123638362346",
-          "views": 53525,
+          "views": 55777,
           "replies": 20,
           "retweets": 11,
-          "likes": 261,
-          "images": null
-        },
-        {
-          "id": "2091923535513928015",
-          "text": "We need to get away from software that we can’t change with a prompt.",
-          "posted_at": "2026-08-24T16:20:11Z",
-          "url": "https://x.com/steipete/status/2091923535513928015",
-          "views": 359200,
-          "replies": 140,
-          "retweets": 199,
-          "likes": 3106,
+          "likes": 274,
           "images": null
         }
       ]
