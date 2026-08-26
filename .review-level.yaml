@@ -189,3 +189,12 @@ review_history:
     findings_open: 0
     tracking: 目录改名旧路径清理审计 (4d7095b/ae05a70/1d8699c) — LR-SEC-018/019 🟢 注记
     report: documents/reviews/llm-radar-path-refs-review-v1.0-20260823.md
+  - date: 2026-08-25
+    reviewer: Security Reviewer (IRIS)
+    review_level: L2
+    verdict: CONDITIONAL_PASS
+    score: 70
+    findings_total: 5
+    findings_open: 5
+    tracking: CL-SEC19 设计评审 v1.0 (29045ed) — SEC-1 🔴, REA-1/REA-2, RIG-1/RIG-2 待修
+    report: documents/reviews/x-hotspot-review-v1.0-20260825.md

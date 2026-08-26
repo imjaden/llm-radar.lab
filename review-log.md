@@ -461,3 +461,35 @@
 
 
 
+
+---
+
+## 2026-08-25 — X热点采集与分栏详情设计评审 (CL-SEC19)
+
+- **review者**: review/llm-radar.lab-review (hermes-1.2.0)
+- **范围**: 设计 v1.0 (29045ed docs@design) — 采集器 (scripts/twitter-collector.py) / 数据 schema (data/twitter.json) / 前端 X热点 tab + 分栏详情 / crontab 并列 / 测试验收; 决策 Q1-Q11 + D1-D6 锁定
+- **Tracking**: SEC-1 🔴, REA-1/REA-2, RIG-1/RIG-2 待修 (设计 v1.0, CL-SEC19); findings_open 5
+- **状态**: ⏳ CONDITIONAL PASS — 70/100 (B)
+- **报告**: documents/reviews/x-hotspot-review-v1.0-20260825.md
+- **实现 prompt**: 未生成 (🔴 SEC-1 阻塞, ops 修后 bump v1.1 重审)
+
+### 结论摘要
+
+架构方向正确、决策闭环完整、采集方案可行 (36h 窗口 × 2/day cadence 匹配, 单轮失败被次轮覆盖; Selenium 登录态方案标准可行; 选择器多级 fallback 充分)。阻塞项为 🔴 SEC-1: 推文文本 (攻击者直接可控数据类) 经 innerHTML 直插渲染, 设计未指定输出编码, 现有 index.html 亦无 escape helper → stored XSS。另 4 🟡: REA-1 入库链路未闭环 (twitter-collector 无 commit/push, 仅靠主采集 git add -A 顺带, 质量门禁失败时 Pages 无限期陈旧); REA-2 cadence 前提与实况不符 (实测主采集每小时, 设计称每日 2 次) + 同刻并发 (双 Chrome + git add 竞争); RIG-1 部分成功语义与 last_error 持久化矛盾; RIG-2 CLI 签名未定义 (--login/--collect/默认模式矛盾)。
+
+### 发现
+
+| # | Severity | Title | Status |
+|---|----------|-------|--------|
+| SEC-1 | 🔴 | X热点渲染路径未指定输出编码 (推文 innerHTML → stored XSS); 现有前端无 escape helper | 待修 v1.1 |
+| REA-1 | 🟡 | twitter.json 入库链路未闭环 ("同 snapshot.json 机制"不成立) | 待修 v1.1 |
+| REA-2 | 🟡 | cadence 前提与实况不符 (主采集实测 hourly) + 同刻 :00 并发 | 待修 v1.1 |
+| RIG-1 | 🟡 | 部分成功语义 + last_error 持久化矛盾 | 待修 v1.1 |
+| RIG-2 | 🟡 | CLI 签名未定义 (--login/--collect/默认模式) | 待修 v1.1 |
+
+### 数据验证要点
+
+- 全部独立验证: git log 29045ed / crontab -l (主采集 hourly `0 * * * *`) / collector.py:2048 CRON_SCHEDULE + 371-429 auto-push (git add -A, partial 仅 timestamp.json) / index.html grep escape helper = 0 命中 (renderHotspotPanel L732-737 innerHTML 直插) / .gitignore (cache/ + data/*.log 覆盖) / scripts/ 5 个独立脚本先例 / country filter Han 检测 L296-298 / 36h×12h cadence 覆盖计算。
+- 未修改任何项目文件 (只读审查); 报告 + review-log + .review-level.yaml 三件产物待 ops 统一处理 commit (本评审不 push)。
+
+---
