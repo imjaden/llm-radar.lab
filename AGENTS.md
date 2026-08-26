@@ -5,9 +5,12 @@ Compact single-project dashboard. One Python collector, one Vanilla JS frontend,
 ## Structure
 
 - `llm-radar-collector.py` — sole Python script (~1330 LOC). No package layout, no modules.
+- `scripts/twitter-collector.py` — X 热点独立采集器 (Selenium 登录态, 纯抓取 0 token, 设计 x-hotspot v1.1)。
+- `twitter-targets.yaml` — X 采集目标名单 (可编辑; name/handle/url 必填, enabled/max_tweets 缺省容错)。
 - `index.html` — single-page frontend, Tailwind CDN, Vanilla JS. No build step.
 - `changelog.html` — static template, renders from `data/snapshot.json` at runtime.
 - `data/snapshot.json` — primary data artifact (JSON, ~8700 lines). Loaded by both HTML files.
+- `data/twitter.json` — X 热点数据 (独立加载, 采集器自带 commit+push 入库)。
 - `data/fetch-cache.json` / `data/metrics.json` — auto-generated, gitignored.
 - `data/dead-letter.json` — git push failures, gitignored.
 - `data/archive/`, `data/history/` — auto-generated archived entities and weekly snapshots.
@@ -26,6 +29,7 @@ python3 llm-radar-collector.py merge            # merge from fetch cache
 python3 llm-radar-collector.py crontab --add    # schedule daily 09:00, 21:00
 python3 llm-radar-collector.py commit [msg]     # git add + commit
 python3 llm-radar-collector.py auto-push        # git add + commit + push
+python3 scripts/twitter-collector.py            # X 采集 (默认 collect; --login 人工登录 / --dry-run 探测登录态)
 ./llm-radar-run.sh                              # cross-platform wrapper (auto-detects Mac/Linux)
 python3 -m http.server 8080                     # local preview
 ```
@@ -45,10 +49,21 @@ lr run help / lr crontab help     # 单命令用法 (positional help 拦截, exi
 - wrapper fork 模板: `cache/cli-registry/wrapper.sh.tmpl` (移除 script-miner calls.log 段, exec 前加载项目 .env)。
 - Linux 主机部署: `.cli-registry.yaml` 的 `env.conda` 需从 `py3.12` 改为 `llm-radar`。
 
+### X 采集 crontab (Mac 本机, x-hotspot 设计 §6)
+
+```cron
+20 9,21 * * * cd /Users/jadenli/CodeSpace/llm-radar.lab && python3 scripts/twitter-collector.py >> data/twitter.log 2>&1 # llm-radar-twitter
+```
+
+- 错峰 `20 9,21` (09:20/21:20): 避开主采集整点 :00, 防双 Chrome 实例资源竞争与 `git add` 抓取竞争 (REA-2)。
+- 采集成功自带 commit + push `auto-push@llm-radar: update twitter (N changes)`; push 失败仅记 cron 日志, 下轮自动重试 (不重试轰炸)。
+- 不调 LLM, 无需 .env; Linux 服务器默认不启用 (无人工登录态, 如需由部署方 --login 一次)。
+- 注意: 此处为文档说明; 实际 crontab 由 ops 核查阶段接入, dev 不直接改用户 crontab。
+
 ## Dependencies
 
 ```bash
-pip3 install openai selenium webdriver-manager requests beautifulsoup4 prettytable
+pip3 install openai selenium webdriver-manager requests beautifulsoup4 prettytable pyyaml
 ```
 
 `DEEPSEEK_API_KEY` required via `export` or `.env` file in project root. Chrome browser required for Selenium headless mode.
@@ -74,10 +89,17 @@ run() ordered as:
 
 ## Frontend (index.html)
 
-- 5 tabs: tools / llms / providers / people / hotspots. Default: llms.
-- Country filter: all / China / global (Unicode Han script detection). Applies to all 5 tabs including hotspots.
-- Source filter: 7 clickable source chips, filters entities by source domain match. Applies to all tabs including hotspots.
-- Tab counts update in real-time when filters change (including `tc-hotspots`).
+- 6 tabs: tools / llms / providers / people / hotspots / xhotspots (X热点). Default: llms.
+- Country filter: all / China / global (Unicode Han script detection). Applies to 5 个实体 tab;
+  X热点 tab 无 country 字段 → 国家 chips 置灰 (仅源 chips 生效)。
+- Source filter: 8 clickable source chips (含 X), filters entities by source domain match.
+  Applies to all tabs including hotspots; X tab 按 handle/url 域名过滤 (源筛选非 X 时显示空态)。
+- X热点 tab: 独立加载 `data/twitter.json?t=<ts>` (失败 console.warn 回退空态, 不阻断页面);
+  表格列 = 时间(MM-DD HH:MM, UTC→本地) / 人物 / 推文摘要(截断) / 指标(浏览/回复/点赞, null 显示 —);
+  单击行或行内"详情"按钮 → split-preview 分栏 (header 上一/下一 + 关闭, body 全文/指标 kv/图片,
+  图片直引 pbs.twimg.com + onerror 占位 + https:// 二次校验); <1200px 变全屏抽屉 (底部滑出);
+  关闭: 关闭按钮 / 点击空白 / Esc。渲染路径全字段 esc() 转义 (SEC-1)。
+- Tab counts update in real-time when filters change (including `tc-hotspots` / `tc-xhotspots`).
 - Responsive: data sources and filter chips auto-hide below 1200px (`hide-1200`).
 - Auto-refresh: 10 min interval, saves tab/filter/sort/scroll to localStorage.
 - Cache busting: `?t=<timestamp>` in data fetch URLs.

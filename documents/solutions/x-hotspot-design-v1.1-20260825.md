@@ -138,7 +138,7 @@ python3 scripts/twitter-collector.py --dry-run  # 只解析配置+探测登录�
 
 ### 3.6 反爬与频率 (REA-2)
 
-- 采集频率: cron 每日 2 次 (9:21 与 21:21 错峰, 见 §6), 这是防 X 风控的
+- 采集频率: cron 每日 2 次 (9:20 与 21:20 错峰, 见 §6), 这是防 X 风控的
   独立选择, 不与主采集 cadence 绑定 (主采集实测为每小时)。
 - 滚动次数保守 (默认 3 次)。
 - 检测验证挑战 (cf-challenge / "Something went wrong") → 跳过本轮,
