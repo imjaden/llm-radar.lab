@@ -637,3 +637,42 @@
 - read collector.py: WINDOW_HOURS=36 5 处引用 + build_document `window_hours` 键 + cmd_collect ChallengeError 现为"跳过本轮" continue (无提前终止) — v1.3 设计描述的是待实现语义, 非现状矛盾。
 - git show --stat b9b025d: design v1.2→v1.3 rename + 263 insertions, 修复声明有正文支撑。
 - 未 commit / 未 push (1A 约束)。
+
+
+---
+
+## 2026-08-26 — X热点实现审计 v1.1 (CL-SEC20 闭环)
+
+- **review者**: review/llm-radar.lab-review (hermes-1.2.0)
+- **范围**: 实现 commit (2c11397→2899b06, 9 个) — CL-SEC20 5 增强 (配置迁移 data/ + 10 账号 / forward / 30-24h 条数窗口 / 全站搜索 + Cmd+F / 动态滚动) vs 设计 v1.3 一致性 + 测试质量 + 治理合规 + 安全性 + 运维闭环; CL-SEC19 收尾项 (9ff4536/dee96c2) 并入
+- **Tracking**: 无 🔴🟡; IMPL-OBS-1~4 🟢 注记; 注记项 D1 1A 条数偏差/依赖约束/push 时机 已确认; findings_open 0
+- **状态**: ✅ PASS — 100/100 (A)
+- **报告**: documents/reviews/x-hotspot-impl-audit-v1.1-20260826.md
+- **实现 prompt**: ⬜ 无需生成 (实现已完成, 闭环)
+
+### 审计结论
+
+- 一致性 ✅: 配置迁移 (data/twitter-targets.yaml + 根路径移除) / 10 账号 / forward "by @作者: 原文" / 条数窗口三规则 (apply_retention a/b/c + 边界 =30/=24h 整点 + per-account override) / 风控三态 (challenge_streak 单/连续 2/非连续) / retention schema (window_hours→retention, 0 残留 36h) / 全站搜索 + Cmd+F/Ctrl+F + 高亮结构化 DOM (禁 innerHTML) / forward 渲染 (esc + textContent) 全落地。
+- 复审残余 🟢 落地: RIG-1 函数改造 (apply_retention/retention 键) ✅ / O-2 forward 作者 fallback (unknown) ✅ / O-3 ctrlKey ✅ / O-4 max_tweets 参数化 ✅; O-5 (steipete 归档) + D3 名单基数 未显式落地 (IMPL-OBS-3, 非阻塞)。
+- 测试 ✅: test_twitter_collector.py (770 行, 条数窗口三规则+边界/forward 7 用例/风控三态/schema retention) + test_html.py TestSearchFeature (11 断言); 复跑 211 passed (184→211, CL-SEC20 新增)。
+- 治理 ✅: commit type@scope 全合规; AGENTS.md 同步 (b11812f); console 前缀/CSS 无引号。
+- 安全 ✅: esc() 全字段 + textContent + https 白名单 + CSP; 高亮禁 innerHTML; forward XSS 专项断言; 无敏感入库 (0 命中); git add 限定 data/twitter.json; subprocess list-form。
+- 运维 ✅: cron 包装 D1A 自动拉起; attach 友好提示; ProfileLock 互斥; 原子写盘 + 去重幂等; 动态滚动 200513e (84→109 提升)。
+
+### 发现 (🟢, 不扣分)
+
+| # | Severity | Title | Status |
+|---|----------|-------|--------|
+| IMPL-OBS-1 | 🟢 | 审计 prompt 所列 commit SHA 与仓库不符 (subjects 1:1 匹配, rebase 前记录残留, 同 LR-SEC-017 类) | 注记 |
+| IMPL-OBS-2 | 🟢 | 指标字段 num() 直通未 esc() (int 类型保证, 非攻击者可控; 文本已全 esc, 同 v1.0) | 注记 |
+| IMPL-OBS-3 | 🟢 | 复审残余 O-5 (steipete 归档说明) + D3 名单基数 doc clarity 未显式落地 | 注记 |
+| IMPL-OBS-4 | 🟢 | searchIcon 注释/代码不符 (encodeURIComponent 未调用), pre-existing 8907a76, 不在 CL-SEC20 diff | 注记 |
+
+### 数据验证要点
+
+- git rev-parse HEAD origin/main = 2899b06 双端一致, status clean, 0 未推送; 实现 commit 全部已推送。
+- read data/twitter-targets.yaml (10 目标) + data/twitter.json (retention '30/24h' + 4 顶层键 + forward 格式正确, 7-14 条/账号)。
+- grep 36h 残留: collector/tests/index.html `window_hours`/`WINDOW_HOURS`/`==36`/`filter_window`/`truncate_tweets` = 0 功能残留。
+- pytest 211 passed 复跑; 测试污染 (snapshot/overview/timestamp) 待 git checkout 还原。
+- 注记项 1 (D1 1A 条数偏差): 实测 30 条不可达 (X 对 CDP attach 降级无限滚动), 用户决策 B 接受 "24h 内全保留 + 首屏可达"; 动态滚动已尽力。
+- 未 commit / 未 push (1A 约束, commit 由 ops 处理; push 已由 auto-push 完成)。
