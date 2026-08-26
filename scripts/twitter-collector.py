@@ -459,8 +459,18 @@ def start_driver(profile_dir, headed=False):
     opts.add_argument('--blink-settings=imagesEnabled=false')
     opts.add_argument('user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) '
                       'AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36')
+    opts.add_argument('--disable-blink-features=AutomationControlled')
     opts.add_experimental_option('excludeSwitches', ['enable-automation'])
-    return webdriver.Chrome(options=opts)
+    opts.add_experimental_option('useAutomationExtension', False)
+    driver = webdriver.Chrome(options=opts)
+    try:
+        # 隐藏 navigator.webdriver 自动化特征 (X/Google 登录拦截修复)
+        driver.execute_cdp_cmd('Page.addScriptToEvaluateOnNewDocument', {
+            'source': 'Object.defineProperty(navigator,"webdriver",{get:()=>undefined});'
+        })
+    except Exception:
+        pass
+    return driver
 
 
 def detect_login_wall(driver):
