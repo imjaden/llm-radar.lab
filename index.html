@@ -87,6 +87,13 @@
     .sp-link:hover { color:#facc15; }
     .sp-row-btn { display:none; padding:2px 8px; border-radius:6px; font-size:0.7rem; cursor:pointer; background:transparent; border:1px solid #4f46e5; color:#818cf8; }
     .sp-row-btn:hover { background:rgba(79,70,229,0.15); color:#facc15; }
+    /* forward 行 (分栏详情, D2 2C): 与正文区分样式 */
+    .sp-forward { font-size:0.85rem; line-height:1.6; color:#a5b4fc; background:rgba(99,102,241,0.08); border-left:3px solid #6366f1; padding:8px 10px; border-radius:6px; margin-bottom:10px; white-space:pre-wrap; word-break:break-word; }
+
+    /* 全站搜索 (D4 4B) */
+    .search-hl { background:rgba(250,204,21,0.35); color:#fde047; border-radius:2px; padding:0 1px; }
+    .search-jump-btn { margin-left:6px; padding:1px 8px; border-radius:9999px; font-size:0.65rem; background:rgba(79,70,229,0.15); color:#a5b4fc; cursor:pointer; border:1px solid #4f46e5; }
+    .search-jump-btn:hover { color:#facc15; border-color:#facc15; }
 
     /* Highlight */
     @keyframes hl-pulse { 0%{background:rgba(250,204,21,0.3)} 50%{background:rgba(250,204,21,0.15)} 100%{background:rgba(250,204,21,0.08)} }
@@ -198,6 +205,14 @@
           </label>
         </div>
       </div>
+      <!-- 全站搜索 (D4 4B): 输入过滤当前 tab + 跨 tab 计数; 窄屏保留 (工具条可滚动) -->
+      <div class="flex items-center gap-2 mt-1.5">
+        <input id="header-search" type="search" placeholder="搜索全站… (⌘F)"
+               autocomplete="off" aria-label="全站搜索"
+               class="flex-1 min-w-0 max-w-md bg-gray-800 border border-gray-700 rounded-md px-2.5 py-1 text-xs text-gray-200 placeholder-gray-500 focus:outline-none focus:border-cobalt-500"
+               oninput="onSearchInput()" onkeydown="onSearchKey(event)">
+        <div id="search-summary" class="text-xs text-gray-500 whitespace-nowrap overflow-x-auto"></div>
+      </div>
     </div>
   </header>
 
@@ -294,6 +309,7 @@
     </div>
     <div class="split-preview-body">
       <div class="sp-full-text" id="sp-full-text"></div>
+      <div class="sp-forward" id="sp-forward"></div>
       <div class="sp-meta" id="sp-meta"></div>
       <div class="sp-metrics" id="sp-metrics"></div>
       <div class="sp-images" id="sp-images"></div>
@@ -725,6 +741,8 @@ function renderTab(tab) {
   document.getElementById('tc-llms').textContent=filterItems(DATA.llms).length;
   document.getElementById('tc-hotspots').textContent=filterItems(DATA.hotspots).length;
   document.getElementById('tc-xhotspots').textContent=xTweetCount();
+  applySearchFilter(panel);   // 全站搜索: 当前 tab 行过滤 + 高亮 (D4 4B)
+  updateSearchSummary();       // 跨 tab 计数 (D4 4B)
 }
 
 function switchTab(tab,focusId) {
@@ -821,6 +839,144 @@ function jumpToHotspot(id) {
   });
 }
 
+// ===== 全站搜索 (D4 4B, SEC-1) =====
+let searchQuery = '';
+let searchTimer = null;
+const SEARCH_TAB_LABELS = {tools:'工具',llms:'模型',providers:'厂商',people:'人物',hotspots:'热点',xhotspots:'X热点'};
+
+function onSearchInput() {
+  clearTimeout(searchTimer);
+  searchTimer = setTimeout(doSearch, 200);   // 防抖 ~200ms
+}
+function onSearchKey(e) {
+  if (e.key === 'Enter') { clearTimeout(searchTimer); doSearch(); }
+  else if (e.key === 'Escape') {
+    const input = document.getElementById('header-search');
+    if (input.value) { input.value = ''; doSearch(); }   // 清空恢复全表
+    else input.blur();
+  }
+}
+function doSearch() {
+  const input = document.getElementById('header-search');
+  searchQuery = (input ? input.value : '').trim();
+  renderTab(activeTab);
+}
+// 匹配文本构建 (name/文本/forward/人物/链接, 大小写不敏感)
+function searchHaystack(item, tab) {
+  if (tab === 'xhotspots') {
+    const f = item || {}, t = f.tweet || {}, tg = f.target || {};
+    return [tg.name, tg.handle, t.text, t.forward, t.url, t.id, t.posted_at]
+      .filter(v => v != null).join(' ').toLowerCase();
+  }
+  const it = item || {};
+  const parts = [it.name, it.name_en, it.id, it.title, it.description, it.category,
+                 it.last_event, it.recent_activity, it.last_update, it.last_event_url,
+                 it.recent_activity_url, it.last_update_url, it.website,
+                 it.official_website, it.url, it.influence_level, it.type, it.tier];
+  if (Array.isArray(it.known_for)) parts.push(it.known_for.join(' '));
+  if (Array.isArray(it.capabilities)) parts.push(it.capabilities.join(' '));
+  return parts.filter(v => v != null).join(' ').toLowerCase();
+}
+function countSearchMatches(tab) {
+  if (!searchQuery) return 0;
+  if (tab === 'xhotspots') {
+    if (!X_DATA) return 0;
+    return X_FLAT.filter(f => searchHaystack(f, 'xhotspots').includes(searchQuery.toLowerCase())).length;
+  }
+  if (!DATA) return 0;
+  return (DATA[tab] || []).filter(it => searchHaystack(it, tab).includes(searchQuery.toLowerCase())).length;
+}
+// 跨 tab 计数汇总: "当前 N" + 其他 tab 计数按钮 (点击跳转, 查询保留)
+function updateSearchSummary() {
+  const el = document.getElementById('search-summary');
+  if (!el) return;
+  el.textContent = '';
+  if (!searchQuery) return;
+  const q = searchQuery.toLowerCase();
+  const curN = countSearchMatches(activeTab);
+  const cur = document.createElement('span');
+  cur.className = 'text-gray-400';
+  cur.textContent = '当前 ' + curN;
+  el.appendChild(cur);
+  TABS.forEach(tab => {
+    if (tab === activeTab) return;
+    const n = countSearchMatches(tab);
+    if (!n) return;
+    const b = document.createElement('button');
+    b.className = 'search-jump-btn';
+    b.textContent = (SEARCH_TAB_LABELS[tab] || tab) + ' ' + n;
+    b.onclick = () => switchTab(tab);
+    el.appendChild(b);
+  });
+}
+// 当前 tab 行过滤 (name/文本/forward/人物/链接): 无匹配行隐藏 + 高亮
+function applySearchFilter(panel) {
+  if (!panel) return;
+  const q = searchQuery.toLowerCase();
+  if (!q) return;
+  const rows = panel.querySelectorAll('tbody tr, .entity-card');
+  if (!rows.length) return;
+  let visible = 0;
+  rows.forEach(el => {
+    const hay = (el.textContent || '').toLowerCase();
+    const hasLink = Array.from(el.querySelectorAll('a[href]')).some(a =>
+      (a.getAttribute('href') || '').toLowerCase().includes(q));
+    const show = hay.includes(q) || hasLink;
+    el.style.display = show ? '' : 'none';
+    if (show) visible++;
+  });
+  if (!visible) {
+    const note = document.createElement('div');
+    note.className = 'text-center text-gray-500 py-12';
+    note.textContent = '无匹配结果';
+    panel.appendChild(note);
+  }
+  highlightMatches(panel, searchQuery);
+}
+// 高亮: 结构化 DOM 构建 (span + textContent 分片), 禁 innerHTML (SEC-1)
+function highlightMatches(root, q) {
+  if (!q || !root) return;
+  const needle = q.toLowerCase();
+  root.querySelectorAll('.search-hl').forEach(s => {
+    const t = document.createTextNode(s.textContent || '');
+    s.parentNode.replaceChild(t, s);
+  });
+  const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+  const hits = [];
+  while (walker.nextNode()) {
+    const t = walker.currentNode;
+    if (t.nodeValue && t.nodeValue.toLowerCase().includes(needle)) hits.push(t);
+  }
+  hits.forEach(t => {
+    const v = t.nodeValue || '';
+    const lower = v.toLowerCase();
+    const frag = document.createDocumentFragment();
+    let i = 0;
+    for (;;) {
+      const idx = lower.indexOf(needle, i);
+      if (idx < 0) { frag.appendChild(document.createTextNode(v.slice(i))); break; }
+      if (idx > i) frag.appendChild(document.createTextNode(v.slice(i, idx)));
+      const span = document.createElement('span');
+      span.className = 'search-hl';
+      span.textContent = v.slice(idx, idx + q.length);
+      frag.appendChild(span);
+      i = idx + q.length;
+    }
+    t.parentNode.replaceChild(frag, t);
+  });
+}
+// Cmd+F (macOS) / Ctrl+F (跨平台, O-3): preventDefault + 聚焦; 已聚焦时无操作
+document.addEventListener('keydown', (e) => {
+  if ((e.metaKey || e.ctrlKey) && (e.key === 'f' || e.key === 'F')) {
+    const input = document.getElementById('header-search');
+    if (input && document.activeElement !== input) {
+      e.preventDefault();
+      input.focus();
+      input.select();
+    }
+  }
+});
+
 // ===== X 热点 (data/twitter.json, §5.1) =====
 let X_DATA = null;   // twitter.json 原始文档
 let X_FLAT = [];     // 展平后的推文引用 [{targetIndex, target, tweet}]
@@ -867,6 +1023,16 @@ async function loadTwitterData() {
   updateStats();
 }
 
+// 摘要: 有 forward 时 `{text}\nforward: {forward}` 截断 (text 空则仅 forward 行, §5.1)
+function xSummaryText(t, limit) {
+  const lines = [];
+  if (t.text) lines.push(t.text);
+  if (t.forward) lines.push('forward: ' + t.forward);
+  let raw = lines.join('\n');
+  if (limit && raw.length > limit) raw = raw.slice(0, limit) + '…';
+  return raw;
+}
+
 // ===== Render: X 热点表格 (§5.2) =====
 function renderXHotspots() {
   const countEl = document.getElementById('tc-xhotspots');
@@ -887,12 +1053,12 @@ function renderXHotspots() {
   if (!items.length) return '<div class="text-center text-gray-500 py-12">暂无 X 热点数据</div>';
   const rows = items.map((f, i) => {
     const t = f.tweet, tg = f.target;
-    const raw = t.text || '';
-    const text = raw.length > 120 ? esc(raw.slice(0, 120)) + '…' : esc(raw);
+    const raw = xSummaryText(t, 120);        // 截断摘要 (未转义, 渲染处 esc)
+    const title = xSummaryText(t, 0);        // 完整摘要 (title 属性)
     return `<tr id="x-tweet-${i}" onclick="openSplitPreview(${i})" title="点击查看详情">
       <td class="font-mono text-xs">${fmtMMDD(t.posted_at)}</td>
       <td><div class="truncate" title="${esc(tg.name)}">${esc(tg.name)}</div></td>
-      <td><div class="truncate" title="${esc(raw)}">${text || '—'}</div></td>
+      <td><div class="truncate" title="${esc(title)}">${raw ? esc(raw) : '—'}</div></td>
       <td class="font-mono text-xs">${num(t.views)}</td>
       <td class="font-mono text-xs">${num(t.replies)}</td>
       <td class="font-mono text-xs">${num(t.likes)}</td>
@@ -916,7 +1082,11 @@ function openSplitPreview(i) {
   X_CUR = i;
   const f = X_ITEMS[i], t = f.tweet, tg = f.target;
   document.getElementById('sp-title').textContent = '@' + tg.handle + ' · ' + fmtMMDD(t.posted_at);
-  document.getElementById('sp-full-text').textContent = t.text || '—';
+  // 正文 + forward (D2 2C): 同格式完整显示, forward 行区分样式; textContent 渲染 (SEC-1/O-1)
+  const ft = document.getElementById('sp-full-text');
+  if (t.text) ft.textContent = t.text;
+  else ft.textContent = t.forward ? '' : '—';
+  document.getElementById('sp-forward').textContent = t.forward ? 'forward: ' + t.forward : '';
   document.getElementById('sp-meta').textContent = '@' + tg.handle + ' · ' + (t.posted_at || '');
   // 指标 kv 卡片 (null → —)
   const metrics = [['浏览', t.views], ['回复', t.replies], ['转推', t.retweets], ['点赞', t.likes]];
