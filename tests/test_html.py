@@ -155,6 +155,106 @@ class TestXHotspotFrontend:
         assert 'num(t.likes)' in js
 
 
+class TestSearchFeature:
+    """全站搜索 (D4 4B, SEC-1) + forward 渲染 (D2 2C) 存在性断言 (设计 §7.2)。
+
+    - header-search 元素 + doSearch + 防抖 + Cmd+F 拦截
+    - 高亮结构化 DOM (span + textContent 分片, 禁 innerHTML)
+    - forward 表格/分栏渲染 + esc/textContent 覆盖 (O-1 forward XSS)
+    """
+
+    def _content(self):
+        return (PROJECT_ROOT / 'index.html').read_text()
+
+    def _js_blocks(self):
+        content = self._content()
+        return re.findall(r"<script(?![^>]*src=)[^>]*>(.*?)</script>", content, re.S)
+
+    def _js(self):
+        return '\n'.join(self._js_blocks())
+
+    def test_search_input_present(self):
+        """header-search 输入框 + oninput/onkeydown 挂钩存在"""
+        c = self._content()
+        assert 'id="header-search"' in c
+        assert 'oninput="onSearchInput()"' in c
+        assert 'onkeydown="onSearchKey(event)"' in c
+
+    def test_search_functions(self):
+        """搜索函数族存在: doSearch / 计数 / 行过滤 / 高亮"""
+        js = self._js()
+        for fn in ('function onSearchInput', 'function onSearchKey',
+                   'function doSearch', 'function updateSearchSummary',
+                   'function countSearchMatches', 'function applySearchFilter',
+                   'function highlightMatches', 'function searchHaystack'):
+            assert fn in js, f'missing {fn}'
+
+    def test_search_debounce(self):
+        """输入防抖 ~200ms (D4 4B)"""
+        js = self._js()
+        assert 'setTimeout(doSearch, 200)' in js
+        assert 'clearTimeout(searchTimer)' in js
+
+    def test_search_summary_cross_tab(self):
+        """跨 tab 计数: 当前 N + 其他 tab 跳转按钮 (textContent 构建)"""
+        js = self._js()
+        assert 'SEARCH_TAB_LABELS' in js
+        assert 'search-jump-btn' in js
+        assert "b.textContent = (SEARCH_TAB_LABELS[tab] || tab)" in js
+        assert "b.onclick = () => switchTab(tab)" in js
+
+    def test_cmd_f_intercept(self):
+        """Cmd+F (metaKey) / Ctrl+F (ctrlKey) 拦截 → preventDefault + 聚焦"""
+        js = self._js()
+        assert 'e.metaKey || e.ctrlKey' in js
+        assert "e.key === 'f' || e.key === 'F'" in js
+        assert 'e.preventDefault()' in js
+        assert 'document.activeElement !== input' in js
+        assert "getElementById('header-search')" in js
+
+    def test_highlight_structured_dom_no_innerhtml(self):
+        """高亮结构化 DOM (SEC-1): span + textContent 分片, highlightMatches 禁 innerHTML"""
+        js = self._js()
+        m = re.search(r'function highlightMatches[\s\S]*?\n\}', js)
+        assert m, 'highlightMatches function not found'
+        body = m.group(0)
+        assert 'createTextNode' in body
+        assert "span.className = 'search-hl'" in body
+        assert 'span.textContent' in body
+        assert 'innerHTML' not in body
+
+    def test_search_highlight_query_text_node(self):
+        """查询词按文本节点渲染 (SEC-1 防回归): 查询含 <script> 不执行"""
+        js = self._js()
+        assert 'document.createTextNode(v.slice(i, idx))' in js
+        assert 'createDocumentFragment' in js
+
+    def test_forward_summary_format(self):
+        """摘要: {text}\\nforward: {forward} 截断 (text 空则仅 forward), esc 覆盖"""
+        js = self._js()
+        assert 'function xSummaryText(t, limit)' in js
+        assert "lines.push('forward: ' + t.forward)" in js
+        assert 'esc(raw)' in js
+        assert 'esc(title)' in js
+
+    def test_forward_split_textcontent(self):
+        """分栏 forward 行: sp-forward 元素 + textContent 渲染 (SEC-1)"""
+        c = self._content()
+        js = self._js()
+        assert 'id="sp-forward"' in c
+        assert "getElementById('sp-forward').textContent" in js
+        assert "document.getElementById('sp-forward').innerHTML" not in js
+
+    def test_forward_xss_text_only(self):
+        """O-1: forward 含 <img onerror> → 纯文本渲染 (textContent/esc, 无 img 执行)"""
+        js = self._js()
+        # 分栏: forward 经 textContent 赋值, 不经 innerHTML
+        assert "t.forward ? 'forward: ' + t.forward : ''" in js
+        assert 'sp-forward' in js
+        # 表格: 摘要统一 esc() 后注入 innerHTML (query/片段均文本节点)
+        assert 'esc(raw)' in js
+
+
 class TestSeleniumPageLoad:
     """Browser-based test: load pages and check for console errors.
     Requires: selenium, webdriver-manager, Chrome.
