@@ -1,0 +1,34 @@
+# X 采集目标名单 (可编辑, 增删人物后采集自动生效)
+# 设计: documents/solutions/x-hotspot-design-v1.3-20260826.md §3.1
+# 必填: name / handle / url; 可选: enabled (默认 true), max_tweets (默认 30)
+targets:
+  - name: DHH
+    handle: dhh
+    url: https://x.com/dhh
+  - name: Boris Cherny
+    handle: bcherny
+    url: https://x.com/bcherny
+  - name: Sam Altman
+    handle: sama
+    url: https://x.com/sama
+  - name: Claude
+    handle: claudeai
+    url: https://x.com/claudeai
+  - name: OpenClaw
+    handle: openclaw
+    url: https://x.com/openclaw
+  - name: Nous Research
+    handle: NousResearch
+    url: https://x.com/NousResearch
+  - name: DeepSeek
+    handle: deepseek_ai
+    url: https://x.com/deepseek_ai
+  - name: Jeff Dean
+    handle: JeffDean
+    url: https://x.com/JeffDean
+  - name: Andrew Ng
+    handle: AndrewYNg
+    url: https://x.com/AndrewYNg
+  - name: Andrej Karpathy
+    handle: karpathy
+    url: https://x.com/karpathy

@@ -4,14 +4,15 @@
 """
 X (Twitter) 热点采集器 — llm-radar 独立采集脚本
 ================================================
-设计: documents/solutions/x-hotspot-design-v1.1-20260825.md
-  §3 采集器 (CLI/登录态/抓取/失败处理/反爬) / §4 数据 schema / §6 入库
+设计: documents/solutions/x-hotspot-design-v1.3-20260826.md
+  §3 采集器 (CLI/登录态/抓取/条数窗口/失败处理/反爬) / §4 数据 schema / §6 入库
 
 CLI 签名 (§3.2):
   python3 scripts/twitter-collector.py            默认 = collect
   python3 scripts/twitter-collector.py --collect  显式采集 (等价默认)
   python3 scripts/twitter-collector.py --login    有头模式打开登录页, 人工登录一次
   python3 scripts/twitter-collector.py --dry-run  只解析配置+探测登录态, 不抓取不写盘
+  python3 scripts/twitter-collector.py --attach   attach 到已运行 Chrome (CDP 9222) 采集
 
 退出码 (§3.5):
   0 = 成功 (含部分成功: 写盘 + last_error)
@@ -21,7 +22,7 @@ CLI 签名 (§3.2):
 环境变量:
   TWITTER_PROFILE_DIR  覆盖 Chrome profile 路径 (默认 cache/twitter-profile/)
 
-依赖: PyYAML (twitter-targets.yaml 解析), selenium + Chrome (抓取)
+依赖: PyYAML (data/twitter-targets.yaml 解析), selenium + Chrome (抓取)
 """
 
 import os
@@ -40,22 +41,24 @@ except ImportError:  # pragma: no cover
 
 # ===== Constants =====
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
-CONFIG_PATH = PROJECT_ROOT / 'twitter-targets.yaml'
+CONFIG_PATH = PROJECT_ROOT / 'data' / 'twitter-targets.yaml'
 DATA_PATH = PROJECT_ROOT / 'data' / 'twitter.json'
 DEFAULT_PROFILE_DIR = PROJECT_ROOT / 'cache' / 'twitter-profile'
 
-WINDOW_HOURS = 36          # 36h 窗口 (§3.4 D4)
+RETENTION_HOURS = 24       # 条数窗口: 24h 内推文 (D1 1A, REA-1 统一语义)
+DEFAULT_MAX_TWEETS = 30    # 每账号默认保留条数 (v1.2: 20→30)
+RETENTION = f'{DEFAULT_MAX_TWEETS}/{RETENTION_HOURS}h'   # schema retention 值 ("30/24h")
 SCROLLS = 3                # 滚动次数 (保守, 防反爬 §3.6)
 SCROLL_DELAY = 2.0         # 每次滚动间隔 (秒)
 WAIT_TIMEOUT = 30          # 等待主时间线超时 (秒)
-TOLERANCE_MINUTES = 5      # O-2: 36h 窗口过滤容差 (now+5min, 时钟偏差)
+TOLERANCE_MINUTES = 5      # 24h 窗口过滤容差 (now+5min, 时钟偏差)
 LOGIN_WAIT_SECONDS = 600   # --login 轮询上限 (10 分钟)
 
 COMMIT_MSG = 'auto-push@llm-radar: update twitter ({} changes)'
 LOGIN_HINT = '需要人工重新登录: python3 scripts/twitter-collector.py --login'
 
 USAGE = """用法:
-  python3 scripts/twitter-collector.py            默认 = collect (抓取 36h 窗口推文)
+  python3 scripts/twitter-collector.py            默认 = collect (30/24h 窗口推文)
   python3 scripts/twitter-collector.py --collect  显式采集 (等价默认)
   python3 scripts/twitter-collector.py --login    有头模式打开登录页, 人工登录一次
   python3 scripts/twitter-collector.py --dry-run  只解析配置+探测登录态, 不抓取不写盘
@@ -74,7 +77,7 @@ def parse_config(text):
     """解析 twitter-targets.yaml 文本 → 规范化 targets 列表 (纯函数, 可单测)。
 
     - name/handle/url 必填 (缺失/非字符串 → ConfigError)
-    - enabled 默认 true, max_tweets 默认 20 (<=0 视为默认)
+    - enabled 默认 true, max_tweets 默认 30 (<=0 视为默认)
     - 空文件/空配置 → []
     """
     if yaml is None:
@@ -102,11 +105,11 @@ def parse_config(text):
         if missing:
             raise ConfigError(f'targets[{i}] 缺少必填字段: {", ".join(missing)}')
         try:
-            max_tweets = int(item.get('max_tweets') or 20)
+            max_tweets = int(item.get('max_tweets') or DEFAULT_MAX_TWEETS)
         except (TypeError, ValueError):
             raise ConfigError(f'targets[{i}] max_tweets 必须是整数')
         if max_tweets <= 0:
-            max_tweets = 20
+            max_tweets = DEFAULT_MAX_TWEETS
         targets.append({
             'name': name.strip(),
             'handle': handle.strip(),
@@ -156,14 +159,14 @@ def parse_posted_at(value):
     return dt.strftime('%Y-%m-%dT%H:%M:%SZ') if dt else None
 
 
-# ===== 36h 窗口过滤 (§3.4 D4, O-2 容差) =====
+# ===== 条数窗口 (D1 1A, §3.4 步骤5, REA-1 统一语义) =====
 
-def within_window(posted_at, now=None, window_hours=WINDOW_HOURS,
+def within_window(posted_at, now=None, window_hours=RETENTION_HOURS,
                   tolerance_minutes=TOLERANCE_MINUTES):
     """posted_at 是否在 [now - window_hours, now + tolerance] 窗口内。
 
     O-2: 允许未来 5 分钟 (时钟偏差); 更远的未来视为异常丢弃。
-    边界: 恰好在窗口起点 (now - window_hours) 保留。
+    边界: 恰好在窗口起点 (now - window_hours) 保留 (=24h 整点视为 24h 内)。
     """
     dt = _to_utc_dt(posted_at)
     if dt is None:
@@ -176,13 +179,45 @@ def within_window(posted_at, now=None, window_hours=WINDOW_HOURS,
     return lower <= dt <= upper
 
 
-def filter_window(tweets, now=None, window_hours=WINDOW_HOURS):
-    """36h 窗口过滤: 保留窗口内推文 (含容差)。"""
-    return [t for t in tweets
-            if within_window(t.get('posted_at'), now=now, window_hours=window_hours)]
+def apply_retention(tweets, now=None, max_tweets=DEFAULT_MAX_TWEETS,
+                    retention_hours=RETENTION_HOURS,
+                    tolerance_minutes=TOLERANCE_MINUTES):
+    """条数窗口三规则 (§3.4 步骤5, REA-1):
+
+      a. 24h 内 >max_tweets 条 → 全保留 (24h 内所有, 不截断);
+      b. 24h 内 ≤max_tweets 条 → 保留全部 24h 内 + 24h 外按时间倒序补足至 max_tweets;
+      c. 总推文 <max_tweets 条 → 全部保留。
+
+    边界: 恰好 max_tweets 条 → 全保留; 恰好 24h 整点视为 24h 内。
+    无 posted_at / 超出容差的未来推文丢弃 (继承 filter_window 语义)。
+    """
+    now = now or datetime.now(timezone.utc)
+    if now.tzinfo is None:
+        now = now.replace(tzinfo=timezone.utc)
+    lower = now - timedelta(hours=retention_hours)
+    upper = now + timedelta(minutes=tolerance_minutes)
+    inner, outer = [], []
+    for t in tweets:
+        dt = _to_utc_dt(t.get('posted_at'))
+        if dt is None:
+            continue
+        if dt < lower:
+            outer.append(t)
+        elif dt <= upper:
+            inner.append(t)
+        # dt > upper → 未来异常, 丢弃
+    key = lambda t: _to_utc_dt(t.get('posted_at')).timestamp()
+    inner.sort(key=key, reverse=True)
+    outer.sort(key=key, reverse=True)
+    n = max(1, int(max_tweets or DEFAULT_MAX_TWEETS))
+    if len(inner) > n:
+        return inner                       # 规则 a
+    if len(inner) + len(outer) <= n:
+        return inner + outer               # 规则 c (=n 边界全保留)
+    return inner + outer[:n - len(inner)]  # 规则 b
 
 
-# ===== 去重 / 截断 (O-3) =====
+# ===== 去重 (O-3) =====
 
 def dedup_tweets(tweets):
     """单次抓取内 tweet id 去重 (O-3, 滚动防重复); 无 id 推文保留。"""
@@ -196,17 +231,6 @@ def dedup_tweets(tweets):
             seen.add(tid)
         out.append(t)
     return out
-
-
-def truncate_tweets(tweets, max_tweets=20):
-    """max_tweets 截断: 时间倒序取前 N (posted_at 缺失排最后)。"""
-    n = max(1, int(max_tweets or 20))
-
-    def key(t):
-        dt = _to_utc_dt(t.get('posted_at'))
-        return dt.timestamp() if dt else -1.0
-
-    return sorted(tweets, key=key, reverse=True)[:n]
 
 
 # ===== DOM 解析 (纯函数, 供单测与实抓共用 §3.4) =====
@@ -231,14 +255,35 @@ def _num_from_label(label, pattern):
     return int(digits)
 
 
+def _extract_forward_author(soup):
+    """转推/引用内层原推文作者 (D2 2C, §3.4 步骤4)。
+
+    优先级: 最后一个 /status/ 链接路径 → handle;
+    回退: 头像 alt ('X's profile picture') → 显示名; 最终 'unknown'。
+    """
+    for a in reversed(soup.select('a[href*="/status/"]')):
+        href = a.get('href') or ''
+        m = re.search(r'/([^/]+)/status/\d+', href)
+        if m:
+            return m.group(1).lstrip('@')
+    for img in soup.select('img[alt]'):
+        alt = img.get('alt') or ''
+        m = re.search(r"(.+?)'s profile picture", alt)
+        if m:
+            return m.group(1).strip()
+    return 'unknown'
+
+
 def parse_tweet_html(html, handle=''):
-    """纯函数: 从 tweet article 的 outerHTML 提取字段 (§3.4)。
+    """纯函数: 从 tweet article 的 outerHTML 提取字段 (§3.4 步骤4)。
 
     字段缺失置 null (不省略键); 多级 fallback; 任何解析失败不抛异常。
+    forward (D2 2C): retweet/quote 检测 → 外层 tweetText (可空) + 内层原推文
+    tweetText + 作者; forward 格式 `by @{作者}: {原推文}`; 非转发 → None。
     """
-    tweet = {'id': None, 'text': None, 'posted_at': None, 'url': None,
-             'views': None, 'replies': None, 'retweets': None, 'likes': None,
-             'images': None}
+    tweet = {'id': None, 'text': None, 'forward': None, 'posted_at': None,
+             'url': None, 'views': None, 'replies': None, 'retweets': None,
+             'likes': None, 'images': None}
     if not html:
         return tweet
     try:
@@ -260,15 +305,28 @@ def parse_tweet_html(html, handle=''):
         if h:
             tweet['url'] = f'https://x.com/{h}/status/{status_id}'
 
-    # text: [data-testid="tweetText"]; 无则整卡文本
-    text_el = soup.select_one('[data-testid="tweetText"]')
-    if text_el is not None:
-        tweet['text'] = text_el.get_text(' ', strip=True)
+    # text + forward: retweet/quote 检测 (转推标记 socialContext / 嵌套 tweetText ≥2)
+    text_els = soup.select('[data-testid="tweetText"]')
+    social = soup.select_one('[data-testid="socialContext"]')
+    is_retweet = bool(social) and bool(
+        re.search(r'(?:转推|repost|retweet)', social.get_text(' ', strip=True), re.I))
+    is_quote = len(text_els) >= 2
+    if is_retweet or is_quote:
+        # 内层原推文 = 最后一个 tweetText; 外层 = 第一个 (纯转推无外层 → None)
+        inner_text = text_els[-1].get_text(' ', strip=True) if text_els else None
+        outer_text = text_els[0].get_text(' ', strip=True) if len(text_els) >= 2 else None
+        tweet['text'] = outer_text      # 转发且无外层文本 → null (§4)
+        if inner_text:
+            author = _extract_forward_author(soup)
+            tweet['forward'] = f'by @{author}: {inner_text}'
     else:
-        card_text = soup.get_text(' ', strip=True)
-        tweet['text'] = card_text[:500] if card_text else None
+        if text_els:
+            tweet['text'] = text_els[0].get_text(' ', strip=True)
+        else:
+            card_text = soup.get_text(' ', strip=True)
+            tweet['text'] = card_text[:500] if card_text else None
 
-    # posted_at: time[datetime]
+    # posted_at: time[datetime] (第一个 = 外层/本条推文时间)
     t = soup.select_one('time[datetime]')
     if t is not None:
         tweet['posted_at'] = parse_posted_at(t.get('datetime'))
@@ -328,12 +386,15 @@ def evaluate_results(results, login_wall=False):
 
 # ===== Schema / 写盘 (§4) =====
 
-def build_document(targets, window_hours=WINDOW_HOURS, last_error=None,
+def build_document(targets, retention=RETENTION, last_error=None,
                    generated_at=None):
-    """构造 twitter.json 文档: 缺失键用 null, 不省略 (前端渲染稳定)。"""
+    """构造 twitter.json 文档: 缺失键用 null, 不省略 (前端渲染稳定)。
+
+    schema (RIG-1): window_hours → retention (语义 "30/24h", §4)。
+    """
     return {
         'generated_at': generated_at or utc_now_str(),
-        'window_hours': window_hours,
+        'retention': retention,
         'targets': targets,
         'last_error': last_error,
     }
@@ -515,11 +576,11 @@ def detect_challenge(driver):
         return False
 
 
-def fetch_target(driver, target, window_hours=WINDOW_HOURS, scrolls=SCROLLS,
+def fetch_target(driver, target, retention_hours=RETENTION_HOURS, scrolls=SCROLLS,
                  scroll_delay=SCROLL_DELAY, wait_timeout=WAIT_TIMEOUT, now=None):
-    """抓取单个 target 36h 窗口内推文 (§3.4)。
+    """抓取单个 target 30/24h 窗口内推文 (§3.4)。
 
-    返回 tweets (窗口过滤 + 去重 + max_tweets 截断)。
+    返回 tweets (去重 + 条数窗口 apply_retention)。
     登录墙 → LoginWallError; 验证挑战 → ChallengeError; 超时/无元素 → FetchError。
     """
     driver.get(target['url'])
@@ -567,8 +628,8 @@ def fetch_target(driver, target, window_hours=WINDOW_HOURS, scrolls=SCROLLS,
         raise ChallengeError('验证挑战 (cf-challenge / Something went wrong)')
 
     tweets = dedup_tweets(tweets)
-    tweets = filter_window(tweets, now=now, window_hours=window_hours)
-    tweets = truncate_tweets(tweets, target.get('max_tweets', 20))
+    tweets = apply_retention(tweets, now=now, retention_hours=retention_hours,
+                             max_tweets=target.get('max_tweets', DEFAULT_MAX_TWEETS))
     return tweets
 
 
@@ -679,20 +740,28 @@ def cmd_collect(targets, profile_dir, cdp_port=None):
             return 1
         results = []
         login_wall = False
+        challenge_streak = 0          # RIG-2: 连续验证挑战计数
         for t in targets:
             print(f'[twitter-collector] 抓取: {t["name"]} (@{t["handle"]})')
             try:
                 tweets = fetch_target(driver, t)
-                print(f'[twitter-collector]   → {len(tweets)} 条 36h 窗口内推文')
+                print(f'[twitter-collector]   → {len(tweets)} 条 (30/24h 窗口)')
                 results.append({'target': t, 'tweets': tweets, 'error': None})
+                challenge_streak = 0
             except LoginWallError:
                 login_wall = True
                 print('[twitter-collector] ❌ 登录态失效', file=sys.stderr)
                 break
             except ChallengeError as e:
-                print(f'[twitter-collector] ⚠️  {e}, 跳过本轮', file=sys.stderr)
+                challenge_streak += 1
+                print(f'[twitter-collector] ⚠️  {e}, 跳过该账号', file=sys.stderr)
                 results.append({'target': t, 'tweets': [], 'error': str(e)})
+                if challenge_streak >= 2:
+                    print('[twitter-collector] ⚠️  连续 2 账号遇验证挑战, 提前终止本轮'
+                          ' (防风控升级)', file=sys.stderr)
+                    break
             except Exception as e:
+                challenge_streak = 0
                 print(f'[twitter-collector] ⚠️  抓取失败: {e}', file=sys.stderr)
                 results.append({'target': t, 'tweets': [], 'error': str(e)})
 
@@ -701,9 +770,9 @@ def cmd_collect(targets, profile_dir, cdp_port=None):
             print(f'[twitter-collector] ❌ {LOGIN_HINT}', file=sys.stderr)
             return 2
         if not write:
-            fails = [f'{r["target"].get("name")}: {r.get("error") or "无 36h 窗口内推文"}'
+            fails = [f'{r["target"].get("name")}: {r.get("error") or "无 30/24h 窗口内推文"}'
                      for r in results if r.get('error')]
-            reason = '; '.join(fails) if fails else '全部 target 均无 36h 窗口内推文'
+            reason = '; '.join(fails) if fails else '全部 target 均无 30/24h 窗口内推文'
             print(f'[twitter-collector] ❌ 本轮无可用数据, 不写盘 '
                   f'(保留上次 twitter.json): {reason}', file=sys.stderr)
             return 1
@@ -777,7 +846,7 @@ def main(argv=None):
     enabled = [t for t in targets if t['enabled']]
     if mode == 'dry-run':
         if not enabled:
-            print('[twitter-collector] ❌ 无启用目标 (twitter-targets.yaml)',
+            print('[twitter-collector] ❌ 无启用目标 (data/twitter-targets.yaml)',
                   file=sys.stderr)
             return 1
         return cmd_dry_run(enabled, profile_dir)
@@ -785,7 +854,7 @@ def main(argv=None):
     if not enabled:
         # O-12: 空 targets/全 disabled → 写空文件 exit 0 + 提示
         write_document(build_document([]))
-        print('[twitter-collector] ⚠️  twitter-targets.yaml 无启用目标, '
+        print('[twitter-collector] ⚠️  data/twitter-targets.yaml 无启用目标, '
               '已写空 data/twitter.json')
         commit_and_push(0)
         return 0
