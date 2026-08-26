@@ -607,13 +607,21 @@ def fetch_target(driver, target, retention_hours=RETENTION_HOURS, scrolls=SCROLL
             continue
         tweets.append(parse_tweet_html(html, target['handle']))
 
-    # 滚动加载 (保守 3 次 × 2s, 防反爬 §3.6); 每次滚动后补抓新出现的 article
-    for _ in range(scrolls):
+    # 滚动加载 (动态: 达 max_tweets 提前停 / 连续 2 次无新增停 / 上限 12 次)
+    # CL-SEC20 实测: 静态 3 次仅 ~11 条, 不足 30 条窗口 (设计 §8 风险预案)。
+    max_scrolls = max(int(scrolls), 12)
+    no_new = 0
+    for _ in range(max_scrolls):
+        unique_ids = {t['id'] for t in tweets if t.get('id')}
+        if unique_ids and len(unique_ids) >= int(
+                target.get('max_tweets', DEFAULT_MAX_TWEETS)):
+            break
         try:
             driver.execute_script('window.scrollTo(0, document.body.scrollHeight);')
         except Exception:
             pass
         time.sleep(scroll_delay)
+        before = len(tweets)
         try:
             more = driver.find_elements('css selector', 'article[data-testid="tweet"]')
         except Exception:
@@ -624,6 +632,12 @@ def fetch_target(driver, target, retention_hours=RETENTION_HOURS, scrolls=SCROLL
             except Exception:
                 continue
             tweets.append(parse_tweet_html(html, target['handle']))
+        if len(tweets) == before:
+            no_new += 1
+            if no_new >= 2:
+                break
+        else:
+            no_new = 0
     if detect_challenge(driver):
         raise ChallengeError('验证挑战 (cf-challenge / Something went wrong)')
 
