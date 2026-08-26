@@ -493,3 +493,40 @@
 - 未修改任何项目文件 (只读审查); 报告 + review-log + .review-level.yaml 三件产物待 ops 统一处理 commit (本评审不 push)。
 
 ---
+
+## 2026-08-26 — X热点设计复审 v1.1 (CL-SEC19)
+
+- **review者**: review/llm-radar.lab-review (hermes-1.2.0)
+- **范围**: 设计 v1.1 (7238949 docs@design) — 复审 v1.0 的 5 修正项 (SEC-1/REA-1/REA-2/RIG-1/RIG-2) + 3 观察项 (O-1/O-4/O-6) 修复核验 + 新问题扫描
+- **Tracking**: SEC-1/REA-1/REA-2/RIG-1/RIG-2 ✅ all fixed; O-1/O-4/O-6 ✅; O-7/O-10 顺带解决; X-REV-1~3 🟢 观察; v1.0 余项 O-2/3/5/8/9/11/12/13 挂账 (不阻塞); findings_open 0
+- **状态**: ✅ PASS — 100/100 (A)
+- **报告**: documents/reviews/x-hotspot-rereview-v1.1-20260826.md
+- **实现 prompt**: ✅ 已生成 (cache/review-prep/prompt-x-hotspot-impl-20260826.md)
+
+### 修复核验
+
+| # | v1.0 问题 | v1.1 验证 |
+|:--|:----------|:---------|
+| SEC-1 | 🔴 XSS 输出编码 | ✅ §5.2 esc() 字符集 `& < > " ' \` `; §5.3 URL 白名单+noopener+图片二次校验; §5.4 src https 前缀 |
+| REA-1 | 🟡 入库链路未闭环 | ✅ §4/§6 采集器自带 commit+push (auto-push@llm-radar: update twitter), push 失败记 last_error 不轰炸 |
+| REA-2 | 🟡 cadence 实况+同刻并发 | ✅ Q6/§3.6 独立选择非"同 cadence", 主采集实测每小时已注明; cron `20 9,21` 错峰 |
+| RIG-1 | 🟡 部分成功语义 | ✅ §3.5 四场景表 (全成功/部分成功/全失败/登录失效) 无矛盾, last_error 写盘条件显式 |
+| RIG-2 | 🟡 CLI 签名 | ✅ §3.2 默认 collect / --collect / --login / --dry-run + 退出码 0/1/2 + 未知参数 exit 1 |
+| O-1 | 时区混用 | ✅ 全 Z, grep +08:00 = 0 |
+| O-4 | 缺退出码用例 | ✅ §7.1 exit-2 登录墙/挑战/全失败/部分成功用例 |
+| O-6 | country filter 语义 | ✅ X tab 国家 chips 隐藏/置灰, 仅源 chips 生效 |
+
+### 新增发现 (🟢, 不阻塞)
+
+- X-REV-1: §3.6 "9:21 与 21:21" 表述残留 vs cron `20 9,21` (09:20/21:20) — 建议改 "9:20 与 21:20"。
+- X-REV-2: push 失败 last_error 写入时机未定义 (写盘后 push 失败) + git add 范围未限定 — 实现时限定 data/twitter.json。
+- X-REV-3: AGENTS.md 依赖清单未声明 PyYAML (环境已装, 无运行缺口)。
+
+### 数据验证要点
+
+- git show --stat 7238949: 设计 rename + 126 行实改 (修复声明均有正文支撑, 非仅追加); e4c22cb docs@review 记录两件套。
+- 全部 8 项修复逐条读设计文档核验; grep +08:00 = 0; grep yaml → 仅 tasks/al-scanner.py 在用 PyYAML; .gitignore 覆盖 cache/ + data/*.log, twitter.json 不入 ignore。
+- 复审执行日期 2026-08-26 (prompt 中 20260825 为设计文档日期, 报告文件名按实际执行日命名)。
+- 未 commit / 未 push (1A 约束, commit 由 ops 处理); 本评审仅新增报告 + review-log + .review-level.yaml 三件 + cache/review-prep/ 实现 prompt。
+
+---
