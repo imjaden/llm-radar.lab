@@ -5,8 +5,8 @@ Compact single-project dashboard. One Python collector, one Vanilla JS frontend,
 ## Structure
 
 - `llm-radar-collector.py` — sole Python script (~1330 LOC). No package layout, no modules.
-- `scripts/twitter-collector.py` — X 热点独立采集器 (Selenium 登录态, 纯抓取 0 token, 设计 x-hotspot v1.1)。
-- `twitter-targets.yaml` — X 采集目标名单 (可编辑; name/handle/url 必填, enabled/max_tweets 缺省容错)。
+- `scripts/twitter-collector.py` — X 热点独立采集器 (Selenium 登录态, 纯抓取 0 token, 设计 x-hotspot v1.3)。
+- `data/twitter-targets.yaml` — X 采集目标名单 (可编辑; 10 账号; name/handle/url 必填, enabled/max_tweets 缺省容错, max_tweets 默认 30)。
 - `index.html` — single-page frontend, Tailwind CDN, Vanilla JS. No build step.
 - `changelog.html` — static template, renders from `data/snapshot.json` at runtime.
 - `data/snapshot.json` — primary data artifact (JSON, ~8700 lines). Loaded by both HTML files.
@@ -96,9 +96,14 @@ run() ordered as:
   Applies to all tabs including hotspots; X tab 按 handle/url 域名过滤 (源筛选非 X 时显示空态)。
 - X热点 tab: 独立加载 `data/twitter.json?t=<ts>` (失败 console.warn 回退空态, 不阻断页面);
   表格列 = 时间(MM-DD HH:MM, UTC→本地) / 人物 / 推文摘要(截断) / 指标(浏览/回复/点赞, null 显示 —);
-  单击行或行内"详情"按钮 → split-preview 分栏 (header 上一/下一 + 关闭, body 全文/指标 kv/图片,
-  图片直引 pbs.twimg.com + onerror 占位 + https:// 二次校验); <1200px 变全屏抽屉 (底部滑出);
-  关闭: 关闭按钮 / 点击空白 / Esc。渲染路径全字段 esc() 转义 (SEC-1)。
+  摘要含 forward 时显示 `{text}\nforward: {forward}` (text 空则仅 forward 行);
+  单击行或行内"详情"按钮 → split-preview 分栏 (header 上一/下一 + 关闭, body 全文/forward 行
+  (区分样式)/指标 kv/图片, 图片直引 pbs.twimg.com + onerror 占位 + https:// 二次校验);
+  <1200px 变全屏抽屉 (底部滑出); 关闭: 关闭按钮 / 点击空白 / Esc。渲染路径全字段 esc()/textContent 转义 (SEC-1)。
+- 全站搜索 (D4 4B): header-search 输入框 (防抖 ~200ms + Enter) 过滤当前 tab 表格行
+  (匹配 name/文本/forward/人物/链接) + 跨 tab 计数 (如 "工具 3 · 模型 5", 点击跳转);
+  清空/Esc 恢复全表; Cmd+F (metaKey) / Ctrl+F (ctrlKey) 拦截 preventDefault + 聚焦;
+  高亮用结构化 DOM 构建 (span + textContent 分片), 禁 innerHTML 拼接 (SEC-1)。
 - Tab counts update in real-time when filters change (including `tc-hotspots` / `tc-xhotspots`).
 - Responsive: data sources and filter chips auto-hide below 1200px (`hide-1200`).
 - Auto-refresh: 10 min interval, saves tab/filter/sort/scroll to localStorage.
