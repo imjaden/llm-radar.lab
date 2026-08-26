@@ -59,6 +59,7 @@ USAGE = """用法:
   python3 scripts/twitter-collector.py --collect  显式采集 (等价默认)
   python3 scripts/twitter-collector.py --login    有头模式打开登录页, 人工登录一次
   python3 scripts/twitter-collector.py --dry-run  只解析配置+探测登录态, 不抓取不写盘
+  python3 scripts/twitter-collector.py --attach   attach 到已运行 Chrome (CDP 9222) 采集, 复用其登录态
 
 退出码: 0=成功(含部分成功) / 1=抓取失败或配置错误 / 2=登录态失效"""
 
@@ -444,11 +445,18 @@ class FetchError(Exception):
     """抓取失败 (单 target)"""
 
 
-def start_driver(profile_dir, headed=False):
-    """启动 Chrome (持久化 profile + headless=new / 有头)。selenium 惰性导入。"""
+def start_driver(profile_dir, headed=False, cdp_port=None):
+    """启动 Chrome (持久化 profile + headless=new / 有头)。selenium 惰性导入。
+
+    cdp_port: attach 到已运行 Chrome (--attach, CDP 调试端口), 复用其登录态;
+    不传 user-data-dir/headless/自动化参数 (真 Chrome 无自动化特征, 登录不受拦)。
+    """
     from selenium import webdriver
     from selenium.webdriver.chrome.options import Options
     opts = Options()
+    if cdp_port:
+        opts.debugger_address = f'127.0.0.1:{cdp_port}'
+        return webdriver.Chrome(options=opts)
     opts.add_argument(f'--user-data-dir={Path(profile_dir)}')
     if not headed:
         opts.add_argument('--headless=new')
@@ -522,17 +530,7 @@ def fetch_target(driver, target, window_hours=WINDOW_HOURS, scrolls=SCROLLS,
     if not articles:
         raise FetchError('未找到 tweet 元素 (可能页面结构变化或登录态异常)')
 
-    # 滚动加载 (保守 3 次 × 2s, 防反爬 §3.6)
-    for _ in range(scrolls):
-        try:
-            driver.execute_script('window.scrollTo(0, document.body.scrollHeight);')
-        except Exception:
-            pass
-        time.sleep(scroll_delay)
-    articles = driver.find_elements('css selector', 'article[data-testid="tweet"]')
-    if detect_challenge(driver):
-        raise ChallengeError('验证挑战 (cf-challenge / Something went wrong)')
-
+    # 首屏解析 (X 虚拟列表滚动后会回收首屏 DOM — 最新推文必须先抓)
     tweets = []
     for el in articles:
         try:
@@ -540,6 +538,27 @@ def fetch_target(driver, target, window_hours=WINDOW_HOURS, scrolls=SCROLLS,
         except Exception:
             continue
         tweets.append(parse_tweet_html(html, target['handle']))
+
+    # 滚动加载 (保守 3 次 × 2s, 防反爬 §3.6); 每次滚动后补抓新出现的 article
+    for _ in range(scrolls):
+        try:
+            driver.execute_script('window.scrollTo(0, document.body.scrollHeight);')
+        except Exception:
+            pass
+        time.sleep(scroll_delay)
+        try:
+            more = driver.find_elements('css selector', 'article[data-testid="tweet"]')
+        except Exception:
+            more = []
+        for el in more:
+            try:
+                html = el.get_attribute('outerHTML') or ''
+            except Exception:
+                continue
+            tweets.append(parse_tweet_html(html, target['handle']))
+    if detect_challenge(driver):
+        raise ChallengeError('验证挑战 (cf-challenge / Something went wrong)')
+
     tweets = dedup_tweets(tweets)
     tweets = filter_window(tweets, now=now, window_hours=window_hours)
     tweets = truncate_tweets(tweets, target.get('max_tweets', 20))
@@ -639,14 +658,14 @@ def cmd_dry_run(targets, profile_dir):
         lock.release()
 
 
-def cmd_collect(targets, profile_dir):
+def cmd_collect(targets, profile_dir, cdp_port=None):
     """--collect (默认): 抓取 → 判定 → 写盘 → commit+push。"""
     lock = ProfileLock(profile_dir)
     if not lock.acquire():
         return 1
     driver = None
     try:
-        driver = start_driver(profile_dir, headed=False)
+        driver = start_driver(profile_dir, headed=False, cdp_port=cdp_port)
         results = []
         login_wall = False
         for t in targets:
@@ -713,6 +732,8 @@ def parse_args(argv):
         mode = 'login'
     elif arg == '--dry-run':
         mode = 'dry-run'
+    elif arg == '--attach':
+        mode = 'attach'
     else:
         print(USAGE, file=sys.stderr)
         raise SystemExit(1)
@@ -757,7 +778,11 @@ def main(argv=None):
               '已写空 data/twitter.json')
         commit_and_push(0)
         return 0
-    return cmd_collect(enabled, profile_dir)
+    cdp_port = None
+    if mode == 'attach':
+        cdp_port = int(os.environ.get('TWITTER_CDP_PORT', '9222'))
+        print(f'[twitter-collector] attach 模式: CDP 127.0.0.1:{cdp_port}')
+    return cmd_collect(enabled, profile_dir, cdp_port=cdp_port)
 
 
 if __name__ == '__main__':
