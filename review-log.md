@@ -564,3 +564,40 @@
 - 遗留注记项: O-9 (健康度入 metrics.json, 后续迭代), O-13 (主采集 cron 指向核对, ops 侧)。
 
 ---
+
+## 2026-08-26 — X热点设计 v1.2 评审 (CL-SEC20)
+
+- **review者**: review/llm-radar.lab-review (hermes-1.2.0)
+- **范围**: 设计 v1.2 (82d8d1a docs@design) — CL-SEC20 增强 5 项 (配置迁移 data/ 账号 1→10 / forward 字段 / 条数窗口 30+24h / 全站搜索 Cmd+F / 采集时长 5-8min); 继承 v1.1 机制核验
+- **Tracking**: REA-1, RIG-1/RIG-2, SEC-1 (🟡 待修, findings_open 4); O-1~O-5 🟢 观察
+- **状态**: ⏳ CONDITIONAL PASS — 80/100 (B)
+- **报告**: documents/reviews/x-hotspot-review-v1.2-20260826.md
+- **实现 prompt**: ⬜ 未生成 (非 PASS, 待 ops 修 4 🟡 bump v1.3 重审)
+
+### 发现摘要
+
+| # | Severity | 维度 | Title | Status |
+|:-:|:--------:|:----:|-------|--------|
+| REA-1 | 🟡 | 合理性 | D1 条数窗口回填语义 §3.4 ("取最近 30") vs §7.1 ("补足到 30") 矛盾 | 待修 |
+| RIG-1 | 🟡 | 严格性 | window_hours→retention 影响未完整枚举 (3 处测试断言 break + "写盘不变" 错误) | 待修 |
+| RIG-2 | 🟡 | 严格性 | §3.6 "跳过本轮" vs "提前终止本轮" 风控语义矛盾 | 待修 |
+| SEC-1 | 🟡 | 安全性 | 搜索 "高亮" innerHTML 注入面 + 查询词转义未约束 | 待修 |
+| O-1~O-5 | 🟢 | — | forward esc 专项断言 / 作者 fallback 粒度 / ctrlKey / max_tweets 语义 / steipete 移除 | 观察 |
+
+### 3D 评分
+
+| 维度 | 评级 | 说明 |
+|:-----|:----:|:-----|
+| 合理性 | 🟡 | 决策闭环完整、继承一致; D1 回填语义自相矛盾 (REA-1) |
+| 严格性 | 🟡 | schema→测试影响遗漏 (RIG-1); 风控语义矛盾 (RIG-2); 30/24h 边界用例缺失 |
+| 安全性 | 🟡 | "全字段 esc()" 覆盖 forward (O-1); 搜索高亮新注入面未约束 (SEC-1) |
+| 继承一致性 | 🟢 | CLI/登录态/反爬/分栏/抽屉/crontab 无破坏 |
+
+### 数据验证要点
+
+- grep index.html `window_hours`/`retention` = 0 命中 → §4 "前端无需读" 成立; grep `doSearch`/`header-search` = 0 命中 → 搜索为净新增 (仅 searchIcon Bing 图标)。
+- read tests/test_twitter_collector.py: 3 处 `assert ...['window_hours'] == 36` (L317/340/513) + TestWindowFilter 整类 36h 用例 + max_tweets 默认 20 断言多处, §7.1 未提及 → RIG-1。
+- grep collector.py `WINDOW_HOURS` = 5 处 (within_window/filter_window/build_document/fetch_target/truncate_tweets), "废弃 36h" 缺函数级改造映射 → RIG-1。
+- read 设计 §3.6 ("跳过本轮" vs "提前终止本轮") + §8 ("挑战跳过") 三处并存 → RIG-2。
+- read index.html L468-471 esc() 存在并已用于 searchIcon title; read .gitignore 无 data/*.yaml 忽略 → §3.1 "入库" 成立。
+- 未 commit / 未 push (1A 约束, commit 由 ops 处理); 本评审仅新增报告 + review-log + .review-level.yaml 三件。

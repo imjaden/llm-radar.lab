@@ -216,3 +216,12 @@ review_history:
     findings_open: 0
     tracking: CL-SEC19 实现审计 (04b7866→23e3401) — 一致性/测试184/治理/安全/运维 all ✅; IMPL-OBS-1~3 🟢 注记
     report: documents/reviews/x-hotspot-impl-audit-v1.0-20260826.md
+  - date: 2026-08-26
+    reviewer: Security Reviewer (IRIS)
+    review_level: L2
+    verdict: CONDITIONAL_PASS
+    score: 80
+    findings_total: 4
+    findings_open: 4
+    tracking: CL-SEC20 设计评审 v1.2 (82d8d1a) — REA-1, RIG-1/RIG-2, SEC-1 🟡 待修; O-1~O-5 🟢 观察
+    report: documents/reviews/x-hotspot-review-v1.2-20260826.md
