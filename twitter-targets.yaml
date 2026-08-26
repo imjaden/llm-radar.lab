@@ -1,0 +1,9 @@
+# X 采集目标名单 (可编辑, 增删人物后采集自动生效)
+# 设计: documents/solutions/x-hotspot-design-v1.1-20260825.md §3.1
+# 必填: name / handle / url; 可选: enabled (默认 true), max_tweets (默认 20)
+targets:
+  - name: Peter Steinberger
+    handle: steipete
+    url: https://x.com/steipete
+    enabled: true
+    max_tweets: 20        # 单次采集该人物最多保留条数
