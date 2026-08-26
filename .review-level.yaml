@@ -225,3 +225,13 @@ review_history:
     findings_open: 4
     tracking: CL-SEC20 设计评审 v1.2 (82d8d1a) — REA-1, RIG-1/RIG-2, SEC-1 🟡 待修; O-1~O-5 🟢 观察
     report: documents/reviews/x-hotspot-review-v1.2-20260826.md
+    resolved_by: re-review v1.3 (2026-08-26) — PASS 100/100
+  - date: 2026-08-26
+    reviewer: Security Reviewer (IRIS)
+    review_level: L2
+    verdict: PASS
+    score: 100
+    findings_total: 0
+    findings_open: 0
+    tracking: CL-SEC20 设计复审 v1.3 (b9b025d) — REA-1/RIG-2/SEC-1 ✅ 全修; RIG-1 ✅ 主修 (残余 🟢 并入 impl prompt); O-1 ✅; 残余 🟢 O-2~O-5 + D3 名单基数
+    report: documents/reviews/x-hotspot-rereview-v1.3-20260826.md

@@ -570,7 +570,7 @@
 - **review者**: review/llm-radar.lab-review (hermes-1.2.0)
 - **范围**: 设计 v1.2 (82d8d1a docs@design) — CL-SEC20 增强 5 项 (配置迁移 data/ 账号 1→10 / forward 字段 / 条数窗口 30+24h / 全站搜索 Cmd+F / 采集时长 5-8min); 继承 v1.1 机制核验
 - **Tracking**: REA-1, RIG-1/RIG-2, SEC-1 (🟡 待修, findings_open 4); O-1~O-5 🟢 观察
-- **状态**: ⏳ CONDITIONAL PASS — 80/100 (B)
+- **状态**: ✅ RESOLVED — 见 2026-08-26 re-review v1.3 (PASS 100/100)
 - **报告**: documents/reviews/x-hotspot-review-v1.2-20260826.md
 - **实现 prompt**: ⬜ 未生成 (非 PASS, 待 ops 修 4 🟡 bump v1.3 重审)
 
@@ -601,3 +601,39 @@
 - read 设计 §3.6 ("跳过本轮" vs "提前终止本轮") + §8 ("挑战跳过") 三处并存 → RIG-2。
 - read index.html L468-471 esc() 存在并已用于 searchIcon title; read .gitignore 无 data/*.yaml 忽略 → §3.1 "入库" 成立。
 - 未 commit / 未 push (1A 约束, commit 由 ops 处理); 本评审仅新增报告 + review-log + .review-level.yaml 三件。
+
+---
+
+## 2026-08-26 — X热点设计 v1.3 复审 (CL-SEC20 闭环)
+
+- **review者**: review/llm-radar.lab-review (hermes-1.2.0)
+- **范围**: 设计 v1.3 (b9b025d docs@design) — 复审 v1.2 的 4 🟡 (REA-1/RIG-1/RIG-2/SEC-1) + O-1 🟢 修复核验 + 新问题扫描
+- **Tracking**: REA-1/RIG-2/SEC-1 ✅ 全修; RIG-1 ✅ 主修 (残余 🟢 并入 impl prompt); O-1 ✅; 残余 🟢 O-2~O-5 + D3 名单基数; findings_open 0
+- **状态**: ✅ PASS — 100/100 (A)
+- **报告**: documents/reviews/x-hotspot-rereview-v1.3-20260826.md
+- **实现 prompt**: ✅ 已生成
+
+### 修复核验
+
+| # | v1.2 问题 | v1.3 验证 |
+|:--|:----------|:---------|
+| REA-1 | 🟡 条数窗口回填语义矛盾 | ✅ §3.4 步骤5 三规则 (a/b/c) + 边界 (=30/=24h 整点); §7.1 用例同步 |
+| RIG-1 | 🟡 schema 影响未完整枚举 | ✅ §4 retention + 3 处测试断言影响 + "写盘不变"更正; ⚠️ 残余: 函数映射 + 方法级命名 + max_tweets 20→30 断言 (→ impl prompt) |
+| RIG-2 | 🟡 风控语义矛盾 | ✅ §3.6 单账号跳过 / 连续≥2 提前终止(已抓写盘) / 全未抓成 exit1 |
+| SEC-1 | 🟡 搜索高亮注入面 | ✅ §5.2 结构化 DOM (span+textContent) 禁 innerHTML + 双转义; §7.2 `<script>` 用例 |
+| O-1 | 🟢 forward XSS 断言 | ✅ §7.2 `<img onerror>` → 纯文本断言 |
+
+### 残余观察 (🟢, 并入 impl prompt, 不阻塞)
+
+- RIG-1 残余: 函数级改造映射缺失 (within_window/filter_window/truncate_tweets/build_document/fetch_target 5 函数); 断言未命名到方法级 (test_build_document_keys L316-317 / test_write_document_roundtrip L340 / test_all_disabled_writes_empty L513) + TestWindowFilter 36h 用例 + max_tweets 默认 20→30 断言 (test_max_tweets_default / test_max_tweets_zero_falls_back)。
+- O-4 残余: "补足至 30" 硬编码 vs "N=max_tweets" 未显式等价 ("30" 应写作 max_tweets 默认 30)。
+- O-2/O-3/O-5 残余: forward 作者 fallback 粒度 / ctrlKey 跨平台 / steipete 归档说明。
+- 新 🟢: §2.2 D3 "新增 3 账号" vs §3.1 10 账号清单基数未说明。
+
+### 数据验证要点
+
+- read 设计 §3.4/§7.1 三规则+边界一致; §3.6 三态自洽; §5.2/§7.2 编码约束+注入用例齐。
+- read tests/test_twitter_collector.py: 3 处 `assert ...['window_hours'] == 36` (L317/340/513) 确认存在; grep index.html retention/window_hours = 0 → §4 "前端不读" 成立。
+- read collector.py: WINDOW_HOURS=36 5 处引用 + build_document `window_hours` 键 + cmd_collect ChallengeError 现为"跳过本轮" continue (无提前终止) — v1.3 设计描述的是待实现语义, 非现状矛盾。
+- git show --stat b9b025d: design v1.2→v1.3 rename + 263 insertions, 修复声明有正文支撑。
+- 未 commit / 未 push (1A 约束)。
