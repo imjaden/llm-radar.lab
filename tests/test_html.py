@@ -66,6 +66,95 @@ class TestHtmlJsSyntax:
             assert not bad, f"{html_file}: unquoted keys: {bad}"
 
 
+class TestXHotspotFrontend:
+    """X热点 tab + renderXHotspots + split-preview + esc() 存在性断言 (设计 §7.2)。
+
+    按既有规则: JS 相关断言只扫 <script> 块 (排除 <style> 块);
+    元素/属性存在性断言直接扫全文。
+    """
+
+    def _content(self):
+        return (PROJECT_ROOT / 'index.html').read_text()
+
+    def _js_blocks(self):
+        content = self._content()
+        return re.findall(r"<script(?![^>]*src=)[^>]*>(.*?)</script>", content, re.S)
+
+    def test_xhotspot_tab_present(self):
+        """X热点 tab 按钮 + 计数元素存在"""
+        c = self._content()
+        assert 'data-tab="xhotspots"' in c
+        assert 'id="tc-xhotspots"' in c
+        assert 'X热点' in c
+
+    def test_xhotspot_render_functions(self):
+        """renderXHotspots / 分栏 / 数据加载函数存在"""
+        js = '\n'.join(self._js_blocks())
+        for fn in ('function renderXHotspots', 'function openSplitPreview',
+                   'function spNav', 'function closeSplitPreview',
+                   'async function loadTwitterData', 'function flattenTwitter'):
+            assert fn in js, f'missing {fn}'
+
+    def test_split_preview_elements(self):
+        """split-preview 元素/类存在 (header nav/close + body)"""
+        c = self._content()
+        assert 'id="split-preview"' in c
+        assert 'id="split-backdrop"' in c
+        assert 'split-preview-header' in c
+        assert 'split-preview-body' in c
+        assert 'onclick="closeSplitPreview()"' in c
+
+    def test_esc_helper_present(self):
+        """esc() helper 存在且转义字符集完整 (SEC-1: & < > " ' `)"""
+        js = '\n'.join(self._js_blocks())
+        assert 'function esc(' in js
+        assert "'&':'&amp;'" in js
+        assert "'<':'&lt;'" in js
+        assert "'>':'&gt;'" in js
+        assert "'&quot;'" in js
+        assert "'&#39;'" in js
+        assert "'&#96;'" in js
+
+    def test_existing_render_points_backfilled(self):
+        """既有 innerHTML 直插点已回填 esc (SEC-1 顺带收敛)"""
+        js = '\n'.join(self._js_blocks())
+        assert 'esc(h.title' in js            # renderHotspotPanel / renderHotspots
+        assert 'esc(h.id)' in js              # renderHotspots / renderHotspotPanel
+        assert 'esc(label)' in js             # chip()
+        assert 'esc(text)' in js              # eventCell / smartEventCell
+
+    def test_x_source_chip(self):
+        """源 filter chips 扩展 X (按 handle/url 域名过滤)"""
+        js = '\n'.join(self._js_blocks())
+        assert "{name:'X', url:'https://x.com'}" in js
+
+    def test_country_filter_disabled_on_x_tab(self):
+        """国家过滤对 X tab 置灰 (O-6)"""
+        js = '\n'.join(self._js_blocks())
+        assert "tab==='xhotspots'" in js
+        assert 'filter-chip.disabled' in self._content()
+
+    def test_images_https_guard(self):
+        """图片 src 前端二次校验 https:// 前缀 + 占位 (SEC-1/O-7)"""
+        js = '\n'.join(self._js_blocks())
+        assert "s.startsWith('https://')" in js
+        assert 'imgFail(this)' in js
+        assert '图片加载失败' in js
+
+    def test_twitter_fetch_warn(self):
+        """twitter.json 加载失败 console.warn + 不阻断页面"""
+        js = '\n'.join(self._js_blocks())
+        assert "'data/twitter.json?t=' + Date.now()" in js
+        assert "console.warn('[llm-radar] twitter.json load failed:', e.message)" in js
+
+    def test_null_metric_dash(self):
+        """指标 null 显示 — (num helper 复用)"""
+        js = '\n'.join(self._js_blocks())
+        assert 'num(t.views)' in js
+        assert 'num(t.replies)' in js
+        assert 'num(t.likes)' in js
+
+
 class TestSeleniumPageLoad:
     """Browser-based test: load pages and check for console errors.
     Requires: selenium, webdriver-manager, Chrome.
