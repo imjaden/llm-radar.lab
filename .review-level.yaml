@@ -306,4 +306,21 @@ review_history:
     findings_total: 0
     findings_open: 0
     tracking: LLM-RADAR-CL003 实现审计 (0013b84) — 验收 8 项全 ✅; RIG-001 ✅ 断言规格落实 (区域截取+正则双形式+禁裸子串); IMPL-OBS-1~6 🟢 观察; 测试 219/4 独立复跑全绿
-    report: documents/reviews/llm-radar-copy-fix-impl-audit-v1.0-20260827.md
+  - date: 2026-08-27
+    reviewer: Security Reviewer (IRIS)
+    review_level: L2
+    verdict: PASS
+    score: 90
+    findings_total: 2
+    findings_open: 0
+    tracking: LLM-RADAR-CL004 设计 v1.0 (8f14683) — D1~D6 与确认串 (A1 B1 C1 D1 E1 F1) 内容全对应 (D4=2D 不动, 复述批准); RIG-001/002 🟡 并入实现验收清单 (help 补行格式 / 缺 not-found-json 用例); OBS-1~5 🟢 观察
+    report: documents/reviews/llm-radar-skills-prompt-review-v1.0-20260827.md
+  - date: 2026-08-27
+    reviewer: Security Reviewer (IRIS)
+    review_level: L2
+    verdict: PASS
+    score: 95
+    findings_total: 1
+    findings_open: 1
+    tracking: LLM-RADAR-CL004 实现审计 (f0276ea) — 验收 5 项 + RIG-001/002 ✅ 全落地; AUD-001 🟡 (no_key_log 断言 scope 盲点, 本地无 key 环境假绿风险, CI 有效, 建议后续 test 硬化); IMPL-OBS-1~5 🟢 观察; 测试 21 + 243/2 独立复跑全绿
+    report: documents/reviews/llm-radar-skills-prompt-impl-audit-v1.0-20260827.md

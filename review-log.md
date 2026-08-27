@@ -891,3 +891,70 @@
 - IMPL-OBS 🟢: (1) fallback 用 top:-9999px+readonly 替代设计 opacity:0 — 功能等价更稳; (2) feedback() 合并 done/fail 闭包 — 语义一致更精简; (3) 评审 O-3 (iOS setSelectionRange) 未补 — 非验收项; (4) ago.onclick 裸 writeText 未动 — 范围外; (5) 区域截取边界依赖函数位置, assert message 已注明; (6) orig 负断言锁定 B2 核心。
 - 测试污染精确还原: timestamp.json / overview.json / data/snapshot.json git checkout 指定 3 文件, 哈希与基线逐字节一致, git status clean。
 - 未 commit / 未 push (1A 约束); 本审计仅新增报告 + review-log 追加 + .review-level.yaml 追加。
+
+---
+
+## 2026-08-27 — skills 供给站+prompt 子命令 设计 v1.0 评审 (LLM-RADAR-CL004)
+
+- **review者**: ops/llm-radar-skills-prompt-review (hermes-1.2.0)
+- **范围**: 设计 v1.0 (8f14683 docs@llm-radar) — x-twitter-collector skill 沉淀 + `llm-radar prompt` 子命令 (全量对齐 hs cli.py:685-800) + test_cli 扩展 + AGENTS.md 双处同步
+- **Tracking**: RIG-001 🟡 (help 补行格式非两行式) + RIG-002 🟡 (行为矩阵含 `<不存在> --json` 但 7 用例缺自动化) 并入实现验收清单; OBS-1~5 🟢 观察; findings_open 0
+- **状态**: ✅ PASS — 90/100 (A)
+- **报告**: documents/reviews/llm-radar-skills-prompt-review-v1.0-20260827.md
+- **实现 prompt**: ✅ 已生成 (设计 PASS, 可进 dev)
+
+### 发现摘要
+
+| # | Severity | Title | Status |
+|:-:|:--------:|-------|--------|
+| RIG-001 | 🟡 | §3.4 help 补行为单行内联+全称令牌, 与 print_grouped_help 两行式/短名格式不符 | 并入实现验收清单 (两行式 `prompt` + 缩进描述行) |
+| RIG-002 | 🟡 | 行为矩阵含 `<不存在> --json` 错误信封但 7 用例无自动化 (hs 有 test_not_found_json) | 并入实现验收清单 (补第 8 用例) |
+
+### 3D 评分
+
+| 维度 | 评级 | 说明 |
+|:-----|:----:|:-----|
+| 合理性 | 🟢 | 三件事与确认串内容逐项对应; 行为矩阵 8 行实测对齐 hs; main() 分支位置消除 key 日志论证闭环; B1 边界分工清晰 |
+| 严格性 | 🟡 | 2 项规格精度缺陷 (help 格式 / 错误信封测试); brief ^#{2,3} 为 hs ^## 超集 (OBS-1) |
+| 安全性 | 🟢 | 纯文档+只读子命令, 无新依赖/无注入面; no_key_log 防回归 |
+
+### 数据验证要点
+
+- 运行时实测: `help` 出 NotOpenSSLWarning (python3.9 urllib3 + LibreSSL) → D4 "所有命令均有"成立; `prompt` 现状 = 构造器噪音 + `❌ 未知命令: prompt` + exit 1 → 设计修复前提属实。
+- main() 2204-2302: help 分支 2222-2224 不实例化 / status 2227-2228 / 实例化 2230 / else 2300-2302 → prompt 插入点可行, key 日志 (L180/182) 不再触发。
+- hs 对照: cli.py:685-800 _cmd_prompt 全逻辑逐行比对 (8 行矩阵全对齐, brief 扫 `^## `, 详情追加 refs); test_prompt.py 9 用例含 test_not_found_json。
+- CI: test.yml:14 未 ignore test_cli.py → 自动覆盖属实; 本地传统命令 --ignore=tests/test_cli.py 已由设计显式标注必须另跑。
+- skills/ 现状 = {github-workflow} (无 references/) → 精确集合断言基线成立; test_cli.py 基线 13 passed (扩展后 20)。
+- AGENTS.md grep skills/prompt = 0 有效命中 → O-2 双处同步确需; Key Commands 节为第三处 (OBS-4)。
+- 确认串回溯 (探讨会话 20260827_205047_35d6ad): D 组选项 D1=全局抑制/D2=不动; 复述批准"不动（D2）"+「开始」→ 设计 D4=2D 内容正确, 字面 "D1" 为标签歧义 (OBS-2)。
+- 编号: review_history 实测 CL001 (x-preview) / CL002 (perf-optimize) / CL003 (copy-fix) 2026-08-27 已占 → CL004 正确。
+- 未 commit / 未 push (1A 约束); 本评审仅新增报告 + review-log 追加 + .review-level.yaml 追加。
+
+---
+
+## 2026-08-27 — skills 供给站+prompt 子命令 实现审计 (LLM-RADAR-CL004)
+
+- **review者**: ops/llm-radar-skills-prompt-impl-audit (hermes-1.2.0)
+- **范围**: 实现 commit f0276ea (feat@llm-radar: add x-twitter-collector skill and prompt subcommand) — 设计 D1-D6 + 评审实现验收清单 5 项 + RIG-001/002 落地核验
+- **Tracking**: 验收 1-5 ✅ 全落地; RIG-001 ✅ 两行式落地 (2+10 空格与既有行一致); RIG-002 ✅ 第 8 用例落地; AUD-001 🟡 (no_key_log 断言 scope 盲点, 非阻塞); IMPL-OBS-1~5 🟢 观察; findings_open 1
+- **状态**: ✅ PASS — 95/100 (A)
+- **报告**: documents/reviews/llm-radar-skills-prompt-impl-audit-v1.0-20260827.md
+
+### 验收核验
+
+| # | 验收项 | 结果 | 证据 |
+|:--|:-------|:----:|:-----|
+| 1 | SKILL.md frontmatter + 正文 7 节 | ✅ | name/description 首 57 字符自含 "Use when operating" 触发/category devops; 7 节 (CLI 签名退出码 0/1/2 / targets 配置 / schema 30/24h / 双 profile 概念表 (OBS-3) / auto-push / cron 20 9,21 / 故障浓缩→x-twitter-scraping) 与 twitter-collector.py 实况逐一核验一致 |
+| 2 | collector prompt 分支 + 行为矩阵 8 行 | ✅ | main():2346-2349 help 后/实例化前/sys.exit 于分支内; _cmd_prompt 2207-2321 vs hs cli.py:685-800 逐行对齐; SKILLS_DIR L47; 参数三形态实测; 无 key 日志 grep 0 |
+| 3 | RIG-001 help 两行式 | ✅ | L2178-2179 `  prompt` + 10 空格描述行, 与同组 help/<cmd> help 行字节级同格式 (评审修正块字面亦 10 空格, "11"系评审笔误) |
+| 4 | test_cli 8 用例 + RIG-002 | ✅ | L137-220 8 用例; json_not_found (L206-213) status error + data None + exit 1; 独立复跑 21 passed; 防假阳性: 精确集合相等/exit code/分流断言 — no_key_log scope 盲点 → AUD-001 |
+| 5 | AGENTS.md 三处同步 | ✅ | :20 (结构节 skills/) / :33 (Key Commands prompt) / :45 (CLI 治理 lr prompt) 逐一命中 |
+
+### 数据验证要点
+
+- 独立复跑: `python3 -m pytest tests/test_cli.py -q` → **21 passed** (13 既有 + 8 新增; 评审验收清单预测 "20 (13+8−1)" 系算术笔误); `python3 -m pytest tests/ -m "not selenium" -q` → **243 passed, 2 deselected** — 与审计预期完全一致。
+- 手工实测 6 项全过: prompt 列表 exit 0 / prompt x-twitter-collector 全文无 key 日志 / prompt nope exit 1 (stderr 报错 + stdout 可用列表) / prompt --json 信封 (status ok, names 精确 = 双 skill) / prompt nope --json 错误信封 (status error/data null, exit 1) / help【其他】组两行式。
+- NotOpenSSLWarning 实测出现于 prompt stderr (urllib3 v2 + LibreSSL) — D4 已知 ("所有命令均有"), 与 help 一致, 非缺陷。
+- AUD-001: no_key_log 断言串 "DeepSeek API key" 仅匹配构造器成功路径日志 (L181); 失败路径 "DEEPSEEK_API_KEY 未配置" (L183, 全大写+下划线) 不含该串 — 本地无 key 环境假绿风险, CI (secrets key) 守卫有效; 断言串出自评审验收清单原文, 建议后续 test 硬化 (双串或时间戳前缀断言)。
+- 测试污染精确还原: timestamp.json / overview.json / data/snapshot.json git checkout 指定 3 文件, git status 回到仅 3 件评审产物 (与审计前一致)。
+- 未 commit / 未 push (1A 约束); 本审计仅新增报告 + review-log 追加 + .review-level.yaml 追加。
