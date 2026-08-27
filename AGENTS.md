@@ -17,6 +17,7 @@ Compact single-project dashboard. One Python collector, one Vanilla JS frontend,
 - `llm-news-prompt.md` — LLM data spec, output schema guidance.
 - `features.md` — feature checklist.
 - `loop.md` — iteration checklist.
+- `skills/` — 项目 skills 供给站 (SKILL.md; AI 对接用 `llm-radar prompt [<name>]` 读取).
 
 ## Key Commands
 
@@ -29,6 +30,7 @@ python3 llm-radar-collector.py merge            # merge from fetch cache
 python3 llm-radar-collector.py crontab --add    # schedule daily 09:00, 21:00
 python3 llm-radar-collector.py commit [msg]     # git add + commit
 python3 llm-radar-collector.py auto-push        # git add + commit + push
+python3 llm-radar-collector.py prompt [skill]   # 列出/输出项目 skill (AI 对接, 全只读)
 python3 scripts/twitter-collector.py            # X 采集 (默认 collect; --login 人工登录 / --dry-run 探测登录态)
 ./llm-radar-run.sh                              # cross-platform wrapper (auto-detects Mac/Linux)
 python3 -m http.server 8080                     # local preview
@@ -40,6 +42,7 @@ CLI 治理 (2026-08-23 起): 全局注册 `llm-radar` 主名 + `lr` 别名 (`.cl
 lr help                           # hm-style 分组帮助 (llm-radar / lr 输出一致)
 lr status [--json]                # checkpoint 七字段协议 (ok/warning/critical, 全只读)
 lr run --force                    # 绕过 6h 节流
+lr prompt [skill] [--brief|--json]  # skills/ 供给站: 无参列表 / <name> 全文 (AI 对接, 全只读)
 lr run help / lr crontab help     # 单命令用法 (positional help 拦截, exit=0 无副作用)
 ```
 

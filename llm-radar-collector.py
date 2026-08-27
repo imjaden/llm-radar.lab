@@ -44,6 +44,7 @@ PROJECT_ROOT = Path(__file__).resolve().parent
 DATA_DIR = PROJECT_ROOT / 'data'
 SNAPSHOT_PATH = DATA_DIR / 'snapshot.json'
 FETCH_CACHE_PATH = DATA_DIR / 'fetch-cache.json'
+SKILLS_DIR = PROJECT_ROOT / 'skills'
 
 # ===== Status 阈值 (lr status checkpoint 协议) =====
 # STALE_HOURS 对齐 scripts/llm-radar-health.py 语义 (7h); CRITICAL_HOURS 独立常量 (48, 非 STALE*7 近似)
@@ -2174,6 +2175,8 @@ def print_grouped_help():
     print('【其他】')
     print('  help')
     print('          显示本帮助')
+    print('  prompt')
+    print('          列出可用技能（AI 对接，llm-radar prompt <name> 输出全文）')
     print('  <cmd> help')
     print('          各子指令帮助（fetch/run/commit/crontab，禁止当参数执行）')
     print()
@@ -2201,6 +2204,123 @@ def _silent_collector():
         sys.stdout = old
 
 
+def _cmd_prompt(args):
+    """llm-radar prompt — 输出 skills/ 使用说明 (AI 对接, 参考 hs _cmd_prompt)。
+
+    行为矩阵 (D3 1C): 无参列表 / <name> 全文 / --brief / --json 信封 /
+    不存在报错+可用列表+exit 1 / --json 错误信封 / 目录缺失空 报错 exit 1。
+    """
+    json_mode = '--json' in args
+    brief = '--brief' in args
+    skill_name = next((a for a in args if not a.startswith('-')), None)
+
+    if not SKILLS_DIR.is_dir():
+        if json_mode:
+            print(json.dumps({'status': 'error', 'data': None,
+                              'error': 'skills/ 目录不存在'}, ensure_ascii=False))
+        else:
+            print('❌ skills/ 目录不存在', file=sys.stderr)
+        sys.exit(1)
+
+    def _skill_desc(smd):
+        try:
+            for _line in open(smd, encoding='utf-8'):
+                if _line.startswith('description:'):
+                    return _line.split(':', 1)[1].strip()
+        except Exception:
+            pass
+        return ''
+
+    skills = []
+    for d in sorted(SKILLS_DIR.iterdir()):
+        if d.is_dir():
+            smd = d / 'SKILL.md'
+            if smd.exists():
+                skills.append({'name': d.name, 'path': smd, 'dir': d})
+
+    if not skills:
+        if json_mode:
+            print(json.dumps({'status': 'error', 'data': None,
+                              'error': '无可用 skill'}, ensure_ascii=False))
+        else:
+            print('❌ 无可用 skill', file=sys.stderr)
+        sys.exit(1)
+
+    # 无参: 列出所有
+    if not skill_name:
+        if json_mode:
+            print(json.dumps({'status': 'ok', 'error': '', 'data': [
+                {'name': s['name'],
+                 'description': _skill_desc(s['path']),
+                 'references': [r.name for r in s['dir'].glob('references/*.md')]}
+                for s in skills]}, ensure_ascii=False, indent=2))
+            return
+        print('可用 skills:\n')
+        for s in skills:
+            desc = _skill_desc(s['path'])
+            refs = [r.name for r in s['dir'].glob('references/*.md')]
+            print(f"  {s['name']}")
+            if desc:
+                print(f"    {desc}")
+            if refs:
+                print(f"    references: {', '.join(refs)}")
+            print(f"    用法: llm-radar prompt {s['name']}")
+            print()
+        return
+
+    # 带参: 查找 skill
+    target = next((s for s in skills if s['name'] == skill_name), None)
+    if not target:
+        if json_mode:
+            print(json.dumps({'status': 'error', 'data': None,
+                              'error': f"skill '{skill_name}' 不存在"},
+                             ensure_ascii=False, indent=2))
+            sys.exit(1)
+        print(f"❌ skill '{skill_name}' 不存在", file=sys.stderr)
+        print(f"可用: {', '.join(s['name'] for s in skills)}")
+        sys.exit(1)
+
+    content_text = target['path'].read_text(encoding='utf-8')
+
+    if json_mode:
+        refs = sorted(target['dir'].glob('references/*.md'))
+        print(json.dumps({'status': 'ok', 'error': '', 'data': {
+            'name': target['name'],
+            'content': content_text,
+            'references': {r.stem: r.read_text(encoding='utf-8') for r in refs},
+        }}, ensure_ascii=False, indent=2))
+        return
+
+    if brief:
+        lines = content_text.split('\n')
+        desc = next((l.split(':', 1)[1].strip() for l in lines
+                     if l.startswith('description:')), '')
+        headings = [re.sub(r'^#{2,3}\s+', '', l) for l in lines
+                    if re.match(r'^#{2,3} ', l)]
+        refs = [r.name for r in target['dir'].glob('references/*.md')]
+        if desc:
+            print(desc)
+            print()
+        if headings:
+            print('章节:')
+            for h in headings:
+                print(f"  {h}")
+            print()
+        if refs:
+            print(f"references: {', '.join(refs)}")
+        return
+
+    # 全文
+    print(content_text)
+    refs = sorted(target['dir'].glob('references/*.md'))
+    if refs:
+        print('\n---\n')
+        for r in refs:
+            print(f'## {r.stem}')
+            print(r.read_text(encoding='utf-8'))
+            print()
+
+
 def main():
     """主函数"""
     if len(sys.argv) < 2:
@@ -2221,6 +2341,11 @@ def main():
     # help 无需实例化 collector (避免构造期 API key 日志噪音)
     if command == 'help':
         print_grouped_help()
+        sys.exit(0)
+
+    # prompt 只读供给 skills/ (AI 对接; 与 help 同先例, 不实例化 collector, 无 API key 日志)
+    if command == 'prompt':
+        _cmd_prompt(args)
         sys.exit(0)
 
     # status 是只读查询: 抑制构造期日志, 保持输出纯净 (--json 纯 JSON / 文本单行摘要)
