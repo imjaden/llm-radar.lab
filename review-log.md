@@ -859,3 +859,35 @@
 - 测试基线: `pytest tests/test_html.py -m "not selenium"` = 27 passed / 2 deselected; 全量非 selenium/cli = 215 → +1 = 216, 与设计 §4 "预期 216+" 一致。
 - git: HEAD=75826f2 (design v1.0); 工作区仅 index.html (按钮图标化 3+/3-); 分支 14 ahead/3 behind 为既有分叉, 与本评审无关。
 - 未 commit / 未 push (1A 约束); 本评审仅新增报告 + review-log 追加 + .review-level.yaml 追加。
+
+## 2026-08-27 — 拷贝降级修复+按钮图标化 实现审计 (llm-radar-CL003)
+
+- **review者**: ops/llm-radar-copy-fix-impl-audit (hermes-1.2.0)
+- **范围**: 实现 commit 0013b84 (feat@llm-radar: X弹框按钮图标化+拷贝降级修复) — 设计 D1-D5 + 评审验收清单 3 项核心变更 + RIG-001 断言规格落地核验
+- **Tracking**: 验收 1-8 ✅ 全落地; RIG-001 ✅ 断言规格落实 (区域截取+正则双形式+禁裸子串); IMPL-OBS-1~6 🟢 观察; findings_open 0
+- **状态**: ✅ PASS — 100/100 (A)
+- **报告**: documents/reviews/llm-radar-copy-fix-impl-audit-v1.0-20260827.md
+
+### 验收核验
+
+| # | 验收项 | 结果 | 证据 |
+|:--|:-------|:----:|:-----|
+| 1 | D1 降级链 — clipboard 防御 (&& / ?.) | ✅ | index:1149 `if (navigator.clipboard && navigator.clipboard.writeText)` — undefined 短路不再抛 TypeError (根因修复) |
+| 2 | D1 降级链 — promise catch → fallback | ✅ | index:1150 `.catch(() => feedback(copyTextFallback(text)))` |
+| 3 | D1 降级链 — API 不可用分支 | ✅ | index:1151-1153 else → `feedback(copyTextFallback(text))`; 三分支完整 |
+| 4 | D1 copyTextFallback (textarea + execCommand boolean + finally 移除; SEC-1) | ✅ | index:1157-1172: value/setAttribute 赋值 0 innerHTML; try { select; return execCommand('copy') } catch false; finally removeChild |
+| 5 | D2 B2 — orig='📋' + 1500/2000ms 复原; 无残留 | ✅ | index:1143 orig='📋'; :1145-1148 feedback(ok) 1500/2000ms; grep '📋 拷贝' index.html = 0 |
+| 6 | D3 B3 — 三按钮 title + 纯图标保留 | ✅ | index:306-308 title 打开原文/作者主页/拷贝推广内容; 🔗/👤/📋 无文字 (用户微调已入库未还原) |
+| 7 | D4 D1 测试 — TestCopyTweetFallback 4 用例 (RIG-001) | ✅ | test_html.py:159-200: _copy_region 截取至 spNav 前含 copyTextFallback; 防御断言正则 `navigator\.clipboard(?:\?\.|\s*&&)\s*navigator\.clipboard\.writeText`; execCommand 断言; orig 正+负断言; 三 title; 无全文件裸 writeText 子串 |
+| 8 | 改动面最小化 | ✅ | git show --stat = index.html + tests/test_html.py 2 文件 (78+/12-); 数据/CI/collector 0 改动 |
+
+### 数据验证要点
+
+- 独立复跑全量: `python3 -m pytest tests/ -m "not selenium" --ignore=tests/test_cli.py --ignore=tests/test_selenium.py -q` → **219 passed, 2 deselected** (与预期 219 一致); TestCopyTweetFallback → **4 passed**。
+- 断言真实性推演: 防御正则要求 clipboard 与 writeText 间有 `&&`/`?.`, ago.onclick (:1230) 裸 writeText 无法满足 → 测试真实防护 (RIG-001 假绿风险排除); execCommand('copy') 仅存在于 copyTextFallback → 区域截取含 fallback 由该用例独立证明。
+- clipboard 调用面: 仅 2 处 — :1149-1150 (copyTweet 已防御) + :1230 (ago.onclick, localhost 专用 secure context, 设计范围外, 评审 O-1 已知)。
+- '📋 拷贝' 残留: index.html 0 命中; tests/ 2 命中均为负断言本身 (docstring + `not in region`)。
+- 用户微调保留: 0013b84 diff 按钮行 = 纯图标 + title 共存, 与设计 §3.1 逐字一致。
+- IMPL-OBS 🟢: (1) fallback 用 top:-9999px+readonly 替代设计 opacity:0 — 功能等价更稳; (2) feedback() 合并 done/fail 闭包 — 语义一致更精简; (3) 评审 O-3 (iOS setSelectionRange) 未补 — 非验收项; (4) ago.onclick 裸 writeText 未动 — 范围外; (5) 区域截取边界依赖函数位置, assert message 已注明; (6) orig 负断言锁定 B2 核心。
+- 测试污染精确还原: timestamp.json / overview.json / data/snapshot.json git checkout 指定 3 文件, 哈希与基线逐字节一致, git status clean。
+- 未 commit / 未 push (1A 约束); 本审计仅新增报告 + review-log 追加 + .review-level.yaml 追加。
