@@ -251,7 +251,7 @@ review_history:
     score: 95
     findings_total: 1
     findings_open: 0
-    tracking: llm-radar-CL001 设计 v1.1 (adf9b2a) — D1~D5 与两轮确认串 (A1 B1 C2 D1 E1 + A1 B1 C1 D1) 完全对应; RIG-1 🟡 版本命名 (dev 随 commit 落地); OBS-1~4 🟢 观察
+    tracking: LLM-RADAR-CL001 设计 v1.1 (adf9b2a) — D1~D5 与两轮确认串 (A1 B1 C2 D1 E1 + A1 B1 C1 D1) 完全对应; RIG-1 🟡 版本命名 (dev 随 commit 落地); OBS-1~4 🟢 观察
     report: documents/reviews/llm-radar-x-preview-review-v1.0-20260827.md
   - date: 2026-08-27
     reviewer: Security Reviewer (IRIS)
@@ -260,7 +260,7 @@ review_history:
     score: 100
     findings_total: 0
     findings_open: 0
-    tracking: llm-radar-CL001 实现审计 (eea7482) — 验收清单 7 项全 ✅; RIG-1 ✅ 落地; OBS-1 ✅ 闭环; IMPL-OBS-1~3 🟢 观察; 测试 306 项独立复跑全绿
+    tracking: LLM-RADAR-CL001 实现审计 (eea7482) — 验收清单 7 项全 ✅; RIG-1 ✅ 落地; OBS-1 ✅ 闭环; IMPL-OBS-1~3 🟢 观察; 测试 306 项独立复跑全绿
     report: documents/reviews/llm-radar-x-preview-impl-audit-v1.0-20260827.md
   - date: 2026-08-27
     reviewer: Security Reviewer (IRIS)
@@ -269,7 +269,7 @@ review_history:
     score: 80
     findings_total: 4
     findings_open: 4
-    tracking: llm-radar-CL002 设计评审 v1.0 (138f62d) — RIG-1~4 🟡 待修 (?t= 枚举/D4 失效条件/写盘点/测试断言); O-1~O-4 🟢 观察; 修复后 bump v1.1 重审
+    tracking: LLM-RADAR-CL002 设计评审 v1.0 (138f62d) — RIG-1~4 🟡 待修 (?t= 枚举/D4 失效条件/写盘点/测试断言); O-1~O-4 🟢 观察; 修复后 bump v1.1 重审
     report: documents/reviews/llm-radar-perf-optimize-review-v1.0-20260827.md
   - date: 2026-08-27
     reviewer: Security Reviewer (IRIS)
@@ -278,7 +278,7 @@ review_history:
     score: 95
     findings_total: 1
     findings_open: 0
-    tracking: llm-radar-CL002 设计复审 v1.1 (4c98e52) — RIG-1~4 ✅ 全修; O-1/O-4 ✅ 落地; N1 🟡 (§6 冒烟 grep .text-cobalt-500 类不存在) 并入 impl 验收清单; N2/N3 🟢; findings_open 0
+    tracking: LLM-RADAR-CL002 设计复审 v1.1 (4c98e52) — RIG-1~4 ✅ 全修; O-1/O-4 ✅ 落地; N1 🟡 (§6 冒烟 grep .text-cobalt-500 类不存在) 并入 impl 验收清单; N2/N3 🟢; findings_open 0
     report: documents/reviews/llm-radar-perf-optimize-rereview-v1.1-20260827.md
   - date: 2026-08-27
     reviewer: Security Reviewer (IRIS)
@@ -287,7 +287,7 @@ review_history:
     score: 100
     findings_total: 0
     findings_open: 0
-    tracking: llm-radar-CL002 实现审计 (8f008e7) — 验收清单 5 项 + N1~N3 全 ✅; IMPL-OBS-1~6 🟢 观察; 测试 215/4 独立复跑全绿; D3 体积 -20.2% 实测与估算一致
+    tracking: LLM-RADAR-CL002 实现审计 (8f008e7) — 验收清单 5 项 + N1~N3 全 ✅; IMPL-OBS-1~6 🟢 观察; 测试 215/4 独立复跑全绿; D3 体积 -20.2% 实测与估算一致
     report: documents/reviews/llm-radar-perf-optimize-impl-audit-v1.0-20260827.md
   - date: 2026-08-27
     reviewer: Security Reviewer (IRIS)
@@ -296,7 +296,7 @@ review_history:
     score: 95
     findings_total: 1
     findings_open: 0
-    tracking: llm-radar-CL003 设计 v1.0 (75826f2) — D1~D5 与确认串 (A1 B2+B3 C1 D1 + 残余 1A 2A) 完全对应; RIG-001 🟡 (test_html 断言规格防假阳性) 并入实现验收清单; O-1~O-4 🟢 观察
+    tracking: LLM-RADAR-CL003 设计 v1.0 (75826f2) — D1~D5 与确认串 (A1 B2+B3 C1 D1 + 残余 1A 2A) 完全对应; RIG-001 🟡 (test_html 断言规格防假阳性) 并入实现验收清单; O-1~O-4 🟢 观察
     report: documents/reviews/llm-radar-copy-fix-review-v1.0-20260827.md
   - date: 2026-08-27
     reviewer: Security Reviewer (IRIS)
@@ -305,5 +305,5 @@ review_history:
     score: 100
     findings_total: 0
     findings_open: 0
-    tracking: llm-radar-CL003 实现审计 (0013b84) — 验收 8 项全 ✅; RIG-001 ✅ 断言规格落实 (区域截取+正则双形式+禁裸子串); IMPL-OBS-1~6 🟢 观察; 测试 219/4 独立复跑全绿
+    tracking: LLM-RADAR-CL003 实现审计 (0013b84) — 验收 8 项全 ✅; RIG-001 ✅ 断言规格落实 (区域截取+正则双形式+禁裸子串); IMPL-OBS-1~6 🟢 观察; 测试 219/4 独立复跑全绿
     report: documents/reviews/llm-radar-copy-fix-impl-audit-v1.0-20260827.md

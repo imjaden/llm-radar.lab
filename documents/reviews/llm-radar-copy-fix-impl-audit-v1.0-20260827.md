@@ -1,10 +1,10 @@
-# X弹框按钮图标化+拷贝降级修复 实现审计报告 (llm-radar-CL003)
+# X弹框按钮图标化+拷贝降级修复 实现审计报告 (LLM-RADAR-CL003)
 
 > 日期: 2026-08-27 (审计执行日)
 > 项目路径: ~/CodeSpace/llm-radar.lab
 > 设计文档: documents/solutions/llm-radar-copy-fix-design-v1.0-20260827.md (commit 75826f2)
 > 设计评审: documents/reviews/llm-radar-copy-fix-review-v1.0-20260827.md (PASS 95/A, RIG-001 并入实现验收清单)
-> 实现 commit: 0013b84 feat@llm-radar: X弹框按钮图标化+拷贝降级修复 (llm-radar-CL003)
+> 实现 commit: 0013b84 feat@llm-radar: X弹框按钮图标化+拷贝降级修复 (LLM-RADAR-CL003)
 > 审计者: ops/llm-radar-copy-fix-impl-audit (hermes-1.2.0)
 > 审计方法: 1A 协议第 5 步独立核验 — 不采信 dev 自报, 全部证据来自 git diff / 源码读取 / 独立复跑
 > 约束: 只读项目文件 (除报告与 review-log/.review-level 追加); 未 commit / 未 push

@@ -1,11 +1,11 @@
-# X热点弹框体验+CI修复 实现审计 (llm-radar-CL001)
+# X热点弹框体验+CI修复 实现审计 (LLM-RADAR-CL001)
 
 > 日期: 2026-08-27 (审计执行日)
 > 项目路径: ~/CodeSpace/llm-radar.lab
 > 设计文档: documents/solutions/llm-radar-x-preview-design-v1.1-20260827.md (commit adf9b2a)
 > 设计评审: documents/reviews/llm-radar-x-preview-review-v1.0-20260827.md (PASS 95/100 A)
-> 实现 commit: eea7482 feat@llm-radar: X热点弹框体验+CI修复 (llm-radar-CL001)
-> 评审记录 commit: d930df7 docs@review: x-preview 设计 v1.1 评审记录 (llm-radar-CL001, PASS 95/A)
+> 实现 commit: eea7482 feat@llm-radar: X热点弹框体验+CI修复 (LLM-RADAR-CL001)
+> 评审记录 commit: d930df7 docs@review: x-preview 设计 v1.1 评审记录 (LLM-RADAR-CL001, PASS 95/A)
 > 审计者: ops/llm-radar-x-preview-impl-audit (hermes-1.2.0)
 > 审计维度: 实现验收清单 7 项 + 验证清单 5 项, 独立核验, 不采信 dev 自报
 

@@ -16,7 +16,7 @@ model: deepseek-v4-flash
 > 探讨确认(2026-08-27): 决策 D1 A1 / D2 B1+E1 / D3 C2 / D4 D1 / D5 锁定。
 > 用户确认串: "A1 B1 C2 D1 E1" + 追加 GitHub Action 报错分析请求;二轮澄清
 > "CI 只测部分功能,浏览器相关仅本地" 确认串: "A1 B1 C1 D1"。
-> 闭环: llm-radar-CL001 (新式编号启用首例, draft 绑定即永久启用)。
+> 闭环: LLM-RADAR-CL001 (新式编号启用首例, draft 绑定即永久启用)。
 
 ## 修订记录
 

@@ -3,7 +3,7 @@
 > 日期: 2026-08-27 (评审执行日)
 > 项目路径: /Users/jadenli/CodeSpace/llm-radar.lab
 > 设计文档: documents/solutions/llm-radar-x-preview-design-v1.1-20260827.md (commit adf9b2a)
-> 决策: llm-radar-CL001 — D1 A1 / D2 B1+E1 / D3 C2 / D4 D1 / D5 (二轮 B1+A1); 二轮 A1 B1 C1 D1
+> 决策: LLM-RADAR-CL001 — D1 A1 / D2 B1+E1 / D3 C2 / D4 D1 / D5 (二轮 B1+A1); 二轮 A1 B1 C1 D1
 > 用户确认串: 一轮 "A1 B1 C2 D1 E1" + 二轮 "A1 B1 C1 D1"
 > review者: ops/llm-radar-x-preview-review (hermes-1.2.0)
 > review维度: 合理性 / 严格性 / 安全性 / 继承一致性 (3D + 100-base, 用户阈值 PASS ≥85/A)
@@ -87,7 +87,7 @@
   commit, 205 行一步到位)。
 - **影响**: 追踪链断裂 — 未来引用者按文件名会误读为 v1.0 内容; 本次 review prompt 也需人工
   标注 "(v1.1)" 才能对齐。
-- **修复 (✅ 已随 llm-radar-CL001 dev 首 commit dd6ec52 落地)**: 设计文件已 git mv 至
+- **修复 (✅ 已随 LLM-RADAR-CL001 dev 首 commit dd6ec52 落地)**: 设计文件已 git mv 至
   `documents/solutions/llm-radar-x-preview-design-v1.1-20260827.md`,frontmatter `version: 1.1`,
   本报告设计文档路径引用已同步 v1.1。
 

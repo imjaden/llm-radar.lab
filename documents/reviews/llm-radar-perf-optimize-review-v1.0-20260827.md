@@ -3,7 +3,7 @@
 > 日期: 2026-08-27 (评审执行日)
 > 项目路径: ~/CodeSpace/llm-radar.lab
 > 设计文档: documents/solutions/llm-radar-perf-optimize-design-v1.0-20260827.md (commit 138f62d)
-> 决策: llm-radar-CL002 — D1 A1+2A / D2 B1+3A / D3 C1+4A / D4 D1+5A; 编号 1A=llm-radar-CL002
+> 决策: LLM-RADAR-CL002 — D1 A1+2A / D2 B1+3A / D3 C1+4A / D4 D1+5A; 编号 1A=LLM-RADAR-CL002
 > 用户确认串: "A1+B1+C1+D1" + "1A 2A 3A 4A 5A"
 > review者: ops/llm-radar-perf-optimize-review (hermes-1.2.0)
 > review维度: 合理性 / 严格性 / 安全性 (3D + 100-base, 用户阈值 PASS ≥85/A)

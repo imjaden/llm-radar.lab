@@ -1,5 +1,5 @@
 /**
- * Tailwind CSS 预编译配置 (llm-radar-CL002 D1/A1)
+ * Tailwind CSS 预编译配置 (LLM-RADAR-CL002 D1/A1)
  * 提取自 index.html 内联 config: colors.cobalt 400/500 + accent 400/500。
  * 产物 static/tailwind.css 入库; 新增 Tailwind 类后必须重跑构建并提交产物 (AGENTS.md O-2)。
  */

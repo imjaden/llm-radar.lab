@@ -11,11 +11,11 @@ provider: deepseek
 model: deepseek-v4-flash
 ---
 
-# 页面加载速度与用户体验优化设计 v1.1 (llm-radar-CL002)
+# 页面加载速度与用户体验优化设计 v1.1 (LLM-RADAR-CL002)
 
 > 探讨确认(2026-08-27): 决策 D1 A1+B1+C1+D1; 待决策 5 项确认 1A 2A 3A 4A 5A。
 > 用户确认串: "A1+B1+C1+D1" + "1A 2A 3A 4A 5A"。
-> 闭环: llm-radar-CL002 (新式编号, 续 CL001)。
+> 闭环: LLM-RADAR-CL002 (新式编号, 续 CL001)。
 
 ## 修订记录
 

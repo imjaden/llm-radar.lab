@@ -11,11 +11,11 @@ provider: deepseek
 model: deepseek-v4-flash
 ---
 
-# X弹框按钮图标化与拷贝降级修复设计 v1.0 (llm-radar-CL003)
+# X弹框按钮图标化与拷贝降级修复设计 v1.0 (LLM-RADAR-CL003)
 
 > 探讨确认(2026-08-27): A1 B2+B3 C1 D1 + 残余 1A 2A。
 > 用户确认串: "A1 B2+B3 C1 D1" + "1A 2A"。
-> 闭环: llm-radar-CL003 (新式编号, 续 CL002)。
+> 闭环: LLM-RADAR-CL003 (新式编号, 续 CL002)。
 
 ## 修订记录
 

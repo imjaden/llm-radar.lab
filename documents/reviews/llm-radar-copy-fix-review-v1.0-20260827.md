@@ -3,7 +3,7 @@
 > 日期: 2026-08-27 (评审执行日)
 > 项目路径: ~/CodeSpace/llm-radar.lab
 > 设计文档: documents/solutions/llm-radar-copy-fix-design-v1.0-20260827.md (commit 75826f2)
-> 决策: llm-radar-CL003 — D1 A1 / D2 B2 / D3 B3 / D4 C1+D1 / D5 2A; 残余 1A=精简设计+完整管线
+> 决策: LLM-RADAR-CL003 — D1 A1 / D2 B2 / D3 B3 / D4 C1+D1 / D5 2A; 残余 1A=精简设计+完整管线
 > 用户确认串: "A1 B2+B3 C1 D1" + "残余 1A 2A"
 > review者: ops/llm-radar-copy-fix-review (hermes-1.2.0)
 > review维度: 合理性 / 严格性 / 安全性 (3D + 100-base, 用户阈值 PASS ≥85/A)

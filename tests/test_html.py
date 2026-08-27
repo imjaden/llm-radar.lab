@@ -157,7 +157,7 @@ class TestXHotspotFrontend:
 
 
 class TestCopyTweetFallback:
-    """拷贝降级链 (llm-radar-CL003, RIG-001): copyTweet 段函数体级断言。
+    """拷贝降级链 (LLM-RADAR-CL003, RIG-001): copyTweet 段函数体级断言。
 
     必须 scope 到 copyTweet 区域: 全文件裸匹配 navigator.clipboard.writeText
     会被 ago.onclick (index.html 尾部) 的裸 writeText 假绿 (RIG-001 修正)。
@@ -400,7 +400,7 @@ class TestSeleniumPageLoad:
 
 
 class TestPerfOptimize:
-    """页面加载优化 (llm-radar-CL002): D1 预编译 CSS / D2 条件缓存 / D4 渲染缓存 (防回归)。
+    """页面加载优化 (LLM-RADAR-CL002): D1 预编译 CSS / D2 条件缓存 / D4 渲染缓存 (防回归)。
 
     - (a) index.html/changelog.html 无 cdn.tailwindcss.com 引用 (运行时 JIT 编译已移除)
     - (b) 存在 <link rel="stylesheet" href="static/tailwind.css"> (预编译产物入库)

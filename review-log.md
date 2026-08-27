@@ -679,7 +679,7 @@
 
 ---
 
-## 2026-08-27 — X热点弹框体验+CI修复 设计 v1.1 评审 (llm-radar-CL001)
+## 2026-08-27 — X热点弹框体验+CI修复 设计 v1.1 评审 (LLM-RADAR-CL001)
 
 - **review者**: ops/llm-radar-x-preview-review (hermes-1.2.0)
 - **范围**: 设计 v1.1 (adf9b2a docs@llm-radar) — 弹框居中720px / 三图标按钮行 / 完整拷贝素材 / sp-title 序号+sp-meta 完整时间 / CI pyyaml 补依赖+排除浏览器测试
@@ -699,7 +699,7 @@
 
 ---
 
-## 2026-08-27 — X热点弹框体验+CI修复 实现审计 (llm-radar-CL001)
+## 2026-08-27 — X热点弹框体验+CI修复 实现审计 (LLM-RADAR-CL001)
 
 - **review者**: ops/llm-radar-x-preview-impl-audit (hermes-1.2.0)
 - **范围**: 实现 eea7482 (feat@llm-radar) — 对照评审报告「实现验收清单」7 项 + 验证清单 5 项, 独立核验
@@ -719,7 +719,7 @@
 
 ---
 
-## 2026-08-27 — 页面加载优化 设计 v1.0 评审 (llm-radar-CL002)
+## 2026-08-27 — 页面加载优化 设计 v1.0 评审 (LLM-RADAR-CL002)
 
 - **review者**: ops/llm-radar-perf-optimize-review (hermes-1.2.0)
 - **范围**: 设计 v1.0 (138f62d docs@llm-radar) — 4 项优化决策 (A1 Tailwind 预编译 / B1 条件缓存 / C1 snapshot compact / D1 渲染缓存) + 编号 1A=CL002 逐项核验
@@ -755,7 +755,7 @@
 
 ---
 
-## 2026-08-27 — 页面加载优化 设计 v1.1 复审 (llm-radar-CL002)
+## 2026-08-27 — 页面加载优化 设计 v1.1 复审 (LLM-RADAR-CL002)
 
 - **review者**: ops/llm-radar-perf-optimize-rereview (hermes-1.2.0)
 - **范围**: 设计 v1.1 (4c98e52 docs@llm-radar) — 复审 v1.0 的 4 🟡 (RIG-1~4) + 2 观察 (O-1/O-4) 修复核验 + 新问题扫描
@@ -795,7 +795,7 @@
 
 ---
 
-## 2026-08-27 — 页面加载优化 实现审计 (llm-radar-CL002)
+## 2026-08-27 — 页面加载优化 实现审计 (LLM-RADAR-CL002)
 
 - **review者**: ops/llm-radar-perf-optimize-impl-audit (hermes-1.2.0)
 - **范围**: 实现 commit 8f008e7 (feat@llm-radar: 页面加载优化 A1+B1+C1+D1) — 复审报告实现验收清单 5 项 + N1~N3 修正落地核验
@@ -828,7 +828,7 @@
 
 ---
 
-## 2026-08-27 — 拷贝降级修复+按钮图标化 设计 v1.0 评审 (llm-radar-CL003)
+## 2026-08-27 — 拷贝降级修复+按钮图标化 设计 v1.0 评审 (LLM-RADAR-CL003)
 
 - **review者**: ops/llm-radar-copy-fix-review (hermes-1.2.0)
 - **范围**: 设计 v1.0 (75826f2 docs@llm-radar) — 按钮纯图标化 (用户手工微调, 工作区 M index.html) + copyTweet 拷贝降级链 (clipboard 防御 → execCommand 兜底, 返回值反馈) + 测试
@@ -860,7 +860,7 @@
 - git: HEAD=75826f2 (design v1.0); 工作区仅 index.html (按钮图标化 3+/3-); 分支 14 ahead/3 behind 为既有分叉, 与本评审无关。
 - 未 commit / 未 push (1A 约束); 本评审仅新增报告 + review-log 追加 + .review-level.yaml 追加。
 
-## 2026-08-27 — 拷贝降级修复+按钮图标化 实现审计 (llm-radar-CL003)
+## 2026-08-27 — 拷贝降级修复+按钮图标化 实现审计 (LLM-RADAR-CL003)
 
 - **review者**: ops/llm-radar-copy-fix-impl-audit (hermes-1.2.0)
 - **范围**: 实现 commit 0013b84 (feat@llm-radar: X弹框按钮图标化+拷贝降级修复) — 设计 D1-D5 + 评审验收清单 3 项核心变更 + RIG-001 断言规格落地核验

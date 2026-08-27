@@ -1,10 +1,10 @@
-# 页面加载优化 实现审计报告 (llm-radar-CL002)
+# 页面加载优化 实现审计报告 (LLM-RADAR-CL002)
 
 > 日期: 2026-08-27 (审计执行日)
 > 项目路径: ~/CodeSpace/llm-radar.lab
 > 设计文档: documents/solutions/llm-radar-perf-optimize-design-v1.1-20260827.md (commit 4c98e52)
 > 设计复审: documents/reviews/llm-radar-perf-optimize-rereview-v1.1-20260827.md (PASS 95/A)
-> 实现 commit: 8f008e7 feat@llm-radar: 页面加载优化 A1+B1+C1+D1 (llm-radar-CL002)
+> 实现 commit: 8f008e7 feat@llm-radar: 页面加载优化 A1+B1+C1+D1 (LLM-RADAR-CL002)
 > 审计者: ops/llm-radar-perf-optimize-impl-audit (hermes-1.2.0)
 > 审计方法: 1A 协议第 5 步独立核验 — 不采信 dev 自报, 全部证据来自 git diff / 源码读取 / 独立复跑
 > 约束: 只读项目文件 (除报告与 review-log/.review-level 追加); 未 commit / 未 push

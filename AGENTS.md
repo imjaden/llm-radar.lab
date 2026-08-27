@@ -107,14 +107,14 @@ run() ordered as:
 - Tab counts update in real-time when filters change (including `tc-hotspots` / `tc-xhotspots`).
 - Responsive: data sources and filter chips auto-hide below 1200px (`hide-1200`).
 - Auto-refresh: 10 min interval, saves tab/filter/sort/scroll to localStorage.
-- Cache: 页面级 `?t` 重定向保留 (页刷新机制, index 337-345 / changelog 12-15); 数据 fetch 用 `{cache:'no-cache'}` 条件缓存 (llm-radar-CL002 D2), ETag/Last-Modified 命中 → 304 零传输。
+- Cache: 页面级 `?t` 重定向保留 (页刷新机制, index 337-345 / changelog 12-15); 数据 fetch 用 `{cache:'no-cache'}` 条件缓存 (LLM-RADAR-CL002 D2), ETag/Last-Modified 命中 → 304 零传输。
 - Cross-tab linking: click entity chips to jump to another tab with highlight.
 - Search icon (🔍) on entity names and event URLs: `cn.bing.com/search?q=keyword+site%3Adomain`.
 - Hotspot FAB: shows events from last 3 hours.
 - Click ago-label on localhost → copies `run` command; on production → navigates to `changelog.html`.
 - Version: v1.5 in footer.
 
-### 样式构建 (Tailwind 预编译, llm-radar-CL002 D1/A1)
+### 样式构建 (Tailwind 预编译, LLM-RADAR-CL002 D1/A1)
 
 - 运行时不再引 cdn.tailwindcss.com (CDN 运行时 JIT 编译已移除); 样式来自入库产物 `static/tailwind.css`。
 - 自定义色 (colors.cobalt/accent) 定义在 `tailwind.config.js` (提取自原内联 config); 页面未用类 (如 cobalt-300/500) 不生成, 与 CDN 行为一致。
