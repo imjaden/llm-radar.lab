@@ -303,9 +303,9 @@
       <div class="sp-metrics" id="sp-metrics"></div>
       <div class="sp-images" id="sp-images"></div>
       <div class="sp-actions">
-        <a class="sp-act" id="sp-act-link" href="#" target="_blank" rel="noopener noreferrer">🔗 打开原文</a>
-        <a class="sp-act" id="sp-act-profile" href="#" target="_blank" rel="noopener noreferrer">👤 作者主页</a>
-        <button class="sp-act" id="sp-act-copy" type="button">📋 拷贝</button>
+        <a class="sp-act" id="sp-act-link" href="#" target="_blank" rel="noopener noreferrer" title="打开原文">🔗</a>
+        <a class="sp-act" id="sp-act-profile" href="#" target="_blank" rel="noopener noreferrer" title="作者主页">👤</a>
+        <button class="sp-act" id="sp-act-copy" type="button" title="拷贝推广内容">📋</button>
       </div>
     </div>
   </div>
@@ -1128,7 +1128,8 @@ function openSplitPreview(i) {
   document.addEventListener('keydown', onSplitKey);
 }
 
-// 拷贝推广素材 (D3 C2): 纯文本模板, textContent 安全 (SEC-1); 成功 "已拷贝 ✓" 1500ms 复原, 失败 "拷贝失败" 2s 复原 (OBS-1)
+// 拷贝推广素材 (CL003 D3 C2): 纯文本模板, textContent 安全 (SEC-1)
+// 降级链: clipboard.writeText → copyTextFallback(execCommand); 成功 "已拷贝 ✓" 1500ms 复原, 失败 "拷贝失败" 2s 复原 (D5/B2)
 function copyTweet(f) {
   const t = f.tweet, tg = f.target;
   const lines = [];
@@ -1139,14 +1140,35 @@ function copyTweet(f) {
   lines.push('浏览 ' + num(t.views) + ' · 回复 ' + num(t.replies) + ' · 转推 ' + num(t.retweets) + ' · 点赞 ' + num(t.likes));
   if (t.url) lines.push('原文: ' + t.url);
   const btn = document.getElementById('sp-act-copy');
-  const orig = '📋 拷贝';
-  navigator.clipboard.writeText(lines.join('\n')).then(() => {
-    btn.textContent = '已拷贝 ✓';
-    setTimeout(() => { btn.textContent = orig; }, 1500);
-  }).catch(() => {
-    btn.textContent = '拷贝失败';
-    setTimeout(() => { btn.textContent = orig; }, 2000);
-  });
+  const orig = '📋';
+  const text = lines.join('\n');
+  const feedback = (ok) => {
+    btn.textContent = ok ? '已拷贝 ✓' : '拷贝失败';
+    setTimeout(() => { btn.textContent = orig; }, ok ? 1500 : 2000);
+  };
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(() => feedback(true)).catch(() => feedback(copyTextFallback(text)));
+  } else {
+    feedback(copyTextFallback(text));
+  }
+}
+
+// 降级拷贝 (CL003 D5): textarea 临时节点 + execCommand('copy'), 返回 boolean (SEC-1 无 innerHTML, 结束移除节点)
+function copyTextFallback(text) {
+  const ta = document.createElement('textarea');
+  ta.value = text;
+  ta.setAttribute('readonly', '');
+  ta.style.position = 'fixed';
+  ta.style.top = '-9999px';
+  document.body.appendChild(ta);
+  try {
+    ta.select();
+    return document.execCommand('copy');
+  } catch (e) {
+    return false;
+  } finally {
+    document.body.removeChild(ta);
+  }
 }
 
 // nav 上一/下一条: 同人物内循环切换 (§5.3)

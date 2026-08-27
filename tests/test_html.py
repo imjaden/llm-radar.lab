@@ -156,6 +156,50 @@ class TestXHotspotFrontend:
         assert 'num(t.likes)' in js
 
 
+class TestCopyTweetFallback:
+    """拷贝降级链 (llm-radar-CL003, RIG-001): copyTweet 段函数体级断言。
+
+    必须 scope 到 copyTweet 区域: 全文件裸匹配 navigator.clipboard.writeText
+    会被 ago.onclick (index.html 尾部) 的裸 writeText 假绿 (RIG-001 修正)。
+    截取范围: function copyTweet 段至下一个函数 (spNav) 前, 含 copyTextFallback。
+    """
+
+    def _content(self):
+        return (PROJECT_ROOT / 'index.html').read_text()
+
+    def _copy_region(self):
+        """截取 function copyTweet 段至下一个函数声明前 (含 copyTextFallback)。"""
+        js = '\n'.join(re.findall(r"<script(?![^>]*src=)[^>]*>(.*?)</script>", self._content(), re.S))
+        m = re.search(r'function copyTweet[\s\S]*?(?=\nfunction spNav)', js)
+        assert m, 'copyTweet region not found (copyTextFallback 需位于 copyTweet 与 spNav 之间)'
+        return m.group(0)
+
+    def test_copy_clipboard_guard(self):
+        """(a) copyTweet 内 clipboard 防御: navigator.clipboard 判空后才调 writeText (兼容 && 与 ?.)"""
+        region = self._copy_region()
+        assert re.search(
+            r"navigator\.clipboard(?:\?\.|\s*&&)\s*navigator\.clipboard\.writeText", region
+        ), 'copyTweet 缺少 navigator.clipboard 防御 (非安全上下文裸 writeText 抛 TypeError)'
+
+    def test_copy_execcommand_fallback(self):
+        """(b) 降级存在: copyTweet 段 (含 copyTextFallback) 使用 execCommand('copy')"""
+        region = self._copy_region()
+        assert "execCommand('copy')" in region, 'copyTweet 段缺少 execCommand 降级'
+
+    def test_copy_orig_icon_restore(self):
+        """D2 B2: 反馈复原为纯图标 📋 (与按钮图标化一致, 不残留 '📋 拷贝')"""
+        region = self._copy_region()
+        assert "const orig = '📋'" in region
+        assert "const orig = '📋 拷贝'" not in region
+
+    def test_sp_action_button_titles(self):
+        """三按钮纯图标 + title 悬停提示 (D3 B3)"""
+        c = self._content()
+        assert 'title="打开原文"' in c
+        assert 'title="作者主页"' in c
+        assert 'title="拷贝推广内容"' in c
+
+
 class TestSearchFeature:
     """全站搜索 (D4 4B, SEC-1) + forward 渲染 (D2 2C) 存在性断言 (设计 §7.2)。
 
