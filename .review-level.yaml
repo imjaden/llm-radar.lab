@@ -289,3 +289,12 @@ review_history:
     findings_open: 0
     tracking: llm-radar-CL002 实现审计 (8f008e7) — 验收清单 5 项 + N1~N3 全 ✅; IMPL-OBS-1~6 🟢 观察; 测试 215/4 独立复跑全绿; D3 体积 -20.2% 实测与估算一致
     report: documents/reviews/llm-radar-perf-optimize-impl-audit-v1.0-20260827.md
+  - date: 2026-08-27
+    reviewer: Security Reviewer (IRIS)
+    review_level: L2
+    verdict: PASS
+    score: 95
+    findings_total: 1
+    findings_open: 0
+    tracking: llm-radar-CL003 设计 v1.0 (75826f2) — D1~D5 与确认串 (A1 B2+B3 C1 D1 + 残余 1A 2A) 完全对应; RIG-001 🟡 (test_html 断言规格防假阳性) 并入实现验收清单; O-1~O-4 🟢 观察
+    report: documents/reviews/llm-radar-copy-fix-review-v1.0-20260827.md

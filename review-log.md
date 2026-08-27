@@ -825,3 +825,37 @@
 - 测试污染精确还原: timestamp.json / overview.json / data/snapshot.json git checkout 指定 3 文件, 哈希与基线逐字节一致, git status clean。
 - IMPL-OBS 🟢: (1) loadTwitterData 失败路径也清缓存 (正向增强); (2) 产物 13.7KB 余量充足, 自定义色类全生成; (3) refreshData 失败不清缓存 (与设计一致, catch 静默为既有行为); (4) ?t= 断言与页面重定向 p.set('t') 无冲突; (5) TestPerfOptimize 计数断言精确; (6) RENDER_CACHE 内存面有界。
 - 未 commit / 未 push (1A 约束); 本审计仅新增报告 + review-log 追加 + .review-level.yaml 追加。
+
+---
+
+## 2026-08-27 — 拷贝降级修复+按钮图标化 设计 v1.0 评审 (llm-radar-CL003)
+
+- **review者**: ops/llm-radar-copy-fix-review (hermes-1.2.0)
+- **范围**: 设计 v1.0 (75826f2 docs@llm-radar) — 按钮纯图标化 (用户手工微调, 工作区 M index.html) + copyTweet 拷贝降级链 (clipboard 防御 → execCommand 兜底, 返回值反馈) + 测试
+- **Tracking**: RIG-001 🟡 (test_html 断言规格防假阳性) 并入实现验收清单; O-1~O-4 🟢 观察; findings_open 0
+- **状态**: ✅ PASS — 95/100 (A)
+- **报告**: documents/reviews/llm-radar-copy-fix-review-v1.0-20260827.md
+- **实现 prompt**: ✅ 已生成 (设计 PASS, 可进 dev)
+
+### 发现摘要
+
+| # | Severity | Title | Status |
+|---|----------|-------|--------|
+| RIG-001 | 🟡 | §3.3 测试断言规格防假阳性不足: 裸子串 `navigator.clipboard.writeText` 会被 index.html:1208 ago.onclick 既有裸调用满足 (修复前即绿, 零保护); D1 表 `?.` 与 §3.2 `&&` 双形式需正则兼容; 须 scope 到 copyTweet 函数体 | 并入实现验收清单 |
+
+### 3D 评分
+
+| 维度 | 评级 | 说明 |
+|:-----|:----:|:-----|
+| 合理性 | 🟢 | 决策 D1-D5 与确认串 (A1 B2+B3 C1 D1 + 残余 1A 2A) 完全对应; 图标化+title 补偿、降级链、反馈语义方向正确; 改动面最小 |
+| 严格性 | 🟡 | 降级链三分支 (API 缺失/promise 失败/返回值反馈) 完整; §3.3 断言规格有假阳性风险 (RIG-001) |
+| 安全性 | 🟢 | textarea 临时节点 + value/textContent 赋值, 无 innerHTML → 无注入面 (SEC-1 声明成立) |
+
+### 数据验证要点
+
+- grep tests/ + changelog.html: 📋/拷贝/copyTweet/sp-act 断言 0 命中 (仅 changelog.html:31 无关 h1) → 设计"无 '📋 拷贝' 文本断言依赖"声明属实。
+- 现状: index.html:1143 裸 `navigator.clipboard.writeText` — TypeError 发生在 promise catch 前, 与设计 bug 描述完全一致; :1208 ago.onclick 同款裸调用但仅 localhost (secure context) 触发, 不受影响 (O-1)。
+- `document.execCommand('copy')` 与 `navigator.clipboard && navigator.clipboard.writeText` 当前 index.html 均 0 命中 → 新断言 RED-前成立; 裸 `navigator.clipboard.writeText` 2 处 (1143/1208) → 全文件子串断言假阳性 (RIG-001)。
+- 测试基线: `pytest tests/test_html.py -m "not selenium"` = 27 passed / 2 deselected; 全量非 selenium/cli = 215 → +1 = 216, 与设计 §4 "预期 216+" 一致。
+- git: HEAD=75826f2 (design v1.0); 工作区仅 index.html (按钮图标化 3+/3-); 分支 14 ahead/3 behind 为既有分叉, 与本评审无关。
+- 未 commit / 未 push (1A 约束); 本评审仅新增报告 + review-log 追加 + .review-level.yaml 追加。
