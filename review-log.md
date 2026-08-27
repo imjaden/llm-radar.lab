@@ -792,3 +792,36 @@
 - read tests/test_html.py:144-148: :147 硬断言 `'data/twitter.json?t=' + Date.now()` 属实, §4 修法精确。
 - git: 4c98e52 design v1.1 修正 commit 为 HEAD (rename + 55+/30-), 与修正声明相符; 上轮三件产物 (报告/review-log/.review-level) 仍工作区未 commit, 本次追加不冲突。
 - 未 commit / 未 push (1A 约束); 本复审仅新增报告 + review-log 追加 + .review-level.yaml 追加。
+
+---
+
+## 2026-08-27 — 页面加载优化 实现审计 (llm-radar-CL002)
+
+- **review者**: ops/llm-radar-perf-optimize-impl-audit (hermes-1.2.0)
+- **范围**: 实现 commit 8f008e7 (feat@llm-radar: 页面加载优化 A1+B1+C1+D1) — 复审报告实现验收清单 5 项 + N1~N3 修正落地核验
+- **Tracking**: 验收 1-7 ✅ 全落地; N1~N3 ✅ 设计文档修正已提交; IMPL-OBS-1~6 🟢 观察; findings_open 0
+- **状态**: ✅ PASS — 100/100 (A)
+- **报告**: documents/reviews/llm-radar-perf-optimize-impl-audit-v1.0-20260827.md
+
+### 验收核验
+
+| # | 验收项 | 结果 | 证据 |
+|:--|:-------|:----:|:-----|
+| 1 | D1 样式预编译 (config/产物<30KB/CDN→link/CSP/内联style/关键类) | ✅ | tailwind.config.js cobalt/accent; static/tailwind.css 14,061B 入库; 双文件 :10 link; CSP script-src 移除 cdn; 内联 <style> 保留; .text-cobalt-400 + .max-w-\[1400px\] 命中, .text-cobalt-500 0 命中 (N1 预期) |
+| 2 | D2 条件缓存 (6 处 ?t= 删 + 页面重定向保留 + 10min 保留) | ✅ | grep ?t= 双文件 = 0; 6 处 fetch {cache:'no-cache'} 逐一读取 (index 445/1023/1233/1280 + changelog 157/166); 页面重定向 index 324-333 / changelog 11-16 完整; setInterval 10min (index:435) |
+| 3 | D3 snapshot compact (1279 唯一改) | ✅ | grep json.dump 9 处: 1279 indent=None; 327/674/1312/1353/1372/1700/2041 全 indent=2; 1343 overview 本就 compact; 1917 print |
+| 4 | D4 渲染缓存 (复合 key + 刷新置空 + 计数/搜索每轮) | ✅ | index:344-345 RENDER_CACHE/clearRenderCache; :735 复合 key (tab\|filterMode\|sourceFilter\|sortState); :446/:1027/:1031 三处置空; :739-746 计数/搜索每轮执行 |
+| 5 | 测试同步 (:147 断言 + TestPerfOptimize 4 用例) | ✅ | test_html.py:144-149 无 ?t= + no-cache + console.warn; TestPerfOptimize 4 用例独立复跑 4 passed |
+| 6 | AGENTS.md 构建命令 (O-2) | ✅ | AGENTS.md 107-124「样式构建」节: npx tailwindcss@3.4.17 命令 + 新增类重构建规则 |
+| 7 | N1/N2/N3 设计文档修正 | ✅ | 8f008e7 内设计文档: 枚举改 6 处 (N2); §6 冒烟改 .text-cobalt-400 并注明 cobalt-500 勿作目标 (N1); 观察项编号引用改文字 (N3) |
+
+### 数据验证要点
+
+- 独立复跑全量: `python3 -m pytest tests/ -m "not selenium" --ignore=tests/test_cli.py --ignore=tests/test_selenium.py -q` → **215 passed, 2 deselected** (与预期 215 一致); TestPerfOptimize → **4 passed**。
+- 冒烟: `grep cdn.tailwindcss.com index.html changelog.html` = 0; `ls -lh static/tailwind.css` = 14K (14,061B < 30KB); `grep -c text-cobalt-400` / `max-w-\[1400px\]` = 各 1; `.text-cobalt-500` = 0 (N1 修正后预期)。
+- D3 体积收益实测: 当前 snapshot.json 315.5KB (323,086B) 内存重序列化 compact → 251.7KB (257,740B), **-20.2%**, 与设计估算 (~250K/-20%) 一致; round-trip 正常; 实际写盘待 collector 下次 run 生效。
+- 条件缓存计数: `{cache:'no-cache'}` index 4 + changelog 2 = 6 处, 与设计枚举 100% 一致。
+- 全仓残留扫描: cdn 仅文档/测试断言/历史归档/review-prep 提示; tests/ 内 ?t= 全为"不应存在"断言; 无其他数据 fetch ?t=。
+- 测试污染精确还原: timestamp.json / overview.json / data/snapshot.json git checkout 指定 3 文件, 哈希与基线逐字节一致, git status clean。
+- IMPL-OBS 🟢: (1) loadTwitterData 失败路径也清缓存 (正向增强); (2) 产物 13.7KB 余量充足, 自定义色类全生成; (3) refreshData 失败不清缓存 (与设计一致, catch 静默为既有行为); (4) ?t= 断言与页面重定向 p.set('t') 无冲突; (5) TestPerfOptimize 计数断言精确; (6) RENDER_CACHE 内存面有界。
+- 未 commit / 未 push (1A 约束); 本审计仅新增报告 + review-log 追加 + .review-level.yaml 追加。
