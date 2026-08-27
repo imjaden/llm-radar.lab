@@ -716,3 +716,79 @@
 - 设计 §3.3 vs copyTweet 模板逐行比对一致; §3.4 序号 sameIdx 子集与 spNav 同子集逻辑天然一致。
 - 已知事项 (不视为缺陷): 评审报告文件被 dev 纳入 eea7482 (归属轻微混入, 内容正确); review-log/.review-level 由 ops 恢复后 commit d930df7。
 - 未 commit / 未 push (1A 约束)。
+
+---
+
+## 2026-08-27 — 页面加载优化 设计 v1.0 评审 (llm-radar-CL002)
+
+- **review者**: ops/llm-radar-perf-optimize-review (hermes-1.2.0)
+- **范围**: 设计 v1.0 (138f62d docs@llm-radar) — 4 项优化决策 (A1 Tailwind 预编译 / B1 条件缓存 / C1 snapshot compact / D1 渲染缓存) + 编号 1A=CL002 逐项核验
+- **Tracking**: RIG-1~4 🟡 待修 (findings_open 4); O-1~4 🟢 观察; 修复后 bump v1.1 重审
+- **状态**: ⏳ CONDITIONAL PASS — 80/100 (B)
+- **报告**: documents/reviews/llm-radar-perf-optimize-review-v1.0-20260827.md
+- **实现 prompt**: ⬜ 未生成 (非 PASS, 待 ops 修 4 🟡 bump v1.1 重审)
+
+### 发现摘要
+
+| # | Severity | Title | Status |
+|---|----------|-------|--------|
+| RIG-1 | 🟡 | B1 `?t=` 枚举不全: 设计列 3 处, 实际 5 处 (漏 index.html:1282 init 首屏加载 + changelog.html:157/:166); D2 "去掉全部" 未落实 | 待修 v1.1 |
+| RIG-2 | 🟡 | D4 缓存失效遗漏 filter/sort 交互: 过滤/排序内嵌 renderer (renderLLMs:696 等 6 处), setFilter/toggleSource/toggleSort 命中缓存 → 面板陈旧 + 计数不一致 | 待修 v1.1 |
+| RIG-3 | 🟡 | C1 写盘点误判: :1353 是 _archive_snapshot 写 data/history/{week}.json (周归档), 非 snapshot.json (仅 1279); 与 D3 "history 保持 pretty" 矛盾 | 待修 v1.1 |
+| RIG-4 | 🟡 | §4 测试影响遗漏: test_html.py:147 硬断言 `?t=` 模式, B1 落地必挂 | 待修 v1.1 |
+
+### 3D 评分
+
+| 维度 | 评级 | 说明 |
+|:-----|:----:|:-----|
+| 合理性 | 🟡 | 决策闭环完整、9 项确认完全映射; A1/CSP 方向正确; B1 枚举与"去掉全部"矛盾 (RIG-1) |
+| 严格性 | 🟡 | D4 失效条件 (RIG-2); C1 写盘点 (RIG-3); 测试影响 (RIG-4) |
+| 安全性 | 🟢 | 去 CDN 收窄第三方 JS 面; 缓存复用既有 renderer 输出, 无新注入路径 |
+
+### 数据验证要点
+
+- 独立盘点: grep `?t=` → index 4 处 (452/1027/1235/1282) + changelog 2 处 (157/166); grep json.dump 10 处逐点归属 (1279=_save_snapshot, 1353=_archive_snapshot→history, 其余 keep-pretty 列表正确)。
+- read renderers 6 处确认 filterMode/sourceFilter/sortState 内嵌; doSearch→applySearchFilter 每次重跑, 搜索无陈旧 (设计该声明成立)。
+- grep tests/ `?t=` 唯一命中 test_html.py:147; 缩进断言 0 命中 (设计 §4 "预期无" 正确)。
+- 环境: node v26.0.0/npx 11.16.0 可用; static/ 已有 favicon 先例; .gitignore 覆盖 cache/ + *.log, static/tailwind.css 可入库; snapshot 316K/twitter 69K 与设计一致。
+- 未 commit / 未 push (1A 约束); 本评审仅新增报告 + review-log + .review-level.yaml 三件。
+
+---
+
+## 2026-08-27 — 页面加载优化 设计 v1.1 复审 (llm-radar-CL002)
+
+- **review者**: ops/llm-radar-perf-optimize-rereview (hermes-1.2.0)
+- **范围**: 设计 v1.1 (4c98e52 docs@llm-radar) — 复审 v1.0 的 4 🟡 (RIG-1~4) + 2 观察 (O-1/O-4) 修复核验 + 新问题扫描
+- **Tracking**: RIG-1~4 ✅ 全修; O-1/O-4 ✅ 落地; N1 🟡 (§6 冒烟 grep .text-cobalt-500 类不存在, 并入 impl 验收清单); N2/N3 🟢; findings_open 0
+- **状态**: ✅ PASS — 95/100 (A)
+- **报告**: documents/reviews/llm-radar-perf-optimize-rereview-v1.1-20260827.md
+- **实现 prompt**: ✅ 已生成 (见报告「实现验收清单」)
+
+### 修复核验
+
+| # | v1.0 问题 | v1.1 验证 |
+|:--|:----------|:---------|
+| RIG-1 | ?t= 枚举不全 | ✅ §3.2 枚举 6 位置 (index 452/1027/1235/1282 + changelog 157/166) = grep 全量 100% 一致; 页面级重定向 (index 337-345 / changelog 12-15) 标注不动; "共 5 处" 应为 6 (N2 🟢) |
+| RIG-2 | 缓存失效漏 filter/sort | ✅ §3.4 复合 key (tab\|filterMode\|sourceFilter\|JSON.stringify(sortState[tab])) 覆盖 renderer 内嵌全部状态 (renderLLMs:696 等 6 处); 数据刷新置空; 计数每轮重算; 搜索独立于缓存 |
+| RIG-3 | 写盘点误判 history | ✅ §1+§3.3 只列 1279 _save_snapshot; :1353 history 保持 pretty; keep-pretty 列表逐点 grep 归属一致 |
+| RIG-4 | 测试断言漏 ?t= | ✅ §4 列出 test_html.py:147; 断言同步方案 (无 ?t= + {cache:'no-cache'} + console.warn 保留) 意图一致 |
+| O-1 | changelog 重定向补注 | ✅ §3.2 补 changelog.html:12-15 标注不动 |
+| O-4 | 边缘缓存窗口 | ✅ §3.2 注记 GH Pages ~10min 窗口 + 自动刷新自愈 |
+
+### 新增发现
+
+| # | Severity | Title | Status |
+|:-:|:--------:|-------|--------|
+| N1 | 🟡 | §6 冒烟 grep `.text-cobalt-500` 必挂 — 页面 0 使用 (仅 cobalt-300/400), JIT 只生成 content 扫描类 → 产物必不含; 改 `.text-cobalt-400` 或删 | 并入 impl 验收清单 #1 |
+| N2 | 🟢 | "共 5 处 ?t=" 数字应为 6 (4 index + 2 changelog); 上轮 RIG-1 "实际 5 处" 亦应为 6 | 注记 |
+| N3 | 🟢 | §6 "(O-3)"/"(O-2 阶段注记)" 引用上轮观察项编号, 与 §5 重排后 O-1~O-4 冲突 | 注记 |
+
+### 数据验证要点
+
+- 独立盘点: grep `?t=` → index 4 (452/1027/1235/1282) + changelog 2 (157/166) = 6 处, 与 §3.2 枚举逐一相等; 页面重定向 index 337-345 / changelog 12-15 实际读取确认与数据 fetch 可区分。
+- grep json.dump 10 处: 1279=_save_snapshot→snapshot.json (SNAPSHOT_PATH L44), 1353=_archive_snapshot→history, 327/674/1312/1372/1700/2041 keep-pretty, 1343 overview compact — 与 §3.3 列表一致。
+- read renderTab:738-749 (renderers 含 xhotspots; 计数 743-749 尾部无条件执行), renderLLMs:696, setFilter/toggleSource/toggleSort/doSearch 调用面 — §3.4 复合 key + 搜索独立声明成立。
+- grep index/changelog cobalt 类: `text-cobalt-300`×4 + `text-cobalt-400`×6, `text-cobalt-500` = 0 → N1; tailwind.config 内联 (index.html:12-21) 定义 cobalt 400/500 + accent 400/500, 与 §3.1 提取范围一致。
+- read tests/test_html.py:144-148: :147 硬断言 `'data/twitter.json?t=' + Date.now()` 属实, §4 修法精确。
+- git: 4c98e52 design v1.1 修正 commit 为 HEAD (rename + 55+/30-), 与修正声明相符; 上轮三件产物 (报告/review-log/.review-level) 仍工作区未 commit, 本次追加不冲突。
+- 未 commit / 未 push (1A 约束); 本复审仅新增报告 + review-log 追加 + .review-level.yaml 追加。
