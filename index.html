@@ -66,7 +66,7 @@
     /* Split preview (X 热点分栏详情, §5.3) */
     .split-backdrop { position:fixed; inset:0; z-index:70; background:rgba(0,0,0,0.5); display:none; }
     .split-backdrop.show { display:block; }
-    .split-preview { position:fixed; top:100px; right:16px; z-index:80; width:420px; max-width:92vw; max-height:calc(100vh - 130px); background:#1e1e2e; border:1px solid #2a2a3e; border-radius:12px; box-shadow:0 8px 32px rgba(0,0,0,0.5); display:none; flex-direction:column; overflow:hidden; }
+    .split-preview { position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); z-index:80; width:720px; max-width:92vw; max-height:80vh; background:#1e1e2e; border:1px solid #2a2a3e; border-radius:12px; box-shadow:0 8px 32px rgba(0,0,0,0.5); display:none; flex-direction:column; overflow:hidden; }
     .split-preview.show { display:flex; }
     .split-preview-header { display:flex; align-items:center; gap:6px; padding:10px 12px; border-bottom:1px solid #2a2a3e; }
     .split-preview-header .sp-title { flex:1; font-size:0.75rem; color:#9ca3af; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
@@ -83,8 +83,9 @@
     .sp-img-wrap { flex-shrink:0; }
     .sp-img-wrap img { max-width:260px; max-height:220px; border-radius:8px; border:1px solid #2a2a3e; display:block; }
     .sp-img-fail { width:140px; height:90px; border:1px dashed #2a2a3e; border-radius:8px; display:flex; align-items:center; justify-content:center; color:#6b7280; font-size:0.7rem; }
-    .sp-link { display:none; color:#818cf8; font-size:0.75rem; text-decoration:none; }
-    .sp-link:hover { color:#facc15; }
+    .sp-actions { display:flex; gap:8px; margin-top:12px; flex-wrap:wrap; }
+    .sp-act { display:none; padding:4px 12px; border-radius:8px; font-size:0.75rem; cursor:pointer; background:#16161f; border:1px solid #4f46e5; color:#818cf8; text-decoration:none; align-items:center; gap:4px; }
+    .sp-act:hover { color:#facc15; border-color:#facc15; background:rgba(79,70,229,0.15); }
     .sp-row-btn { display:none; padding:2px 8px; border-radius:6px; font-size:0.7rem; cursor:pointer; background:transparent; border:1px solid #4f46e5; color:#818cf8; }
     .sp-row-btn:hover { background:rgba(79,70,229,0.15); color:#facc15; }
     /* forward 行 (分栏详情, D2 2C): 与正文区分样式 */
@@ -169,7 +170,7 @@
     @media (max-width:1200px) {
       .hide-1200 { display:none !important; }
       /* 窄屏: 分栏变全屏抽屉 (底部滑出, ~85vh, §5.5); 行内"详情"按钮显示 (7C) */
-      .split-preview { top:auto; bottom:0; left:0; right:0; width:100%; max-width:100%; max-height:85vh; border-radius:12px 12px 0 0; }
+      .split-preview { top:auto; bottom:0; left:0; right:0; width:100%; max-width:100%; max-height:85vh; border-radius:12px 12px 0 0; transform:none; }
       .sp-row-btn { display:inline-flex; }
     }
     /* GitHub icon */
@@ -313,7 +314,11 @@
       <div class="sp-meta" id="sp-meta"></div>
       <div class="sp-metrics" id="sp-metrics"></div>
       <div class="sp-images" id="sp-images"></div>
-      <a class="sp-link" id="sp-link" href="#" target="_blank" rel="noopener noreferrer">打开原文 ↗</a>
+      <div class="sp-actions">
+        <a class="sp-act" id="sp-act-link" href="#" target="_blank" rel="noopener noreferrer">🔗 打开原文</a>
+        <a class="sp-act" id="sp-act-profile" href="#" target="_blank" rel="noopener noreferrer">👤 作者主页</a>
+        <button class="sp-act" id="sp-act-copy" type="button">📋 拷贝</button>
+      </div>
     </div>
   </div>
 
@@ -1008,6 +1013,15 @@ function fmtMMDD(iso) {
   return p(d.getMonth() + 1) + '-' + p(d.getDate()) + ' ' + p(d.getHours()) + ':' + p(d.getMinutes());
 }
 
+// 完整时间 YYYY-MM-DD HH:MM (本地, 复用 fmtMMDD padding, §3.4; null → "—")
+function fmtFull(iso) {
+  if (!iso) return '—';
+  const d = new Date(iso);
+  if (isNaN(d.getTime())) return '—';
+  const p = n => String(n).padStart(2, '0');
+  return d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate()) + ' ' + p(d.getHours()) + ':' + p(d.getMinutes());
+}
+
 async function loadTwitterData() {
   try {
     const r = await fetch('data/twitter.json?t=' + Date.now());
@@ -1081,13 +1095,16 @@ function openSplitPreview(i) {
   if (!X_ITEMS[i]) return;
   X_CUR = i;
   const f = X_ITEMS[i], t = f.tweet, tg = f.target;
-  document.getElementById('sp-title').textContent = '@' + tg.handle + ' · ' + fmtMMDD(t.posted_at);
+  // 序号 (D4 D1): 该作者内位置/总数 · 全局位置/总数 (X_ITEMS 全局降序, V8 稳定排序 → 同作者子集保持降序, 与 spNav 同子集逻辑一致)
+  const sameIdx = [];
+  X_ITEMS.forEach((f2, idx) => { if (f2.targetIndex === f.targetIndex) sameIdx.push(idx); });
+  document.getElementById('sp-title').textContent = (sameIdx.indexOf(i) + 1) + '/' + sameIdx.length + ' · ' + (i + 1) + '/' + X_ITEMS.length;
   // 正文 + forward (D2 2C): 同格式完整显示, forward 行区分样式; textContent 渲染 (SEC-1/O-1)
   const ft = document.getElementById('sp-full-text');
   if (t.text) ft.textContent = t.text;
   else ft.textContent = t.forward ? '' : '—';
   document.getElementById('sp-forward').textContent = t.forward ? 'forward: ' + t.forward : '';
-  document.getElementById('sp-meta').textContent = '@' + tg.handle + ' · ' + (t.posted_at || '');
+  document.getElementById('sp-meta').textContent = '@' + tg.handle + ' · ' + fmtFull(t.posted_at);
   // 指标 kv 卡片 (null → —)
   const metrics = [['浏览', t.views], ['回复', t.replies], ['转推', t.retweets], ['点赞', t.likes]];
   document.getElementById('sp-metrics').innerHTML = metrics.map(m =>
@@ -1098,13 +1115,40 @@ function openSplitPreview(i) {
   document.getElementById('sp-images').innerHTML = imgs.length
     ? imgs.map(src => `<div class="sp-img-wrap"><img src="${esc(src)}" loading="lazy" onerror="imgFail(this)" alt="推文图片"><div class="sp-img-fail" style="display:none">图片加载失败</div></div>`).join('')
     : '';
-  // 原文链接: 协议白名单 https:// + rel=noopener
-  const link = document.getElementById('sp-link');
-  if (t.url && /^https:\/\//.test(t.url)) { link.href = t.url; link.style.display = 'inline-block'; }
-  else { link.style.display = 'none'; }
+  // 操作按钮行 (D2 B1+E1): 原文/作者主页 href 仅 https 白名单 (SEC-1); 拷贝每次打开重绑 (设计 §3.2)
+  const linkBtn = document.getElementById('sp-act-link');
+  const profBtn = document.getElementById('sp-act-profile');
+  const copyBtn = document.getElementById('sp-act-copy');
+  if (t.url && /^https:\/\//.test(t.url)) { linkBtn.href = t.url; linkBtn.style.display = 'inline-flex'; }
+  else { linkBtn.removeAttribute('href'); linkBtn.style.display = 'none'; }
+  if (tg.url && /^https:\/\//.test(tg.url)) { profBtn.href = tg.url; profBtn.style.display = 'inline-flex'; }
+  else { profBtn.removeAttribute('href'); profBtn.style.display = 'none'; }
+  copyBtn.style.display = 'inline-flex';
+  copyBtn.onclick = () => copyTweet(f);
   document.getElementById('split-preview').classList.add('show');
   document.getElementById('split-backdrop').classList.add('show');
   document.addEventListener('keydown', onSplitKey);
+}
+
+// 拷贝推广素材 (D3 C2): 纯文本模板, textContent 安全 (SEC-1); 成功 "已拷贝 ✓" 1500ms 复原, 失败 "拷贝失败" 2s 复原 (OBS-1)
+function copyTweet(f) {
+  const t = f.tweet, tg = f.target;
+  const lines = [];
+  lines.push('@' + (tg.handle || '') + (tg.name ? ' (' + tg.name + ')' : ''));
+  lines.push(fmtFull(t.posted_at));
+  const body = [t.text || '', t.forward ? 'forward: ' + t.forward : ''].filter(Boolean).join('\n');
+  if (body) lines.push(body);
+  lines.push('浏览 ' + num(t.views) + ' · 回复 ' + num(t.replies) + ' · 转推 ' + num(t.retweets) + ' · 点赞 ' + num(t.likes));
+  if (t.url) lines.push('原文: ' + t.url);
+  const btn = document.getElementById('sp-act-copy');
+  const orig = '📋 拷贝';
+  navigator.clipboard.writeText(lines.join('\n')).then(() => {
+    btn.textContent = '已拷贝 ✓';
+    setTimeout(() => { btn.textContent = orig; }, 1500);
+  }).catch(() => {
+    btn.textContent = '拷贝失败';
+    setTimeout(() => { btn.textContent = orig; }, 2000);
+  });
 }
 
 // nav 上一/下一条: 同人物内循环切换 (§5.3)

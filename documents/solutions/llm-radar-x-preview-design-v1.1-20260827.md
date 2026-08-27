@@ -2,7 +2,7 @@
 title: X 热点弹框体验增强与 CI 依赖修复设计
 topic: llm-radar
 type: design
-version: 1.0
+version: 1.1
 date: 2026-08-27
 author: hermes-1.2.0
 tags: [llm-radar, x, frontend, split-preview, clipboard, github-actions]
@@ -53,7 +53,7 @@ twitter-collector 测试因 PyYAML 未安装而失败。
 | D2 | 按钮清单/样式 | B1+E1: body 底部图标按钮行 3 枚 — 🔗 打开原文 / 👤 作者主页 / 📋 拷贝推广内容 (emoji, 零依赖) |
 | D3 | 拷贝内容格式 | C2: 完整推广素材 — 正文+forward+指标 kv+原文链接+作者+完整时间 |
 | D4 | 标题/元信息 | D1: sp-title = "该作者序号/总数 · 全局序号/总数"; sp-meta = "@handle · YYYY-MM-DD HH:MM(本地完整时间)" |
-| D5 | CI 修复 | B1: test.yml pip install 补 pyyaml + 测试命令显式排除浏览器相关(A1 细则见 §3.5) |
+| D5 | CI 修复 | B1(二轮): test.yml pip install 补 pyyaml + 测试命令显式排除浏览器相关(A1 细则见 §3.5) |
 
 ## 3. 详细设计
 
