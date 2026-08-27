@@ -4,10 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="Content-Security-Policy"
-        content="default-src 'self'; script-src 'self' 'unsafe-inline' cdn.tailwindcss.com; style-src 'self' 'unsafe-inline' fonts.googleapis.com; font-src fonts.gstatic.com; img-src 'self' data:; connect-src 'self';">
+        content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' fonts.googleapis.com; font-src fonts.gstatic.com; img-src 'self' data:; connect-src 'self';">
   <title>LLM Radar — 更新日志</title>
   <link rel="icon" href="static/favicon.png">
-  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="static/tailwind.css">
   <script>
   (function(){
     var p=new URLSearchParams(window.location.search),t=p.get('t'),oh=3600000;
@@ -154,7 +154,7 @@
   }
 
   // Load overview.json for quick banner
-  fetch('overview.json?t='+Date.now()).then(function(r){return r.json()}).then(function(o){
+  fetch('overview.json', {cache:'no-cache'}).then(function(r){return r.json()}).then(function(o){
     var meta = document.getElementById('meta');
     var ts = o.t ? new Date(o.t).toLocaleString('zh-CN') : '-';
     var statusText = o.r === 'success' ? '✅ 正常' : '❌ ' + (o.rd || '质量门禁未通过');
@@ -163,7 +163,7 @@
     if (hots) meta.textContent += ' · 热点: ' + hots;
   }).catch(function(){});
 
-  fetch('data/snapshot.json?t='+Date.now()).then(function(r){return r.json()}).then(function(d){
+  fetch('data/snapshot.json', {cache:'no-cache'}).then(function(r){return r.json()}).then(function(d){
     var log = d.changelog || [];
     var list = document.getElementById('log-list');
     var meta = document.getElementById('meta');

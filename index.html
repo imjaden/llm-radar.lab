@@ -4,22 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="Content-Security-Policy"
-        content="default-src 'self'; script-src 'self' 'unsafe-inline' cdn.tailwindcss.com; style-src 'self' 'unsafe-inline' fonts.googleapis.com; font-src fonts.gstatic.com; img-src 'self' data: https://pbs.twimg.com; connect-src 'self';">
+        content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' fonts.googleapis.com; font-src fonts.gstatic.com; img-src 'self' data: https://pbs.twimg.com; connect-src 'self';">
   <title>LLM Radar — 行业情报仪表盘</title>
   <link rel="icon" href="static/favicon.png">
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            cobalt: { 400:'#818cf8', 500:'#6366f1' },
-            accent: { 400:'#facc15', 500:'#eab308' },
-          }
-        }
-      }
-    }
-  </script>
+  <link rel="stylesheet" href="static/tailwind.css">
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
     body { font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif; font-size:14px; line-height:1.5; background:#0a0a14; color:#e0e0e0; }
@@ -351,6 +339,11 @@ let sortState = {}; // { tab: { col, dir } }
 let filterMode = 'all'; // 'all' | 'cn' | 'global'
 let sourceFilter = null; // null=全部, or source name string
 
+// 渲染缓存 (D4): key = tab|filterMode|sourceFilter|sortState 复合状态;
+// 数据刷新 (refreshData/loadTwitterData 成功) 后整体失效
+const RENDER_CACHE = {};
+function clearRenderCache() { Object.keys(RENDER_CACHE).forEach(k => delete RENDER_CACHE[k]); }
+
 // Data sources
 const SOURCES = [
   {name:'量子位', url:'https://www.qbitai.com'},
@@ -449,8 +442,8 @@ function stopAutoRefresh() {
 async function refreshData() {
   saveState();
   try {
-    const r = await fetch('data/snapshot.json?t=' + Date.now());
-    if (r.ok) { DATA = await r.json(); }
+    const r = await fetch('data/snapshot.json', {cache:'no-cache'});
+    if (r.ok) { DATA = await r.json(); clearRenderCache(); }
   } catch(e) {}
   restoreState();
   renderTab(activeTab);
@@ -738,7 +731,10 @@ function getProviderName(id) {
 function renderTab(tab) {
   const renderers={hotspots:renderHotspots,providers:renderProviders,people:renderPeople,tools:renderTools,llms:renderLLMs,xhotspots:renderXHotspots};
   const panel=document.getElementById(`panel-${tab}`);
-  panel.innerHTML=renderers[tab]();
+  // 复合 key: 过滤/排序状态内嵌于 renderer, 必须纳入缓存判定 (RIG-2)
+  const key = tab + '|' + (filterMode||'') + '|' + (sourceFilter||'') + '|' + JSON.stringify(sortState[tab]||null);
+  if (RENDER_CACHE[key]) panel.innerHTML = RENDER_CACHE[key];
+  else { panel.innerHTML = renderers[tab](); RENDER_CACHE[key] = panel.innerHTML; }
   // Update tab counts with filter
   document.getElementById('tc-providers').textContent=filterItems(DATA.providers).length;
   document.getElementById('tc-people').textContent=filterItems(DATA.people).length;
@@ -1024,13 +1020,15 @@ function fmtFull(iso) {
 
 async function loadTwitterData() {
   try {
-    const r = await fetch('data/twitter.json?t=' + Date.now());
+    const r = await fetch('data/twitter.json', {cache:'no-cache'});
     if (!r.ok) throw new Error('HTTP ' + r.status);
     X_DATA = await r.json();
     X_FLAT = flattenTwitter(X_DATA);
+    clearRenderCache();
   } catch(e) {
     X_DATA = null;
     X_FLAT = [];
+    clearRenderCache();
     console.warn('[llm-radar] twitter.json load failed:', e.message);
   }
   if (activeTab === 'xhotspots') renderTab('xhotspots');
@@ -1232,7 +1230,7 @@ function hideSkeleton() {
 
 async function loadOverview() {
   try {
-    var r = await fetch('overview.json?t=' + Date.now());
+    var r = await fetch('overview.json', {cache:'no-cache'});
     if (!r.ok) throw new Error('HTTP ' + r.status);
     var o = await r.json();
     overviewReady = true;
@@ -1279,7 +1277,7 @@ async function init() {
 
   // 2. Load full snapshot.json
   try {
-    var r = await fetch('data/snapshot.json?t=' + Date.now());
+    var r = await fetch('data/snapshot.json', {cache:'no-cache'});
     if(!r.ok) throw new Error('Not found');
     DATA = await r.json();
     snapshotReady = true;

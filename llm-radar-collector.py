@@ -1272,11 +1272,11 @@ hotspots 数组中每个元素格式：
         }
 
     def _save_snapshot(self, snapshot):
-        """保存快照"""
+        """保存快照 (compact 单行写盘, D3/C1 llm-radar-CL002; archive/history/metrics 保持 pretty)"""
         self.data_dir.mkdir(parents=True, exist_ok=True)
         self._clean_conflict_file(self.snapshot_path)
         with open(self.snapshot_path, 'w', encoding='utf-8') as f:
-            json.dump(snapshot, f, ensure_ascii=False, indent=2)
+            json.dump(snapshot, f, ensure_ascii=False, indent=None)
         self._print_ok(f'快照已保存: {self.snapshot_path}')
 
     def _write_timestamp(self, snapshot, quality_ok=True):

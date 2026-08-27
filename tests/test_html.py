@@ -142,9 +142,10 @@ class TestXHotspotFrontend:
         assert '图片加载失败' in js
 
     def test_twitter_fetch_warn(self):
-        """twitter.json 加载失败 console.warn + 不阻断页面"""
+        """twitter.json 加载失败 console.warn + 不阻断页面 (D2 条件缓存: 无 ?t= + {cache:'no-cache'})"""
         js = '\n'.join(self._js_blocks())
-        assert "'data/twitter.json?t=' + Date.now()" in js
+        assert '?t=' not in js
+        assert "'data/twitter.json', {cache:'no-cache'}" in js
         assert "console.warn('[llm-radar] twitter.json load failed:', e.message)" in js
 
     def test_null_metric_dash(self):
@@ -352,3 +353,44 @@ class TestSeleniumPageLoad:
         finally:
             driver.quit()
             server.shutdown()
+
+
+class TestPerfOptimize:
+    """页面加载优化 (llm-radar-CL002): D1 预编译 CSS / D2 条件缓存 / D4 渲染缓存 (防回归)。
+
+    - (a) index.html/changelog.html 无 cdn.tailwindcss.com 引用 (运行时 JIT 编译已移除)
+    - (b) 存在 <link rel="stylesheet" href="static/tailwind.css"> (预编译产物入库)
+    - D2: 数据 fetch 无 ?t= 缓存击穿, 统一 {cache:'no-cache'} (index 4 + changelog 2 = 6)
+    - D4: RENDER_CACHE 复合 key 存在
+    """
+
+    def _content(self, name):
+        return (PROJECT_ROOT / name).read_text()
+
+    def _js(self, name):
+        return '\n'.join(re.findall(r"<script(?![^>]*src=)[^>]*>(.*?)</script>", self._content(name), re.S))
+
+    def test_no_tailwind_cdn(self):
+        """双文件无 cdn.tailwindcss.com"""
+        for html_file in ['index.html', 'changelog.html']:
+            assert 'cdn.tailwindcss.com' not in self._content(html_file), f'{html_file} 仍引用 Tailwind CDN'
+
+    def test_precompiled_css_link(self):
+        """双文件存在预编译 CSS link"""
+        for html_file in ['index.html', 'changelog.html']:
+            assert '<link rel="stylesheet" href="static/tailwind.css">' in self._content(html_file), \
+                f'{html_file} 缺少预编译 CSS link'
+
+    def test_data_fetch_no_cache_buster(self):
+        """D2: 数据 fetch 无 ?t=, 统一 {cache:'no-cache'} (4 index + 2 changelog)"""
+        for html_file, n in [('index.html', 4), ('changelog.html', 2)]:
+            js = self._js(html_file)
+            assert '?t=' not in js, f'{html_file} 仍有 ?t= 缓存击穿'
+            assert js.count("{cache:'no-cache'}") == n, f"{html_file} {{cache:'no-cache'}} 数量 != {n}"
+
+    def test_render_cache_present(self):
+        """D4: RENDER_CACHE 复合 key + 数据刷新失效 (RIG-2)"""
+        js = self._js('index.html')
+        assert 'const RENDER_CACHE = {}' in js
+        assert "tab + '|' + (filterMode||'')" in js
+        assert 'clearRenderCache()' in js

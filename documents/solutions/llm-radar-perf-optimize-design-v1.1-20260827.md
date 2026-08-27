@@ -33,7 +33,7 @@ model: deepseek-v4-flash
 | 瓶颈 | 现状 | 影响 |
 |:---|:---|:---|
 | Tailwind CDN | index.html:10 + changelog.html:10 引 cdn.tailwindcss.com 运行时 JIT 编译 (~300KB JS) | 每次加载浏览器编译, 首屏慢 |
-| 缓存击穿 | 数据 fetch 带 `?t=Date.now()` 共 5 处: index.html 452 (refreshData) / 1027 (loadTwitterData) / 1235 (loadOverview) / 1282 (init 初始 snapshot) + changelog.html 157 (overview) / 166 (snapshot) | 每次刷新/10min 自动刷新全量重下 ~385K (snapshot 316K + twitter 69K); 首屏 init 同样全量 |
+| 缓存击穿 | 数据 fetch 带 `?t=Date.now()` 共 6 处: index.html 452 (refreshData) / 1027 (loadTwitterData) / 1235 (loadOverview) / 1282 (init 初始 snapshot) + changelog.html 157 (overview) / 166 (snapshot) | 每次刷新/10min 自动刷新全量重下 ~385K (snapshot 316K + twitter 69K); 首屏 init 同样全量 |
 | 数据体积 | snapshot.json 写盘 indent=2 (llm-radar-collector.py:1279 `_save_snapshot` → data/snapshot.json) | 316K pretty; 传输/解析偏大 |
 | 渲染重建 | renderTab (index.html:738-741) 每次切 tab 全量 `panel.innerHTML=renderers[tab]()` | 切 tab 重复 DOM 重建 + 重新搜索过滤 |
 
@@ -75,9 +75,9 @@ npx tailwindcss@3.4.17 -c tailwind.config.js -i cache/build/tailwind-input.css \
 - 已知: `bg-surface-900` (index.html:185/:221) 未在 tailwind.config 定义, CDN Play 下同样
   不生成 (行为一致), 不扩范围 → O-1。
 
-### 3.2 条件缓存 (D2/B1) — RIG-1 修正: 枚举 5 处
+### 3.2 条件缓存 (D2/B1) — RIG-1 修正: 枚举 6 处
 
-- 删除全部 5 处 `?t=Date.now()` (数据 fetch):
+- 删除全部 6 处 `?t=Date.now()` (数据 fetch):
   - index.html:452 refreshData (snapshot 自动刷新)
   - index.html:1027 loadTwitterData (twitter)
   - index.html:1235 loadOverview (overview)
@@ -149,8 +149,9 @@ npx tailwindcss@3.4.17 -c tailwind.config.js -i cache/build/tailwind-input.css \
    - 无 cdn.tailwindcss.com 请求 (样式正常, 对比截图无回归)。
    - 首次加载 200; 二次刷新 snapshot/twitter → 304 (或 200 但传输 0 字节)。
    - 切 tab 流畅; 过滤/排序切换面板即时更新 (复合 key 生效); 数据刷新后表格更新。
-3. `ls -lh static/tailwind.css` < 30KB; **冒烟 grep 关键类** (O-3): 产物含
-   `.text-cobalt-500` 与 `.max-w-\[1400px\]` (防 --content 解析遗漏静默缺样式)。
+3. `ls -lh static/tailwind.css` < 30KB; **冒烟 grep 关键类**: 产物含
+   `.text-cobalt-400` (config 定义 + 页面 6 处使用, 必生成) 与 `.max-w-\[1400px\]`
+   (防 --content 解析遗漏静默缺样式; 页面 0 使用的类如 cobalt-500 不生成, 勿作 grep 目标)。
 4. snapshot.json 重新生成后体积下降 (~250K); 页面渲染数据无缺失。
-5. CI 绿跑 (机制 2/3 命令在 CI 同样通过) — 该验证在 review push 后执行 (O-2 阶段注记,
-   dev 无 push 权限)。
+5. CI 绿跑 (机制 2/3 命令在 CI 同样通过) — 该验证在 review push 后执行 (阶段注记:
+   dev 无 push 权限, 属 review 阶段)。
