@@ -696,3 +696,23 @@
 - grep tests/test_twitter_collector.py: 无 requests/webdriver/Chrome 调用 (全 FakeDriver + fixture HTML), CI 保留执行合理。
 - 版本一致性: frontmatter/文件名 v1.0 vs 内容 v1.1 → RIG-1 (dev 随 commit 落地)。
 - 未 commit / 未 push (1A 约束)。
+
+---
+
+## 2026-08-27 — X热点弹框体验+CI修复 实现审计 (llm-radar-CL001)
+
+- **review者**: ops/llm-radar-x-preview-impl-audit (hermes-1.2.0)
+- **范围**: 实现 eea7482 (feat@llm-radar) — 对照评审报告「实现验收清单」7 项 + 验证清单 5 项, 独立核验
+- **Tracking**: 7 项验收全 ✅ (基线 CSS / transform:none / .sp-actions 三按钮零 sp-link 残留 / 序号+三按钮逻辑 / fmtFull+copyTweet / test.yml pyyaml+排除 / RIG-1 rename+frontmatter); RIG-1 ✅ 已落地; OBS-1 ✅ 已在实现闭环 (失败 2s 复原); IMPL-OBS-1~3 🟢; findings_open 0
+- **状态**: ✅ PASS — 100/100 (A)
+- **报告**: documents/reviews/llm-radar-x-preview-impl-audit-v1.0-20260827.md
+- **实现 prompt**: ⬜ 不适用 (实现审计)
+
+### 数据验证要点
+
+- git 证据: eea7482 --stat (test.yml 4 +- / 评审报告 +143 / design rename 4 +- / index.html 66 ++--); d930df7 (.review-level +9 / review-log +20); status clean, 3 未推送。
+- 独立复跑: 主套件 211 passed (2 deselected) + twitter 专项 82 passed + test_cli 13 passed = 306 项, 全部与预期一致; 测试污染 (timestamp/overview/data/snapshot) 已精确 `git checkout --` 还原, 工作区 clean。
+- SEC-1 专项: copyTweet lines.join 纯文本无 HTML; sp-act href 仅 /^https:\/\// 白名单 + 非 https removeAttribute; innerHTML 仅静态标签 + esc(src); 表格行 esc() 全字段。
+- 设计 §3.3 vs copyTweet 模板逐行比对一致; §3.4 序号 sameIdx 子集与 spNav 同子集逻辑天然一致。
+- 已知事项 (不视为缺陷): 评审报告文件被 dev 纳入 eea7482 (归属轻微混入, 内容正确); review-log/.review-level 由 ops 恢复后 commit d930df7。
+- 未 commit / 未 push (1A 约束)。
