@@ -244,3 +244,12 @@ review_history:
     findings_open: 0
     tracking: CL-SEC20 实现审计 v1.3 (2c11397→2899b06) — 一致性/测试211/治理/安全/运维 all ✅; IMPL-OBS-1~4 🟢 注记; CL-SEC19 收尾项 (9ff4536/dee96c2) 并入
     report: documents/reviews/x-hotspot-impl-audit-v1.1-20260826.md
+  - date: 2026-08-27
+    reviewer: Security Reviewer (IRIS)
+    review_level: L2
+    verdict: PASS
+    score: 95
+    findings_total: 1
+    findings_open: 0
+    tracking: llm-radar-CL001 设计 v1.1 (adf9b2a) — D1~D5 与两轮确认串 (A1 B1 C2 D1 E1 + A1 B1 C1 D1) 完全对应; RIG-1 🟡 版本命名 (dev 随 commit 落地); OBS-1~4 🟢 观察
+    report: documents/reviews/llm-radar-x-preview-review-v1.0-20260827.md

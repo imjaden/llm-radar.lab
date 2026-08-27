@@ -676,3 +676,23 @@
 - pytest 211 passed 复跑; 测试污染 (snapshot/overview/timestamp) 待 git checkout 还原。
 - 注记项 1 (D1 1A 条数偏差): 实测 30 条不可达 (X 对 CDP attach 降级无限滚动), 用户决策 B 接受 "24h 内全保留 + 首屏可达"; 动态滚动已尽力。
 - 未 commit / 未 push (1A 约束, commit 由 ops 处理; push 已由 auto-push 完成)。
+
+---
+
+## 2026-08-27 — X热点弹框体验+CI修复 设计 v1.1 评审 (llm-radar-CL001)
+
+- **review者**: ops/llm-radar-x-preview-review (hermes-1.2.0)
+- **范围**: 设计 v1.1 (adf9b2a docs@llm-radar) — 弹框居中720px / 三图标按钮行 / 完整拷贝素材 / sp-title 序号+sp-meta 完整时间 / CI pyyaml 补依赖+排除浏览器测试
+- **Tracking**: D1~D5 与两轮确认串 (A1 B1 C2 D1 E1 + A1 B1 C1 D1) 完全对应, 无遗漏无越界; 7 项重点审查 6 ✅ + RIG-1 🟡 (版本命名, Bucket A 机械修复, 随 dev commit 落地); OBS-1~4 🟢; findings_open 0
+- **状态**: ✅ PASS — 95/100 (A)
+- **报告**: documents/reviews/llm-radar-x-preview-review-v1.0-20260827.md
+- **实现 prompt**: ✅ 已生成
+
+### 数据验证要点
+
+- read index.html:69/:172/:86-87/:316 + JS 1080-1108: 基线 transform translate(-50%,-50%) 与 <1200px 分支 transform:none 成对; .sp-link 替换面完整。
+- 实测 data/twitter.json: 10 targets url 全 https://, handle/name 无 null; 109 tweets 无空 text/url/posted_at。
+- read test.yml:13-14: pip 列表确缺 pyyaml; 命令无排除 → §3.5 根因链逐环成立 (twitter-collector.py:37-40/:83-84 + test_twitter_collector.py:763)。
+- grep tests/test_twitter_collector.py: 无 requests/webdriver/Chrome 调用 (全 FakeDriver + fixture HTML), CI 保留执行合理。
+- 版本一致性: frontmatter/文件名 v1.0 vs 内容 v1.1 → RIG-1 (dev 随 commit 落地)。
+- 未 commit / 未 push (1A 约束)。
