@@ -1,12 +1,12 @@
 {
-  "generated_at": "2026-08-28T07:02:10.591586",
+  "generated_at": "2026-08-28T14:02:28.913070",
   "last_news_date": "2026-08-28",
-  "last_run_at": "2026-08-28T07:02:10.616560",
+  "last_run_at": "2026-08-28T14:02:28.936112",
   "last_run_status": "success",
-  "last_run_detail": "",
+  "last_run_detail": "key_people 缺失率 51%",
   "server": "linux",
   "hostname": "iZ2ze0mvn4qle5b5jp7ndlZ",
-  "entity_count": 351,
+  "entity_count": 354,
   "period": "2026-08-21 ~ 2026-08-28",
   "version": "1.0"
 }
