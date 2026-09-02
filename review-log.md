@@ -1074,3 +1074,36 @@
 - 可复现性: install.py L124-125 填充 {{conda_sh}}/{{brew_prefix}} 占位符; 复刻模板填充 diff 仅 .env 4 行手工 (GOV-1)。
 - symlink: ~/.local/bin/{lr,llm-radar} → cache/system-command/llm-radar-wrapper.sh (同一 wrapper)。
 - SEC-1: cache/cli-registry/wrapper.sh.tmpl 与 .env 同 sha256 (26d9944a...); git check-ignore + git ls-files cache/ 空 → 未入 git/未泄漏; 审计中删除。
+
+---
+
+## 2026-09-02 — 分叉修复 merge 审计 (LLM-RADAR-CL005)
+
+- **review者**: review/llm-radar-cl005-fork-merge-audit (hermes-1.2.0)
+- **范围**: merge commit 3633cf4 (merge origin/main into local CL005 chain, 修复 Git 分叉 16 ahead/3 behind)
+- **Tracking**: SEC-1 🟢 (服务器数据 commit 无代码回退); findings_open 0
+- **状态**: ✅ PASS — 98/100 (A)
+- **报告**: documents/reviews/llm-radar-cl005-fork-merge-audit-20260902.md
+- **实现 prompt**: ⬜ 无需生成 (merge 已完成, PASS 后 push)
+
+### 审计结论
+
+- Merge 双方保留 ✅: Parent1=4362e84 (CL005 tip) + Parent2=ad62fa8 (server 21:02); CL005 代码链 10 commits + 服务器 3 数据 commits 全保留。
+- 冲突解决 ✅: 数据文件 (snapshot/overview/timestamp) 取 origin/main 版 (21:02:05 > 18:42:04, 数据新鲜度优先); 非数据文件零冲突。
+- 代码完整性 ✅: retry 5→3 (L780) / conda_sh (L7) / test_verify.py / features.md 全部 CL005 版存活; 服务器 3 commit 均纯数据 (timestamp/snapshot/overview), 无代码/test.yml 变更。
+- 工作区 ✅: 17 ahead / 0 behind / clean; 17 = 16 CL005 + 1 merge。
+
+### 发现
+
+| # | Severity | Title | Status |
+|---|----------|-------|--------|
+| SEC-1 | 🟢 | 服务器数据 commit 无代码文件变更，无回退风险 | 已验证 |
+
+### 数据验证要点
+
+- `git show 3633cf4` 确认双 parent (4362e84 + ad62fa8)。
+- `git diff 4362e84..3633cf4` = 仅 3 数据文件 (snapshot/overview/timestamp), 代码零变更。
+- `git diff ad62fa8..3633cf4 -- data/snapshot.json overview.json timestamp.json` = 空 (merge = origin/main 版)。
+- `git diff ad62fa8..3633cf4 -- llm-radar-collector.py tests/ .cli-registry.yaml features.md` = CL005 代码变更存在 (retry 5→3 / conda_sh / test_verify.py / features.md 实体数检查)。
+- 服务器 3 commit (685a3e2/ac3cc0f/ad62fa8) 逐个 `git show --stat` = 纯数据文件, 0 代码变更。
+- timestamp.json 当前值: generated_at=2026-09-02T21:02:05.317946, server=linux, hostname=iZ2ze0mvn4qle5b5jp7ndlZ。
