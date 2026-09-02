@@ -1046,3 +1046,31 @@
 - 冒烟: `lr status --json` 5 checks 含「热点数」(81 条 info); 主 status=warning 因 Git 6 ahead 非热点。
 - D3 需求 prompt 已落盘 cache/review-prep/cl005-daily-checker-handoff-prompt.md。
 - 测试污染还原: timestamp.json / overview.json / data/snapshot.json git checkout 还原; .hermes-project.yaml WIP 不碰。
+
+---
+
+## 2026-09-02 — wrapper env 修复 补充审计 (LLM-RADAR-CL005)
+
+- **review者**: review/llm-radar-cl005-wrapper-env-fix-audit (hermes-1.2.0)
+- **范围**: 补充修复 commit 07baf8f (conda_sh/brew_prefix → wrapper env, 修 NotOpenSSLWarning)
+- **Tracking**: SEC-1 🔴 (预存密钥副本, 审计中删除); GOV-1 🟡 (.env 段不可复现); HYG-1 🟡 (orphan lr-wrapper.sh); findings_open 2
+- **状态**: ✅ PASS — 95/100 (A)
+- **报告**: documents/reviews/llm-radar-cl005-wrapper-env-fix-audit-20260902.md
+- **实现 prompt**: ⬜ 无需生成 (修复已完成, PASS 后 push)
+
+### 发现摘要
+
+| # | Severity | Title | Status |
+|---|----------|-------|--------|
+| SEC-1 | 🔴 | cache/cli-registry/wrapper.sh.tmpl 与 .env 字节相同 (live key, 误 cp) | 审计中删除 |
+| GOV-1 | 🟡 | wrapper .env 段为手工 patch, install.py --force 再生成丢失 | 后续 P2 |
+| HYG-1 | 🟡 | orphan cache/system-command/lr-wrapper.sh (旧坏 wrapper) | 后续 P3 |
+
+### 数据验证要点
+
+- 根因实测: /usr/bin/python3 3.9.6 (LibreSSL 2.8.3) import requests → NotOpenSSLWarning; py3.12 3.12.13 → 无。旧 lr-wrapper.sh CONDA_SH 空 → /Caskroom/... 缺 /opt/homebrew 前缀 → conda 未激活。
+- 修复实测: env -i 干净 env lr status → py3.12 3.12.13, grep -c NotOpenSSLWarning = 0; 交互 shell 同 0。
+- diff 最小性: git show 07baf8f = 仅 .cli-registry.yaml +2 行 (conda_sh/brew_prefix); 两路径 ls 存在。
+- 可复现性: install.py L124-125 填充 {{conda_sh}}/{{brew_prefix}} 占位符; 复刻模板填充 diff 仅 .env 4 行手工 (GOV-1)。
+- symlink: ~/.local/bin/{lr,llm-radar} → cache/system-command/llm-radar-wrapper.sh (同一 wrapper)。
+- SEC-1: cache/cli-registry/wrapper.sh.tmpl 与 .env 同 sha256 (26d9944a...); git check-ignore + git ls-files cache/ 空 → 未入 git/未泄漏; 审计中删除。
