@@ -54,9 +54,10 @@ description: LLM Radar 行业情报仪表盘 — 采集管线/LLM 交互/数据�
 ## 质量门禁
 
 1. 事件新鲜度: `_verify` 中位数 <7 天，不达标跳过 auto-push（仍保存数据）✅ — llm-radar-collector.py
-2. 热点数量: 新提取热点 ≥3 条 ✅
-3. URL 校验: `_validate_entity_urls` ✅
-4. 完整性校验: `_validate_data_completeness` ✅
+2. 实体数: 实体 >0 通过（4 维度 providers/people/tools/llms，排除热点）；实体 0 全源失败阻断 ✅ — LLM-RADAR-CL005
+3. 热点数量: 热点 <3 仅 warning 不阻断 push ✅ — LLM-RADAR-CL005
+4. URL 校验: `_validate_entity_urls` ✅
+5. 完整性校验: `_validate_data_completeness` ✅
 
 ## 数据产出
 

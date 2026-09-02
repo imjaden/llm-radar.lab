@@ -1421,7 +1421,8 @@ hotspots 数组中每个元素格式：
         """质量门禁：检查提取结果的新鲜度和完整性
 
         2026-08-10 方案D: URL/key_people 检查降级为警告(记入 self._quality_warnings,
-        不再阻断 auto-push); 仍阻断的硬指标: 新鲜度、热点数量。
+        不再阻断 auto-push); 仍阻断的硬指标: 新鲜度、实体数(4 维度全 0)。
+        2026-09-02 LLM-RADAR-CL005: 热点数量 <3 从阻断降为 warning, 不再阻断 auto-push。
         """
         issues = []
         warnings = []
