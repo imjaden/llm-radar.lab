@@ -93,7 +93,7 @@ class TestStatusOk:
         c, mod = status_env
         result = _run_status(c, mod)
         labels = [ch['label'] for ch in result['checks']]
-        assert labels == ['数据日期', '实体数', '质量门禁', 'Git 同步']
+        assert labels == ['数据日期', '实体数', '质量门禁', 'Git 同步', '热点数']
         # 实体数: 5 providers + 3 people = 8
         entity_check = result['checks'][1]
         assert entity_check['value'] == '8 (5/3/0/0/0)'
@@ -104,6 +104,12 @@ class TestStatusOk:
         # Git: 非 git 仓库 → n/a info (不升级状态)
         assert result['checks'][3]['value'] == 'n/a'
         assert result['checks'][3]['status'] == 'info'
+        # 热点数: 空 snapshot hotspots → 0 条 warning (LLM-RADAR-CL005)
+        assert result['checks'][4]['label'] == '热点数'
+        assert result['checks'][4]['value'] == '0 条'
+        assert result['checks'][4]['status'] == 'warning'
+        # 热点数 warning 不影响主 status (仍 ok)
+        assert result['status'] == 'ok'
 
     def test_actions_present(self, status_env):
         c, mod = status_env

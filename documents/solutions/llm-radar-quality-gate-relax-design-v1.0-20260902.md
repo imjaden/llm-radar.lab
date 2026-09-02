@@ -127,6 +127,6 @@ daily-checker 反复报「LLM Radar 数据更新: 未恢复（复验仍异常）
 
 1. `python3 -m pytest tests/ -m "not selenium" --ignore=tests/test_cli.py --ignore=tests/test_selenium.py -q` 全绿
 2. 新增 3 用例断言通过
-3. 冒烟: `lr status --json` checks 含 '热点数'；`lr run --force` 计时 LLM 阶段 ≤200s
+3. 冒烟: `lr status --json` checks 含 '热点数'；`lr run --force` 记录 LLM 阶段耗时（预期 ~216s, <300s 为承诺）
 4. `git checkout --` 还原测试写脏的 timestamp.json / overview.json / data/snapshot.json
 5. daily-checker 需求 prompt 落盘 cache/review-prep/ 打印给用户

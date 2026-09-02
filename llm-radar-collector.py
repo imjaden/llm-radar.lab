@@ -773,11 +773,12 @@ hotspots 数组中每个元素格式：
             self._print_ok(f'实体提取完成，耗时 {duration}s，共 {total} 个实体')
             return entities
         else:
-            # 重试最多 5 次：复用完整 prompt，末尾强调纯 JSON
+            # 重试最多 3 次：复用完整 prompt，末尾强调纯 JSON
             # 2026-08-10 修复: DeepSeek 长 prompt 偶发返回空 content(finish=length 计满 token),
-            # 单次重试成功率低, 改为 5 次重试, 并对空输出/解析失败分别记录
-            for retry_i in range(1, 6):
-                self._print_warn(f'JSON 解析失败, 重试 {retry_i}/5...')
+            # 单次重试成功率低, 改为 5 次重试; 2026-09-02 LLM-RADAR-CL005: 5→3 次
+            # （重试耗时 ~54s/次, 3 次后 LLM 阶段 ~216s, 总耗时 <300s 保证 heal 预算）
+            for retry_i in range(1, 4):
+                self._print_warn(f'JSON 解析失败, 重试 {retry_i}/3...')
                 retry_prompt = user_prompt + '\n\n只输出 JSON，不要使用 markdown 代码块包裹，不要添加任何说明文字。'
                 retry_result = self._call_deepseek(system_prompt, retry_prompt)
                 if not retry_result or retry_result.get('error'):
@@ -785,7 +786,7 @@ hotspots 数组中每个元素格式：
                     continue
                 retry_content = retry_result.get('content', '')
                 if not retry_content:
-                    self._print_warn(f'重试 {retry_i}/5 返回空内容 (finish_reason=length 计满 token)，跳过解析')
+                    self._print_warn(f'重试 {retry_i}/3 返回空内容 (finish_reason=length 计满 token)，跳过解析')
                     continue
                 retry_entities = self._parse_json_output(retry_content)
                 if retry_entities:
@@ -1443,11 +1444,16 @@ hotspots 数组中每个元素格式：
             median_age = median(ages)
             if median_age > 168:  # 7天
                 issues.append(f'事件中位数新鲜度 {median_age:.0f}h > 168h')
-        # 2. 热点数量
+        # 2. 实体数检查 (LLM-RADAR-CL005: 实体 0 全源失败仍阻断; 4 实体维度, 排除 hotspots)
+        #    场景: LLM 返回全空数组的 dict (truthy, run() L1739 放行) — 防空快照覆盖好数据
+        entity_count = sum(len(entities.get(d, [])) for d in ['providers', 'people', 'tools', 'llms'])
+        if entity_count == 0:
+            issues.append('实体提取为空（4 维度全 0）')
+        # 3. 热点数量 (LLM-RADAR-CL005: 阻断 → warning, 不阻断 push; 素材不足常态)
         hotspots = entities.get('hotspots', [])
         if len(hotspots) < 3:
-            issues.append(f'热点仅 {len(hotspots)} 条')
-        # 3. URL 质量 (2026-08-10 方案D: 降级为警告, 不再阻断 auto-push)
+            warnings.append(f'热点仅 {len(hotspots)} 条（未阻断）')
+        # 4. URL 质量 (2026-08-10 方案D: 降级为警告, 不再阻断 auto-push)
         url_stats = self._validate_entity_urls(entities)
         if url_stats.get('empty_urls', 0) > 5:
             warnings.append(f'空 URL: {url_stats["empty_urls"]} 条')
@@ -1455,11 +1461,11 @@ hotspots 数组中每个元素格式：
             warnings.append(f'截断 URL: {url_stats["truncated_urls"]} 条')
         if url_stats.get('bare_domain_urls', 0) > 2:
             warnings.append(f'裸域名 URL: {url_stats["bare_domain_urls"]} 条')
-        # 4. 数据完整性 (2026-08-10 方案D: 降级为警告)
+        # 5. 数据完整性 (2026-08-10 方案D: 降级为警告)
         comp = self._validate_data_completeness(entities)
         if comp.get('key_people_empty_ratio', 0) > 0.5:
             warnings.append(f'key_people 缺失率 {comp["key_people_empty_ratio"]:.0%}')
-        # 5. 去重比异常（仅当有存量数据时）
+        # 6. 去重比异常（仅当有存量数据时）
         return issues
 
     def _validate_entity_urls(self, entities):
@@ -1884,6 +1890,7 @@ hotspots 数组中每个元素格式：
 
         # checks
         dims = ['providers', 'people', 'tools', 'llms', 'hotspots']
+        dim_counts = [0, 0, 0, 0, 0]
         if snapshot:
             dim_counts = [len(snapshot.get(d, [])) for d in dims]
             entity_value = f'{sum(dim_counts)} ({"/".join(str(c) for c in dim_counts)})'
@@ -1891,11 +1898,17 @@ hotspots 数组中每个元素格式：
             entity_value = 'n/a'
         git_value = f'{ahead} ahead / {behind} behind' if git_status != 'info' else 'n/a'
 
+        # 热点数 (LLM-RADAR-CL005: 仅 checks 附加 warning, 不影响主 status)
+        hotspot_count = dim_counts[4] if snapshot else 0
+        hotspot_status = 'warning' if hotspot_count < 3 else 'info'
+        hotspot_value = f'{hotspot_count} 条' if snapshot else 'n/a'
+
         checks = [
             {'label': '数据日期', 'value': display_time or 'n/a', 'status': freshness},
             {'label': '实体数', 'value': entity_value, 'status': 'info'},
             {'label': '质量门禁', 'value': quality or 'n/a', 'status': quality_status},
             {'label': 'Git 同步', 'value': git_value, 'status': git_status},
+            {'label': '热点数', 'value': hotspot_value, 'status': hotspot_status},
         ]
 
         actions = [
