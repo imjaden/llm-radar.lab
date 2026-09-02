@@ -333,3 +333,13 @@ review_history:
     findings_open: 4
     tracking: LLM-RADAR-CL005 设计 v1.0 (961d666) — D1~D7 与 3 轮确认决策全锁定; REA-1 🟡 (实体0判定 5维度 vs 4实体维度 + 拦截位置误述); RIG-1 🟡 (重试日志 4 处只列 1 处); RIG-2 🟡 (status_str 因子误述); RIG-3 🟡 (耗时估算 40s vs 54s/次); O-1~O-6 ℹ️ 观察
     report: documents/reviews/llm-radar-quality-gate-relax-design-review-v1.0-20260902.md
+    resolved_by: re-review v1.1 (2026-09-02) — PASS 95/100 (A)
+  - date: 2026-09-02
+    reviewer: Security Reviewer (IRIS)
+    review_level: L2
+    verdict: PASS
+    score: 95
+    findings_total: 1
+    findings_open: 0
+    tracking: LLM-RADAR-CL005 设计复审 v1.1 (ba76927) — REA-1/RIG-1/RIG-2/RIG-3 ✅ 全修; SEC-001 ✅ 声明; N1 🟡 (§6 冒烟 ≤200s 未同步, 并入 impl); N2~N4 ℹ️
+    report: documents/reviews/llm-radar-quality-gate-relax-design-rereview-v1.1-20260902.md

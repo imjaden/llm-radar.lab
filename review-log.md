@@ -987,3 +987,34 @@
 - 重试块 4 处计数: L780 `/5` / L784 `/3` / L788 `/5` / L794 `3 次` — 设计只列 L780, L788 漏改。
 - 测试影响: test_ok_checks labels 断言需加 '热点数' (L96); test_warning_quality_failed (L165) 语义不变; test_timestamp.py 不调 _verify 不变; tests/ 无 _verify 直接单测 (新增 2 用例为首批)。
 - 未 commit / 未 push (任务显式约束); 本评审仅新增报告 + review-log 追加 + .review-level.yaml 追加 (3 件产物, 不碰 WIP 的 .hermes-project.yaml / data/snapshot.json / overview.json)。
+
+---
+
+## 2026-09-02 — 质量门禁放宽与重试优化设计 复审 (LLM-RADAR-CL005 v1.1)
+
+- **review者**: review/llm-radar-quality-gate-relax-design-rereview (hermes-1.2.0)
+- **范围**: 设计文档 v1.1 (ba76927) — 上轮 4 🟡 (REA-1/RIG-1/RIG-2/RIG-3) + SEC-001 逐项回归
+- **Tracking**: REA-1 ✅ / RIG-1 ✅ / RIG-2 ✅ / RIG-3 ✅ / SEC-001 ✅; N1 🟡 (§6 冒烟 ≤200s 未同步, 并入 impl); N2~N4 ℹ️; findings_open 0
+- **状态**: ✅ PASS — 95/100 (A)
+- **报告**: documents/reviews/llm-radar-quality-gate-relax-design-rereview-v1.1-20260902.md
+- **实现 prompt**: ✅ 已生成 (报告末「实现验收清单」段, 含 N1 修正)
+
+### 发现摘要
+
+| # | Severity | Title | Status |
+|---|----------|-------|--------|
+| REA-1 | ✅ | 实体0判定 4 实体维度 (排除 hotspots) + 分层拦截 (L1739 拦 None / _verify 新检查拦空 dict / L1428 防御) | 已修 |
+| RIG-1 | ✅ | 重试日志 4 处计数全列 (L780/L788 →/3; L784/L794 既有漂移) + L779 循环 | 已修 |
+| RIG-2 | ✅ | status_str 5 因子枚举 (快照/新鲜度/连续失败/质量门禁status/git分叉) | 已修 |
+| RIG-3 | ✅ | 耗时重ground 216s (324/6=54, 4×54), O-1 不承诺 ≤200s | 已修 |
+| SEC-001 | ✅ | §3.3 + §5 O-1b 取舍显式声明 | 已修 |
+| N1 | 🟡 | §6 冒烟「计时 LLM 阶段 ≤200s」与 216s 矛盾 (RIG-3 放宽未同步 §6) | 并入 impl |
+| N2~N4 | ℹ️ | 背景 ~40s 旧值 / D2 ~200s 略乐观 / L776-L778 注释+_verify docstring 同步未列 | 观察 |
+
+### 数据验证要点
+
+- 源码锚点复核: L1739 `if not entities: return False` / L1428 `return ['实体提取为空']` / L1433 4 维度循环 / L1857-1863 5 因子 / L1896 实体数 status='info' / 重试块 L779-794。
+- RIG-1 grep 全量: collector 重试块硬编码计数恰 L780/L784/L788/L794 四处 + L779 循环, 无遗漏; tests/ 无 retry 计数断言。
+- RIG-3 算术: 324/6=54s/次; 4 次调用×54=216s; 6 次=1 首次 + range(1,6) 5 重试, 自洽。
+- N1: §6 项 3「计时 LLM 阶段 ≤200s」与 §3.1/§5「≤200s 非承诺/非目标」自相矛盾, 照单必挂。
+- commit 报告 + review-log + .review-level.yaml (3 件产物), 不 push; 不碰 WIP (.hermes-project.yaml / data/snapshot.json / overview.json)。
