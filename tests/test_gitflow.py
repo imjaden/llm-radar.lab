@@ -97,10 +97,12 @@ class TestPushRecovery:
         assert ('push', '--force-with-lease', 'origin', 'main') in calls
 
     def test_rejected_rebase_conflict_dead_letter(self, collector, monkeypatch):
-        """v1.3: rebase 冲突 → force-with-lease 失败 → dead-letter (旧行为: 冲突直接 dead-letter 已更新)"""
+        """v1.4: rebase 冲突 → 禁 force-with-lease → 直接 dead-letter (防覆盖, CL005 fork 事故)"""
+        calls = []
         wrote = {}
 
         def fake_git(*args, timeout=60):
+            calls.append(args)
             if args[0] == 'push' and '--force-with-lease' not in args:
                 return _proc(1, 'rejected')
             if args[0] == 'pull':
@@ -117,7 +119,10 @@ class TestPushRecovery:
 
         monkeypatch.setattr(collector, '_write_dead_letter', fake_dead)
         collector._push_with_recovery([{'type': 'new'}], 'msg')
-        assert wrote.get('err') == 'rejected'
+        # v1.4: rebase 冲突后不再尝试 force-with-lease (防覆盖远端)
+        assert not any('--force-with-lease' in a for a in calls)
+        # dead-letter 记录冲突提示 (非原始 rejected)
+        assert '双向分叉' in wrote.get('err', '')
 
     def test_no_exception_when_all_fail(self, collector, monkeypatch):
         monkeypatch.setattr(collector, '_git_run',
@@ -127,8 +132,8 @@ class TestPushRecovery:
         # 全部失败也不应抛异常
         collector._push_with_recovery([{'type': 'new'}], 'msg')
 
-    def test_rebase_conflict_then_force_lease_success(self, collector, monkeypatch):
-        """v1.3: rebase 冲突 → abort 后尝试 force-with-lease → 收敛完成 (不写 dead-letter)"""
+    def test_rebase_conflict_no_force_dead_letter(self, collector, monkeypatch):
+        """v1.4: rebase 冲突 → 即使 force-with-lease 会成功也不尝试 → dead-letter (防覆盖)"""
         calls = []
         wrote = {}
 
@@ -138,41 +143,16 @@ class TestPushRecovery:
                 return _proc(1, 'rejected')
             if args[0] == 'pull':
                 return _proc(1, 'CONFLICT')  # rebase 冲突
-            return _proc(0)  # force-with-lease 成功
+            return _proc(0)  # force-with-lease 本会成功 (但 v1.4 不应调用)
 
         monkeypatch.setattr(collector, '_git_run', fake_git)
         monkeypatch.setattr(collector, '_abort_rebase', lambda: None)
         monkeypatch.setattr(collector, '_write_dead_letter', lambda c, e: wrote.setdefault('err', e))
         collector._push_with_recovery([{'type': 'new'}], 'msg')
-        # force-with-lease 被调用且成功
-        assert ('push', '--force-with-lease', 'origin', 'main') in calls
-        assert calls.count(('push', '--force-with-lease', 'origin', 'main')) >= 1
-        # 收敛成功 → 不写 dead-letter
-        assert 'err' not in wrote
-
-    def test_rebase_conflict_force_lease_fail_dead_letter(self, collector, monkeypatch):
-        """v1.3: rebase 冲突 → force-with-lease 也失败 → dead-letter (不抛异常)"""
-        calls = []
-        wrote = {}
-
-        def fake_git(*args, timeout=60):
-            calls.append(args)
-            if args[0] == 'push' and '--force-with-lease' not in args:
-                return _proc(1, 'rejected')
-            if args[0] == 'pull':
-                return _proc(1, 'CONFLICT')  # rebase 冲突
-            if args[0] == 'push' and '--force-with-lease' in args:
-                return _proc(1, 'lease fail')  # force 也失败
-            return _proc(0)
-
-        monkeypatch.setattr(collector, '_git_run', fake_git)
-        monkeypatch.setattr(collector, '_abort_rebase', lambda: None)
-        monkeypatch.setattr(collector, '_write_dead_letter', lambda c, e: wrote.setdefault('err', e))
-        collector._push_with_recovery([{'type': 'new'}], 'msg')
-        # force-with-lease 被尝试
-        assert ('push', '--force-with-lease', 'origin', 'main') in calls
-        # 全失败 → dead-letter 记录 rejected
-        assert wrote.get('err') == 'rejected'
+        # 冲突后绝不调用 force-with-lease
+        assert not any('--force-with-lease' in a for a in calls)
+        # 写 dead-letter 提示人工 merge
+        assert '人工 merge' in wrote.get('err', '')
 
 
 class TestCleanConflictFile:

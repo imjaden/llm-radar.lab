@@ -356,13 +356,14 @@ class LLMRadarCollector:
             else:
                 self._print_warn(f'pull --rebase 失败/冲突: {(r.stderr or "").strip()[:150]}')
                 self._abort_rebase()
-                # v1.3 补: rebase 冲突说明本地确实领先(有未 push commit) + 远端有新增,
-                # 双向分叉正是 force-with-lease 的适用场景(lease 保证不覆盖他人新 push)
-                r3 = self._git_run('push', '--force-with-lease', 'origin', 'main', timeout=120)
-                if r3.returncode == 0:
-                    self._print_ok('auto-push 完成（rebase 冲突后 force-with-lease 收敛）')
-                    return
-                self._print_warn(f'force-with-lease push 失败(冲突分支): {(r3.stderr or "").strip()[:150]}')
+                # v1.4 (2026-09-03): rebase 冲突 = 本地链不含远端最新 commit (双向数据分叉),
+                # force-with-lease 仅校验「远端从 fetch 后未被再改」, 不校验「push 内容含远端」;
+                # 曾覆盖远端丢失另一端 commit (CL005 fork 事故: 服务器 ad62fa8 覆盖 Mac 链)。
+                # 改为不 force: 走 dead-letter + 提示人工 merge, 防止任一 clone 自动覆盖。
+                self._print_err('rebase 冲突: 双向数据分叉, 已停止 auto-push (防覆盖), 需人工 merge')
+                self._write_dead_letter(changelog,
+                                        'rebase 冲突 (双向分叉): 停止 auto-push 防覆盖, 人工 merge 后重试')
+                return
 
             # 仍失败 → dead-letter（不抛异常）
             self._write_dead_letter(changelog, stderr)
