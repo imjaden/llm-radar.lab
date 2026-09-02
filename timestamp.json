@@ -1,12 +1,12 @@
 {
-  "generated_at": "2026-09-02T07:04:56.776343",
+  "generated_at": "2026-09-02T14:05:16.200114",
   "last_news_date": "2026-09-02",
-  "last_run_at": "2026-09-02T07:04:56.804481",
+  "last_run_at": "2026-09-02T14:05:16.228775",
   "last_run_status": "failed",
   "last_run_detail": "热点仅 0 条",
   "server": "linux",
   "hostname": "iZ2ze0mvn4qle5b5jp7ndlZ",
-  "entity_count": 381,
+  "entity_count": 382,
   "period": "2026-08-26 ~ 2026-09-02",
   "version": "1.0"
 }
