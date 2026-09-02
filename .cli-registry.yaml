@@ -4,6 +4,8 @@ python: python3
 
 env:
   conda: py3.12
+  conda_sh: /opt/homebrew/Caskroom/miniconda/base/etc/profile.d/conda.sh
+  brew_prefix: /opt/homebrew
   # NOTE: 本 Mac 用 py3.12; Linux 主机部署时需改为 conda llm-radar (见 AGENTS.md)
 
 commands:
