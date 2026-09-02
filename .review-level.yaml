@@ -324,3 +324,12 @@ review_history:
     findings_open: 1
     tracking: LLM-RADAR-CL004 实现审计 (f0276ea) — 验收 5 项 + RIG-001/002 ✅ 全落地; AUD-001 🟡 (no_key_log 断言 scope 盲点, 本地无 key 环境假绿风险, CI 有效, 建议后续 test 硬化); IMPL-OBS-1~5 🟢 观察; 测试 21 + 243/2 独立复跑全绿
     report: documents/reviews/llm-radar-skills-prompt-impl-audit-v1.0-20260827.md
+  - date: 2026-09-02
+    reviewer: Security Reviewer (IRIS)
+    review_level: L2
+    verdict: CONDITIONAL PASS
+    score: 80
+    findings_total: 4
+    findings_open: 4
+    tracking: LLM-RADAR-CL005 设计 v1.0 (961d666) — D1~D7 与 3 轮确认决策全锁定; REA-1 🟡 (实体0判定 5维度 vs 4实体维度 + 拦截位置误述); RIG-1 🟡 (重试日志 4 处只列 1 处); RIG-2 🟡 (status_str 因子误述); RIG-3 🟡 (耗时估算 40s vs 54s/次); O-1~O-6 ℹ️ 观察
+    report: documents/reviews/llm-radar-quality-gate-relax-design-review-v1.0-20260902.md

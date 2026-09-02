@@ -958,3 +958,32 @@
 - AUD-001: no_key_log 断言串 "DeepSeek API key" 仅匹配构造器成功路径日志 (L181); 失败路径 "DEEPSEEK_API_KEY 未配置" (L183, 全大写+下划线) 不含该串 — 本地无 key 环境假绿风险, CI (secrets key) 守卫有效; 断言串出自评审验收清单原文, 建议后续 test 硬化 (双串或时间戳前缀断言)。
 - 测试污染精确还原: timestamp.json / overview.json / data/snapshot.json git checkout 指定 3 文件, git status 回到仅 3 件评审产物 (与审计前一致)。
 - 未 commit / 未 push (1A 约束); 本审计仅新增报告 + review-log 追加 + .review-level.yaml 追加。
+
+---
+
+## 2026-09-02 — 质量门禁放宽与重试优化设计 评审 (LLM-RADAR-CL005)
+
+- **review者**: review/llm-radar-quality-gate-relax-design (hermes-1.2.0)
+- **范围**: 设计文档 llm-radar-quality-gate-relax-design-v1.0-20260902.md (961d666) — D1~D7 决策 + §3 详细设计 + §4 测试影响 + §5 观察项
+- **Tracking**: REA-1 🟡 (实体0判定 5维度 vs 4实体维度口径 + 拦截位置误述) / RIG-1 🟡 (重试日志 4 处只列 1 处) / RIG-2 🟡 (status_str 因子误述, "实体数"非因子) / RIG-3 🟡 (~40s/次 vs 实测 324s/6≈54s, O-1 "≤200s" 余量不足) / O-1~O-6 ℹ️; findings_open 4
+- **状态**: ⏳ CONDITIONAL PASS — 80/100 (B)
+- **报告**: documents/reviews/llm-radar-quality-gate-relax-design-review-v1.0-20260902.md
+- **实现 prompt**: ⬜ 无需生成 (非 PASS)
+
+### 发现摘要
+
+| # | Severity | Title | Status |
+|---|----------|-------|--------|
+| REA-1 | 🟡 | 实体0判定维度口径 (5维度 vs 4实体维度) + 拦截位置误述 (run L1739 vs _verify L1428) | 待修 |
+| RIG-1 | 🟡 | 重试日志 4 处计数只列 1 处 (L788 漏; L784/L794 既有漂移) | 待修 |
+| RIG-2 | 🟡 | status_str 因子枚举误述 ("实体数"非因子, 漏 quality_status/git_status) | 待修 |
+| RIG-3 | 🟡 | 耗时估算 ~40s/次 vs 实测 54s/次, O-1 "≤200s" 余量不足 | 待修 |
+| O-1~O-6 | ℹ️ | 跨项目锚点/用例落点/热点数读存量/实体数冗余/空changelog/方法名typo | 观察 |
+
+### 数据验证要点
+
+- 源码锚点全命中: _verify L1419-1463 (热点阻断 L1447-1449) / checks L1894-1899 / status_str L1857-1863 / merge_entities quality_ok 链路 L951→1141→1155→1283 / _auto_push partial L372-399。
+- 漂移: 方法名 `_extract_entities` → 实际 `extract_entities` (L681); status_str 因子实为 5 项 (快照缺失/新鲜度/连续失败/质量门禁status/git分叉), 无 "实体数"。
+- 重试块 4 处计数: L780 `/5` / L784 `/3` / L788 `/5` / L794 `3 次` — 设计只列 L780, L788 漏改。
+- 测试影响: test_ok_checks labels 断言需加 '热点数' (L96); test_warning_quality_failed (L165) 语义不变; test_timestamp.py 不调 _verify 不变; tests/ 无 _verify 直接单测 (新增 2 用例为首批)。
+- 未 commit / 未 push (任务显式约束); 本评审仅新增报告 + review-log 追加 + .review-level.yaml 追加 (3 件产物, 不碰 WIP 的 .hermes-project.yaml / data/snapshot.json / overview.json)。
