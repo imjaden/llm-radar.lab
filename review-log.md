@@ -1107,3 +1107,29 @@
 - `git diff ad62fa8..3633cf4 -- llm-radar-collector.py tests/ .cli-registry.yaml features.md` = CL005 代码变更存在 (retry 5→3 / conda_sh / test_verify.py / features.md 实体数检查)。
 - 服务器 3 commit (685a3e2/ac3cc0f/ad62fa8) 逐个 `git show --stat` = 纯数据文件, 0 代码变更。
 - timestamp.json 当前值: generated_at=2026-09-02T21:02:05.317946, server=linux, hostname=iZ2ze0mvn4qle5b5jp7ndlZ。
+
+---
+
+## 2026-09-03 — Push 防覆盖修复审计 (v1.4)
+
+- **review者**: Security Reviewer (review profile)
+- **范围**: commit 074ac1b `fix@llm-radar: disable force-with-lease on rebase conflict (CL005 fork prevention v1.4)`
+- **Tracking**: (无发现); findings_open 0
+- **状态**: ✅ PASS — 100/100 (A)
+- **报告**: documents/reviews/llm-radar-push-anti-overwrite-audit-20260903.md
+- **实现 prompt**: ⬜ 无需生成 (修复已完成, PASS 后 push)
+
+### 审计结论
+
+- else 分支修改 ✅: rebase 冲突 → 禁 force-with-lease → dead-letter + 提示人工 merge (L356-366)
+- rebase 成功路径 ✅: r2 force-with-lease 保留 (L348-355), 该路径 push 内容含远端, force 安全
+- 测试更新 ✅: 3 用例覆盖新行为 (冲突禁 force + dead-letter 断言), 旧 v1.3 用例正确移除
+- _sync_remote / 正常 push ✅: 不受影响 (独立路径)
+- 无遗漏 ✅: finally abort 清理保留, dead-letter 字段语义正确
+
+### 数据验证
+
+- 全量测试: `pytest -m "not selenium" --ignore=test_cli.py --ignore=test_selenium.py` → 222 passed
+- diff 最小性: 2 files changed, 22 insertions(+), 41 deletions(-)
+
+实现 prompt: ✅ 已生成
