@@ -1018,3 +1018,31 @@
 - RIG-3 算术: 324/6=54s/次; 4 次调用×54=216s; 6 次=1 首次 + range(1,6) 5 重试, 自洽。
 - N1: §6 项 3「计时 LLM 阶段 ≤200s」与 §3.1/§5「≤200s 非承诺/非目标」自相矛盾, 照单必挂。
 - commit 报告 + review-log + .review-level.yaml (3 件产物), 不 push; 不碰 WIP (.hermes-project.yaml / data/snapshot.json / overview.json)。
+
+---
+
+## 2026-09-02 — 质量门禁放宽与重试优化 实现审计 (LLM-RADAR-CL005)
+
+- **review者**: review/llm-radar-quality-gate-relax-impl-audit (hermes-1.2.0)
+- **范围**: feat commit 1dc7ddf (retry 5→3 + 质量门禁放宽 + status checks 第5项) + tests + design v1.1 §6 N1 修正
+- **Tracking**: D2/D5/D6/D7 ✅ 全落地; DOC-1/2/3 🟡 文档漂移 (docstring/features.md 审计中修复, AGENTS.md 待用户改); findings_open 1
+- **状态**: ✅ PASS — 95/100 (A)
+- **报告**: documents/reviews/llm-radar-quality-gate-relax-impl-audit-20260902.md
+- **实现 prompt**: ⬜ 无需生成 (实现已完成, PASS 后 push)
+
+### 发现摘要
+
+| # | Severity | Title | Status |
+|---|----------|-------|--------|
+| DOC-1 | 🟡 | _verify docstring 仍称「热点数量」为阻断硬指标 (N4 清单项漏改) | 审计中修复 |
+| DOC-2 | 🟡 | features.md 质量门禁「热点 ≥3 条」旧口径 | 审计中修复 |
+| DOC-3 | 🟡 | AGENTS.md L82/L145 仍描述旧门禁 (protected 文件无写权限) | 待用户改 |
+
+### 数据验证要点
+
+- 独立复跑: `pytest -m "not selenium" --ignore=test_cli.py --ignore=test_selenium.py` → 223 passed, 2 deselected; test_verify.py 4 用例 + test_status.py::test_ok_checks 5 labels 全绿。
+- 源码锚点: L780 range(1,4) + L781/785/789/795 四处 /3 计数; L1449-1451 实体 4 维度 ==0 阻断; L1454-1455 热点 <3 warning; L1429 防御; run L1745 拦 None; L1911 checks 第5项; L1864-1869 status_str 5 因子无热点。
+- 联动面核验: merge_entities quality_ok=False 时空实体 dict merge 为 no-op (不 wipe 存量) + _auto_push partial 仅推 timestamp.json; 前端 index.html 空热点态 (L570) 已兜底, 无破坏。
+- 冒烟: `lr status --json` 5 checks 含「热点数」(81 条 info); 主 status=warning 因 Git 6 ahead 非热点。
+- D3 需求 prompt 已落盘 cache/review-prep/cl005-daily-checker-handoff-prompt.md。
+- 测试污染还原: timestamp.json / overview.json / data/snapshot.json git checkout 还原; .hermes-project.yaml WIP 不碰。
