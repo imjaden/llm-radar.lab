@@ -31,6 +31,7 @@ import sys
 import json
 import time
 import subprocess
+import platform
 from pathlib import Path
 from datetime import datetime, timedelta, timezone
 
@@ -38,6 +39,20 @@ try:
     import yaml
 except ImportError:  # pragma: no cover
     yaml = None
+
+
+def _is_flclash_running():
+    """检测 FlClash 代理是否运行（macOS）"""
+    if platform.system() != 'Darwin':
+        return True  # 非 macOS 跳过检测
+    try:
+        result = subprocess.run(
+            ['pgrep', '-f', 'FlClash'],
+            capture_output=True, text=True, timeout=5
+        )
+        return result.returncode == 0
+    except Exception:
+        return False
 
 # ===== Constants =====
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
@@ -872,6 +887,13 @@ def main(argv=None):
               '已写空 data/twitter.json')
         commit_and_push(0)
         return 0
+
+    # 检测 FlClash 代理（X 需要）
+    if not _is_flclash_running():
+        print('[twitter-collector] ❌ FlClash 未运行，无法访问 X (exit 1)',
+              file=sys.stderr)
+        return 1
+
     cdp_port = None
     if mode == 'attach':
         cdp_port = int(os.environ.get('TWITTER_CDP_PORT', '9222'))

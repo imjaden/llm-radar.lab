@@ -39,6 +39,20 @@ from datetime import datetime, timedelta
 from openai import OpenAI
 from prettytable import PrettyTable
 
+
+def _is_flclash_running():
+    """检测 FlClash 代理是否运行（macOS）"""
+    if platform.system() != 'Darwin':
+        return True  # 非 macOS 跳过检测
+    try:
+        result = subprocess.run(
+            ['pgrep', '-f', 'FlClash'],
+            capture_output=True, text=True, timeout=5
+        )
+        return result.returncode == 0
+    except Exception:
+        return False
+
 # ===== Constants =====
 PROJECT_ROOT = Path(__file__).resolve().parent
 DATA_DIR = PROJECT_ROOT / 'data'
@@ -660,6 +674,14 @@ class LLMRadarCollector:
         if degraded:
             self._print_warn(f'跳过 {len(degraded)} 个已降级源: {", ".join(degraded)}')
             source_keys = [k for k in source_keys if k not in degraded]
+
+        # 检测 FlClash 代理（海外源需要）
+        NEEDS_FLCLASH = {'github-trending', 'huggingface'}
+        if not _is_flclash_running():
+            blocked = [k for k in source_keys if k in NEEDS_FLCLASH]
+            if blocked:
+                self._print_warn(f'FlClash 未运行，跳过海外源: {", ".join(blocked)}')
+                source_keys = [k for k in source_keys if k not in NEEDS_FLCLASH]
 
         results = []
         for key in source_keys:
