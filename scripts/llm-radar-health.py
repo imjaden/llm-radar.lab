@@ -34,8 +34,8 @@ import time
 import urllib.request
 from datetime import datetime, timedelta
 
-# ===== 阈值常量（默认 7h，可用 LLM_RADAR_STALE_HOURS 覆盖）=====
-STALE_HOURS = int(os.environ.get('LLM_RADAR_STALE_HOURS', '7'))
+# ===== 阈值常量（默认 12h，可用 LLM_RADAR_STALE_HOURS 覆盖）=====
+STALE_HOURS = int(os.environ.get('LLM_RADAR_STALE_HOURS', '12'))
 
 # 线上健康检查端点（自有域名，HTTPS）
 ENDPOINT = 'https://llm-radar.lab.jaden.tech/timestamp.json'

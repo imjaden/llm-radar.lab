@@ -47,8 +47,10 @@ FETCH_CACHE_PATH = DATA_DIR / 'fetch-cache.json'
 SKILLS_DIR = PROJECT_ROOT / 'skills'
 
 # ===== Status 阈值 (lr status checkpoint 协议) =====
-# STALE_HOURS 对齐 scripts/llm-radar-health.py 语义 (7h); CRITICAL_HOURS 独立常量 (48, 非 STALE*7 近似)
-STALE_HOURS = int(os.environ.get('LLM_RADAR_STALE_HOURS', '7'))        # warning 阈值
+# STALE_HOURS 对齐 scripts/llm-radar-health.py 语义 (12h, 2026-09-03 从 7h 放宽:
+# 正常 cron 7h 节奏 + 跨夜空窗 10-14h 需余量, 避免跨夜必报误触发 heal);
+# CRITICAL_HOURS 独立常量 (48, 非 STALE*7 近似)
+STALE_HOURS = int(os.environ.get('LLM_RADAR_STALE_HOURS', '12'))       # warning 阈值
 CRITICAL_HOURS = int(os.environ.get('LLM_RADAR_CRITICAL_HOURS', '48'))  # critical 阈值
 
 # ===== News Sources =====
