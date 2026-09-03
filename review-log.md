@@ -1133,3 +1133,32 @@
 - diff 最小性: 2 files changed, 22 insertions(+), 41 deletions(-)
 
 实现 prompt: ✅ 已生成
+
+---
+
+## 2026-09-03 — STALE_HOURS 7→12 调整审计
+
+- **review者**: Security Reviewer (review profile)
+- **范围**: commit 2ff9b51 `fix@llm-radar: STALE_HOURS 7->12 for cross-night gap (2026-09-03)`
+- **Tracking**: 🟡 SEC-280 (docstring L28 minor); findings_open 0 blockers
+- **状态**: ✅ PASS — 98/100 (A)
+- **报告**: documents/reviews/llm-radar-stale-hours-audit-20260903.md
+- **实现 prompt**: ⬜ 无需生成 (常量调整, 无实现任务)
+
+### 审计结论
+
+- 双文件默认值同步 ✅: collector.py L53 + health.py L38 均为 `'12'`
+- 注释一致 ✅: collector L50-52 + health L37 注释已更新为 12h
+- docstring minor 🟡: health.py L28 docstring 仍写 "默认 7" (不影响运行时)
+- tests ✅: 222 passed, mod.STALE_HOURS 自动跟随
+- env 覆盖 ✅: LLM_RADAR_STALE_HOURS 环境变量机制完好
+- AGENTS.md L50 🟡: 仍写 STALE_HOURS=7 (protected 拦截, 待用户改)
+- 服务器 🟡: df9ef61 需后续 pull 同步
+
+### 数据验证
+
+- 全量测试: `pytest -m "not selenium" --ignore=test_cli.py --ignore=test_selenium.py` → 222 passed
+- diff 最小性: 2 files changed, 6 insertions(+), 4 deletions(-)
+- env 覆盖实测: `LLM_RADAR_STALE_HOURS=5` → 正确返回 5
+
+实现 prompt: ⬜ 无需生成
