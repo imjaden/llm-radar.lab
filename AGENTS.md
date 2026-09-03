@@ -47,7 +47,7 @@ lr run help / lr crontab help     # 单命令用法 (positional help 拦截, exi
 ```
 
 - 空入参 → 打印分组帮助 exit=0 (原 exit=1)。
-- `lr status` 阈值: STALE_HOURS=7 (LLM_RADAR_STALE_HOURS 可配) / CRITICAL_HOURS=48 (LLM_RADAR_CRITICAL_HOURS 可配)。
+- `lr status` 阈值: STALE_HOURS=12 (LLM_RADAR_STALE_HOURS 可配) / CRITICAL_HOURS=48 (LLM_RADAR_CRITICAL_HOURS 可配)。
 - 数据源全只读: timestamp.json (项目根) + data/metrics.json 全局 `consecutive_fails` + git rev-list 本地 ref (不 fetch) + snapshot.json。
 - wrapper fork 模板: `cache/cli-registry/wrapper.sh.tmpl` (移除 script-miner calls.log 段, exec 前加载项目 .env)。
 - Linux 主机部署: `.cli-registry.yaml` 的 `env.conda` 需从 `py3.12` 改为 `llm-radar`。
