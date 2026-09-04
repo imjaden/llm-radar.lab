@@ -1162,3 +1162,31 @@
 - env 覆盖实测: `LLM_RADAR_STALE_HOURS=5` → 正确返回 5
 
 实现 prompt: ⬜ 无需生成
+
+---
+
+## 2026-09-04 — FlClash 代理跳过海外源审计
+
+- **review者**: Security Reviewer (review profile)
+- **范围**: commit d73188b `feat@llm-radar: skip github/huggingface when FlClash proxy down`
+- **Tracking**: 无 🔴/🟡; OBS-1 (重复实现, 符合单脚本设计) / OBS-2 (无独立单测) ℹ️
+- **状态**: ✅ PASS — 100/100 (A)
+- **报告**: documents/reviews/llm-radar-flclash-proxy-skip-audit-20260904.md
+- **实现 prompt**: ⬜ 无需生成 (无实现任务)
+
+### 审计结论
+
+- 改动范围 ✅: 2 files, +44/-0 (collector.py +22, twitter-collector.py +22), 无测试脏文件
+- FlClash 检测 ✅: `pgrep -f FlClash` (list 形式, 无注入), 非 Darwin 返回 True 跳过检测, except → False fail-closed
+- fetch_all 跳过 ✅: `NEEDS_FLCLASH={github-trending,huggingface}` 与 SOURCES key 一致, TechCrunch 已移除无遗漏
+- twitter exit 1 ✅: 位置在 login/dry-run/空 targets 之后、cmd_collect 之前, 仅 collect/attach 触发
+- tests ✅: 222 passed, 2 deselected (非 selenium 全量)
+- 实测 ✅: 本机 FlClash 运行中 (pgrep 命中 PID 77742/77746), 检测返回 True 无跳过
+
+### 数据验证
+
+- 全量测试: `pytest -m "not selenium" --ignore=test_cli.py --ignore=test_selenium.py` → 222 passed
+- diff 最小性: 2 files changed, 44 insertions(+), 0 deletions(-)
+- 测试后已 `git checkout --` 还原 timestamp.json / overview.json / data/snapshot.json
+
+实现 prompt: ⬜ 无需生成

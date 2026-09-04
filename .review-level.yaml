@@ -361,3 +361,12 @@ review_history:
     findings_open: 0
     tracking: push anti-overwrite audit (074ac1b, v1.4) — 无发现; else 分支禁 force ✅; rebase 成功路径保留 ✅; 测试 3 用例 ✅; 222 passed
     report: documents/reviews/llm-radar-push-anti-overwrite-audit-20260903.md
+  - date: 2026-09-04
+    reviewer: Security Reviewer
+    review_level: L2
+    verdict: PASS
+    score: 100
+    findings_total: 0
+    findings_open: 0
+    tracking: flclash-proxy-skip audit (d73188b) — 无发现; pgrep list 形式无注入 ✅; 非 Darwin 跳过检测 ✅; fetch_all 跳过海外源 ✅; twitter exit 1 ✅; 222 passed
+    report: documents/reviews/llm-radar-flclash-proxy-skip-audit-20260904.md
