@@ -376,15 +376,26 @@ review_history:
     verdict: CONDITIONAL_PASS
     score: 70
     findings_total: 6
-    findings_open: 6
+    findings_open: 0
     tracking: LLM-RADAR-CL006 设计评审 v1.0 (b981e9e) — RIG-1~6 🟡 待修 (overview.json 字段漂移/_merge_single 语义不准确/D0 SHA 漂移/docstring 未同步/partial 参数未锁定/平局非确定); 修复后重审
     report: documents/reviews/llm-radar-fork-converge-design-review-v1.0-20260906.md
+    resolved_by: re-review v1.1 (2026-09-06) — RIG-1~6/O-1~3 全修; 残余 RIG-7/8/9 → v1.1-r2
   - date: 2026-09-06
     reviewer: Security Reviewer
     review_level: L2
     verdict: CONDITIONAL_PASS
     score: 85
     findings_total: 3
-    findings_open: 3
+    findings_open: 0
     tracking: LLM-RADAR-CL006 设计复审 v1.1 (1985ca8) — RIG-1~6/O-1~3 ✅ 全修; RIG-7/8/9 (新 🟡 残余) 待 v1.1-r2
     report: documents/reviews/llm-radar-fork-converge-design-rereview-v1.1-20260906.md
+    resolved_by: re-review v1.1-r2 (2026-09-06) — PASS 100/100
+  - date: 2026-09-06
+    reviewer: Security Reviewer
+    review_level: L2
+    verdict: PASS
+    score: 100
+    findings_total: 0
+    findings_open: 0
+    tracking: LLM-RADAR-CL006 设计复审 v1.1-r2 (5c1bf42) — RIG-7/8/9 ✅ 全修; O-4 🟢 观察 (twitter-targets.yaml 白名单表放置, 实施时明确人工)
+    report: documents/reviews/llm-radar-fork-converge-design-rereview-v1.1-r2-20260906.md

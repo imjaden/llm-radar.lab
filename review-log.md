@@ -1276,3 +1276,43 @@
 - RIG-8 根因链实证: run() L1164/1168 始终写盘 snapshot/overview → partial 仅 commit timestamp.json → converge D2 步骤3 脏守护拦截。
 - 全文 grep 无「平局保留本地」/「复用 _merge_single」活性残留 (仅修订记录描述「已删」)。
 - 未修改任何项目数据文件; 报告 + review-log + .review-level.yaml 三件产物 commit 用 audit@review (不 push)。
+
+---
+
+## 2026-09-06 — 双端分叉自动收敛设计复审 v1.1-r2 (LLM-RADAR-CL006)
+
+- **review者**: Security Reviewer (review profile)
+- **范围**: documents/solutions/llm-radar-git-fork-converge-design-v1.1-r2-20260906.md (commit 5c1bf42 docs@llm-radar) — 复审 v1.1 的 3 🟡 (RIG-7/8/9) 修复核验 + 新问题扫描; 本轮仅评审不 push (PASS 后由 ops 执行 Phase 0 收敛并 push, 随后另行调度实现审计)
+- **Tracking**: RIG-7/8/9 ✅ 全修; O-4 🟢 观察 (twitter-targets.yaml 白名单表放置, 实施时明确人工); findings_open 0
+- **状态**: ✅ PASS — 100/100 (A)
+- **报告**: documents/reviews/llm-radar-fork-converge-design-rereview-v1.1-r2-20260906.md
+- **实现 prompt**: ✅ 已生成 (cache/review-prep/prompt-llm-radar-fork-converge-impl-20260906.md)
+
+### 修复核验
+
+| # | v1.1 问题 | v1.1-r2 验证 |
+|---|----------|-------------|
+| RIG-7 | overview.json D1 规则遗漏 v/r/rd + h 截断 | ✅ 7 字段 v/t/p/s/h/r/rd 全覆盖, 与 _write_overview L1358-1366 逐字段一致; h 按 (date,hot_score) 降序 top3 (非并集) |
+| RIG-8 | partial→converge 与 D2 脏守护矛盾 | ✅ D3 L172 锁定先 checkout -- data/snapshot.json overview.json 丢弃 → clean → _converge_fork; dead-letter changelog_count:0/snapshot:[] 与 L332-347 契约一致; 行号 L1164/L1168/L399 全属实 |
+| RIG-9 | 多时间字段优先级未定 | ✅ D1 L126 锁定 last_event_date > date > updated_at (存在即用不交叉, updated_at fallback) + 单测冲突断言 (L187) |
+
+### 新增发现
+
+| # | Severity | Title | Status |
+|---|----------|-------|--------|
+| O-4 | 🟢 | twitter-targets.yaml 在 D1「数据白名单」表内但标注「非合并对象」, 与 L59「前者纳入白名单」措辞轻微张力 (意图明确: config 人工) | 实施时一行澄清 |
+
+### 3D 评分
+
+| 维度 | 评级 | 说明 |
+|:-----|:----:|:-----|
+| 合理性 | 🟢 | 根因/方案不变, 三轮已代码级确认 |
+| 严格性 | 🟢 | RIG-7/8/9 全修无新矛盾; 仅 O-4 🟢 文档清晰度 |
+| 安全性 | 🟢 | v1.4 契约维持 (无 force/白名单外 abort/清理残留态), 确定性 (跨机 tie-break) 成立, 0 新攻击面 |
+
+### 数据验证要点
+
+- 分叉实况复核: merge-base af48ced; 本地 ahead 7 / 远端 ahead 3 (本地较 v1.1 复审时 5/3 再增 2 审计 commit), RIG-3 修复已免疫。
+- RIG-7/8/9 逐行源码实证: _write_overview L1358-1366 (7 字段) / _save_snapshot L1164 + _write_overview L1168 (partial 写盘) / _auto_push partial L395-416 仅 add timestamp.json L399 / _write_dead_letter L332-347 / _sync_remote L271-297 / _push_with_recovery L349-387 / run() L1745 sync 先于 L1748 _think, 行号全部属实。
+- 全文无「平局保留本地」/「复用 _merge_single」活性残留; 时间优先级锁定为确定性闭环。
+- 未修改任何项目数据文件; 报告 + review-log + .review-level.yaml + cache/review-prep/ 实现 prompt 产物 commit 用 audit@review (不 push)。
