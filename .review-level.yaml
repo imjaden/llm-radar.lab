@@ -370,3 +370,12 @@ review_history:
     findings_open: 0
     tracking: flclash-proxy-skip audit (d73188b) — 无发现; pgrep list 形式无注入 ✅; 非 Darwin 跳过检测 ✅; fetch_all 跳过海外源 ✅; twitter exit 1 ✅; 222 passed
     report: documents/reviews/llm-radar-flclash-proxy-skip-audit-20260904.md
+  - date: 2026-09-06
+    reviewer: Security Reviewer
+    review_level: L2
+    verdict: CONDITIONAL_PASS
+    score: 70
+    findings_total: 6
+    findings_open: 6
+    tracking: LLM-RADAR-CL006 设计评审 v1.0 (b981e9e) — RIG-1~6 🟡 待修 (overview.json 字段漂移/_merge_single 语义不准确/D0 SHA 漂移/docstring 未同步/partial 参数未锁定/平局非确定); 修复后重审
+    report: documents/reviews/llm-radar-fork-converge-design-review-v1.0-20260906.md

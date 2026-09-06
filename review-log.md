@@ -1190,3 +1190,42 @@
 - 测试后已 `git checkout --` 还原 timestamp.json / overview.json / data/snapshot.json
 
 实现 prompt: ⬜ 无需生成
+
+---
+
+## 2026-09-06 — 双端分叉自动收敛设计评审 v1.0 (LLM-RADAR-CL006)
+
+- **review者**: Security Reviewer (review profile)
+- **范围**: documents/solutions/llm-radar-git-fork-converge-design-v1.0-20260906.md (commit b981e9e docs@llm-radar) — L2 设计评审; 本轮仅评审不 push (仓库 3 ahead/3 behind 分叉态, Phase 0 收敛由 ops 在 PASS 后执行)
+- **Tracking**: RIG-1~6 🟡 待修; 无 🔴; 安全性 🟢 (v1.4 意图保留并强化)
+- **状态**: ⏳ CONDITIONAL PASS — 70/100 (B)
+- **报告**: documents/reviews/llm-radar-fork-converge-design-review-v1.0-20260906.md
+- **实现 prompt**: ⬜ 未生成 (非 PASS, ops 修 v1.1 后复评)
+
+### 发现摘要
+
+| # | Severity | Title | Status |
+|---|----------|-------|--------|
+| RIG-1 | 🟡 | overview.json 合并规则字段漂移 (generated_at vs 实际 `t`; `h`/s.pr/pe/to/ll/ho 未覆盖) | 待修 v1.1 |
+| RIG-2 | 🟡 | 「复用 _merge_single(语义同)」不成立 (参数序 new-wins ≠ 较新胜出; 取并未定义) | 待修 v1.1 |
+| RIG-3 | 🟡 | D0 Phase 0 硬编码 SHA/「2 ahead/2 behind」已漂移 (实况 3/3 + e01c6dd) | 待修 v1.1 |
+| RIG-4 | 🟡 | _sync_remote/_push_with_recovery docstring 契约未同步 (D3 加 push/删 force) | 待修 v1.1 |
+| RIG-5 | 🟡 | partial 分支复用 _push_with_recovery 参数映射未锁定 (无 changelog) | 待确认 |
+| RIG-6 | 🟡 | 「平局保留本地」与「确定性(评审可审)」矛盾 (跨机非确定 tie-break) | 待修 v1.1 |
+
+### 3D 评分
+
+| 维度 | 评级 | 说明 |
+|:-----|:----:|:-----|
+| 合理性 | 🟢 | 根因代码级成立, 语义并集方案正确, 非目标守界良好 |
+| 严格性 | 🟡 | 6 个规格精度/字段名/文档同步/开放决策缺口 |
+| 安全性 | 🟢 | 删 force-with-lease 已验证安全; v1.4 意图保留并强化; 0 注入面 |
+
+### 数据验证要点
+
+- 分叉拓扑实测: merge-base af48ced; 本地 ahead 3 (8eee136→7d0a990→b981e9e) / 远端 ahead 3 (d0ad26e→08cae7d→e01c6dd); 每 auto-push commit 仅动 3 数据文件 (4 笔实证)。
+- 真实并集佐证: providers union=101 (local=100/remote=100/local_only=1/remote_only=1) 与设计一致; hotspots union=92 > max(90) (RIG 观察)。
+- collector.log 全量: 110「远端分叉本地优先」+ 23「残留 rebase 状态」+ 6 dead-letter + 5「双向数据分叉需人工 merge」(设计「13+ 次」为保守低估)。
+- 代码锚点全核对: _sync_remote L293-295 分叉分支 / _push_with_recovery L366-371 force 分支 + L372-382 冲突分支 / _auto_push L411 partial / _merge_single L1185 / run L1745 sync 先于 L1748 _think, 行号全部属实。
+- force-with-lease 仅存 L367 一处 (D3 删除目标); anti-overwrite 3 用例 (test_gitflow L82/L99/L135) 存在且需改写语义。
+- 未修改任何项目数据文件; 报告 + review-log + .review-level.yaml 三件产物 commit 用 audit@review (不 push)。
