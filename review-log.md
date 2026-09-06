@@ -1229,3 +1229,50 @@
 - 代码锚点全核对: _sync_remote L293-295 分叉分支 / _push_with_recovery L366-371 force 分支 + L372-382 冲突分支 / _auto_push L411 partial / _merge_single L1185 / run L1745 sync 先于 L1748 _think, 行号全部属实。
 - force-with-lease 仅存 L367 一处 (D3 删除目标); anti-overwrite 3 用例 (test_gitflow L82/L99/L135) 存在且需改写语义。
 - 未修改任何项目数据文件; 报告 + review-log + .review-level.yaml 三件产物 commit 用 audit@review (不 push)。
+
+---
+
+## 2026-09-06 — 双端分叉自动收敛设计复审 v1.1 (LLM-RADAR-CL006)
+
+- **review者**: Security Reviewer (review profile)
+- **范围**: documents/solutions/llm-radar-git-fork-converge-design-v1.1-20260906.md (commit 1985ca8 docs@llm-radar) — 复审 v1.0 的 6 🟡 (RIG-1~6) + 3 🟢 (O-1~3) 修复核验 + 新问题扫描; 本轮仅评审不 push
+- **Tracking**: RIG-1~6 + O-1~3 ✅ 全修; RIG-7/8/9 (新 🟡 残余) 待 v1.1-r2
+- **状态**: ⏳ CONDITIONAL PASS — 85/100 (A 阈值线)
+- **报告**: documents/reviews/llm-radar-fork-converge-design-rereview-v1.1-20260906.md
+- **实现 prompt**: ⬜ 未生成 (非 PASS, ops 出 v1.1-r2 后复评)
+
+### 修复核验
+
+| # | v1.0 问题 | v1.1 验证 |
+|---|----------|---------|
+| RIG-1 | overview.json 字段漂移 | ⚠️ 部分 — t/s.p\|pe\|to\|ll\|ho/h ✅, 遗漏 v/r/rd → RIG-7 |
+| RIG-2 | _merge_single 复用不成立 | ✅ _union_record 独立规则 (空值填补/时间胜出/字典序 tie-break) + 单测 |
+| RIG-3 | D0 SHA/计数漂移 | ✅ 以 fetch 后实况为准 + 时间点快照标注 |
+| RIG-4 | docstring 未同步 | ✅ D3 两行显式纳入 _sync_remote/_push_with_recovery |
+| RIG-5 | partial 参数未锁定 | ⚠️ 参数映射 ✅ (changelog_count:0/snapshot:[] 与 _write_dead_letter 一致), 但 dirty 守护矛盾 → RIG-8 |
+| RIG-6 | 平局非确定 | ✅ JSON 字典序 tie-break (跨机确定), 删「平局保留本地」 |
+| O-1~O-3 | 3 🟢 观察 | ✅ 均接受/声明 (目标1 限 4 维度 / changelog 折叠 / scope 维持现状) |
+
+### 新增发现
+
+| # | Severity | Title | Status |
+|---|----------|-------|--------|
+| RIG-7 | 🟡 | overview.json D1 规则遗漏 v/r/rd 三字段 (实测 _write_overview 7 字段只覆盖 4) + h top-3 截断未声明 | 待 v1.1-r2 |
+| RIG-8 | 🟡 | partial→converge (D3 L176) 与 D2 步骤3 脏工作区守护矛盾 (partial 模式 snapshot/overview 未提交 dirty → converge 必 bail, 兜底为 no-op) | 待 v1.1-r2 |
+| RIG-9 | 🟡 | D1 规则2「时间较新侧胜出」未指定多时间字段优先级 (last_event_date/updated_at/date 并存时较新侧无定义) | 待 v1.1-r2 |
+
+### 3D 评分
+
+| 维度 | 评级 | 说明 |
+|:-----|:----:|:-----|
+| 合理性 | 🟢 | 根因/方案不变, v1.0 已代码级确认 |
+| 严格性 | 🟡 | 6 RIG + 3 O 全修; 复评发现 3 新残余 (规格精度/一致性) |
+| 安全性 | 🟢 | v1.4 契约维持 (无 force/白名单外 abort/清理残留态), 0 新攻击面 |
+
+### 数据验证要点
+
+- 分叉实况复核: merge-base af48ced; 本地 ahead 5 (1985ca8 链) / 远端 ahead 3 (e01c6dd 链) — 设计 L41「3/3」为 v1.0 时快照, RIG-3 修复已免疫。
+- 代码锚点复核对: _write_overview L1358-1366 (7 字段 v/t/p/s/h/r/rd) / _auto_push partial L395-416 (仅 add timestamp.json) / _write_dead_letter L332-347 (changelog_count/snapshot 契约) / _sync_remote L271-297 / _push_with_recovery L349-387 / _merge_single L1185, 行号全部属实。
+- RIG-8 根因链实证: run() L1164/1168 始终写盘 snapshot/overview → partial 仅 commit timestamp.json → converge D2 步骤3 脏守护拦截。
+- 全文 grep 无「平局保留本地」/「复用 _merge_single」活性残留 (仅修订记录描述「已删」)。
+- 未修改任何项目数据文件; 报告 + review-log + .review-level.yaml 三件产物 commit 用 audit@review (不 push)。
