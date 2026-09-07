@@ -200,8 +200,8 @@ def handle_passed(manifest: dict, task_dir: Path) -> str:
             h["summary"] = "评审通过，已 git push"
     save_manifest(manifest, task_dir)
 
-    # 追加到根 audit-log.md
-    root_log = PROJECT / "audit-log.md"
+    # 追加到根聚合日志 review-log.md (2026-09-07 起)
+    root_log = PROJECT / "review-log.md"
     entry = f"\n## {task_id}: {manifest.get('title', '')}\n"
     entry += f"- 状态: 已合并推送 ✅\n"
     entry += f"- 时间: {datetime.now(TZ).isoformat()}\n"
