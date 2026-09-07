@@ -408,3 +408,12 @@ review_history:
     findings_open: 1
     tracking: LLM-RADAR-CL006 实现审计 (ea9172c) — D1/D2/D3 ✅ 全落地; O-4 ✅ 落地 (白名单外); AC1-AC5 ✅ (AC4 docstring ✅ / AGENTS.md 待用户); DOC-1 🟡 (AGENTS.md L190 待用户授权); IMPL-OBS-1~2 🟢; 测试 33 gitflow + 266/2 独立复跑全绿; 生产实测收敛 299e97a
     report: documents/reviews/llm-radar-fork-converge-impl-audit-20260907.md
+  - date: 2026-09-07
+    reviewer: Security Reviewer
+    review_level: L2
+    verdict: PASS
+    score: 100
+    findings_total: 2
+    findings_open: 0
+    tracking: W6 过期文档清理复审 (b46ffc4/5f63370/af38d47) — F1 ✅ Closed (al-scanner 根聚合→review-log.md) / F2 ✅ Closed (design 4处+演进注记) / L201 有意未改复核正确 / L23 requirements.md 维持原文正确 (活跃文件非废弃, 🟢 澄清)
+    report: documents/reviews/llm-radar-w6-cleanup-rereview-v1.0-20260907.md

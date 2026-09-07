@@ -1356,3 +1356,36 @@
 - **生产实测自动收敛**: 审计期间分叉已自愈 — `299e97a merge@llm-radar: auto-converge dual-writer data (semantic union)` 双亲 = ea9172c + eccc122, 消息与 `_CONVERGE_MSG` 精确一致; 随后 `6ee0c5d auto-push`。当前 `git rev-parse HEAD == origin/main == 6ee0c5d` (0/0, clean)。AC2 真实世界验证。
 - pytest 写脏 3 数据文件 (snapshot/overview/timestamp) 已 `git checkout --` 还原, 工作区 clean。
 - 审计产物 (报告 + review-log + .review-level.yaml) commit 用 audit@review 并 push (分叉已收敛, 普通 push)。
+
+
+---
+
+## 2026-09-07 — W6 过期文档清理复审 (F1/F2 修复闭环)
+
+- **review者**: Security Reviewer (review profile)
+- **范围**: 3 commit — b46ffc4 docs@cleanup (rm audit-log.md + requirements.md stub) / 5f63370 fix@agent-loop (F1) / af38d47 docs@sync (F2); 复审首审 F1 🔴 / F2 🟡 修复闭环
+- **Tracking**: F1 ✅ Closed (al-scanner.py:203-204 根聚合→review-log.md, py_compile 通过); F2 ✅ Closed (design L29/L180/L210/L269 + 演进注记); L201 有意未改复核正确 (per-task 语义); L23 requirements.md 维持原文正确 (活跃文件非废弃, 🟢 澄清); findings_open 0
+- **状态**: ✅ PASS — 100/100 (A)
+- **报告**: documents/reviews/llm-radar-w6-cleanup-rereview-v1.0-20260907.md
+- **实现 prompt**: ✅ 无需生成 (纯文档清理复审, 无新功能)
+
+### 修复核验
+
+| # | 首审问题 | 修复验证 |
+|---|---------|---------|
+| F1 | handle_passed 根聚合写入已删 audit-log.md, open("a") 会重建 | ✅ L203-204 改 review-log.md; py_compile 通过; open("a") 目标为既存 review-log.md |
+| F2 | design 根聚合日志引用仍指 audit-log.md | ✅ L29(+演进注记)/L180/L210/L269 改 review-log.md; L201 有意保留正确 (reviewer 写 per-task audit-log.md) |
+
+### 新观察裁定
+
+| # | 观察 | 裁定 |
+|---|------|------|
+| L23 | 核心文件表仍列根 requirements.md (b46ffc4 同批删除) | ✅ 维持原文正确 — requirements.md 为活跃工作流输入 (al-init.py:27 / al-scanner.py:161 / design L156 入口), 删除的是 9B 空 stub 非废弃文件; commit message 亦归为 "empty stubs" 非 "deprecated" |
+
+### 数据验证要点
+
+- grep 三模式 (tasks/ scripts/ documents/loop/ AGENTS.md, *.py *.md) 根聚合 audit-log.md = 0 命中; 剩余全为 per-task 形态或历史归档/一次性迁移脚本 (al-rename.sh)。
+- per-task audit-log 引用有效保留: al-dev.sh:26-27 / al-init.py:155 / al-scanner.py:247 / al-dev.prompt:12,34 / al-review.prompt:21,26。
+- git 状态漂移: 简报「ahead 3」实况「ahead 2」— b46ffc4 已随 auto-converge merge 28aaf20 上 origin (origin/main:audit-log.md 已不存在); 本次 push 交付 5f63370 + af38d47 + 审计产物。
+- 净 diff = 2 文件 (al-scanner.py +2/-2, design +4/-4), 6/6; 工作区 clean。
+- 删除内容确为历史: b46ffc4^:audit-log.md = 188 行止于 07-13 (LR-SEC-005/009/010); requirements.md 9B stub; agent-todo.md gitignored 已 rm。
