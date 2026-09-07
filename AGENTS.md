@@ -187,7 +187,7 @@ run() ordered as:
 
 - Commit messages use `type@scope: subject` format.
 - Auto-push uses `auto-push@llm-radar: update data (N changes)`.
-- `run` 前先 `_sync_remote()` 同步（fetch + `merge --ff-only`，分叉时本地优先），质量门禁通过后 auto-commit+push；push rejected 时走 `_push_with_recovery()`（rebase 重试 → `--force-with-lease` → dead-letter）。
+- `run` 前先 `_sync_remote()`（fetch + `merge --ff-only`；分叉时自动 `_converge_fork()` 语义并集收敛，失败才本地优先）；质量门禁通过后 auto-commit+push；push rejected 时走 `_push_with_recovery()`（rebase 重试 → 冲突时 `_converge_fork()` 语义并集 merge → 仍失败 dead-letter；全程无 force push）。
 - Push failures go to `data/dead-letter.json` (last 10).
 
 ## `llm-radar-run.sh`
