@@ -26,7 +26,7 @@
 | **`tasks/<task-dir>/demand.md`** | `tasks/` 下 | 需求副本，锁定范围 |
 | **`tasks/<task-dir>/features.md`** | `tasks/` 下 | developer 交付清单 |
 | **`tasks/<task-dir>/audit-log.md`** | `tasks/` 下 | reviewer 评审报告（含失败明细） |
-| **`audit-log.md`** | 项目根目录 | 聚合评审日志 |
+| **`review-log.md`** | 项目根目录 | 聚合评审日志（audit-log.md 已于 2026-09-07 移除，现聚合至本文件） |
 
 ### 1.3 三个角色
 
@@ -177,7 +177,7 @@ Scanner 脚本 `tasks/al-scanner.py` 逻辑：
 
      demand → 复制 requirements.md 快照到 demand.md → state=assigned
      failed → retry<3 则 state=assigned; retry>=3 则 escalated=true
-     passed → git push → state=closed → 追记根 audit-log.md
+     passed → git push → state=closed → 追记根 review-log.md
      escalated → 打印警告
 
   4. 更新 tasks/agents-teamwork.yaml
@@ -207,7 +207,7 @@ Scanner 脚本 `tasks/al-scanner.py` 逻辑：
 **通过（state == passed）**：
 
 ```
-scanner → git push → state=closed → 追记根 audit-log.md
+scanner → git push → state=closed → 追记根 review-log.md
 ```
 
 **不通过（state == failed）**：
@@ -266,7 +266,7 @@ llm-radar.jaden.tech/
 │   │   ├── features.md
 │   │   └── audit-log.md
 │   └── al-20260711-002/
-├── audit-log.md
+├── review-log.md
 ├── documents/
 │   ├── README.md
 │   ├── [loop]/          requirements-spec.md, agent-loop-design.md
