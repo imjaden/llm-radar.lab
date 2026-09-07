@@ -244,6 +244,12 @@ class LLMRadarCollector:
 
     # ===== Git 同步与推送 =====
     # 所有 git 操作均用 subprocess.run(['git', ...]) list-form，禁止 shell=True。
+    # D1 数据白名单（CL006 v1.1-r2）：语义收敛仅自动处理这些由采集器生成的 tracked 数据文件；
+    # 白名单外冲突（源码/文档/配置，含 data/twitter-targets.yaml，O-4）→ abort 人工，绝不自动解决。
+    _CONVERGE_WHITELIST = ('data/snapshot.json', 'overview.json', 'timestamp.json', 'data/twitter.json')
+    _CONVERGE_MSG = 'merge@llm-radar: auto-converge dual-writer data (semantic union)'
+    # 时间字段优先级：存在即用、不交叉比较（RIG-9）；updated_at 仅作无语义日期字段的 fallback
+    _TIME_FIELDS = ('last_event_date', 'date', 'updated_at')
 
     def _git_run(self, *args, timeout=60):
         """统一 git 子进程封装。返回 CompletedProcess，不抛异常。"""
@@ -269,10 +275,11 @@ class LLMRadarCollector:
             self._git_run('rebase', '--abort')
 
     def _sync_remote(self):
-        """pre-run 同步：fetch + merge --ff-only，分叉时本地优先，先清理残留 rebase。
+        """pre-run 同步：fetch + merge --ff-only；分叉时先自动收敛（_converge_fork，
+        语义并集 merge commit + push），收敛失败才回退本地优先。先清理残留 rebase。
 
-        仅同步，不 commit、不 push；本地采集数据由 _auto_push 统一 commit + push。
-        所有 git 失败仅 warning，不阻断采集。
+        仅落后时 ff 由本方法完成；本地新采集数据仍由 _auto_push 统一 commit + push
+        （分叉收敛产生的 merge commit 除外）。所有 git 失败仅 warning，不阻断采集。
         """
         try:
             self._abort_rebase()
@@ -291,8 +298,10 @@ class LLMRadarCollector:
                 else:
                     self._print_warn(f'fast-forward 合并失败，跳过: {(m.stderr or "").strip()[:100]}')
             else:
-                # 分叉：本地优先，稍后 auto-push 收敛
-                self._print_warn('远端分叉，本地优先，稍后 auto-push 收敛')
+                # 分叉：自动收敛（双保险之一）；失败才本地优先（数据新鲜度优先仅作兜底）
+                self._print_warn('远端分叉，尝试自动收敛...')
+                if not self._converge_fork():
+                    self._print_warn('收敛失败，本地优先（下轮 run/push 再试）')
         except Exception as e:
             self._print_warn(f'远端同步异常，跳过: {e}')
 
@@ -347,9 +356,10 @@ class LLMRadarCollector:
             self._print_warn(f'dead letter 写入失败: {dl_err}')
 
     def _push_with_recovery(self, changelog, msg):
-        """push 冲突自愈：push rejected → rebase 重试 → force-with-lease → dead-letter。
+        """push 冲突自愈：push rejected → pull --rebase 重试（成功即普通 push，无 force）
+        → rebase 冲突走 _converge_fork 语义并集收敛 → 仍失败 dead-letter + 人工提示。
 
-        结束始终清理残留 rebase 状态；任何失败不抛异常。
+        结束始终清理残留 rebase/merge 状态；任何失败不抛异常。
         """
         try:
             r = self._git_run('push', 'origin', 'main', timeout=120)
@@ -360,30 +370,308 @@ class LLMRadarCollector:
             stderr = (r.stderr or '').strip()
             self._print_warn(f'push rejected，尝试收敛: {stderr[:150]}')
 
-            # 尝试 1: pull --rebase（远端有新增）
+            # 尝试 1: pull --rebase（远端有新增；成功后本地已含远端 → 普通 push 即 ff）
             r = self._git_run('pull', '--rebase', 'origin', 'main', timeout=120)
             if r.returncode == 0:
-                # 尝试 2: rebase 成功后 force-with-lease 收敛分叉（带 lease 保护）
-                r2 = self._git_run('push', '--force-with-lease', 'origin', 'main', timeout=120)
-                if r2.returncode == 0:
-                    self._print_ok('auto-push 完成（rebase + force-with-lease 收敛分叉）')
+                p = self._git_run('push', 'origin', 'main', timeout=120)
+                if p.returncode == 0:
+                    self._print_ok('auto-push 完成（rebase 后推送）')
                     return
-                self._print_warn(f'force-with-lease push 失败: {(r2.stderr or "").strip()[:150]}')
+                self._print_warn(f'rebase 后 push 失败: {(p.stderr or "").strip()[:150]}')
             else:
                 self._print_warn(f'pull --rebase 失败/冲突: {(r.stderr or "").strip()[:150]}')
                 self._abort_rebase()
-                # v1.4 (2026-09-03): rebase 冲突 = 本地链不含远端最新 commit (双向数据分叉),
-                # force-with-lease 仅校验「远端从 fetch 后未被再改」, 不校验「push 内容含远端」;
-                # 曾覆盖远端丢失另一端 commit (CL005 fork 事故: 服务器 ad62fa8 覆盖 Mac 链)。
-                # 改为不 force: 走 dead-letter + 提示人工 merge, 防止任一 clone 自动覆盖。
-                self._print_err('rebase 冲突: 双向数据分叉, 已停止 auto-push (防覆盖), 需人工 merge')
+                # CL006 v1.1-r2: rebase 冲突 = 双向数据分叉 → 语义并集自动收敛。
+                # 无 force push：不覆盖任一端数据由并集保证（v1.4 防覆盖意图保留并强化）。
+                if self._converge_fork():
+                    p = self._git_run('push', 'origin', 'main', timeout=120)
+                    if p.returncode == 0:
+                        self._print_ok('auto-push 完成（语义收敛后推送）')
+                        return
+                    self._print_warn(f'语义收敛后 push 失败: {(p.stderr or "").strip()[:150]}')
+                self._print_err('rebase 冲突且收敛失败: 数据已存档 dead-letter, 需人工 merge')
                 self._write_dead_letter(changelog,
-                                        'rebase 冲突 (双向分叉): 停止 auto-push 防覆盖, 人工 merge 后重试')
+                                        'rebase 冲突 (双向分叉): 语义收敛失败, 人工 merge 后重试')
                 return
 
             # 仍失败 → dead-letter（不抛异常）
             self._write_dead_letter(changelog, stderr)
         finally:
+            self._abort_rebase()
+
+    # ===== 语义并集（D1, CL006 v1.1-r2）=====
+    # 跨机确定性：_merge_semantic 与 _union_by_id 对称（参数交换结果一致），
+    # tie-break 取字典序较大值，不依赖执行机/merge 方向。
+
+    @staticmethod
+    def _is_empty(v):
+        """空值判定：None / 空串 / 空容器。"""
+        return v is None or v == '' or v == [] or v == {}
+
+    @classmethod
+    def _lex_key(cls, v):
+        """JSON 规范化比较键（字符串按 Unicode 码点；数字先转字符串）。"""
+        return json.dumps(v, ensure_ascii=False, sort_keys=True)
+
+    @classmethod
+    def _merge_semantic(cls, a, b):
+        """两条同 id 记录的字段级语义合并（对称：_merge_semantic(a,b)==_merge_semantic(b,a)）。
+
+        规则（D1/RIG-9）：逐字段空值填补；两侧非空不等时，按 _TIME_FIELDS 固定优先级
+        取最高位可判字段判较新侧胜出；无时间字段或判平 → 逐字段取字典序较大值。
+        """
+        win = None
+        for f in cls._TIME_FIELDS:
+            av, bv = (a or {}).get(f), (b or {}).get(f)
+            if av and bv and av != bv:
+                win = a if str(av) > str(bv) else b
+                break
+        merged = {}
+        for k in list(dict.fromkeys(list((a or {}).keys()) + list((b or {}).keys()))):
+            av, bv = (a or {}).get(k), (b or {}).get(k)
+            if cls._is_empty(av):
+                merged[k] = bv
+            elif cls._is_empty(bv):
+                merged[k] = av
+            elif av == bv:
+                merged[k] = av
+            elif win is a:
+                merged[k] = av
+            elif win is b:
+                merged[k] = bv
+            else:
+                merged[k] = av if cls._lex_key(av) > cls._lex_key(bv) else bv
+        return merged
+
+    @classmethod
+    def _union_by_id(cls, items_a, items_b, id_key='id'):
+        """按 id 并集（对称）：仅一侧有保留；两侧有 → _merge_semantic。
+
+        返回列表按键排序（str(id|name)），保证参数交换/跨机输出顺序一致。
+        """
+        key_a = {(x.get(id_key) or x.get('name')): x for x in (items_a or []) if isinstance(x, dict)}
+        key_b = {(x.get(id_key) or x.get('name')): x for x in (items_b or []) if isinstance(x, dict)}
+        out = []
+        for k in list(key_a.keys()) + [k for k in key_b if k not in key_a]:
+            if k in key_a and k in key_b:
+                out.append(cls._merge_semantic(key_a[k], key_b[k]))
+            else:
+                out.append(key_a.get(k, key_b.get(k)))
+        return sorted(out, key=lambda x: str(x.get(id_key) or x.get('name') or ''))
+
+    @classmethod
+    def _union_snapshot(cls, local, remote):
+        """snapshot.json 语义并集（D1）：4 实体维度按 id 并集不丢数据；
+        hotspots/changelog 并集截断 max(len)（display-only）；stats total_* 重算、
+        period 计数取较新侧；version/period/execution_mode 取较新侧。
+
+        对称：_union_snapshot(local, remote) == _union_snapshot(remote, local)。
+        """
+        loc_t = str((local or {}).get('generated_at', ''))
+        rem_t = str((remote or {}).get('generated_at', ''))
+        base = local if loc_t >= rem_t else remote
+        other = remote if base is local else local
+        out = dict(base)
+        for dim in ('providers', 'people', 'tools', 'llms'):
+            out[dim] = cls._union_by_id((local or {}).get(dim, []), (remote or {}).get(dim, []))
+        # hotspots: 同 id 合并（对称）→ date 降序 → 截断 max(len)
+        hi = {}
+        for h in ((local or {}).get('hotspots', []) + (remote or {}).get('hotspots', [])):
+            if isinstance(h, dict) and h.get('id'):
+                hi[h['id']] = cls._merge_semantic(hi.get(h['id'], {}), h)
+        hs = sorted(hi.values(), key=lambda x: (str(x.get('date', '')), x.get('hot_score', 0)), reverse=True)
+        max_hs = max(len((local or {}).get('hotspots', [])), len((remote or {}).get('hotspots', [])))
+        out['hotspots'] = hs[:max_hs]
+        # changelog: 按 (type,dimension,id) 并集，同键取 (time, 字典序) 较大；按键排序 → 截断 max(len)
+        cl = {}
+        for c in ((local or {}).get('changelog', []) + (remote or {}).get('changelog', [])):
+            if isinstance(c, dict):
+                ck = (c.get('type'), c.get('dimension'), c.get('id'))
+                cur = cl.get(ck)
+                if cur is None:
+                    cl[ck] = c
+                elif (str(c.get('time', '')), cls._lex_key(c)) > \
+                        (str(cur.get('time', '')), cls._lex_key(cur)):
+                    cl[ck] = c
+        max_cl = max(len((local or {}).get('changelog', [])), len((remote or {}).get('changelog', [])))
+        out['changelog'] = sorted(cl.values(),
+                                  key=lambda c: (str(c.get('type')), str(c.get('dimension')), str(c.get('id'))))[:max_cl]
+        # stats: total_* 重算 + 其余 period 计数取较新侧
+        st = dict((other or {}).get('stats', {}) or {})
+        st.update(dict((base or {}).get('stats', {}) or {}))
+        st.update({
+            'total_providers': len(out['providers']), 'total_people': len(out['people']),
+            'total_tools': len(out['tools']), 'total_llms': len(out['llms']),
+            'total_hotspots': len(out['hotspots']),
+        })
+        out['stats'] = st
+        return out
+
+    @classmethod
+    def _union_twitter(cls, local, remote):
+        """data/twitter.json 并集：targets 按 url/handle 并集，tweets 按 id 并集（对称有序）。"""
+        lo, ro = local or {}, remote or {}
+        base = lo if str(lo.get('generated_at', '')) >= str(ro.get('generated_at', '')) else ro
+        out = dict(base)
+        t_a = {(t.get('url') or t.get('handle')): t for t in (lo.get('targets', []) or []) if isinstance(t, dict)}
+        t_b = {(t.get('url') or t.get('handle')): t for t in (ro.get('targets', []) or []) if isinstance(t, dict)}
+        targets = []
+        for k in list(t_a.keys()) + [k for k in t_b if k not in t_a]:
+            if k in t_a and k in t_b:
+                merged_t = dict(cls._merge_semantic(t_a[k], t_b[k]))
+                tweets = cls._union_by_id(t_a[k].get('tweets', []), t_b[k].get('tweets', []), id_key='id')
+                merged_t['tweets'] = tweets
+                targets.append(merged_t)
+            else:
+                targets.append(t_a.get(k, t_b.get(k)))
+        out['targets'] = sorted(targets, key=lambda x: str(x.get('url') or x.get('handle') or ''))
+        return out
+
+    def _git_show(self, ref, path):
+        """git show <ref>:<path> → 内容文本；失败返回 None。"""
+        r = self._git_run('show', f'{ref}:{path}', timeout=60)
+        return r.stdout if r.returncode == 0 else None
+
+    def _write_json_file(self, rel, obj, mode):
+        """按文件既有格式写盘（mode: compact / pretty / min），供收敛解决使用。"""
+        p = self.project_root / rel
+        text = ''
+        if mode == 'compact':        # snapshot.json / twitter? (writer 默认 indent=None)
+            text = json.dumps(obj, ensure_ascii=False)
+        elif mode == 'min':          # overview.json (writer separators=(',',':'))
+            text = json.dumps(obj, ensure_ascii=False, separators=(',', ':'))
+        else:                        # timestamp.json / twitter.json pretty
+            text = json.dumps(obj, ensure_ascii=False, indent=2)
+        p.write_text(text, encoding='utf-8')
+
+    def _resolve_converge_file(self, rel):
+        """冲突白名单文件语义解决：读 HEAD/origin/main 两侧 blob → 并集 → 覆写 → git add。
+
+        顺序约定：data/snapshot.json 先于 overview.json 解决（overview 重算需读已合并快照）。
+        """
+        local_txt = self._git_show('HEAD', rel)
+        remote_txt = self._git_show('origin/main', rel)
+        if local_txt is None or remote_txt is None:
+            return False
+        try:
+            if rel == 'data/snapshot.json':
+                merged = self._union_snapshot(json.loads(local_txt), json.loads(remote_txt))
+                self._write_json_file(rel, merged, 'compact')
+            elif rel == 'data/twitter.json':
+                merged = self._union_twitter(json.loads(local_txt), json.loads(remote_txt))
+                self._write_json_file(rel, merged, 'pretty')
+            elif rel == 'overview.json':
+                lo, ro = json.loads(local_txt), json.loads(remote_txt)
+                newer = lo if str(lo.get('t', '')) >= str(ro.get('t', '')) else ro
+                # 已合并快照（snapshot 若冲突已先行解决并写盘，否则读 HEAD 侧内容）
+                snap_txt = (self.project_root / 'data' / 'snapshot.json').read_text(encoding='utf-8') \
+                    if (self.project_root / 'data' / 'snapshot.json').exists() else local_txt
+                snap = json.loads(snap_txt)
+                hs = sorted(snap.get('hotspots', []),
+                            key=lambda h: (str(h.get('date', '')), h.get('hot_score', 0)), reverse=True)[:3]
+                s = dict(newer.get('s', {}) or {})
+                s.update({'pr': len(snap.get('providers', [])), 'pe': len(snap.get('people', [])),
+                          'to': len(snap.get('tools', [])), 'll': len(snap.get('llms', [])),
+                          'ho': len(snap.get('hotspots', []))})
+                ov = {'v': 1, 't': newer.get('t', snap.get('generated_at', '')),
+                      'p': newer.get('p', snap.get('period', '')), 's': s,
+                      'h': [{'d': h.get('date', ''), 't': h.get('title', '')} for h in hs],
+                      'r': newer.get('r', 'success'), 'rd': newer.get('rd', '')}
+                self._write_json_file(rel, ov, 'min')
+            elif rel == 'timestamp.json':
+                lo, ro = json.loads(local_txt), json.loads(remote_txt)
+                ts = lo if str(lo.get('generated_at', '')) >= str(ro.get('generated_at', '')) else ro
+                self._write_json_file(rel, ts, 'pretty')
+            else:
+                return False
+        except Exception as e:
+            self._print_warn(f'语义解决失败 {rel}: {e}')
+            return False
+        self._git_run('add', '--', rel)
+        return True
+
+    def _in_merge_state(self):
+        return (self.project_root / '.git' / 'MERGE_HEAD').exists()
+
+    def _converge_fork(self):
+        """双端分叉自动收敛（D2, CL006 v1.1-r2）：语义并集 merge commit，全程无 force。
+
+        流程：fetch → 状态判定（相等 return / 祖先 ff / 分叉继续）→ 脏工作区守护 →
+        merge --no-commit --no-ff → 冲突文件集 ∈ 白名单则语义解决（含白名单外 → abort 人工）
+        → merge commit → push。失败返回 False（调用方决定本地优先或 dead-letter）。
+        finally 始终清理残留 merge/rebase 状态。
+        """
+        if getattr(self, '_skip_push', False):
+            self._print_info('_skip_push 开启，跳过 _converge_fork')
+            return False
+        try:
+            r = self._git_run('fetch', 'origin', 'main', timeout=90)
+            if r.returncode != 0:
+                self._print_warn(f'收敛 fetch 失败: {(r.stderr or "").strip()[:100]}')
+                return False
+            head = self._git_run('rev-parse', 'HEAD')
+            remote = self._git_run('rev-parse', 'origin/main')
+            if remote.returncode != 0:
+                self._print_warn('origin/main 不存在，跳过收敛')
+                return False
+            if head.stdout.strip() == remote.stdout.strip():
+                self._print_info('本地与远端一致，无需收敛')
+                return True
+            anc = self._git_run('merge-base', '--is-ancestor', 'HEAD', 'origin/main')
+            if anc.returncode == 0:
+                m = self._git_run('merge', '--ff-only', 'origin/main')
+                if m.returncode == 0:
+                    self._print_ok('收敛：fast-forward 已同步')
+                    return True
+                self._print_warn(f'收敛 ff 失败: {(m.stderr or "").strip()[:100]}')
+                return False
+            # 分叉：脏工作区守护
+            st = self._git_run('status', '--porcelain')
+            if st.returncode == 0 and st.stdout.strip():
+                self._print_warn('工作区有未提交改动，跳过收敛（调用方应先行清理）')
+                return False
+            m = self._git_run('merge', 'origin/main', '--no-commit', '--no-ff')
+            if m.returncode != 0:
+                # 冲突预期；若无可冲突文件（merge 其他错误）→ abort 降级
+                confl = self._git_run('diff', '--name-only', '--diff-filter=U')
+                files = [ln.strip() for ln in (confl.stdout or '').splitlines() if ln.strip()]
+                if not files:
+                    self._print_warn(f'merge 失败: {(m.stderr or "").strip()[:150]}')
+                    self._git_run('merge', '--abort')
+                    return False
+                bad = [f for f in files if f not in self._CONVERGE_WHITELIST]
+                if bad:
+                    self._git_run('merge', '--abort')
+                    self._print_err(f'白名单外冲突，需人工 merge: {", ".join(bad)}')
+                    self._write_dead_letter([], f'白名单外冲突 {", ".join(bad)}: 需人工 merge')
+                    return False
+                # 按序解决（snapshot 先于 overview）
+                for rel in sorted(files, key=lambda f: (f != 'data/snapshot.json', f)):
+                    if not self._resolve_converge_file(rel):
+                        self._git_run('merge', '--abort')
+                        return False
+                left = self._git_run('diff', '--name-only', '--diff-filter=U')
+                if left.stdout.strip():
+                    self._print_warn(f'仍有未解决冲突: {left.stdout.strip()}')
+                    self._git_run('merge', '--abort')
+                    return False
+            cm = self._git_run('commit', '-m', self._CONVERGE_MSG)
+            if cm.returncode != 0:
+                self._print_warn(f'收敛 merge commit 失败: {(cm.stderr or "").strip()[:150]}')
+                self._git_run('merge', '--abort')
+                return False
+            p = self._git_run('push', 'origin', 'main', timeout=120)
+            if p.returncode != 0:
+                self._print_warn(f'收敛 push 失败: {(p.stderr or "").strip()[:150]}')
+                return False
+            self._print_ok('收敛完成（语义并集 merge commit 已推送）')
+            return True
+        except Exception as e:
+            self._print_warn(f'收敛异常: {e}')
+            return False
+        finally:
+            if self._in_merge_state():
+                self._git_run('merge', '--abort')
             self._abort_rebase()
 
     def _auto_push(self, changelog, partial=False):
@@ -412,7 +700,17 @@ class LLMRadarCollector:
                                check=True, capture_output=True)
                 self._print_ok('timestamp.json 已推送')
             except subprocess.CalledProcessError as e:
-                self._print_err(f'timestamp.json push 失败: {e}')
+                # CL006 v1.1-r2 (RIG-5/8)：push 被拒 → 丢弃未提交的质量失败生成文件
+                # （run() 已写盘但未提交的 snapshot/overview，下轮重生成，丢弃无损）
+                # → 工作区 clean 后走 _converge_fork 语义收敛
+                self._print_warn(f'timestamp.json push 失败: {e}')
+                for rel in ('data/snapshot.json', 'overview.json'):
+                    self._git_run('checkout', '--', rel)
+                if self._converge_fork():
+                    self._print_ok('timestamp.json 推送经语义收敛完成')
+                else:
+                    self._write_dead_letter([], 'partial (quality-gate) push converge failed')
+                    self._print_err('partial push 收敛失败，变更已存档 dead-letter')
             return
 
         # 正常模式
