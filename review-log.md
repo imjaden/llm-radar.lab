@@ -1316,3 +1316,43 @@
 - RIG-7/8/9 逐行源码实证: _write_overview L1358-1366 (7 字段) / _save_snapshot L1164 + _write_overview L1168 (partial 写盘) / _auto_push partial L395-416 仅 add timestamp.json L399 / _write_dead_letter L332-347 / _sync_remote L271-297 / _push_with_recovery L349-387 / run() L1745 sync 先于 L1748 _think, 行号全部属实。
 - 全文无「平局保留本地」/「复用 _merge_single」活性残留; 时间优先级锁定为确定性闭环。
 - 未修改任何项目数据文件; 报告 + review-log + .review-level.yaml + cache/review-prep/ 实现 prompt 产物 commit 用 audit@review (不 push)。
+
+---
+
+## 2026-09-07 — 双端分叉自动收敛实现审计 (LLM-RADAR-CL006)
+
+- **review者**: Security Reviewer (review profile)
+- **范围**: 实现 commit ea9172c feat@llm-radar (collector +338 / test_gitflow +499) — 实现 vs 设计 v1.1-r2 (5c1bf42) 一致性 + 代码质量 + AC1-AC5 + 安全性
+- **Tracking**: D1/D2/D3 ✅ 全落地; O-4 ✅ 落地 (白名单外); AC1-AC5 ✅ (AC4 docstring ✅ / AGENTS.md 待用户); DOC-1 🟡 (AGENTS.md L190 待用户授权); IMPL-OBS-1~2 🟢; findings_open 1
+- **状态**: ✅ PASS — 95/100 (A)
+- **报告**: documents/reviews/llm-radar-fork-converge-impl-audit-20260907.md
+- **实现 prompt**: ⬜ 无需生成 (实现已完成)
+
+### 实现 vs 设计逐项核对
+
+| 模块 | 设计项 | 实现 | 状态 |
+|:-----|:-------|:-----|:----:|
+| D1 | 白名单 4 文件 + twitter-targets.yaml 排除 (O-4) | L249 `_CONVERGE_WHITELIST` 仅 4 文件 + L16-17 注释 | ✅ O-4 落地 |
+| D1 | 4 实体维度 id 并集不丢数据 | L463 `_union_snapshot` → L447 `_union_by_id` | ✅ |
+| D1 | 时间优先级 last_event_date > date > updated_at (RIG-9) | L252 `_TIME_FIELDS` + L424-428 存在即用不交叉 | ✅ |
+| D1 | 空值填补 / 平局字典序 / 跨机对称 | L407 `_is_empty` + L412 `_lex_key`(sort_keys) | ✅ |
+| D1 | hotspots/changelog 并集+截断 / stats total_* 重算 | L476-497 / L499-505 | ✅ |
+| D2 | fetch→判定→脏守护→merge→白名单校验→解决→commit→push→finally | L596 `_converge_fork` | ✅ |
+| D3 | sync 分叉收敛 / push 冲突收敛(删 force) / partial checkout 收敛 | L300-304 / L381-391 / L702-713 | ✅ |
+
+### 发现
+
+| # | Severity | Title | Status |
+|---|----------|-------|--------|
+| DOC-1 | 🟡 | AGENTS.md L190 描述过期 (仍写「分叉本地优先」+「rebase→force-with-lease→dead-letter」, 与 v1.4/CL006 不符) | 待用户授权 (CL005 同先例) |
+| IMPL-OBS-1 | 🟢 | `_union_twitter` 同 id 取较新经字典序近似 (tweet 无采集时间戳入 _TIME_FIELDS) | 注记 |
+| IMPL-OBS-2 | 🟢 | `_union_snapshot` generated_at 精确相等时 base=local 理论非对称 (微秒级不可达) | 注记 |
+
+### 数据验证要点
+
+- 写盘格式三处对齐: snapshot compact(indent=None) / overview min(separators) / timestamp pretty(indent=2) ↔ `_write_json_file` 三 mode 全一致。
+- AC3 复验: grep 全文 0 处 `--force-with-lease`/`push --force`, 仅 CLI `--force` 采集参数。
+- 测试独立复跑: test_gitflow 33 passed; 全量 `pytest tests/` 266 passed / 2 skipped / 0 failed (ops 报告 263, +3 计数差源于调用集合/数据态, 结论一致全绿)。
+- **生产实测自动收敛**: 审计期间分叉已自愈 — `299e97a merge@llm-radar: auto-converge dual-writer data (semantic union)` 双亲 = ea9172c + eccc122, 消息与 `_CONVERGE_MSG` 精确一致; 随后 `6ee0c5d auto-push`。当前 `git rev-parse HEAD == origin/main == 6ee0c5d` (0/0, clean)。AC2 真实世界验证。
+- pytest 写脏 3 数据文件 (snapshot/overview/timestamp) 已 `git checkout --` 还原, 工作区 clean。
+- 审计产物 (报告 + review-log + .review-level.yaml) commit 用 audit@review 并 push (分叉已收敛, 普通 push)。
