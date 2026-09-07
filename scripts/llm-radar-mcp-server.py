@@ -54,7 +54,11 @@ else:
     log = logging.getLogger('mcp-llm-radar')
 PROJECT_ROOT = Path(os.environ.get('LLM_RADAR_DIR', __file__)).resolve().parent.parent
 DATA_DIR = PROJECT_ROOT / 'data'
+CACHE_DIR = PROJECT_ROOT / 'cache'
 SNAPSHOT_PATH = DATA_DIR / 'snapshot.json'
+# 运行时产物按 cli-runtime-files v1.0 规范进 cache/ (gitignored)
+CACHE_PIDS_DIR = CACHE_DIR / 'pids'
+CACHE_LOGS_DIR = CACHE_DIR / 'logs' / 'llm-radar-mcp-server'
 
 # ── Protocol Helpers ────────────────────────────────────────────────────
 
@@ -409,9 +413,10 @@ if __name__ == '__main__':
     """CLI entry point with lifecycle commands."""
     import argparse
 
-    DATA_DIR.mkdir(parents=True, exist_ok=True)
-    PID_FILE = DATA_DIR / 'mcp-server.pid'
-    LOG_FILE = DATA_DIR / 'mcp-server.log'
+    PID_FILE = CACHE_PIDS_DIR / 'llm-radar-mcp-server.pid'
+    LOG_FILE = CACHE_LOGS_DIR / 'mcp-server.log'
+    CACHE_PIDS_DIR.mkdir(parents=True, exist_ok=True)
+    CACHE_LOGS_DIR.mkdir(parents=True, exist_ok=True)
     DEFAULT_PORT = 8901
 
     def _read_pid():
@@ -636,9 +641,10 @@ HTTPServer(('0.0.0.0',{args.port}),H).serve_forever()'''
    LLM_RADAR_MCP_KEY    API Key（默认: llm-radar-mcp-2026）
    LLM_RADAR_DIR        项目根目录
 
+ Runtime Files (cache/, gitignored):
+   cache/pids/llm-radar-mcp-server.pid  PID 文件
+   cache/logs/llm-radar-mcp-server/mcp-server.log  运行日志
  Data Files:
-   data/mcp-server.pid  PID 文件
-   data/mcp-server.log  运行日志
    data/snapshot.json   数据快照
 ''')
 

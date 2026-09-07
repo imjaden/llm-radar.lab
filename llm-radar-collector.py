@@ -56,8 +56,11 @@ def _is_flclash_running():
 # ===== Constants =====
 PROJECT_ROOT = Path(__file__).resolve().parent
 DATA_DIR = PROJECT_ROOT / 'data'
+CACHE_DIR = PROJECT_ROOT / 'cache'
 SNAPSHOT_PATH = DATA_DIR / 'snapshot.json'
-FETCH_CACHE_PATH = DATA_DIR / 'fetch-cache.json'
+# 运行时产物按 cli-runtime-files v1.0 规范进 cache/ (gitignored); data/ 只留真实数据
+FETCH_CACHE_PATH = CACHE_DIR / 'llm-radar-collector' / 'fetch-cache.json'
+COLLECTOR_LOG = CACHE_DIR / 'logs' / 'llm-radar-collector' / 'collector.log'
 SKILLS_DIR = PROJECT_ROOT / 'skills'
 
 # ===== Status 阈值 (lr status checkpoint 协议) =====
@@ -993,7 +996,7 @@ class LLMRadarCollector:
             'fetched_at': datetime.now().isoformat(),
             'sources': results,
         }
-        self.data_dir.mkdir(parents=True, exist_ok=True)
+        self.fetch_cache_path.parent.mkdir(parents=True, exist_ok=True)
         with open(self.fetch_cache_path, 'w', encoding='utf-8') as f:
             json.dump(cache, f, ensure_ascii=False, indent=2)
 
@@ -2381,7 +2384,7 @@ hotspots 数组中每个元素格式：
 
 CRON_TAG = '# llm-radar-collector'
 RUN_SCRIPT = PROJECT_ROOT / 'llm-radar-run.sh'
-CRON_CMD = f'{RUN_SCRIPT} >> {DATA_DIR}/collector.log 2>&1'
+CRON_CMD = f'{RUN_SCRIPT} >> {COLLECTOR_LOG} 2>&1'
 # 本机(macOS)每小时 + 6h 防抖（错过窗口从"一天"缩到"几小时"）；服务器(Linux 7×24)保持 7/14/21
 CRON_SCHEDULE = '0 * * * *' if platform.system() == 'Darwin' else '0 7,14,21 * * *'
 CRON_HELP = f'crontab --add [schedule] - 添加定时任务（默认 {CRON_SCHEDULE}）'
@@ -2391,6 +2394,7 @@ def crontab_add(schedule=None):
     import subprocess
     sched = schedule or CRON_SCHEDULE
     entry = f'{sched} {CRON_CMD} {CRON_TAG}'
+    COLLECTOR_LOG.parent.mkdir(parents=True, exist_ok=True)  # 日志目录随 crontab 安装自建
     # 读取现有 crontab
     result = subprocess.run(['crontab', '-l'], capture_output=True, text=True)
     lines = result.stdout.splitlines() if result.returncode == 0 else []
@@ -2458,7 +2462,7 @@ def crontab_status():
     if found:
         print('✅ 定时任务: 已启用')
         # 检查最近日志
-        log_path = DATA_DIR / 'collector.log'
+        log_path = COLLECTOR_LOG
         if log_path.exists():
             with open(log_path, 'r') as f:
                 lines = f.readlines()
