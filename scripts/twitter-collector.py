@@ -54,6 +54,25 @@ def _is_flclash_running():
     except Exception:
         return False
 
+
+def _notify_flclash_required():
+    """macOS 本地通知: 提示启动 FlClash (best-effort, 失败静默)。
+
+    仅 macOS 发送 (非 Darwin 时 _is_flclash_running 恒 True, 不会触发,
+    此处再防御一次)。实现参考 macosx-manager.py 通知逻辑。
+    """
+    if platform.system() != 'Darwin':
+        return
+    try:
+        subprocess.run(
+            ['osascript', '-e',
+             'display notification "采集 X 数据需启动 flClash 应用" '
+             'with title "llm-radar"'],
+            capture_output=True, timeout=3
+        )
+    except Exception:
+        pass
+
 # ===== Constants =====
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 CONFIG_PATH = PROJECT_ROOT / 'data' / 'twitter-targets.yaml'
@@ -888,8 +907,9 @@ def main(argv=None):
         commit_and_push(0)
         return 0
 
-    # 检测 FlClash 代理（X 需要）
+    # 检测 FlClash 代理（X 需要）; macOS 未运行时发本地通知提醒
     if not _is_flclash_running():
+        _notify_flclash_required()
         print('[twitter-collector] ❌ FlClash 未运行，无法访问 X (exit 1)',
               file=sys.stderr)
         return 1
