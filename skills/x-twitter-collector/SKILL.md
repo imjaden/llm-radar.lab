@@ -85,7 +85,7 @@ retention 规则 (条数优先滑动窗口):
 ## cron 20 9,21 错峰
 
 ```cron
-20 9,21 * * * cd /Users/jadenli/CodeSpace/llm-radar.lab && python3 scripts/twitter-collector.py >> data/twitter.log 2>&1 # llm-radar-twitter
+20 9,21 * * * cd /Users/jadenli/CodeSpace/llm-radar.lab && python3 scripts/twitter-collector.py >> cache/logs/twitter-collector/twitter.log 2>&1 # llm-radar-twitter
 ```
 
 - 09:20 / 21:20, 避开主采集整点 :00 — 防双 Chrome 实例资源竞争与 `git add` 抓取竞争。

@@ -89,13 +89,14 @@ python3 llm-radar-collector.py fetch [source_key]
 │   └── search-tips-*.md       # 搜索技巧
 └── data/
     ├── snapshot.json           # 当前快照
-    ├── fetch-cache.json        # 抓取缓存
     ├── metrics.json            # 运行指标
     ├── dead-letter.json        # 推送失败存档
     ├── archive/                # 过期数据归档
-    ├── history/                # 按周归档
-    └── collector.log           # 采集日志
+    └── history/                # 按周归档
 ```
+
+运行时产物 (日志/PID/抓取缓存) 一律进 gitignored `cache/` (cli-runtime-files v1.0 规范), data/ 不残留:
+`cache/logs/{llm-radar-collector,twitter-collector,llm-radar-mcp-server}/`、`cache/llm-radar-collector/fetch-cache.json`、`cache/pids/llm-radar-mcp-server.pid`。
 
 ## 技术栈
 
