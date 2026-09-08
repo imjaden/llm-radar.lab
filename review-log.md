@@ -1418,3 +1418,44 @@
 - git check-ignore 确认 cache/ 3 运行时文件忽略; git ls-files cache/ = 0 (未跟踪)。
 - ls-remote ground truth: origin/main=6903089, local=7006ee2 (ahead 1/behind 0); f9928eb/7e7e41d 已随 auto-converge 上 origin。
 - pytest 写脏数据文件已 git checkout -- 还原 (worktree clean)。
+
+---
+
+## 2026-09-08 — docs-consolidation 审计 (P5 推广 #2)
+
+- **review者**: Security Reviewer (review profile)
+- **范围**: 3 commit — c572028 docs@consolidate (6 handbooks) / d5e2405 docs@archive (76 files) / a439553 docs@sync (README rebuild + Q3 renames/Q4-Q7 fixes); 承接 P5 推广 #2
+- **Tracking**: 无安全发现; OBS-1~2 🟢 (测试计数口径 / review-log 历史路径); findings_open 0
+- **状态**: ✅ PASS — 100/100 (A)
+- **报告**: documents/reviews/llm-radar-docs-consolidation-audit-20260908.md
+- **实现 prompt**: ⬜ 无需生成 (纯文档整合, 无新功能)
+
+### 审计项核验
+
+| # | 项 | 结果 |
+|---|----|------|
+| 1 | 手册与实现一致 (STALE_HOURS=12 / CRON_SCHEDULE L2389 / parse_args L849 / frontend 行号 7 项逐字命中; frontmatter ×6 合规) | ✅ |
+| 2 | 归档 76 份 = reviews 50 + solutions 14 + theme 12; R100 保历史; 原位 data-flow/linux-deployment/github-ci/emoji-mapping 未动 | ✅ |
+| 3 | 引用零残留 (76 basename × 非豁免 86 命中全 archive 上下文, 0 dangling; al-rename.sh L90 豁免合理) | ✅ |
+| 4 | Q3/Q4/Q5 修复 (git-flow-fix-impl+cl005 落 reviews 桶 / git- 段统一一次 commit / requirements-spec 行号剥离 0 残留 / README 树+链接 / YAML parse 46 条) | ✅ |
+| 5 | pytest 266 passed + 2 skipped + 0 failed 无回归; 脏数据还原 worktree clean | ✅ |
+| 6 | git 卫生 (3 commits 各只含目标 / 无 -A / auto-push 未混入 / review-log 未动 / yaml 仅注记) | ✅ |
+| 7 | 安全面 (纯文档/路径; 源码仅 twitter docstring + twitter-targets.yaml 注释) | ✅ |
+| 8 | AGENTS.md 未擅改 (protected, git log 空) | ✅ |
+
+### 数据验证要点
+
+- 手册常量逐字实核 (collector L70 / health.py L38 / L2389 / twitter L849-871); frontmatter 六份一致。
+- frontend 行号逐条命中 TABS L336 / EMOJI_M L597 / DIM_EM L598 / entEmoji L599 / hl L479 / he L480 / copyTweet L1133 / 1333 行。
+- 归档桶分布与 documents/README.md 口径一致 (14/50/12); 原位 4 件未动。
+- requirements-spec 行号 token 0 残留; .review-level.yaml safe_load 通过 (46 条)。
+- pytest 独立复跑 266/2/0 (108.83s); snapshot/overview/timestamp 脏数据已 git checkout -- 还原。
+
+### 观察裁定
+
+| # | 观察 | 裁定 |
+|---|------|------|
+| OBS-1 | 简报「242 passed 2 deselected」vs 实测「266 passed 2 skipped」— dev 自报滞后 (runtime-files 审计同源), 「deselected」实为 2 个 @pytest.mark.selenium skip | 🟢 记录, 无回归 |
+| OBS-2 | review-log.md 末两条报告路径仍指 documents/reviews/ 未随归档改, 与 yaml 不对称 | 🟢 记录 (review 侧 append-only 豁免面) |
+
+---

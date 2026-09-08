@@ -427,6 +427,15 @@ review_history:
     findings_open: 0
     tracking: cli-runtime-files data/ 运行时迁移审计 (f9928eb/7e7e41d/7006ee2) — 无阻塞; 路径迁移仅路径段+docstring / 引用零残留 / cache 就位 data 零残留 / 263+2 skip 全绿 / ahead 仅 7006ee2; OBS-1~2 🟢 (gitignore 过期条目 + 远端 59.110.66.1 重部署)
     report: documents/archive/reviews-20260908/llm-radar-runtime-files-migration-audit-20260908.md
+  - date: 2026-09-08
+    reviewer: Security Reviewer
+    review_level: L2
+    verdict: PASS
+    score: 100
+    findings_total: 0
+    findings_open: 0
+    tracking: docs-consolidation 审计 (c572028/d5e2405/a439553) — 无阻塞; 手册/归档76/引用零残留/Q3-Q7/测试266+2/卫生/安全 all 通过; OBS-1~2 🟢 (测试计数口径 + review-log 历史路径)
+    report: documents/reviews/llm-radar-docs-consolidation-audit-20260908.md
 
 # ------------------------------------------------------------------
 # 注记 (2026-09-08 docs@sync): 以下 8 份 review 报告存在但未在 review_history 注册
