@@ -9,7 +9,7 @@ date: 2026-09-08
 
 > documents-consolidation phase-2 草稿（只写文件，未 commit）。素材全文（gitignored）：
 > `cache/doc-consolidation/llm-radar-quality-loop-extract.md`。
-> 本手册同时**整合三份 agent-loop 流程文档**（Q4：loop/agent-loop-design-v1.0 + loop/requirements-spec.md + pipeline/agent-loop-plan.md，原件 phase-3 归档）。
+> 本手册同时**整合三份 agent-loop 流程文档**（Q4：loop/agent-loop-design-v1.0 + loop/requirements-spec.md + pipeline/agent-loop-plan.md；原件已于 2026-09-08 归档 → documents/archive/theme-20260908/）。
 > 代码行号核实基准：2026-09-08 工作区（CL006 后，门禁行号较 CL005 实现审计时点又漂移）。
 
 ## 〇、概念映射（必须先读）
@@ -19,7 +19,7 @@ date: 2026-09-08
 1. **跨 profile 开发流程闭环**（agent-loop-design v1.0 + requirements-spec）——需求→开发→评审 cron 接力 + 任务状态机，即下文 §五「开发流程 agent-loop」。
 2. **数据管道自修正闭环**（agent-loop-plan）——采集器 Think→Act→Observe→Verify 蓝图，即 §六。其门禁口径「热点<3 → fail」是 **CL005 放宽前的旧版**（时间线：plan 早期 → CL005 2026-09-02 放宽）——引用勿混。
 
-另：requirements-spec.md 是面向**人类编写者**的需求清单规范（agent-loop 的输入格式），非开发流程本身。
+另：**requirements 规范**（原 requirements-spec.md，内容见 §5.7，原件已归档 → documents/archive/theme-20260908/）是面向**人类编写者**的需求清单规范（agent-loop 的输入格式），非开发流程本身。
 
 ## 一、定位
 
@@ -32,7 +32,7 @@ date: 2026-09-08
 - **质量门禁现状（2026-09-08 code 实核）**：`_verify()`（L1746）——4 实体维度（providers/people/tools/llms）全 0 → issue「实体提取为空（4 维度全 0）」（L1776-1778）；**热点 <3 仅 warning 不阻断**（L1781-1782「热点仅 N 条（未阻断）」）；事件中位新鲜度 >168h（7 天）→ issue；空 URL>5/截断>0/裸域名>2 → warning。`run()` L1745 `if not entities: return False` 拦 None（全源失败主拦截），L1757 防御保留。
 - **重试现状**：LLM JSON 解析失败重试 **3 次**（extract_entities L1007，`range(1, 4)` L1106；CL005 由 5→3，耗时 324s→~216s < 300s）。
 - **status checks**（L2137）：5 项 = 数据日期/实体数/质量门禁/Git 同步/**热点数**（L2238，<3 → warning 否则 info）；主 status_str 由 5 因子决定（not snapshot/新鲜度/连续失败≥3/quality_status/git_status），**不受 checks 项影响**（断 daily-checker heal 死循环）。
-- **治理基线**：commit 格式 `type@scope: subject`，项目既定类型集 **{data, feat, fix, docs, auto-push}**（governance 2026-08-10 实测归纳；requirements-spec 早期表 {add, fixed, optimized, refactor, docs, test, chore} 为旧版 [待核，以 .review-level.yaml commit_types 为现行权威]）；审计基础设施 = `.review-level.yaml`（项目根）+ `review-log.md`（根聚合，Style B 固定名）+ `documents/reviews/`；2026-09-07 起根 `audit-log.md` 移除，per-task `tasks/<task>/audit-log.md` 保留。
+- **治理基线**：commit 格式 `type@scope: subject`，项目既定类型集 **{data, feat, fix, docs, auto-push}**（governance 2026-08-10 实测归纳；requirements-spec 早期表 {add, fixed, optimized, refactor, docs, test, chore} 为旧版 [待核，以 .review-level.yaml commit_types 为现行权威]）；审计基础设施 = `.review-level.yaml`（项目根）+ `review-log.md`（根聚合，Style B 固定名）；评审报告档案 = `documents/archive/reviews-20260908/`；2026-09-07 起根 `audit-log.md` 移除，per-task `tasks/<task>/audit-log.md` 保留。
 
 ## 三、机制与指令说明（质量门禁演变链）
 
@@ -101,7 +101,7 @@ git checkout -- timestamp.json overview.json data/snapshot.json   # 跑完还原
 
 创建/更新需求 = 编辑 requirements.md；初始化 `python3 tasks/al-init.py "<标题>"`（`--demand` 直接就绪）；确认需求完成 = state=demand；查进度 `cat tasks/agents-teamwork.yaml`；人工介入 = 改 state + 重置 retry_count；3 次失败明细 `cat tasks/al-<id>/{demand.md,features.md,audit-log.md}`。
 
-### 5.7 requirements-spec.md 要点（整合；N| 行号污染修复前的原规范，剥 `^\d+\|` 即还原）
+### 5.7 requirements 规范要点（整合原 requirements-spec.md → 已归档 documents/archive/theme-20260908/；N| 行号污染已于 2026-09-08 修复，本目即其现行载体）
 
 - **定位**：结构化需求清单（非技术设计/非聊天记录），每条独立可验收；3 条以上批量、多文件改动 → 写入 requirements.md（1-2 条简单需求可对话）。
 - **模板**：`# 迭代需求: <标题>` → `## 涉及文件` → `## Bug 修复`（场景/期望/实际）→ `## 功能新增`（场景/行为/验收）→ `## 强调` 4 条（每条独立 commit / 实现后跑 tests / commit 不 push（review 通过后自动 push）/ 验收不过 AI 修后重验）。
@@ -110,7 +110,7 @@ git checkout -- timestamp.json overview.json data/snapshot.json   # 跑完还原
 - **AI 协作流程**：写完 →「requirements.md 已更新，执行」→ AI 逐条**复述理解 + 验收方案** → 用户确认/修正 → 实现 → 测试 → commit（不 push）→ features.md 打印「实现功能清单 + 验证结果」表 → 用户验收。
 - **默认约束**：验证须实测（不能「代码看起来没问题」）；验证通过后打印结果表；验证用例必做（测试不通过不得 commit）；Commit 但不 Push（commit type 表见 §二 治理基线——早期表与现行集不一致 [待核]）。
 
-## 六、数据管道 agent-loop 蓝图（整合 pipeline/agent-loop-plan.md；历史早期设计）
+## 六、数据管道 agent-loop 蓝图（整合 pipeline/agent-loop-plan.md → 已归档 documents/archive/theme-20260908/；历史早期设计）
 
 - 目标：Think → Act → Observe → Verify 闭环改造线性管道（Fetch→Extract→Merge→Push），自修正、可观测、质量门禁。
 - [Think] 采集策略（间隔<6h skip / 3 fails 源降级 / 48h 事件优先）→ [Act] Fetch+Extract+Merge（7 源 parallel / LLM prompt rule 8 / 增量 merge+dedup）→ [Observe] `_observe()` 写 metrics.json（sources/llm/data/push 四类指标）→ [Verify] 门禁（见 §三-1 旧口径）→ Pass push / Fail 记录跳过。
@@ -138,7 +138,7 @@ git checkout -- timestamp.json overview.json data/snapshot.json   # 跑完还原
 ## 八、已知坑
 
 1. **「agent-loop」双义**：开发流程闭环 vs 数据管道闭环；引用必须指明（本文 §〇）。
-2. **requirements-spec.md 行号污染**：297 物理行全带 `N|` 前缀（嵌号==物理行号，自洽）；剥 `^\d+\|` 即还原；该缺陷 phase-3 修复，原件届时归档（修复后内容即本手册 §5.7）。
+2. **requirements 规范行号污染（已修复）**：原 documents/loop/requirements-spec.md（→ 已归档 documents/archive/theme-20260908/）297 物理行全带 `N|` 前缀（嵌号==物理行号，自洽）；2026-09-08 phase-3 剥前缀修复（修复后内容即本手册 §5.7）。
 3. **commit type 集三处不一致 [待核]**：requirements-spec 早期表 vs governance 既定集 {data,feat,fix,docs,auto-push}——以 .review-level.yaml commit_types 为现行权威。
 4. **门禁行号随实现漂移**：CL005 设计时点（L779/1419-1463）、实现审计时点（L780/1449-1454）、CL006 后现时点（L1106/1746-1782/2238）三套——引用注明时点。
 5. **「实体>0 即 push」勿简写**：实际含 changelog 非空条件（全过期/无变更仍 skip）。
@@ -152,17 +152,17 @@ git checkout -- timestamp.json overview.json data/snapshot.json   # 跑完还原
 
 | 源文件（原位 documents/…） | 角色 | 处置 |
 |---|---|---|
-| solutions/llm-radar-quality-gate-relax-design-v1.0-20260902.md | CL005 design | 待归档 → archive/solutions-{date}/ |
-| reviews/llm-radar-quality-gate-relax-design-review-v1.0-20260902.md | CL005 评审 | 待归档 → archive/reviews-{date}/ |
-| reviews/llm-radar-quality-gate-relax-design-rereview-v1.1-20260902.md | CL005 复审 | 待归档 → archive/reviews-{date}/ |
-| reviews/llm-radar-quality-gate-relax-impl-audit-20260902.md | CL005 审计（族终审） | 待归档 → archive/reviews-{date}/ |
-| reviews/llm-radar-quality-gate-relax-ops-check-20260902.md | CL005 ops 核查 | 待归档 → archive/reviews-{date}/ |
-| reviews/llm-radar-governance-review-v1.0-20260810.md | 治理审查 v1.0 | 待归档 → archive/reviews-{date}/ |
-| reviews/llm-radar-governance-review-v1.1-20260810.md | 治理审查 v1.1（族终审） | 待归档 → archive/reviews-{date}/ |
-| reviews/llm-radar-w6-cleanup-rereview-v1.0-20260907.md | 清理复审（终审） | 待归档 → archive/reviews-{date}/ |
-| reviews/llm-radar-path-refs-review-v1.0-20260823.md | 路径清理审查 | 待归档 → archive/reviews-{date}/ |
-| loop/agent-loop-design-v1.0-20260711.md | agent-loop 开发流程设计（Q4 整合入 §五） | 待归档 → archive/theme-{date}/ |
-| loop/requirements-spec.md | 需求编写规范（Q4 修复后内容入 §5.7；原件带 N\| 污染） | 待归档 → archive/theme-{date}/ |
-| pipeline/agent-loop-plan.md | 数据管道闭环蓝图（Q4 整合入 §六） | 待归档 → archive/theme-{date}/ |
+| solutions/llm-radar-quality-gate-relax-design-v1.0-20260902.md | CL005 design | 已归档 → archive/solutions-20260908/ |
+| reviews/llm-radar-quality-gate-relax-design-review-v1.0-20260902.md | CL005 评审 | 已归档 → archive/reviews-20260908/ |
+| reviews/llm-radar-quality-gate-relax-design-rereview-v1.1-20260902.md | CL005 复审 | 已归档 → archive/reviews-20260908/ |
+| reviews/llm-radar-quality-gate-relax-impl-audit-20260902.md | CL005 审计（族终审） | 已归档 → archive/reviews-20260908/ |
+| reviews/llm-radar-quality-gate-relax-ops-check-20260902.md | CL005 ops 核查 | 已归档 → archive/reviews-20260908/ |
+| reviews/llm-radar-governance-review-v1.0-20260810.md | 治理审查 v1.0 | 已归档 → archive/reviews-20260908/ |
+| reviews/llm-radar-governance-review-v1.1-20260810.md | 治理审查 v1.1（族终审） | 已归档 → archive/reviews-20260908/ |
+| reviews/llm-radar-w6-cleanup-rereview-v1.0-20260907.md | 清理复审（终审） | 已归档 → archive/reviews-20260908/ |
+| reviews/llm-radar-path-refs-review-v1.0-20260823.md | 路径清理审查 | 已归档 → archive/reviews-20260908/ |
+| loop/agent-loop-design-v1.0-20260711.md | agent-loop 开发流程设计（Q4 整合入 §五） | 已归档 → archive/theme-20260908/ |
+| loop/requirements-spec.md | 需求编写规范（Q4：N| 污染已修复，内容即 §5.7） | 已归档 → archive/theme-20260908/ |
+| pipeline/agent-loop-plan.md | 数据管道闭环蓝图（Q4 整合入 §六） | 已归档 → archive/theme-20260908/ |
 
-相关现行保留项（不归档）：`review-log.md` + `.review-level.yaml`（项目根，审计基础设施）、`tasks/`（agent-loop 落地脚本/状态，现行工作流）、`requirements.md`（活跃工作流输入，不存在则 al-init.py 建空占位）、AGENTS.md（protected；DOC-3 待用户改）、`cache/doc-consolidation/llm-radar-quality-loop-extract.md`（gitignored 提炼产物）。三份 loop 原件归档后，本手册 §五/§5.7/§六 即其现行载体（档案注：agent-loop-design 文件名 v1.0 尾注 1.2 [待核]，requirements-spec 修复见 phase-3）。
+相关现行保留项（不归档）：`review-log.md` + `.review-level.yaml`（项目根，审计基础设施）、`tasks/`（agent-loop 落地脚本/状态，现行工作流）、`requirements.md`（活跃工作流输入，不存在则 al-init.py 建空占位）、AGENTS.md（protected；DOC-3 待用户改）、`cache/doc-consolidation/llm-radar-quality-loop-extract.md`（gitignored 提炼产物）。三份 loop 原件已于 2026-09-08 随 docs@archive 归档（documents/archive/theme-20260908/），本手册 §五/§5.7/§六 即其现行载体（档案注：agent-loop-design 文件名 v1.0 尾注 1.2 [待核]；requirements-spec N| 污染已修复，内容即 §5.7）。

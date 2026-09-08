@@ -116,11 +116,11 @@ GITHUB_ACTIONS=true python3 -m pytest tests/ -v --tb=short   # 模拟 CI（跳�
 |---|---|---|
 | ops/linux-deployment-v1.0-20260701.md | 现行部署环境速查 | **保留原位**（运维命令日志路径已过期见 §六-5） |
 | ops/github-ci-issues-v1.0-20260704.md | CI 故障记录（现行开放项 #3） | **保留原位** |
-| solutions/llm-radar-health-probe-design-v1.2-20260813.md | health design 终版 | 待归档 → archive/solutions-{date}/ |
-| solutions/llm-radar-health-probe-impl-v1.0-20260814.md | health 实现报告 | 待归档 → archive/solutions-{date}/ |
-| reviews/llm-radar-health-probe-review-v1.0-20260813.md | health 评审（80/B） | 待归档 → archive/reviews-{date}/ |
-| reviews/llm-radar-health-probe-rereview-v1.2-20260813.md | health 复审（100/A） | 待归档 → archive/reviews-{date}/ |
-| reviews/llm-radar-health-probe-ops-verify-v1.0-20260814.md | ops 独立验证（族终审） | 待归档 → archive/reviews-{date}/ |
-| reviews/llm-radar-stale-hours-audit-20260903.md | STALE_HOURS 放宽审计 | 待归档 → archive/reviews-{date}/ |
+| solutions/llm-radar-health-probe-design-v1.2-20260813.md | health design 终版 | 已归档 → archive/solutions-20260908/ |
+| solutions/llm-radar-health-probe-impl-v1.0-20260814.md | health 实现报告 | 已归档 → archive/solutions-20260908/ |
+| reviews/llm-radar-health-probe-review-v1.0-20260813.md | health 评审（80/B） | 已归档 → archive/reviews-20260908/ |
+| reviews/llm-radar-health-probe-rereview-v1.2-20260813.md | health 复审（100/A） | 已归档 → archive/reviews-20260908/ |
+| reviews/llm-radar-health-probe-ops-verify-v1.0-20260814.md | ops 独立验证（族终审） | 已归档 → archive/reviews-20260908/ |
+| reviews/llm-radar-stale-hours-audit-20260903.md | STALE_HOURS 放宽审计 | 已归档 → archive/reviews-20260908/ |
 
 交叉引用：`cache/doc-consolidation/llm-radar-ops-extract.md`（gitignored 提炼产物）；阈值常量/CLI 命令面细节见 cli-governance handbook；采集器数据流与 git 自愈见 collector-pipeline / git-sync handbook。

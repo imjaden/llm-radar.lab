@@ -124,39 +124,39 @@ git log --oneline --merges -3
 
 ## 七、参考文档
 
-归档说明：18 份素材均为过程文档，phase-3 移入 archive 桶；下表「预计路径」以 phase-3 实际执行日为 {date}（本批预计 2026-09-08 当日执行）。`reviews/` 系 fork-converge 文件名缺 `git-` 段（Q3 改名项，与归档同批处理）。
+归档说明：18 份素材均为过程文档，已随 docs@archive（2026-09-08）移入 archive 桶，档案 = `documents/archive/{solutions,reviews}-20260908/`。Q3 改名项同批落地：reviews/ 4 份 `fork-converge-*` 补 `git-` 段 → `llm-radar-git-fork-converge-*`；`cl005-fork-merge-audit` 补 `git-` 段 → `llm-radar-cl005-git-fork-merge-audit-*`；`git-flow-fix-impl-v1.0` 迁 reviews 桶。
 
 ### 族 A git-flow-fix（9 份）
 
 | 源文件（原位 documents/…） | 处置 |
 |---|---|
-| solutions/llm-radar-git-flow-fix-design-v1.2-20260812.md | 待归档 → archive/solutions-{date}/ |
-| solutions/llm-radar-git-flow-fix-design-v1.3-20260815.md | 待归档 → archive/solutions-{date}/ |
-| solutions/llm-radar-git-flow-fix-impl-v1.0-20260813.md | 待归档 → archive/solutions-{date}/（impl 存错目录项，Q3 待核是否改入 reviews 桶） |
-| reviews/llm-radar-git-flow-fix-review-v1.0-20260812.md | 待归档 → archive/reviews-{date}/ |
-| reviews/llm-radar-git-flow-fix-impl-audit-v1.0-20260813.md | 待归档 → archive/reviews-{date}/ |
-| reviews/llm-radar-git-flow-fix-ops-verify-v1.0-20260813.md | 待归档 → archive/reviews-{date}/ |
-| reviews/llm-radar-git-flow-fix-rereview-v1.2-20260812.md | 待归档 → archive/reviews-{date}/ |
-| reviews/llm-radar-git-flow-fix-v1.3-review-v1.0-20260815.md | 待归档 → archive/reviews-{date}/ |
-| reviews/llm-radar-git-flow-fix-v1.3-rereview-v1.1-20260815.md | 待归档 → archive/reviews-{date}/ |
+| solutions/llm-radar-git-flow-fix-design-v1.2-20260812.md | 已归档 → archive/solutions-20260908/ |
+| solutions/llm-radar-git-flow-fix-design-v1.3-20260815.md | 已归档 → archive/solutions-20260908/ |
+| solutions/llm-radar-git-flow-fix-impl-v1.0-20260813.md（原存 solutions/，Q3 迁 reviews 桶） | 已归档 → archive/reviews-20260908/ |
+| reviews/llm-radar-git-flow-fix-review-v1.0-20260812.md | 已归档 → archive/reviews-20260908/ |
+| reviews/llm-radar-git-flow-fix-impl-audit-v1.0-20260813.md | 已归档 → archive/reviews-20260908/ |
+| reviews/llm-radar-git-flow-fix-ops-verify-v1.0-20260813.md | 已归档 → archive/reviews-20260908/ |
+| reviews/llm-radar-git-flow-fix-rereview-v1.2-20260812.md | 已归档 → archive/reviews-20260908/ |
+| reviews/llm-radar-git-flow-fix-v1.3-review-v1.0-20260815.md | 已归档 → archive/reviews-20260908/ |
+| reviews/llm-radar-git-flow-fix-v1.3-rereview-v1.1-20260815.md | 已归档 → archive/reviews-20260908/ |
 
 ### 族 B fork-converge（8 份）
 
 | 源文件（原位 documents/…） | 处置 |
 |---|---|
-| solutions/llm-radar-git-fork-converge-design-v1.0-20260906.md | 待归档 → archive/solutions-{date}/ |
-| solutions/llm-radar-git-fork-converge-design-v1.1-20260906.md | 待归档 → archive/solutions-{date}/ |
-| solutions/llm-radar-git-fork-converge-design-v1.1-r2-20260906.md | 待归档 → archive/solutions-{date}/ |
-| reviews/llm-radar-fork-converge-design-review-v1.0-20260906.md | 待归档 → archive/reviews-{date}/（改名项 Q3：补 `git-` 段 → llm-radar-git-fork-converge-…） |
-| reviews/llm-radar-fork-converge-design-rereview-v1.1-20260906.md | 待归档 → archive/reviews-{date}/（同上改名项） |
-| reviews/llm-radar-fork-converge-design-rereview-v1.1-r2-20260906.md | 待归档 → archive/reviews-{date}/（同上改名项） |
-| reviews/llm-radar-fork-converge-impl-audit-20260907.md | 待归档 → archive/reviews-{date}/（族 B 终审） |
-| reviews/llm-radar-cl005-fork-merge-audit-20260902.md | 待归档 → archive/reviews-{date}/ |
+| solutions/llm-radar-git-fork-converge-design-v1.0-20260906.md | 已归档 → archive/solutions-20260908/ |
+| solutions/llm-radar-git-fork-converge-design-v1.1-20260906.md | 已归档 → archive/solutions-20260908/ |
+| solutions/llm-radar-git-fork-converge-design-v1.1-r2-20260906.md | 已归档 → archive/solutions-20260908/ |
+| reviews/llm-radar-git-fork-converge-design-review-v1.0-20260906.md | 已归档 → archive/reviews-20260908/（Q3 改名：原 llm-radar-fork-converge-design-review-v1.0-20260906.md 补 git- 段） |
+| reviews/llm-radar-git-fork-converge-design-rereview-v1.1-20260906.md | 已归档 → archive/reviews-20260908/（Q3 改名：同上补 git- 段） |
+| reviews/llm-radar-git-fork-converge-design-rereview-v1.1-r2-20260906.md | 已归档 → archive/reviews-20260908/（Q3 改名：同上补 git- 段） |
+| reviews/llm-radar-git-fork-converge-impl-audit-20260907.md | 已归档 → archive/reviews-20260908/（族 B 终审；Q3 改名：补 git- 段） |
+| reviews/llm-radar-cl005-git-fork-merge-audit-20260902.md | 已归档 → archive/reviews-20260908/（Q3 改名：补 git- 段） |
 
 ### 族 C push-anti-overwrite（1 份）
 
 | 源文件（原位 documents/…） | 处置 |
 |---|---|
-| reviews/llm-radar-push-anti-overwrite-audit-20260903.md | 待归档 → archive/reviews-{date}/ |
+| reviews/llm-radar-push-anti-overwrite-audit-20260903.md | 已归档 → archive/reviews-20260908/ |
 
 相关现行保留项（不归档）：`AGENTS.md`（仓库根，受保护指令文件；L190 描述需按 CL006 终态更新，待用户授权——DOC-1）、`cache/doc-consolidation/llm-radar-git-sync-extract.md`（gitignored 提炼产物）。

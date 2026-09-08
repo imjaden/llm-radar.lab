@@ -30,7 +30,7 @@ risk: "*下一步建议**: 转交两个修正 prompt;确认 CL004 状态;指示 
 ## 输出 / 关键路径
 - /Users/jadenli/CodeSpace/llm-radar.lab
 - /Users/jadenli/CodeSpace/llm-radar.lab/.review-level.yaml
-- /Users/jadenli/CodeSpace/llm-radar.lab/documents/reviews/llm-radar-x-preview-review-v1.0-20260827.md
+- /Users/jadenli/CodeSpace/llm-radar.lab/documents/archive/reviews-20260908/llm-radar-x-preview-review-v1.0-20260827.md
 - /Users/jadenli/CodeSpace/llm-radar.lab/review-log.md
 - ~/CodeSpace/llm-radar.lab
 

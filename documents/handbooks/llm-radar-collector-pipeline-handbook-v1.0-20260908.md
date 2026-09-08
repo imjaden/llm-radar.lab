@@ -119,14 +119,14 @@ python3 -c "import json;d=json.load(open('data/twitter.json'));print(d['retentio
 | 源文件（原位 documents/…） | 角色 | 处置 |
 |---|---|---|
 | pipeline/data-flow-v1.0-20260622.md | 现行架构说明（骨架） | **保留原位**（部分字段过期，事实以手册为准；归档与否见复核清单待核实项） |
-| solutions/x-hotspot-design-v1.3-20260826.md | design 终版（CL-SEC20） | 待归档 → archive/solutions-{date}/ |
-| reviews/x-hotspot-review-v1.0-20260825.md | CL-SEC19 评审 | 待归档 → archive/reviews-{date}/ |
-| reviews/x-hotspot-impl-audit-v1.0-20260826.md | CL-SEC19 审计 | 待归档 → archive/reviews-{date}/ |
-| reviews/x-hotspot-rereview-v1.1-20260826.md | CL-SEC19 复审 | 待归档 → archive/reviews-{date}/ |
-| reviews/x-hotspot-review-v1.2-20260826.md | CL-SEC20 评审 | 待归档 → archive/reviews-{date}/ |
-| reviews/x-hotspot-rereview-v1.3-20260826.md | CL-SEC20 复审 | 待归档 → archive/reviews-{date}/ |
-| reviews/x-hotspot-impl-audit-v1.1-20260826.md | CL-SEC20 审计（族终审） | 待归档 → archive/reviews-{date}/ |
-| verify/x-hotspot-verify-20260826.md | 一次性验证指令 | 待归档 → archive/theme-{date}/ |
-| reviews/llm-radar-flclash-proxy-skip-audit-20260904.md | flclash 审计 | 待归档 → archive/reviews-{date}/ |
+| solutions/x-hotspot-design-v1.3-20260826.md | design 终版（CL-SEC20） | 已归档 → archive/solutions-20260908/ |
+| reviews/x-hotspot-review-v1.0-20260825.md | CL-SEC19 评审 | 已归档 → archive/reviews-20260908/ |
+| reviews/x-hotspot-impl-audit-v1.0-20260826.md | CL-SEC19 审计 | 已归档 → archive/reviews-20260908/ |
+| reviews/x-hotspot-rereview-v1.1-20260826.md | CL-SEC19 复审 | 已归档 → archive/reviews-20260908/ |
+| reviews/x-hotspot-review-v1.2-20260826.md | CL-SEC20 评审 | 已归档 → archive/reviews-20260908/ |
+| reviews/x-hotspot-rereview-v1.3-20260826.md | CL-SEC20 复审 | 已归档 → archive/reviews-20260908/ |
+| reviews/x-hotspot-impl-audit-v1.1-20260826.md | CL-SEC20 审计（族终审） | 已归档 → archive/reviews-20260908/ |
+| verify/x-hotspot-verify-20260826.md | 一次性验证指令 | 已归档 → archive/theme-20260908/ |
+| reviews/llm-radar-flclash-proxy-skip-audit-20260904.md | flclash 审计 | 已归档 → archive/reviews-20260908/ |
 
 交叉引用：`cache/doc-consolidation/llm-radar-collector-pipeline-extract.md`（gitignored 提炼产物）；quality-gate/重试细节见 quality-loop handbook；X 热点前端渲染见 frontend handbook；运行时布局见 cli-governance handbook。

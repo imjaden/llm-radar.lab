@@ -99,15 +99,15 @@ git checkout -- data/snapshot.json overview.json timestamp.json   # 跑完全量
 | 源文件（原位 documents/…） | 角色 | 处置 |
 |---|---|---|
 | emoji-mapping-v1.0-20260713.md | 现行 emoji 约定/映射表 | **保留原位**（documents/ 根；与手册并存，漂移见 §6-2/3） |
-| solutions/llm-radar-x-preview-design-v1.1-20260827.md | CL001 design 终版 | 待归档 → archive/solutions-{date}/ |
-| reviews/llm-radar-x-preview-review-v1.0-20260827.md | CL001 评审 | 待归档 → archive/reviews-{date}/ |
-| reviews/llm-radar-x-preview-impl-audit-v1.0-20260827.md | CL001 审计（族终审） | 待归档 → archive/reviews-{date}/ |
-| solutions/llm-radar-perf-optimize-design-v1.1-20260827.md | CL002 design 终版 | 待归档 → archive/solutions-{date}/ |
-| reviews/llm-radar-perf-optimize-review-v1.0-20260827.md | CL002 评审 | 待归档 → archive/reviews-{date}/ |
-| reviews/llm-radar-perf-optimize-rereview-v1.1-20260827.md | CL002 复审 | 待归档 → archive/reviews-{date}/ |
-| reviews/llm-radar-perf-optimize-impl-audit-v1.0-20260827.md | CL002 审计（族终审） | 待归档 → archive/reviews-{date}/ |
-| solutions/llm-radar-copy-fix-design-v1.0-20260827.md | CL003 design 终版 | 待归档 → archive/solutions-{date}/ |
-| reviews/llm-radar-copy-fix-review-v1.0-20260827.md | CL003 评审 | 待归档 → archive/reviews-{date}/ |
-| reviews/llm-radar-copy-fix-impl-audit-v1.0-20260827.md | CL003 审计（族终审） | 待归档 → archive/reviews-{date}/ |
+| solutions/llm-radar-x-preview-design-v1.1-20260827.md | CL001 design 终版 | 已归档 → archive/solutions-20260908/ |
+| reviews/llm-radar-x-preview-review-v1.0-20260827.md | CL001 评审 | 已归档 → archive/reviews-20260908/ |
+| reviews/llm-radar-x-preview-impl-audit-v1.0-20260827.md | CL001 审计（族终审） | 已归档 → archive/reviews-20260908/ |
+| solutions/llm-radar-perf-optimize-design-v1.1-20260827.md | CL002 design 终版 | 已归档 → archive/solutions-20260908/ |
+| reviews/llm-radar-perf-optimize-review-v1.0-20260827.md | CL002 评审 | 已归档 → archive/reviews-20260908/ |
+| reviews/llm-radar-perf-optimize-rereview-v1.1-20260827.md | CL002 复审 | 已归档 → archive/reviews-20260908/ |
+| reviews/llm-radar-perf-optimize-impl-audit-v1.0-20260827.md | CL002 审计（族终审） | 已归档 → archive/reviews-20260908/ |
+| solutions/llm-radar-copy-fix-design-v1.0-20260827.md | CL003 design 终版 | 已归档 → archive/solutions-20260908/ |
+| reviews/llm-radar-copy-fix-review-v1.0-20260827.md | CL003 评审 | 已归档 → archive/reviews-20260908/ |
+| reviews/llm-radar-copy-fix-impl-audit-v1.0-20260827.md | CL003 审计（族终审） | 已归档 → archive/reviews-20260908/ |
 
 交叉引用：`cache/doc-consolidation/llm-radar-frontend-extract.md`（gitignored 提炼产物）；X 热点采集端见 collector-pipeline handbook；热度等级数值口径（collector `_score_to_level`）与 git 自愈无关但同仓——口径对齐见 §6-2 [待核]。

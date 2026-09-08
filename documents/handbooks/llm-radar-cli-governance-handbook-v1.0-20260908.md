@@ -102,34 +102,34 @@ git checkout -- timestamp.json overview.json data/snapshot.json
 
 ## 七、参考文档
 
-归档说明：13 份素材均为过程文档，phase-3 移入 archive 桶；{date}=phase-3 实际执行日。
+归档说明：13 份素材均为过程文档，已随 docs@archive（2026-09-08）移入 archive 桶，档案 = `documents/archive/{solutions,reviews}-20260908/`。
 
 ### 族 A cli-governance（8 份）
 
 | 源文件（原位 documents/…） | 处置 |
 |---|---|
-| solutions/llm-radar-cli-governance-design-v1.1-20260823.md | 待归档 → archive/solutions-{date}/ |
-| reviews/llm-radar-cli-governance-review-v1.0-20260823.md | 待归档 → archive/reviews-{date}/ |
-| reviews/llm-radar-cli-governance-rereview-v1.1-20260823.md | 待归档 → archive/reviews-{date}/ |
-| reviews/llm-radar-cli-governance-recheck-v1.0-20260823.md | 待归档 → archive/reviews-{date}/ |
-| reviews/llm-radar-cli-governance-recheck-v1.1-20260823.md | 待归档 → archive/reviews-{date}/ |
-| reviews/llm-radar-cli-governance-ops-verify-v1.0-20260823.md | 待归档 → archive/reviews-{date}/ |
-| reviews/llm-radar-cli-governance-convergence-review-v1.0-20260823.md | 待归档 → archive/reviews-{date}/ |
-| reviews/llm-radar-cli-governance-implementation-review-v1.0-20260823.md | 待归档 → archive/reviews-{date}/ |
+| solutions/llm-radar-cli-governance-design-v1.1-20260823.md | 已归档 → archive/solutions-20260908/ |
+| reviews/llm-radar-cli-governance-review-v1.0-20260823.md | 已归档 → archive/reviews-20260908/ |
+| reviews/llm-radar-cli-governance-rereview-v1.1-20260823.md | 已归档 → archive/reviews-20260908/ |
+| reviews/llm-radar-cli-governance-recheck-v1.0-20260823.md | 已归档 → archive/reviews-20260908/ |
+| reviews/llm-radar-cli-governance-recheck-v1.1-20260823.md | 已归档 → archive/reviews-20260908/ |
+| reviews/llm-radar-cli-governance-ops-verify-v1.0-20260823.md | 已归档 → archive/reviews-20260908/ |
+| reviews/llm-radar-cli-governance-convergence-review-v1.0-20260823.md | 已归档 → archive/reviews-20260908/ |
+| reviews/llm-radar-cli-governance-implementation-review-v1.0-20260823.md | 已归档 → archive/reviews-20260908/ |
 
 ### 族 B skills-prompt（3 份）
 
 | 源文件（原位 documents/…） | 处置 |
 |---|---|
-| solutions/llm-radar-skills-prompt-design-v1.0-20260827.md | 待归档 → archive/solutions-{date}/ |
-| reviews/llm-radar-skills-prompt-review-v1.0-20260827.md | 待归档 → archive/reviews-{date}/ |
-| reviews/llm-radar-skills-prompt-impl-audit-v1.0-20260827.md | 待归档 → archive/reviews-{date}/ |
+| solutions/llm-radar-skills-prompt-design-v1.0-20260827.md | 已归档 → archive/solutions-20260908/ |
+| reviews/llm-radar-skills-prompt-review-v1.0-20260827.md | 已归档 → archive/reviews-20260908/ |
+| reviews/llm-radar-skills-prompt-impl-audit-v1.0-20260827.md | 已归档 → archive/reviews-20260908/ |
 
 ### 族 C runtime-files（1 份）+ 族 D wrapper-env（1 份）
 
 | 源文件（原位 documents/…） | 处置 |
 |---|---|
-| reviews/llm-radar-runtime-files-migration-audit-20260908.md | 待归档 → archive/reviews-{date}/ |
-| reviews/llm-radar-cl005-wrapper-env-fix-audit-20260902.md | 待归档 → archive/reviews-{date}/ |
+| reviews/llm-radar-runtime-files-migration-audit-20260908.md | 已归档 → archive/reviews-20260908/ |
+| reviews/llm-radar-cl005-wrapper-env-fix-audit-20260902.md | 已归档 → archive/reviews-20260908/ |
 
 相关现行保留项（不归档）：`.cli-registry.yaml`（仓库根，入 git）、`skills/x-twitter-collector/SKILL.md` 与 `skills/github-workflow/SKILL.md`（现行供给站内容）、`.hermes-project.yaml`（handoff 指向 documents/handoff/handoff-llm-radar.lab-ops.md）、`cache/doc-consolidation/llm-radar-cli-governance-extract.md`（gitignored 提炼产物）。

@@ -83,10 +83,15 @@ python3 llm-radar-collector.py fetch [source_key]
 ├── llm-radar-prompt.md        # LLM 提取 prompt 规范
 ├── AGENTS.md                  # Agent 开发指南
 ├── documents/
-│   ├── data-flow-*.md         # 数据流程文档
-│   ├── mcp-protocol-design-*.md   # MCP 协议设计
-│   ├── hermes-integration-*.md    # Hermes 集成方案
-│   └── search-tips-*.md       # 搜索技巧
+│   ├── README.md               # 文档索引（手册 + 保留主题 + 归档口径）
+│   ├── handbooks/              # 6 份主题手册（现行知识底座, v1.0-20260908）
+│   ├── emoji-mapping-*.md      # emoji 约定（现行参考）
+│   ├── mcp/                    # MCP 协议设计（现行）
+│   ├── integ/                  # Hermes 集成方案（现行）
+│   ├── pipeline/               # data-flow 数据流说明（现行）
+│   ├── ops/                    # linux-deployment / github-ci-issues（现行）
+│   ├── handoff/                # 跨 profile 交接清单
+│   └── archive/                # 过程文档归档（solutions/reviews/theme-20260908 桶）
 └── data/
     ├── snapshot.json           # 当前快照
     ├── metrics.json            # 运行指标
@@ -119,7 +124,7 @@ python3 llm-radar-collector.py run        # 全量采集 + auto-push
 python3 llm-radar-collector.py cron --add # 添加定时任务
 ```
 
-详见 [features.md](features.md) 和 [documents/data-flow-v1.0-20260622.md](documents/data-flow-v1.0-20260622.md)。
+详见 [features.md](features.md) 和 [documents/pipeline/data-flow-v1.0-20260622.md](documents/pipeline/data-flow-v1.0-20260622.md)。
 
 ### Pipeline B: Hermes (MCP)（对话驱动写入）
 
@@ -149,7 +154,7 @@ mcp_servers:
 # → mcp_llm_radar_submit_entities 写入
 ```
 
-详见 [documents/hermes-integration-v1.0-20260624.md](documents/hermes-integration-v1.0-20260624.md) 和 [documents/mcp-protocol-design-v1.0-20260623.md](documents/mcp-protocol-design-v1.0-20260623.md)。
+详见 [documents/integ/hermes-integration-v1.0-20260624.md](documents/integ/hermes-integration-v1.0-20260624.md) 和 [documents/mcp/mcp-protocol-design-v1.0-20260623.md](documents/mcp/mcp-protocol-design-v1.0-20260623.md)。
 
 ## 功能清单
 

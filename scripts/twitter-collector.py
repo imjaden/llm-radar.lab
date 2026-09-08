@@ -4,7 +4,7 @@
 """
 X (Twitter) 热点采集器 — llm-radar 独立采集脚本
 ================================================
-设计: documents/solutions/x-hotspot-design-v1.3-20260826.md
+设计: documents/archive/solutions-20260908/x-hotspot-design-v1.3-20260826.md
   §3 采集器 (CLI/登录态/抓取/条数窗口/失败处理/反爬) / §4 数据 schema / §6 入库
 
 CLI 签名 (§3.2):

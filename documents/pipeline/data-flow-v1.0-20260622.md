@@ -285,7 +285,7 @@ data/snapshot.json
 | `README.md` | 项目说明 | 77 |
 | `features.md` | 功能清单 | 55 |
 | `loop.md` | 迭代检查清单 | 13 |
-| `agent-loop-plan.md` | Agent Loop 升级规划 | — |
+| `documents/archive/theme-20260908/agent-loop-plan.md` | Agent Loop 升级规划（已归档） | — |
 
 ---
 

@@ -20,15 +20,15 @@ profile: review
 
 | # | 审查对象 | 结论 | 报告 |
 |:-:|:---------|:-----|:-----|
-| 1 | governance v1.0 (5 commits) | CONDITIONAL PASS 80 | documents/reviews/llm-radar-governance-review-v1.0-20260810.md |
-| 2 | governance v1.1 (2 commits) | PASS 100 | documents/reviews/llm-radar-governance-review-v1.1-20260810.md |
-| 3 | git flow fix 设计 v1.0/v1.1 | CONDITIONAL PASS 80 | documents/reviews/llm-radar-git-flow-fix-review-v1.0-20260812.md |
-| 4 | git flow fix 设计 v1.2 | PASS 100 | documents/reviews/llm-radar-git-flow-fix-rereview-v1.2-20260812.md |
-| 5 | git flow fix 实现审计 | PASS 100 | documents/reviews/llm-radar-git-flow-fix-impl-audit-v1.0-20260813.md |
-| 6 | health probe 设计 v1.1 | CONDITIONAL PASS 80 | documents/reviews/llm-radar-health-probe-review-v1.0-20260813.md |
-| 7 | health probe 设计 v1.2 | PASS 100 | documents/reviews/llm-radar-health-probe-rereview-v1.2-20260813.md |
-| 8 | git flow fix v1.3 设计 | PASS 95 | documents/reviews/llm-radar-git-flow-fix-v1.3-review-v1.0-20260815.md |
-| 9 | git flow fix v1.3 复检+实现审计 | PASS 100 | documents/reviews/llm-radar-git-flow-fix-v1.3-rereview-v1.1-20260815.md |
+| 1 | governance v1.0 (5 commits) | CONDITIONAL PASS 80 | documents/archive/reviews-20260908/llm-radar-governance-review-v1.0-20260810.md |
+| 2 | governance v1.1 (2 commits) | PASS 100 | documents/archive/reviews-20260908/llm-radar-governance-review-v1.1-20260810.md |
+| 3 | git flow fix 设计 v1.0/v1.1 | CONDITIONAL PASS 80 | documents/archive/reviews-20260908/llm-radar-git-flow-fix-review-v1.0-20260812.md |
+| 4 | git flow fix 设计 v1.2 | PASS 100 | documents/archive/reviews-20260908/llm-radar-git-flow-fix-rereview-v1.2-20260812.md |
+| 5 | git flow fix 实现审计 | PASS 100 | documents/archive/reviews-20260908/llm-radar-git-flow-fix-impl-audit-v1.0-20260813.md |
+| 6 | health probe 设计 v1.1 | CONDITIONAL PASS 80 | documents/archive/reviews-20260908/llm-radar-health-probe-review-v1.0-20260813.md |
+| 7 | health probe 设计 v1.2 | PASS 100 | documents/archive/reviews-20260908/llm-radar-health-probe-rereview-v1.2-20260813.md |
+| 8 | git flow fix v1.3 设计 | PASS 95 | documents/archive/reviews-20260908/llm-radar-git-flow-fix-v1.3-review-v1.0-20260815.md |
+| 9 | git flow fix v1.3 复检+实现审计 | PASS 100 | documents/archive/reviews-20260908/llm-radar-git-flow-fix-v1.3-rereview-v1.1-20260815.md |
 
 ## 当前状态
 
@@ -51,12 +51,12 @@ profile: review
 ## 关键路径
 
 - 项目根: /Users/jadenli/CodeSpace/llm-radar.lab
-- 设计文档: documents/solutions/
-- 审查报告: documents/reviews/
+- 设计文档: documents/solutions/（现行；历史归档见 documents/archive/solutions-20260908/）
+- 审查报告: documents/reviews/（现行；历史归档见 documents/archive/reviews-20260908/）
 - 治理日志: review-log.md（Style B append-only）
 - 审查历史: .review-level.yaml（review_history 字段）
 - 审查 prompt 缓存: cache/review-prep/
-- 实现审计报告: documents/reviews/llm-radar-git-flow-fix-impl-audit-v1.0-20260813.md
+- 实现审计报告: documents/archive/reviews-20260908/llm-radar-git-flow-fix-impl-audit-v1.0-20260813.md
 
 ## 审查治理约定（本项目）
 

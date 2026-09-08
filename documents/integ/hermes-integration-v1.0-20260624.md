@@ -304,7 +304,7 @@ Agent: ✅ 状态正常，当前 390 条实体
 | `scripts/llm-radar-mcp-server.py` | MCP Server 实现 |
 | `scripts/mcp-protocol-demo.py` | MCP 协议测试脚本 |
 | `documents/mcp-protocol-design-v1.0-20260623.md` | MCP 协议设计 |
-| `documents/search-tips-v1.0-20260622.md` | 搜索技巧参考（用于构造查询） |
+| `documents/archive/theme-20260908/search-tips-v1.0-20260622.md` | 搜索技巧参考（已归档，用于构造查询） |
 | `llm-radar-prompt.md` | 5 维度数据规范 |
 
 ---

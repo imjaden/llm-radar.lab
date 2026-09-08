@@ -1,5 +1,7 @@
 # LLM-Radar Supabase 迁移方案
 
+> **[archive note 2026-09-08]** 未落地方案稿（全仓代码 0 处 supabase 引用）——Q6 归档注记。
+
 > 从 JSON 文件 + Git 存储迁移到 Supabase (PostgreSQL)，消除数据更新时的 Git 操作，
 > 同时保留版本历史。
 

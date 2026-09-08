@@ -43,8 +43,8 @@ profile: dev
 ## 关键路径
 
 - 项目根: /Users/jadenli/CodeSpace/llm-radar.lab
-- 设计文档: documents/solutions/
-- 审查报告: documents/reviews/
+- 设计文档: documents/solutions/（现行；历史归档见 documents/archive/solutions-20260908/）
+- 审查报告: documents/reviews/（现行；历史归档见 documents/archive/reviews-20260908/）
 - 治理日志: review-log.md（Style B append-only）
 - 功能清单: features.md（dev profile 维护）
 - 交接文档: documents/handoff/

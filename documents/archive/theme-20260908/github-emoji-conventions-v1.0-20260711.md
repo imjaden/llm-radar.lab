@@ -1,5 +1,7 @@
 # GitHub Emoji 编程与评审约定速查
 
+> **[archive note 2026-09-08]** 通用 GitHub emoji 约定，非 llm-radar 项目特有——Q7 归档注记。项目内 emoji 现行口径见 documents/emoji-mapping-v1.0-20260713.md + frontend handbook。
+
 > Version: 1.0 (2026-07-11)
 
 ---

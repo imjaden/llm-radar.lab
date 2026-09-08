@@ -1,5 +1,7 @@
 # 搜索引擎搜索技巧 —— 以 Bing 为例
 
+> **[archive note 2026-09-08]** 通用搜索技巧（以 Bing 为例），非 llm-radar 项目特有——Q7 归档注记。
+
 > 所有示例基于 Bing（Microsoft 必应），大部分操作符在 Google / DuckDuckGo 也通用。
 > 聚焦**热点场景**：竞品调研、社媒监听、技术调研。
 
