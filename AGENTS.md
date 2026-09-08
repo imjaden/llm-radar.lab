@@ -11,7 +11,8 @@ Compact single-project dashboard. One Python collector, one Vanilla JS frontend,
 - `changelog.html` — static template, renders from `data/snapshot.json` at runtime.
 - `data/snapshot.json` — primary data artifact (JSON, ~8700 lines). Loaded by both HTML files.
 - `data/twitter.json` — X 热点数据 (独立加载, 采集器自带 commit+push 入库)。
-- `data/fetch-cache.json` / `data/metrics.json` — auto-generated, gitignored.
+- `data/metrics.json` — auto-generated, gitignored.
+- 运行时产物（fetch-cache/日志/pid）已入 cache/（cli-runtime-files 规范, gitignored）
 - `data/dead-letter.json` — git push failures, gitignored.
 - `data/archive/`, `data/history/` — auto-generated archived entities and weekly snapshots.
 - `llm-news-prompt.md` — LLM data spec, output schema guidance.
@@ -55,7 +56,7 @@ lr run help / lr crontab help     # 单命令用法 (positional help 拦截, exi
 ### X 采集 crontab (Mac 本机, x-hotspot 设计 §6)
 
 ```cron
-20 9,21 * * * cd /Users/jadenli/CodeSpace/llm-radar.lab && python3 scripts/twitter-collector.py >> data/twitter.log 2>&1 # llm-radar-twitter
+20 9,21 * * * cd /Users/jadenli/CodeSpace/llm-radar.lab && python3 scripts/twitter-collector.py >> cache/logs/twitter-collector/twitter.log 2>&1 # llm-radar-twitter
 ```
 
 - 错峰 `20 9,21` (09:20/21:20): 避开主采集整点 :00, 防双 Chrome 实例资源竞争与 `git add` 抓取竞争 (REA-2)。
