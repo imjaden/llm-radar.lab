@@ -417,3 +417,12 @@ review_history:
     findings_open: 0
     tracking: W6 过期文档清理复审 (b46ffc4/5f63370/af38d47) — F1 ✅ Closed (al-scanner 根聚合→review-log.md) / F2 ✅ Closed (design 4处+演进注记) / L201 有意未改复核正确 / L23 requirements.md 维持原文正确 (活跃文件非废弃, 🟢 澄清)
     report: documents/reviews/llm-radar-w6-cleanup-rereview-v1.0-20260907.md
+  - date: 2026-09-08
+    reviewer: Security Reviewer
+    review_level: L2
+    verdict: PASS
+    score: 100
+    findings_total: 0
+    findings_open: 0
+    tracking: cli-runtime-files data/ 运行时迁移审计 (f9928eb/7e7e41d/7006ee2) — 无阻塞; 路径迁移仅路径段+docstring / 引用零残留 / cache 就位 data 零残留 / 263+2 skip 全绿 / ahead 仅 7006ee2; OBS-1~2 🟢 (gitignore 过期条目 + 远端 59.110.66.1 重部署)
+    report: documents/reviews/llm-radar-runtime-files-migration-audit-20260908.md

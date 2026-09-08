@@ -1389,3 +1389,32 @@
 - git 状态漂移: 简报「ahead 3」实况「ahead 2」— b46ffc4 已随 auto-converge merge 28aaf20 上 origin (origin/main:audit-log.md 已不存在); 本次 push 交付 5f63370 + af38d47 + 审计产物。
 - 净 diff = 2 文件 (al-scanner.py +2/-2, design +4/-4), 6/6; 工作区 clean。
 - 删除内容确为历史: b46ffc4^:audit-log.md = 188 行止于 07-13 (LR-SEC-005/009/010); requirements.md 9B stub; agent-todo.md gitignored 已 rm。
+
+---
+
+## 2026-09-08 — cli-runtime-files data/ 运行时迁移审计
+
+- **review者**: Security Reviewer (review profile)
+- **范围**: 3 commit — f9928eb feat@collector (runtime files → cache/) / 7e7e41d docs@sync (README + skill cron) / 7006ee2 docs@sync (AGENTS.md); 承接 cli-runtime-files 规范 v1.0 (HM-DESIGN-SEC-265) P4 W2
+- **Tracking**: 无安全发现; OBS-1~2 🟢 (gitignore 过期条目 / 远端 59.110.66.1 重部署); findings_open 0
+- **状态**: ✅ PASS — 100/100 (A)
+- **报告**: documents/reviews/llm-radar-runtime-files-migration-audit-20260908.md
+- **实现 prompt**: ⬜ 无需生成 (实现已完成)
+
+### 审计项核验
+
+| # | 项 | 结果 |
+|---|----|------|
+| 1 | 源码迁移仅路径段 + docstring, 逻辑/格式零改动; mkdir parents 自建 | ✅ |
+| 2 | grep *.py/*.sh data/ 运行时路径 = 0; AGENTS/README/skill cron 已同步 | ✅ |
+| 3 | cache/logs/* + fetch-cache 就位; data/ 零 .log/.pid/fetch-cache | ✅ |
+| 4 | conda py3.12: 263 passed + 2 skipped, 0 failed (dev 自报 242, 套件增长) | ✅ |
+| 5 | ahead 仅 7006ee2 (只含 AGENTS.md); auto-converge 3 笔正常; worktree clean | ✅ |
+| 6 | daily-checker lr status --json 不读 log; 远端重部署 OBS-2 | 🟢 已声明 |
+
+### 数据验证要点
+
+- 路径迁移逐行实证: collector L62/63/2387/2397/2465 + L999(fetch mkdir)/L1604(data mkdir 保留); mcp-server L416-419 + L56-58/234-235(snapshot 保持 data/)。
+- git check-ignore 确认 cache/ 3 运行时文件忽略; git ls-files cache/ = 0 (未跟踪)。
+- ls-remote ground truth: origin/main=6903089, local=7006ee2 (ahead 1/behind 0); f9928eb/7e7e41d 已随 auto-converge 上 origin。
+- pytest 写脏数据文件已 git checkout -- 还原 (worktree clean)。
