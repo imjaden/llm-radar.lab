@@ -50,7 +50,7 @@ lr run help / lr crontab help     # 单命令用法 (positional help 拦截, exi
 - 空入参 → 打印分组帮助 exit=0 (原 exit=1)。
 - `lr status` 阈值: STALE_HOURS=12 (LLM_RADAR_STALE_HOURS 可配) / CRITICAL_HOURS=48 (LLM_RADAR_CRITICAL_HOURS 可配)。
 - 数据源全只读: timestamp.json (项目根) + data/metrics.json 全局 `consecutive_fails` + git rev-list 本地 ref (不 fetch) + snapshot.json。
-- wrapper fork 模板: `cache/cli-registry/wrapper.sh.tmpl` (移除 script-miner calls.log 段, exec 前加载项目 .env)。
+- wrapper: `~/.local/bin/{llm-radar,lr}` → symlink 至 gitignored `cache/system-command/llm-radar-wrapper.sh`（生成物，exec 前 `set -a; source .env; set +a` 加载项目 .env）。仓库内无 wrapper 模板：曾标 `cache/cli-registry/wrapper.sh.tmpl` 为 fork 模板，实为 .env 误副本，已删 (CL005 SEC-1, 2026-09-02)；.env 段为手工 patch，install.py 再生成即丢失 (GOV-1, P2 未闭)。
 - Linux 主机部署: `.cli-registry.yaml` 的 `env.conda` 需从 `py3.12` 改为 `llm-radar`。
 
 ### X 采集 crontab (Mac 本机, x-hotspot 设计 §6)
@@ -80,10 +80,10 @@ run() ordered as:
 [Think]   _think()          检查 6h 间隔、连续失败 ≥ 3
 [Act]     fetch_all()       Selenium 无头抓取 7 源（chromedriver，page_text），失败降级 requests
 [Act]     extract_entities() DeepSeek API（max_tokens=16000, deepseek-v4-flash）
-[Verify]  _verify()         质量门禁：事件中位数新鲜度 < 7 天，热点 ≥ 3 条
+[Verify]  _verify()         质量门禁：事件新鲜度中位数 < 7 天 + 实体 > 0（热点 <3 仅 warning，不阻断）
 [Act]     merge_entities()  按 name 去重 + 合并 + 过期归档（100+15d 滑动窗口）
 [Observe] _observe()        写 metrics.json（源健康、连续失败、运行历史 30 次）
-[Act]     _auto_push()      git commit + push（质量门禁未通过则跳过）
+[Act]     _auto_push()      git commit + push（质量门禁未通过 → partial 仅推 timestamp.json）
 ```
 
 - Detects LLM output truncation (content > 7000 chars), auto-retries with `max_tokens=16000`
@@ -142,9 +142,9 @@ run() ordered as:
 
 ## `_verify()` Quality Gate
 
-- Event median freshness: extracted entity `last_event_date` median must be < 7 days old. If older, quality gate fails (skips auto-push).
-- Hotspot count: newly extracted hotspots must be ≥ 3. If fewer, quality gate fails.
-- Failure does NOT prevent data save — `merge` still runs, `snapshot.json` is updated. Only `auto-push` is skipped.
+- Blocking issues (any → quality_ok=False): entities empty / all 4 entity dims (providers/people/tools/llms) zero / event median freshness > 7 days (168h).
+- Hotspot count < 3 is a warning only, NOT a gate failure (since CL005, 2026-09-02). URL quality and key_people checks are warnings too.
+- Gate failure still saves data: `merge` runs and `snapshot.json` is always written; `timestamp.json`/`overview.json` record `last_run_status=failed`; `_auto_push()` switches to partial mode — commits and pushes ONLY `timestamp.json` (health endpoint), data files stay unpushed (CL006 v1.1-r2; partial-push failure → discard quality-failed artifacts → `_converge_fork`).
 
 ## JSON Parsing
 
