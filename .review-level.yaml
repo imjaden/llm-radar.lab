@@ -455,6 +455,15 @@ review_history:
     findings_open: 0
     tracking: P7 AGENTS.md gate 口径对齐审计 (7fab719) — 无阻塞; 仅 AGENTS.md 6+/6- 无 -A / _verify 硬阻断+热点 warning 口径逐行对齐 / partial 仅推 timestamp.json 对齐 / wrapper symlink+exec 前 .env 对齐 / L191/L54/L196 未动准确; DOC-3 ✅ Closed (CL005 实现审计 findings_open 1→0)
     report: documents/reviews/llm-radar-p7-agentsmd-gate-audit-20260909.md
+  - date: 2026-09-09
+    reviewer: Security Reviewer
+    review_level: L2
+    verdict: PASS
+    score: 100
+    findings_total: 0
+    findings_open: 0
+    tracking: 部署收尾审计 (843feb1/c678e70) — 无阻塞; conda_sh 对齐 Linux 路径 (/root/miniconda3) 正确 / cron 实况注记与源码 L2389 (CRON_SCHEDULE 非 Darwin '0 7,14,21') + COLLECTOR_LOG L63 一致 / 调度行为零改动; OBS-1 🟢 (.cli-registry.yaml 机器特定值入共享 origin, Mac wrapper 硬编码 conda 路径不受影响)
+    report: documents/reviews/llm-radar-deploy-closeout-audit-20260909.md
 
 # ------------------------------------------------------------------
 # 注记 (2026-09-08 docs@sync): 以下 8 份 review 报告存在但未在 review_history 注册

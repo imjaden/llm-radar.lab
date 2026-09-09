@@ -1518,3 +1518,32 @@
 - 未修改任何项目数据文件; 报告 + review-log + .review-level.yaml 三件产物 commit 用 audit@review 并 push。
 
 ---
+
+## 2026-09-09 — 部署收尾审计 (conda_sh 对齐 + cron 实况注记, 2 commits)
+
+- **review者**: Security Reviewer (review profile)
+- **范围**: 2 commits — 843feb1 fix@llm-radar (conda_sh 对齐 Linux) + c678e70 docs@llm-radar (cron 实况注记); 承接远端部署闭环收尾
+- **Tracking**: 无安全发现; OBS-1 🟢 注记 (机器特定值入共享 origin); findings_open 0
+- **状态**: ✅ PASS — 100/100 (A)
+- **报告**: documents/reviews/llm-radar-deploy-closeout-audit-20260909.md
+- **实现 prompt**: ⬜ 无需生成 (配置+文档收尾, 无新功能)
+
+### 审计项核验
+
+| # | 项 | 结果 |
+|---|----|------|
+| 1 | 843feb1 diff 仅 .cli-registry.yaml 1+/1- conda_sh → /root/miniconda3; env.conda=llm-radar 保持; 无 -A | ✅ |
+| 2 | c678e70 diff 仅 linux-deployment doc +4 行 (第 6 节, 第 5 节后 footer 前); 内容与源码实况一致 | ✅ |
+| 3 | 影响面注记 (记录不阻塞): Mac wrapper 硬编码 conda 路径不受影响 | ✅ |
+| 4 | worktree clean; ahead 仅 2 commits (ls-remote=306f0c1 为父) | ✅ |
+| 5 | 登记 review-log/.review-level + push origin main (ls-remote 核验) | ✅ |
+
+### 数据验证要点
+
+- 843feb1: `git show --stat` 仅 .cli-registry.yaml 2 +/-; diff 1 行 conda_sh `/opt/homebrew/Caskroom/miniconda/base/etc/profile.d/conda.sh` → `/root/miniconda3/etc/profile.d/conda.sh`; env.conda=llm-radar 未动 (在 diff 上方)。
+- c678e70: `git show --stat` 仅 linux-deployment-v1.0-20260701.md 4 插入; 第 6 节在 L139 (第 5 节后) 与 L144 footer 之间。`CRON_SCHEDULE` L2389 = `'0 * * * *' if Darwin else '0 7,14,21 * * *'` → 注记 "Linux 默认 0 7,14,21 (collector L2389)" 准确; `COLLECTOR_LOG` L63 = `CACHE_DIR/logs/llm-radar-collector/collector.log` → 注记重定向路径准确。调度行为零改动 (纯文档)。
+- OBS-1 (影响面注记, 不阻塞): `.cli-registry.yaml` 现为机器特定值 (conda=llm-radar / conda_sh=/root/miniconda3) 已入共享 origin。Mac 侧 `~/.local/bin/{lr,llm-radar}` symlink → cache/system-command/llm-radar-wrapper.sh, wrapper `load_environment` 硬编码 Mac conda 路径 (`CONDA_SH=/opt/homebrew/Caskroom/miniconda/base/etc/profile.d/conda.sh` + `conda activate py3.12`), 运行时不读 .cli-registry.yaml → Mac lr 当前不受影响。install.py 仓库内不存在 (外部 cli-registry 工具组件); 若未来 Mac 用外部工具重生成 wrapper 读 .cli-registry.yaml, 会产出 Linux 路径 → 需本地配置覆盖后重生成。
+- git 状态: worktree clean; `git rev-parse HEAD`=c678e70 / origin/main=306f0c1 → ahead 2 / behind 0, 无 auto-converge 插入。
+- 未修改任何项目数据文件; 报告 + review-log + .review-level.yaml 三件产物 commit 用 audit@review 并 push。
+
+---
