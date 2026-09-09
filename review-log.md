@@ -1459,3 +1459,32 @@
 | OBS-2 | review-log.md 末两条报告路径仍指 documents/reviews/ 未随归档改, 与 yaml 不对称 | 🟢 记录 (review 侧 append-only 豁免面) |
 
 ---
+
+## 2026-09-09 — P7 gitignore 清理 + integ 指针审计
+
+- **review者**: Security Reviewer (review profile)
+- **范围**: 1 commit — d113aee chore@cleanup（本地 main，未 push）; 承接 runtime-files 审计 OBS-1「gitignore 过期条目」
+- **Tracking**: 无安全发现; OBS-1 (runtime-files 审计 gitignore 过期条目) ✅ 本 commit 关闭; findings_open 0
+- **状态**: ✅ PASS — 100/100 (A)
+- **报告**: documents/reviews/llm-radar-p7-gitignore-cleanup-audit-20260909.md
+- **实现 prompt**: ⬜ 无需生成 (纯清理, 无新功能)
+
+### 审计项核验
+
+| # | 项 | 结果 |
+|---|----|------|
+| 1 | 移除 4 条 data/ 过期行正确 (fetch-cache.json 0 引用 / *.log+collector.log 被 *.log 宽规则覆盖 / *.pid 运行时已迁 cache/) | ✅ |
+| 2 | 保留 data/history\|archive\|metrics\|dead-letter 有据 (collector L1676/L1686/L346/L964/L1957 仍写入) | ✅ |
+| 3 | cache/ 整目录忽略 (L15) 兜底; check-ignore 实证 cache 文件 + 保留 data 规则命中 | ✅ |
+| 4 | integ 指针改对: documents/mcp/mcp-protocol-design-v1.0-20260623.md 存在, 旧指针 grep 零残留 | ✅ |
+| 5 | 工作树 clean; commit 仅 2 文件无 -A 混入 | ✅ |
+
+### 数据验证要点
+
+- 移除 4 条逐条实证: fetch-cache.json 全仓 0 引用; *.log/collector.log 被 .gitignore L35 `*.log` 宽规则覆盖 (check-ignore -v 实证); *.pid 代码写 cache/pids/ + cache/twitter-profile/.collector.lock。
+- 保留 4 条逐行实证 (llm-radar-collector.py): history L1676 / archive L1686 / metrics L964/L1714/L1957/L2363 / dead-letter L346。
+- git check-ignore: cache 4 项 + data 保留 6 项全命中。
+- integ 指针: 新指针 3 处 (README L157 / integ L269/L306); 旧形 `documents/mcp-protocol-design-` 零残留。
+- git 卫生: --stat 仅 .gitignore + integ 文档; worktree clean。
+
+---

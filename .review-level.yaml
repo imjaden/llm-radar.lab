@@ -436,6 +436,15 @@ review_history:
     findings_open: 0
     tracking: docs-consolidation 审计 (c572028/d5e2405/a439553) — 无阻塞; 手册/归档76/引用零残留/Q3-Q7/测试266+2/卫生/安全 all 通过; OBS-1~2 🟢 (测试计数口径 + review-log 历史路径)
     report: documents/reviews/llm-radar-docs-consolidation-audit-20260908.md
+  - date: 2026-09-09
+    reviewer: Security Reviewer
+    review_level: L2
+    verdict: PASS
+    score: 100
+    findings_total: 0
+    findings_open: 0
+    tracking: P7 gitignore 清理 + integ 指针审计 (d113aee) — 无阻塞; 移除 4 条 data/ 过期行正确 / 保留 history|archive|metrics|dead-letter 有据 (L346/964/1676/1686/1957) / cache 整目录兜底 / integ 指针改对旧指针零残留; OBS-1 (runtime-files gitignore 过期) ✅ 关闭
+    report: documents/reviews/llm-radar-p7-gitignore-cleanup-audit-20260909.md
 
 # ------------------------------------------------------------------
 # 注记 (2026-09-08 docs@sync): 以下 8 份 review 报告存在但未在 review_history 注册
