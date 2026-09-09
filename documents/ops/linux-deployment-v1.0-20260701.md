@@ -127,7 +127,7 @@ python3 llm-radar-collector.py selenium-check
 bash llm-radar-run.sh run
 
 # 查看日志
-tail -f data/collector.log
+tail -f cache/logs/llm-radar-collector/collector.log
 
 # 清理残留 chromedriver 进程
 pkill -9 -f chromedriver
