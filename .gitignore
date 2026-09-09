@@ -1,13 +1,9 @@
 .env
-data/fetch-cache.json
 data/history/
 data/archive/
-data/*.log
-data/*.pid
 .DS_Store
 __pycache__/
 *.pyc
-data/collector.log
 data/metrics.json
 data/dead-letter.json
 

@@ -266,7 +266,7 @@ Agent: ✅ 状态正常，当前 390 条实体
 - [x] `scripts/llm-radar-mcp-server.py` — MCP Server（JSON-RPC 2.0 over stdio）
 - [x] 质量检验（5 项拒绝规则：必填字段、置信度、日期、空提交、鉴权）
 - [x] `scripts/mcp-protocol-demo.py` — 测试脚本（5 TC 全部通过）
-- [x] `documents/mcp-protocol-design-v1.0-20260623.md` — MCP 协议设计文档
+- [x] `documents/mcp/mcp-protocol-design-v1.0-20260623.md` — MCP 协议设计文档
 
 ### 📋 需手动操作
 
@@ -303,7 +303,7 @@ Agent: ✅ 状态正常，当前 390 条实体
 |:---|:---|
 | `scripts/llm-radar-mcp-server.py` | MCP Server 实现 |
 | `scripts/mcp-protocol-demo.py` | MCP 协议测试脚本 |
-| `documents/mcp-protocol-design-v1.0-20260623.md` | MCP 协议设计 |
+| `documents/mcp/mcp-protocol-design-v1.0-20260623.md` | MCP 协议设计 |
 | `documents/archive/theme-20260908/search-tips-v1.0-20260622.md` | 搜索技巧参考（已归档，用于构造查询） |
 | `llm-radar-prompt.md` | 5 维度数据规范 |
 
