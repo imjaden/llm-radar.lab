@@ -136,5 +136,9 @@ pkill -9 -f chromedriver
 git pull
 ```
 
+## 6. cron 实况（2026-09-09 部署记录）
+
+手动 crontab: `0 3,11,19 * * *`（备份 /tmp/llm-radar-crontab-backup-20260909-102510.txt; 重定向 cache/logs/llm-radar-collector/collector.log）; 代码 CRON_SCHEDULE Linux 默认 `0 7,14,21`（collector L2389）, 以实况为准差异留档; `lr crontab --install` 若未来使用会重置调度, 需人工确认。
+
 
 *版本: 1.0 | 创建: 2026-07-01*
