@@ -1488,3 +1488,33 @@
 - git 卫生: --stat 仅 .gitignore + integ 文档; worktree clean。
 
 ---
+
+## 2026-09-09 — P7 AGENTS.md gate 口径对齐审计 (DOC-3/SEC-1/GOV-1)
+
+- **review者**: Security Reviewer (review profile)
+- **范围**: 1 commit — 7fab719 docs@agentsync (AGENTS.md gate 口径对齐 CL005 + wrapper 表述修正); 承接 CL005 实现审计遗留 DOC-3 (AGENTS.md 待用户改)
+- **Tracking**: 无安全发现; DOC-3 ✅ Closed (CL005 实现审计 findings_open 1→0); SEC-1/GOV-1 表述复核正确; findings_open 0
+- **状态**: ✅ PASS — 100/100 (A)
+- **报告**: documents/reviews/llm-radar-p7-agentsmd-gate-audit-20260909.md
+- **实现 prompt**: ⬜ 无需生成 (纯文档审计, 无新功能)
+
+### 审计项核验
+
+| # | 项 | 结果 |
+|---|----|------|
+| 1 | diff 范围: 仅 AGENTS.md, 6+/6-; 无 -A; 无其他文件 | ✅ |
+| 2 | 口径对源码: _verify L1746-1796 / partial L1481-1482+L680-717 / wrapper L78-80 | ✅ |
+| 3 | 表述无歧义/无冲突 (L191/L54/L196 未动准确) | ✅ |
+| 4 | worktree clean; ahead 仅 7fab719 (ls-remote=098fa7c) | ✅ |
+| 5 | 登记 review-log/.review-level + push | ✅ |
+
+### 数据验证要点
+
+- `_verify` 硬阻断逐行实证 (llm-radar-collector.py): entities empty L1756-1757 / 4 维度全 0 L1776-1778 / median_age >168h L1772-1773; 热点 <3 → warnings L1780-1782; URL/key_people → warnings L1783-1794。与 AGENTS.md L145/L146 逐字对应。
+- partial 实证: L1482 `partial=not quality_ok` → `_auto_push` partial 分支仅 `git add timestamp.json` L689 + CalledProcessError → checkout snapshot/overview L710-711 → `_converge_fork` L712 (CL006 v1.1-r2, docstring L600/L706)。与 AGENTS.md L147 逐字对应。
+- wrapper 实证: `~/.local/bin/{llm-radar,lr}` 双 symlink → cache/system-command/llm-radar-wrapper.sh; L78-80 .env 加载 (`set -a && source .env && set +a`) 在 `exec` L101 之前; `git check-ignore` 命中 cache/ 忽略; `git ls-files` 无 .tmpl, cache/cli-registry/ 空 (SEC-1 已删成立)。
+- GOV-1 口径: install.py 为外部 cli-registry 工具组件 (仓库内无此文件), `.cli-registry.yaml` 无 .env 字段 — 与 review-log GOV-1 一致。
+- git 状态: worktree clean; `git ls-remote origin main`=098fa7c (7fab719 父), `git rev-parse HEAD`=7fab719 → ahead 1 / behind 0, 无 auto-converge 插入。
+- 未修改任何项目数据文件; 报告 + review-log + .review-level.yaml 三件产物 commit 用 audit@review 并 push。
+
+---

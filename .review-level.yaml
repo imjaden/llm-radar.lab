@@ -350,9 +350,10 @@ review_history:
     verdict: PASS
     score: 95
     findings_total: 3
-    findings_open: 1
+    findings_open: 0
     tracking: LLM-RADAR-CL005 实现审计 (1dc7ddf) — D2/D5/D6/D7 ✅ 全落地; DOC-1/2/3 🟡 文档漂移 (docstring/features.md 审计中修复, AGENTS.md 待用户改); 测试 223 独立复跑全绿
     report: documents/archive/reviews-20260908/llm-radar-quality-gate-relax-impl-audit-20260902.md
+    resolved_by: DOC-3 ✅ Closed by 7fab719 (2026-09-09, P7 AGENTS.md gate 口径对齐审计)
   - date: 2026-09-03
     reviewer: Security Reviewer
     review_level: L2
@@ -445,6 +446,15 @@ review_history:
     findings_open: 0
     tracking: P7 gitignore 清理 + integ 指针审计 (d113aee) — 无阻塞; 移除 4 条 data/ 过期行正确 / 保留 history|archive|metrics|dead-letter 有据 (L346/964/1676/1686/1957) / cache 整目录兜底 / integ 指针改对旧指针零残留; OBS-1 (runtime-files gitignore 过期) ✅ 关闭
     report: documents/reviews/llm-radar-p7-gitignore-cleanup-audit-20260909.md
+  - date: 2026-09-09
+    reviewer: Security Reviewer
+    review_level: L2
+    verdict: PASS
+    score: 100
+    findings_total: 0
+    findings_open: 0
+    tracking: P7 AGENTS.md gate 口径对齐审计 (7fab719) — 无阻塞; 仅 AGENTS.md 6+/6- 无 -A / _verify 硬阻断+热点 warning 口径逐行对齐 / partial 仅推 timestamp.json 对齐 / wrapper symlink+exec 前 .env 对齐 / L191/L54/L196 未动准确; DOC-3 ✅ Closed (CL005 实现审计 findings_open 1→0)
+    report: documents/reviews/llm-radar-p7-agentsmd-gate-audit-20260909.md
 
 # ------------------------------------------------------------------
 # 注记 (2026-09-08 docs@sync): 以下 8 份 review 报告存在但未在 review_history 注册
