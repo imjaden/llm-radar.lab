@@ -32,7 +32,7 @@ tags: [agents-md, reference, governance, handbooks]
 - 运行时产物（fetch-cache/日志/pid）已入 cache/（cli-runtime-files 规范, gitignored）
 - `data/dead-letter.json` — git push failures, gitignored.
 - `data/archive/`, `data/history/` — auto-generated archived entities and weekly snapshots.
-- `llm-news-prompt.md` — LLM data spec, output schema guidance. **[OBS-1: 仓根实际文件名为 `llm-radar-prompt.md`，原表述待核]**
+- `llm-radar-prompt.md` — LLM data spec, output schema guidance.
 - `features.md` — feature checklist.
 - `loop.md` — iteration checklist.
 - `skills/` — 项目 skills 供给站 (SKILL.md; AI 对接用 `llm-radar prompt [<name>]` 读取).
@@ -239,5 +239,5 @@ GitHub Pages with custom domain (`llm-radar.lab.jaden.tech` via `CNAME` file). N
 
 ## 观察项
 
-- **OBS-1**（§1）: 原 AGENTS.md 记 `llm-news-prompt.md`；仓根实际为 `llm-radar-prompt.md`（`ls` 实测 2026-09-16）。搬运不改写，原样保留待核。
+- **OBS-1**（§1）**已闭合**（2026-09-16）: 原 AGENTS.md 误记 `llm-news-prompt.md`；仓根实测（`git ls-files` / `find`）文件名为 `llm-radar-prompt.md`，命名漂移已改正 —— 本文 §1 与仓根 `README.md` 结构块。残留: `documents/pipeline/data-flow-v1.0-20260622.md` §7 仍记旧名（该件为 v1.0-20260622 历史件，不在本次落点范围）。
 - **OBS-2**: 本文件为原 AGENTS.md 的**逐节搬运**（2026-09-16 @ 9a3114f）；后续实现说明的编辑落点应为本文件，勿再回填 `AGENTS.md`（该文件受保护且受 4,000B 上限约束）。

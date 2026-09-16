@@ -78,7 +78,6 @@ python3 llm-radar-collector.py fetch [source_key]
 ├── llm-radar-collector.py     # 数据采集脚本（Agent Loop）
 ├── scripts/llm-radar-mcp-server.py    # MCP Server（Hermes 对接）
 ├── llm-radar-run.sh           # 跨平台执行器（自动识别 Mac/Linux）
-├── llm-news-prompt.md         # 数据规范文档
 ├── features.md                # 功能清单
 ├── llm-radar-prompt.md        # LLM 提取 prompt 规范
 ├── AGENTS.md                  # Agent 指南（三档边界 Only；实现细节见 documents/handbooks/ 外移明细）
