@@ -18,6 +18,11 @@
 手册 frontmatter：`author=hermes-v0.20.6(2026.8.27) profile=dev type=summary date=2026-09-08`；
 素材提炼（gitignored）：`cache/doc-consolidation/llm-radar-{domain}-extract.md` ×6。
 
+**另**: [llm-radar-agents-guide-details-v1.0-20260916.md](handbooks/llm-radar-agents-guide-details-v1.0-20260916.md)
+= 仓库根 `AGENTS.md`（三档边界 Always Do / Ask First / Never Do）的**外移明细**：原 AGENTS.md
+（9a3114f, 221 行 / 14,514B）逐节搬运（§1 结构 … §14 部署），供细节查阅 ——
+实现说明的编辑落点在该文件，勿回填 `AGENTS.md`（protected + ≤4,000B 上限）。
+
 ## 保留原位（不归档，与手册并存）
 
 - 主题说明（现行参考/骨架，手册 §参考文档 列明漂移点）：

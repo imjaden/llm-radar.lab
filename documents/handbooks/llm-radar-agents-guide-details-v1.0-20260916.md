@@ -1,0 +1,243 @@
+---
+title: llm-radar AGENTS.md 外移明细（实现参考）
+author: ops (llm-radar-ops session)
+profile: ops
+type: reference
+date: 2026-09-16
+source: AGENTS.md @ 9a3114f (2026-09-16, 221 行 / 14,514B)
+tags: [agents-md, reference, governance, handbooks]
+---
+
+# llm-radar AGENTS.md 外移明细 v1.0
+
+> **用途**: 仓库根 `AGENTS.md` 按三档边界模板（Always Do / Ask First / Never Do，见
+> `~/CodeSpace/hermes-manager/skills-governance/agents-md-template.md`）瘦身至 ≤4,000B 后，
+> 原有**实现说明细节**的现行载体 = 本文件（逐节搬运，内容与原文件一致，未改写）。
+> 每轮自动注入上下文只保留边界与入口；需要实现细节时按下述节号查阅。
+> **由来**: 转交 prompt「llm-radar.lab 仓 AGENTS.md 三档边界对齐」（来源 hermes-manager `HERMES-MANAGER-CL065` 批B §3.2 /
+> 结构不变式 B 档裁决 `HERMES-MANAGER-CL066` ⑧，2026-09-16）。
+> **素材源**: `git show 9a3114f:AGENTS.md`（仓根，2026-09-16 工作区 HEAD）。
+> **相关内容**: `documents/README.md`（知识底座索引，6 份主题手册）。
+
+## §1 结构与文件清单
+
+- `llm-radar-collector.py` — sole Python script (~1330 LOC). No package layout, no modules.
+- `scripts/twitter-collector.py` — X 热点独立采集器 (Selenium 登录态, 纯抓取 0 token, 设计 x-hotspot v1.3)。
+- `data/twitter-targets.yaml` — X 采集目标名单 (可编辑; 10 账号; name/handle/url 必填, enabled/max_tweets 缺省容错, max_tweets 默认 30)。
+- `index.html` — single-page frontend, Tailwind CDN, Vanilla JS. No build step.
+- `changelog.html` — static template, renders from `data/snapshot.json` at runtime.
+- `data/snapshot.json` — primary data artifact (JSON, ~8700 lines). Loaded by both HTML files.
+- `data/twitter.json` — X 热点数据 (独立加载, 采集器自带 commit+push 入库)。
+- `data/metrics.json` — auto-generated, gitignored.
+- 运行时产物（fetch-cache/日志/pid）已入 cache/（cli-runtime-files 规范, gitignored）
+- `data/dead-letter.json` — git push failures, gitignored.
+- `data/archive/`, `data/history/` — auto-generated archived entities and weekly snapshots.
+- `llm-news-prompt.md` — LLM data spec, output schema guidance. **[OBS-1: 仓根实际文件名为 `llm-radar-prompt.md`，原表述待核]**
+- `features.md` — feature checklist.
+- `loop.md` — iteration checklist.
+- `skills/` — 项目 skills 供给站 (SKILL.md; AI 对接用 `llm-radar prompt [<name>]` 读取).
+
+## §2 命令面（Key Commands + CLI 治理）
+
+```bash
+python3 llm-radar-collector.py run              # Think → Act → Verify → Observe + push
+python3 llm-radar-collector.py run <source>     # single source (e.g. qbitai, techcrunch)
+python3 llm-radar-collector.py sources          # list sources (prettytable)
+python3 llm-radar-collector.py fetch [source]   # fetch only (Selenium → requests fallback)
+python3 llm-radar-collector.py merge            # merge from fetch cache
+python3 llm-radar-collector.py crontab --add    # schedule daily 09:00, 21:00
+python3 llm-radar-collector.py commit [msg]     # git add + commit
+python3 llm-radar-collector.py auto-push        # git add + commit + push
+python3 llm-radar-collector.py prompt [skill]   # 列出/输出项目 skill (AI 对接, 全只读)
+python3 scripts/twitter-collector.py            # X 采集 (默认 collect; --login 人工登录 / --dry-run 探测登录态)
+./llm-radar-run.sh                              # cross-platform wrapper (auto-detects Mac/Linux)
+python3 -m http.server 8080                     # local preview
+```
+
+CLI 治理 (2026-08-23 起): 全局注册 `llm-radar` 主名 + `lr` 别名 (`.cli-registry.yaml`, wrapper 生成物在 gitignored `cache/system-command/`)。
+
+```bash
+lr help                           # hm-style 分组帮助 (llm-radar / lr 输出一致)
+lr status [--json]                # checkpoint 七字段协议 (ok/warning/critical, 全只读)
+lr run --force                    # 绕过 6h 节流
+lr prompt [skill] [--brief|--json]  # skills/ 供给站: 无参列表 / <name> 全文 (AI 对接, 全只读)
+lr run help / lr crontab help     # 单命令用法 (positional help 拦截, exit=0 无副作用)
+```
+
+- 空入参 → 打印分组帮助 exit=0 (原 exit=1)。
+- `lr status` 阈值: STALE_HOURS=12 (LLM_RADAR_STALE_HOURS 可配) / CRITICAL_HOURS=48 (LLM_RADAR_CRITICAL_HOURS 可配)。
+- 数据源全只读: timestamp.json (项目根) + data/metrics.json 全局 `consecutive_fails` + git rev-list 本地 ref (不 fetch) + snapshot.json。
+- wrapper: `~/.local/bin/{llm-radar,lr}` → symlink 至 gitignored `cache/system-command/llm-radar-wrapper.sh`（生成物，exec 前 `set -a; source .env; set +a` 加载项目 .env）。仓库内无 wrapper 模板：曾标 `cache/cli-registry/wrapper.sh.tmpl` 为 fork 模板，实为 .env 误副本，已删 (CL005 SEC-1, 2026-09-02)；.env 段为手工 patch，install.py 再生成即丢失 (GOV-1, P2 未闭)。
+- Linux 主机部署: `.cli-registry.yaml` 的 `env.conda` 需从 `py3.12` 改为 `llm-radar`。
+
+## §3 X 采集 crontab (Mac 本机, x-hotspot 设计 §6)
+
+```cron
+20 9,21 * * * cd /Users/jadenli/CodeSpace/llm-radar.lab && python3 scripts/twitter-collector.py >> cache/logs/twitter-collector/twitter.log 2>&1 # llm-radar-twitter
+```
+
+- 错峰 `20 9,21` (09:20/21:20): 避开主采集整点 :00, 防双 Chrome 实例资源竞争与 `git add` 抓取竞争 (REA-2)。
+- 采集成功自带 commit + push `auto-push@llm-radar: update twitter (N changes)`; push 失败仅记 cron 日志, 下轮自动重试 (不重试轰炸)。
+- 不调 LLM, 无需 .env; Linux 服务器默认不启用 (无人工登录态, 如需由部署方 --login 一次)。
+- 注意: 此处为文档说明; 实际 crontab 由 ops 核查阶段接入, dev 不直接改用户 crontab。
+
+## §4 Dependencies
+
+```bash
+pip3 install openai selenium webdriver-manager requests beautifulsoup4 prettytable pyyaml
+```
+
+`DEEPSEEK_API_KEY` required via `export` or `.env` file in project root. Chrome browser required for Selenium headless mode.
+
+## §5 Execution Flow — Agent Loop
+
+```
+run() ordered as:
+
+[Think]   _think()          检查 6h 间隔、连续失败 ≥ 3
+[Act]     fetch_all()       Selenium 无头抓取 7 源（chromedriver，page_text），失败降级 requests
+[Act]     extract_entities() DeepSeek API（max_tokens=16000, deepseek-v4-flash）
+[Verify]  _verify()         质量门禁：事件新鲜度中位数 < 7 天 + 实体 > 0（热点 <3 仅 warning，不阻断）
+[Act]     merge_entities()  按 name 去重 + 合并 + 过期归档（100+15d 滑动窗口）
+[Observe] _observe()        写 metrics.json（源健康、连续失败、运行历史 30 次）
+[Act]     _auto_push()      git commit + push（质量门禁未通过 → partial 仅推 timestamp.json）
+```
+
+- Detects LLM output truncation (content > 7000 chars), auto-retries with `max_tokens=16000`
+- JSON parsing: 3-level fallback (code block → strict=False relaxed parse → bracket balancing truncation fix)
+- Retry prompt reuses the full prompt with date context (not a stripped version)
+- Push failures go to `data/dead-letter.json` (last 10)
+
+## §6 Frontend (index.html)
+
+- 6 tabs: tools / llms / providers / people / hotspots / xhotspots (X热点). Default: llms.
+- Country filter: all / China / global (Unicode Han script detection). Applies to 5 个实体 tab;
+  X热点 tab 无 country 字段 → 国家 chips 置灰 (仅源 chips 生效)。
+- Source filter: 8 clickable source chips (含 X), filters entities by source domain match.
+  Applies to all tabs including hotspots; X tab 按 handle/url 域名过滤 (源筛选非 X 时显示空态)。
+- X热点 tab: 独立加载 `data/twitter.json?t=<ts>` (失败 console.warn 回退空态, 不阻断页面);
+  表格列 = 时间(MM-DD HH:MM, UTC→本地) / 人物 / 推文摘要(截断) / 指标(浏览/回复/点赞, null 显示 —);
+  摘要含 forward 时显示 `{text}\nforward: {forward}` (text 空则仅 forward 行);
+  单击行或行内"详情"按钮 → split-preview 分栏 (header 上一/下一 + 关闭, body 全文/forward 行
+  (区分样式)/指标 kv/图片, 图片直引 pbs.twimg.com + onerror 占位 + https:// 二次校验);
+  <1200px 变全屏抽屉 (底部滑出); 关闭: 关闭按钮 / 点击空白 / Esc。渲染路径全字段 esc()/textContent 转义 (SEC-1)。
+- 全站搜索 (D4 4B): header-search 输入框 (防抖 ~200ms + Enter) 过滤当前 tab 表格行
+  (匹配 name/文本/forward/人物/链接) + 跨 tab 计数 (如 "工具 3 · 模型 5", 点击跳转);
+  清空/Esc 恢复全表; Cmd+F (metaKey) / Ctrl+F (ctrlKey) 拦截 preventDefault + 聚焦;
+  高亮用结构化 DOM 构建 (span + textContent 分片), 禁 innerHTML 拼接 (SEC-1)。
+- Tab counts update in real-time when filters change (including `tc-hotspots` / `tc-xhotspots`).
+- Responsive: data sources and filter chips auto-hide below 1200px (`hide-1200`).
+- Auto-refresh: 10 min interval, saves tab/filter/sort/scroll to localStorage.
+- Cache: 页面级 `?t` 重定向保留 (页刷新机制, index 337-345 / changelog 12-15); 数据 fetch 用 `{cache:'no-cache'}` 条件缓存 (LLM-RADAR-CL002 D2), ETag/Last-Modified 命中 → 304 零传输。
+- Cross-tab linking: click entity chips to jump to another tab with highlight.
+- Search icon (🔍) on entity names and event URLs: `cn.bing.com/search?q=keyword+site%3Adomain`.
+- Hotspot FAB: shows events from last 3 hours.
+- Click ago-label on localhost → copies `run` command; on production → navigates to `changelog.html`.
+- Version: v1.5 in footer.
+
+### 6.1 样式构建 (Tailwind 预编译, LLM-RADAR-CL002 D1/A1)
+
+- 运行时不再引 cdn.tailwindcss.com (CDN 运行时 JIT 编译已移除); 样式来自入库产物 `static/tailwind.css`。
+- 自定义色 (colors.cobalt/accent) 定义在 `tailwind.config.js` (提取自原内联 config); 页面未用类 (如 cobalt-300/500) 不生成, 与 CDN 行为一致。
+- **新增 Tailwind 类后必须重构建并提交产物** (防漂移 O-2):
+  ```bash
+  npx tailwindcss@3.4.17 -c tailwind.config.js -i cache/build/tailwind-input.css \
+    -o static/tailwind.css --minify --content "index.html,changelog.html"
+  ```
+- 构建输入 `cache/build/tailwind-input.css` 不入库 (cache/ gitignored); 产物 `static/tailwind.css` 提交。
+
+### 6.2 Console 规范 (2026-08-15 起)
+
+- **必要性分级**:
+  - `error`: 仅异常终止路径（数据加载彻底失败）
+  - `warn`: 可恢复异常（如 overview.json 加载失败回退 snapshot）
+  - `info`/`log`: 有意义的里程碑（如"数据加载完成 N 实体"）
+  - `debug`: 开发调试用 — 生产代码**不保留**调试 log（历史 423/424 行已删）
+- **格式**: 统一前缀 `[llm-radar] `，如 `console.warn('[llm-radar] overview.json load failed:', e.message)`
+- 对象展开打印，不用字符串拼接；不打印敏感信息（token/key）
+- CSS 规则：属性**不得用引号包裹**（`'font-size':0.7rem` 是无效 CSS，浏览器丢弃该声明 — 2026-08-15 修复 52 处）
+
+## §7 `_verify()` Quality Gate
+
+- Blocking issues (any → quality_ok=False): entities empty / all 4 entity dims (providers/people/tools/llms) zero / event median freshness > 7 days (168h).
+- Hotspot count < 3 is a warning only, NOT a gate failure (since CL005, 2026-09-02). URL quality and key_people checks are warnings too.
+- Gate failure still saves data: `merge` runs and `snapshot.json` is always written; `timestamp.json`/`overview.json` record `last_run_status=failed`; `_auto_push()` switches to partial mode — commits and pushes ONLY `timestamp.json` (health endpoint), data files stay unpushed (CL006 v1.1-r2; partial-push failure → discard quality-failed artifacts → `_converge_fork`).
+
+## §8 JSON Parsing
+
+```python
+# _parse_json_output 3-level fallback:
+1. re.search(r'```json\s*([\s\S]*?)\s*```', content)  # extract code block
+2. json.loads(text, strict=False)                      # relaxed: allow control chars
+3. _try_fix_truncated_json(text)                        # bracket balancing + string truncation
+
+# _try_parse_json:
+- json.loads(text)          # strict first
+- json.loads(text, strict=False)  # relax on failure
+```
+
+## §9 Data Retention
+
+- Max 100 entities per dimension.
+- 15-day sliding window: entities without recent events (> 15 days) are archived.
+- Archive: `data/archive/{dim}.json` (deduplicated by id).
+- Weekly snapshots: `data/history/{week}.json`.
+
+## §10 Scraping
+
+**Default**: Selenium headless Chrome (chromedriver managed by webdriver-manager).
+
+| Source | Selector | Notes |
+|:---|:---|:---|
+| 量子位 | `h2 a` | filter: qbitai.com |
+| 机器之心 | `a.title, h3 a, h2 a` | scroll for lazy load |
+| InfoQ | `a[href*="/article/"]` | scroll for lazy load |
+| TechCrunch | `a[href*="/2026/"]` | filter: techcrunch.com + /2026/ |
+| 36氪 | `a[href*="/article/"]` | — |
+| GitHub Trending | `article.Box-row h2 a` | — |
+| HuggingFace | `a[href*="/papers/"]` | scroll for lazy load |
+
+**Fallback**: requests + BeautifulSoup (when chromedriver unavailable/crashing). Extracts raw page text, truncated to 5000 chars.
+
+**Source health tracking**: consecutive failures tracked in `metrics.json`. Sources with ≥ 3 consecutive fails are auto-skipped in `fetch_all()`.
+
+## §11 Git
+
+- Commit messages use `type@scope: subject` format.
+- Auto-push uses `auto-push@llm-radar: update data (N changes)`.
+- `run` 前先 `_sync_remote()`（fetch + `merge --ff-only`；分叉时自动 `_converge_fork()` 语义并集收敛，失败才本地优先）；质量门禁通过后 auto-commit+push；push rejected 时走 `_push_with_recovery()`（rebase 重试 → 冲突时 `_converge_fork()` 语义并集 merge → 仍失败 dead-letter；全程无 force push）。
+- Push failures go to `data/dead-letter.json` (last 10).
+
+## §12 `llm-radar-run.sh`
+
+Cross-platform launcher: auto-detects Mac (system Python) vs Linux (conda `llm-radar` env). Sources `.env` file. Used by crontab.
+
+## §13 Tests
+
+Test suite under `tests/`, run by CI (GitHub Actions) via `pytest tests/` on every push to main. Covers collector logic, git-flow recovery, HTML JS-syntax, and timestamp/overview generation.
+
+### 13.1 前端文件变更验证要求 (2026-08-15 起, 机制 2/3)
+
+- 任何对 `index.html` / `changelog.html` / `tests/test_html.py` 的改动, 提交前必须跑:
+  ```bash
+  python3 -m pytest tests/ -m "not selenium" --ignore=tests/test_cli.py --ignore=tests/test_selenium.py -q
+  ```
+- 浏览器 Selenium 渲染验证是**补充**, 不能替代 pytest — 它标记了 `@pytest.mark.selenium`, CI 上可能因 chromedriver 缺失而 skip
+- 本地验证命令集合必须覆盖 CI 会跑的非 selenium 部分 (CI: `pytest tests/`; 本地至少跑同一集合去掉 selenium/cli)
+- 测试断言必须精确匹配意图: `test_html.py` 只扫 `<script>` 块, 排除 `<style>` 块 (CSS 属性不带引号是合法写法, 不属于 JS key 检查范围)
+- 防假阳性: 测试通过 ≠ 行为正确。当断言依赖被检查对象的巧合形态时 (如带引号恰好绕过正则), 要警惕 — 测试可能在保护一个不存在的保证。改动实现时必须同步审视测试是否仍成立
+
+### 13.2 后端/数据文件变更验证要求
+
+- collector / git-flow 改动: `python3 -m pytest tests/test_gitflow.py -q` (14 用例)
+- 全量回归: 同上非 selenium 命令
+- 注意: 全量测试会写脏 `timestamp.json` / `overview.json` / `data/snapshot.json` (test_timestamp 用真实 project_root), 跑完需 `git checkout --` 还原
+
+## §14 Deployment
+
+GitHub Pages with custom domain (`llm-radar.lab.jaden.tech` via `CNAME` file). No CI/CD config. Deploy is manual `git push`.
+
+## 观察项
+
+- **OBS-1**（§1）: 原 AGENTS.md 记 `llm-news-prompt.md`；仓根实际为 `llm-radar-prompt.md`（`ls` 实测 2026-09-16）。搬运不改写，原样保留待核。
+- **OBS-2**: 本文件为原 AGENTS.md 的**逐节搬运**（2026-09-16 @ 9a3114f）；后续实现说明的编辑落点应为本文件，勿再回填 `AGENTS.md`（该文件受保护且受 4,000B 上限约束）。

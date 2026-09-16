@@ -81,7 +81,7 @@ python3 llm-radar-collector.py fetch [source_key]
 ├── llm-news-prompt.md         # 数据规范文档
 ├── features.md                # 功能清单
 ├── llm-radar-prompt.md        # LLM 提取 prompt 规范
-├── AGENTS.md                  # Agent 开发指南
+├── AGENTS.md                  # Agent 指南（三档边界 Only；实现细节见 documents/handbooks/ 外移明细）
 ├── documents/
 │   ├── README.md               # 文档索引（手册 + 保留主题 + 归档口径）
 │   ├── handbooks/              # 6 份主题手册（现行知识底座, v1.0-20260908）
@@ -167,4 +167,5 @@ mcp_servers:
   ```
 - 后端/collector 改动: `python3 -m pytest tests/test_gitflow.py -q` (14 用例)
 - 全量测试会写脏 `timestamp.json` / `overview.json` / `data/snapshot.json`, 跑完需 `git checkout --` 还原
-- 详细验证要求与防假阳性原则见 `AGENTS.md` § No Tests
+- 详细验证要求与防假阳性原则见 `AGENTS.md` § Always Do 与
+  `documents/handbooks/llm-radar-agents-guide-details-v1.0-20260916.md` §13
