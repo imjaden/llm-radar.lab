@@ -276,7 +276,7 @@ data/snapshot.json
 |:---|:---|:---:|
 | `llm-radar-collector.py` | 采集主程序（Think → Fetch → Extract → Merge → Observe → Push） | 1111 |
 | `llm-radar-run.sh` | 跨平台启动器（加载 .env + conda） | 68 |
-| `llm-news-prompt.md` | LLM 提取用的 system prompt 定义 | 160 |
+| `llm-radar-prompt.md` | LLM 提取用的 system prompt 定义 | 116 |
 | `index.html` | 前端仪表盘（5 tab + 筛选 + 搜索） | 777 |
 | `changelog.html` | 更新日志页（从 snapshot.json 渲染） | 73 |
 | `data/snapshot.json` | 核心数据文件（前端唯一数据源） | 动态 |
