@@ -1,11 +1,11 @@
 {
-  "generated_at": "2026-09-17T03:02:05.012880",
+  "generated_at": "2026-09-17T09:41:36.537202",
   "last_news_date": "2026-09-17",
-  "last_run_at": "2026-09-17T03:02:05.041863",
+  "last_run_at": "2026-09-17T09:41:36.554675",
   "last_run_status": "success",
-  "last_run_detail": "热点仅 0 条（未阻断）",
-  "server": "linux",
-  "hostname": "iZ2ze0mvn4qle5b5jp7ndlZ",
+  "last_run_detail": "",
+  "server": "mac",
+  "hostname": "Jaden.Tech",
   "entity_count": 357,
   "period": "2026-09-10 ~ 2026-09-17",
   "version": "1.0"
