@@ -1,12 +1,12 @@
 {
-  "generated_at": "2026-09-19T19:43:59.682102",
-  "last_news_date": "2026-09-19",
-  "last_run_at": "2026-09-19T19:43:59.700082",
+  "generated_at": "2026-09-20T02:41:37.329104",
+  "last_news_date": "2026-09-20",
+  "last_run_at": "2026-09-20T02:41:37.346041",
   "last_run_status": "success",
-  "last_run_detail": "热点仅 0 条（未阻断）",
+  "last_run_detail": "热点仅 0 条（未阻断） / 裸域名 URL: 20 条",
   "server": "mac",
   "hostname": "Jaden.Tech",
-  "entity_count": 373,
-  "period": "2026-09-12 ~ 2026-09-19",
+  "entity_count": 378,
+  "period": "2026-09-13 ~ 2026-09-20",
   "version": "1.0"
 }
