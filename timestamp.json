@@ -1,12 +1,12 @@
 {
-  "generated_at": "2026-10-01T03:01:25.640615",
+  "generated_at": "2026-10-01T11:01:37.094261",
   "last_news_date": "2026-10-01",
-  "last_run_at": "2026-10-01T03:01:25.670934",
+  "last_run_at": "2026-10-01T11:01:37.126892",
   "last_run_status": "success",
   "last_run_detail": "",
   "server": "linux",
   "hostname": "iZ2ze0mvn4qle5b5jp7ndlZ",
-  "entity_count": 390,
+  "entity_count": 392,
   "period": "2026-09-24 ~ 2026-10-01",
   "version": "1.0"
 }
