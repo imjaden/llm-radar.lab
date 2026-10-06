@@ -65,12 +65,13 @@ retention 规则 (条数优先滑动窗口):
 | 概念 | 路径 | 用途 |
 |:---|:---|:---|
 | 脚本默认 profile | `cache/twitter-profile/` (DEFAULT_PROFILE_DIR, TWITTER_PROFILE_DIR 可覆盖) | 默认 collect / `--login` 自管理 Chrome 实例 |
-| 运维实际登录态 | `~/chrome-twitter-cdp` + CDP 9222 | cron `--attach` 复用; Chrome ≥151 禁止默认 profile 开调试端口, 必须独立 user-data-dir |
+| 运维实际登录态 | `~/chrome-twitter-cdp` + CDP 9222 | cron 包装按需启停 (`--attach` 复用登录态, 采集后释放实例); Chrome ≥151 禁止默认 profile 开调试端口, 必须独立 user-data-dir |
 
 - `--login`: 有头模式打开 `x.com/login` 人工登录一次; 登录 cookie 持久化在 profile 内,
   重启 Chrome 不丢。
 - `--attach`: attach 到已运行 Chrome (CDP 9222), 复用其登录态, 不传
-  `--user-data-dir`/`--headless`; attach 模式 `driver.quit()` 会关掉调试 Chrome 实例。
+  `--user-data-dir`/`--headless`; **attach 模式下 `driver.quit()` 只断开 CDP, 调试 Chrome 仍存活**
+  (2026-10-06 实测: 曾常驻 1d7h / 家族 10 进程 660MB) ⇒ 释放实例由 `scripts/twitter-collector-cron.sh` 收尾负责。
 - 登录墙检测: URL 重定向 `/login` 或出现登录按钮 → exit 2 + 提示
   `python3 scripts/twitter-collector.py --login`。
 - Profile 互斥: `cache/twitter-profile/.collector.lock` pidfile 防 --login 与 cron 并发双 Chrome。
@@ -82,14 +83,30 @@ retention 规则 (条数优先滑动窗口):
 - push 失败仅记 cron 日志, 不重试轰炸, 下一轮自动再试。
 - 全部失败不写盘 (保留上次 twitter.json), 前端展示旧数据。
 
-## cron 20 9,21 错峰
+## cron 20 9,21 错峰 + 按需启停
 
 ```cron
-20 9,21 * * * cd /Users/jadenli/CodeSpace/llm-radar.lab && python3 scripts/twitter-collector.py >> cache/logs/twitter-collector/twitter.log 2>&1 # llm-radar-twitter
+20 9,21 * * * cd /Users/jadenli/CodeSpace/llm-radar.lab && bash scripts/twitter-collector-cron.sh >> cache/logs/twitter-collector/twitter.log 2>&1 # llm-radar-twitter
 ```
 
 - 09:20 / 21:20, 避开主采集整点 :00 — 防双 Chrome 实例资源竞争与 `git add` 抓取竞争。
 - Mac 本机部署; Linux 服务器默认不启用 (无人工登录态, 如需由部署方 `--login` 一次)。
+
+### 按需启停生命周期 (2026-10-06, 省 ~660MB 常驻)
+
+`scripts/twitter-collector-cron.sh` = 检查 CDP → 未就绪拉起 (独立 profile) → 等 ready (≤30s)
+→ 采集 → **采集结束释放实例** (SIGTERM 优雅退出, 超时 SIGKILL), 退出码原样透传。
+
+- 幂等边界: pidfile `cache/pids/twitter-chrome-<port>.pid` 存在 ⇒ 视为本脚本实例 (上轮被强杀
+  的遗留) → 本轮收编并释放; 无 pidfile 的就绪实例视为**外部常驻**, 只复用不杀。
+- 人工登录/调试需保留窗口: `TWITTER_CHROME_KEEP=1 bash scripts/twitter-collector-cron.sh`
+  (或直接 `--login`), 保留的实例会在下一轮 cron 被收编释放 (pidfile 已写)。
+- 环境变量: `TWITTER_CDP_PORT` / `TWITTER_PROFILE_DIR` / `TWITTER_CHROME_BIN` /
+  `TWITTER_CHROME_LOG` / `TWITTER_CHROME_SHUTDOWN_TIMEOUT` / `TWITTER_CHROME_READY_TRIES` /
+  `TWITTER_CHROME_KEEP`。
+- 不得改回 `exec python3 …`: exec 会顶掉包装进程, 收尾释放永不执行 (测试有回归守卫)。
+- 验证 (判据): 采集前/后 `pgrep -f 'remote-debugging-port=9222' | wc -l` 均为 0, 采集期间 ≥1;
+  生命周期回归 `python3 -m pytest tests/test_twitter_cron.py -q` (桩 Chrome/桩采集器, 端口 19222)。
 
 ## 故障排查
 

@@ -38,7 +38,7 @@ date: 2026-09-08
 - 配置：`data/twitter-targets.yaml`（L78）；name/handle/url 必填（缺失→ConfigError L103-106）、enabled 默认 true、max_tweets 默认 30（<=0 回落 L83/L108-118）；**10 账号**：DHH, Boris Cherny, Sam Altman, Claude, OpenClaw, Nous Research, DeepSeek, Jeff Dean, Andrew Ng, Andrej Karpathy。
 - 条数窗口（`apply_retention` L182-217，D1=1A）：`retention = "30/24h"`（L84/RETENTION_HOURS=24 L82）——(a) 24h 内 >30 → 全保留；(b) 24h 内 ≤30 → 24h 内全保留 + 24h 外倒序补足至 30；(c) 总 <30 → 全保留；边界 =30 / =24h 整点含等号；无 posted_at 或 >now+5min 丢弃。
 - 数据 schema（`build_document` L389-400）：顶层 `generated_at`（UTC Z）/ `retention` "30/24h" / `targets[{name,handle,url,tweets[]}]` / `last_error`；tweet 字段 id/text/**forward**/posted_at/url/views/replies/retweets/likes/images；**字段缺失置 null 不省略键**；forward=`by @{作者}: {原推文}`（非转发 null）。
-- 登录态：profile `~/chrome-twitter-cdp`（独立 Chrome，人工登录一次）；`scripts/twitter-collector-cron.sh` 检查 CDP 9222 → 未就绪自动拉起 → 轮询 ready ≤30s → `exec ... --attach`；ProfileLock pidfile（`.collector.lock`，os.kill(pid,0) 存活检查）；原子写盘 tmp+os.replace。
+- 登录态：profile `~/chrome-twitter-cdp`（独立 Chrome，人工登录一次）；`scripts/twitter-collector-cron.sh` 检查 CDP 9222 → 未就绪自动拉起 → 轮询 ready ≤30s → 采集 → **采集结束释放实例**（SIGTERM/SIGKILL 兜底，pidfile `cache/pids/twitter-chrome-<port>.pid` 记归属，`TWITTER_CHROME_KEEP=1` 可保留；2026-10-06 由常驻改为按需，省 ~660MB；修复前 `driver.quit()` 只断 CDP 不关实例 ⇒ 曾常驻 1d7h）；ProfileLock pidfile（`.collector.lock`，os.kill(pid,0) 存活检查）；原子写盘 tmp+os.replace。
 - 已知边界（用户决策 B）：**30 条/账号为理想目标，X 对 CDP attach 会话降级无限滚动（scrollHeight 不增长），实测 7-14 条/账号（总量 84-109）**，用户接受「24h 内全保留 + 首屏可达」——勿把 30 写作硬保证。
 
 ### 2.3 网络前置（flclash, 2026-09-04）
@@ -64,7 +64,7 @@ llm-radar-run.sh >> data/collector.log 2>&1                                   # 
 python3 scripts/twitter-collector.py --dry-run                                # 预检，exit 0
 python3 scripts/twitter-collector.py --login                                  # 人工登录一次（~/chrome-twitter-cdp）
 python3 scripts/twitter-collector.py --attach                                 # 真实采集（CDP 9222，cron 自动拉起）
-bash scripts/twitter-collector-cron.sh                                        # cron 包装：自拉起 Chrome + attach
+bash scripts/twitter-collector-cron.sh                                        # cron 包装：自拉起 Chrome → 采集 → 采集后释放实例
 TWITTER_CDP_PORT=9299 python3 scripts/twitter-collector.py --attach           # 失败提示「无法连接调试 Chrome ... 请先启动 cron.sh」
 
 # cron 预期两行（verify F1 实况）
