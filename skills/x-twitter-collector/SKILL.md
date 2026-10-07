@@ -81,6 +81,8 @@ retention 规则 (条数优先滑动窗口):
 - 采集成功自带 commit + push: `auto-push@llm-radar: update twitter (N changes)`。
 - `git add` 范围限定 `data/twitter.json` (勿 `git add -A` 顺带)。
 - push 失败仅记 cron 日志, 不重试轰炸, 下一轮自动再试。
+  常见形态 (2026-10-07 实测): `! [rejected] main -> main (fetch first)` — 主采集/服务器 auto-push 先推了数据 commit,
+  X 采集器只做普通 push 不 rebase ⇒ 该轮数据 commit 留在本地, 下一轮 (或人工 fetch+rebase, 禁 force) 再推。
 - 全部失败不写盘 (保留上次 twitter.json), 前端展示旧数据。
 
 ## cron 20 9,21 错峰 + 按需启停
@@ -107,6 +109,17 @@ retention 规则 (条数优先滑动窗口):
 - 不得改回 `exec python3 …`: exec 会顶掉包装进程, 收尾释放永不执行 (测试有回归守卫)。
 - 验证 (判据): 采集前/后 `pgrep -f 'remote-debugging-port=9222' | wc -l` 均为 0, 采集期间 ≥1;
   生命周期回归 `python3 -m pytest tests/test_twitter_cron.py -q` (桩 Chrome/桩采集器, 端口 19222)。
+
+## 观察项 O-X: 收尾兜底缺口 (2026-10-07, 暂不实现)
+
+- 缺口场景: 采集脚本被 `kill -9` (cron 超时 / 人工强杀 / 系统休眠回收进程) ⇒ trap 不执行,
+  该轮实例无人回收; 现靠**下一轮 cron** (`20 9,21`, 最坏 ~12h) 经 pidfile 收编后释放;
+  若机器长期休眠 + 白天无 cron, 常驻时间可更长 (迁移前 1d7h 案例即此类, 靠人工发现)。
+- 自查命令: `pgrep -f 'remote-debugging-port=9222' | wc -l` 非 0 且无采集在跑 = 命中该场景。
+- 候选方案 (未采用): 拉起后 spawn 一个 detached 看门狗 (记 port + 最大存活 T, 默认 30min),
+  每 30s 检查 (a) 主进程存活 + (b) 「采集中」标记文件 (脚本采集期间 touch / 结束 rm); 两条件皆无
+  ⇒ SIGTERM + 清 pidfile + 记日志。双条件是避免误杀进行中的采集。
+  代价 = 多一个常驻小进程 + 状态文件; 机器休眠时 sleep 不前进 (唤醒后才计时)。
 
 ## 故障排查
 
