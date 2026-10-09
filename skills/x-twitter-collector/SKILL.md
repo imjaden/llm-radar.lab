@@ -119,7 +119,7 @@ retention 规则 (条数优先滑动窗口):
 - 验证 (判据): 采集前/后 `pgrep -f 'remote-debugging-port=9222' | wc -l` 均为 0, 采集期间 ≥1;
   生命周期 + 节流回归 `python3 -m pytest tests/test_twitter_cron.py -q` (19 用例; 桩 Chrome/桩采集器/
   桩 FlClash 真源, 端口 19222) + 真源单测 `python3 -m pytest tests/test_flclash_proxy.py -q`
-  (17 用例: 探测口径 / 判别力反例 / ensure / release / CLI 契约 / 与 policy 对齐)。
+  (18 用例: 探测口径 / 判别力反例 / ensure / release / CLI 契约 / 与 policy 对齐 / 两入口委托)。
 
 ### FlClash 代理生命周期 (X 必需)
 

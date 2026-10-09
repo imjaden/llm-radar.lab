@@ -47,7 +47,7 @@ date: 2026-09-08
 `_is_flclash_running()`（code 两个 python 入口的薄包装，真源 = `scripts/flclash_proxy.py::is_running`）：非 Darwin → True（CI/Linux 不误伤）；探测口径 = 精确名 `pgrep -x FlClash` ∪ 应用路径 `pgrep -f '/Applications/FlClash.app'` 双判据（2026-10-09 收敛前为单一 `-f` + 应用名，会被 `osascript -e 'quit app "FlClash"'` 自命中）；异常 → False（fail-closed 保守）。collector 侧 `NEEDS_FLCLASH = {'github-trending','huggingface'}`（L979-985），单源运行仅命中该集才跳；twitter-collector 侧检测在 login/dry-run/空 targets 分支之后、cmd_collect 之前（L910-915），仅 collect/attach 需代理，未运行时提前 exit 1 避免无谓 Chrome 启动。
 
 - 2026-10-09 X 侧起停接管：`scripts/twitter-collector-cron.sh` 采集前确保代理就位（未运行 → `open -a FlClash` + 等 7890 LISTEN ≤180s），采集后**只释放本脚本拉起的**实例（原本在运行的一律不动，真源同 `macosx-service-policy.json`）；python 侧 `_is_flclash_running()` 降为兜底（绕过包装脚本直跑 python 时仍生效）。`TWITTER_FLCLASH_ENSURE=0` 可退回旧行为。
-- 2026-10-09 实现收敛（同日第二笔）：FlClash 探测/起停从**三处实现两种口径**收敛为**唯一真源 `scripts/flclash_proxy.py`**（`flclash_pids/is_running/ensure_ready/release/notify_required` + CLI）；包装脚本只编排（调子命令，不再自持 pgrep/osascript/nc），两个 python 入口改 import（仓根 `llm-radar-collector.py` 显式注入 `scripts/` 路径）。回归: `tests/test_flclash_proxy.py`（17 用例）含判别力反例与 policy 对齐断言；`tests/test_twitter_cron.py` 增「命令位不得出现旧口径」守卫。
+- 2026-10-09 实现收敛（同日第二笔）：FlClash 探测/起停从**三处实现两种口径**收敛为**唯一真源 `scripts/flclash_proxy.py`**（`flclash_pids/is_running/ensure_ready/release/notify_required` + CLI）；包装脚本只编排（调子命令，不再自持 pgrep/osascript/nc），两个 python 入口改 import（仓根 `llm-radar-collector.py` 显式注入 `scripts/` 路径）。回归: `tests/test_flclash_proxy.py`（18 用例）含判别力反例与 policy 对齐断言；`tests/test_twitter_cron.py` 增「命令位不得出现旧口径」守卫。
 
 ## 三、机制与指令说明
 
