@@ -85,30 +85,56 @@ retention 规则 (条数优先滑动窗口):
   X 采集器只做普通 push 不 rebase ⇒ 该轮数据 commit 留在本地, 下一轮 (或人工 fetch+rebase, 禁 force) 再推。
 - 全部失败不写盘 (保留上次 twitter.json), 前端展示旧数据。
 
-## cron 20 9,21 错峰 + 按需启停
+## cron 每小时 :20 + 节流 + 按需启停 (2026-10-09)
 
 ```cron
-20 9,21 * * * cd /Users/jadenli/CodeSpace/llm-radar.lab && bash scripts/twitter-collector-cron.sh >> cache/logs/twitter-collector/twitter.log 2>&1 # llm-radar-twitter
+20 * * * * cd /Users/jadenli/CodeSpace/llm-radar.lab && bash scripts/twitter-collector-cron.sh >> cache/logs/twitter-collector/twitter.log 2>&1 # llm-radar-twitter
 ```
 
-- 09:20 / 21:20, 避开主采集整点 :00 — 防双 Chrome 实例资源竞争与 `git add` 抓取竞争。
+- 每小时 :20 触发（与主采集 :40 错峰, 防双 Chrome 与 `git add` 竞争）; **实际采集频率由脚本内节流决定**。
+- ⚠️ 为什么不能再用固定槽位 `20 9,21`: **Mac 休眠期间错过的 cron 槽位不会补跑**。
+  2026-10-07~09 实测: 休眠窗口正好盖住 09:20/21:20 ⇒ 连续 3 天零执行、`twitter.json` 陈旧 46.6h,
+  而 crontab 完好（主采集因「每小时 :40 + 6h 节流」天然抗休眠, 所以只有 X 侧断档）。
+- 节流: `twitter.json` 生成 < `TWITTER_THROTTLE_HOURS`(默认 5) 则跳过（`--force` 绕过, `0` = 关闭）。
+  任意一次唤醒都能补上被错过的窗口。
 - Mac 本机部署; Linux 服务器默认不启用 (无人工登录态, 如需由部署方 `--login` 一次)。
 
 ### 按需启停生命周期 (2026-10-06, 省 ~660MB 常驻)
 
-`scripts/twitter-collector-cron.sh` = 检查 CDP → 未就绪拉起 (独立 profile) → 等 ready (≤30s)
-→ 采集 → **采集结束释放实例** (SIGTERM 优雅退出, 超时 SIGKILL), 退出码原样透传。
+`scripts/twitter-collector-cron.sh` = 节流判定 → FlClash 就位 → 检查 CDP → 未就绪拉起 (独立 profile)
+→ 等 ready (≤30s) → 采集 → **收尾释放本脚本拉起的 Chrome 与 FlClash**（SIGTERM 优雅, 超时 SIGKILL）,
+退出码原样透传。
 
 - 幂等边界: pidfile `cache/pids/twitter-chrome-<port>.pid` 存在 ⇒ 视为本脚本实例 (上轮被强杀
   的遗留) → 本轮收编并释放; 无 pidfile 的就绪实例视为**外部常驻**, 只复用不杀。
-- 人工登录/调试需保留窗口: `TWITTER_CHROME_KEEP=1 bash scripts/twitter-collector-cron.sh`
-  (或直接 `--login`), 保留的实例会在下一轮 cron 被收编释放 (pidfile 已写)。
-- 环境变量: `TWITTER_CDP_PORT` / `TWITTER_PROFILE_DIR` / `TWITTER_CHROME_BIN` /
-  `TWITTER_CHROME_LOG` / `TWITTER_CHROME_SHUTDOWN_TIMEOUT` / `TWITTER_CHROME_READY_TRIES` /
-  `TWITTER_CHROME_KEEP`。
+- 只关「是 Chrome 程序」的进程: `main_pids` 排除 `--type=` Helper, 并要求命令行含 Chrome 程序名
+  ⇒ 仅"提到"端口的旁观进程 (监视脚本/巡检命令) 不会被误杀 (2026-10-09 实测中招后加固)。
+- 人工登录/调试需保留窗口: `TWITTER_CHROME_KEEP=1 bash scripts/twitter-collector-cron.sh --force`
+  (或直接 `--login`), 保留的资源会在下一轮 cron 被收编释放 (pidfile 已写)。
+- 环境变量: `TWITTER_THROTTLE_HOURS` / `TWITTER_FLCLASH_ENSURE` / `TWITTER_FLCLASH_PORT` /
+  `TWITTER_FLCLASH_READY_TIMEOUT` / `TWITTER_FLCLASH_GRACE` / `TWITTER_CDP_PORT` /
+  `TWITTER_PROFILE_DIR` / `TWITTER_CHROME_BIN` / `TWITTER_CHROME_LOG` /
+  `TWITTER_CHROME_SHUTDOWN_TIMEOUT` / `TWITTER_CHROME_READY_TRIES` / `TWITTER_CHROME_KEEP`。
 - 不得改回 `exec python3 …`: exec 会顶掉包装进程, 收尾释放永不执行 (测试有回归守卫)。
 - 验证 (判据): 采集前/后 `pgrep -f 'remote-debugging-port=9222' | wc -l` 均为 0, 采集期间 ≥1;
-  生命周期回归 `python3 -m pytest tests/test_twitter_cron.py -q` (桩 Chrome/桩采集器, 端口 19222)。
+  生命周期 + 节流 + FlClash 回归 `python3 -m pytest tests/test_twitter_cron.py -q`
+  (19 用例; 桩 Chrome/桩采集器/桩 FlClash, 端口 19222)。
+
+### FlClash 代理生命周期 (X 必需)
+
+真源 = `script-miner/projects/macosx/macosx-service-policy.json` (`services[FlClash].restart`):
+stop `osascript -e 'quit app "FlClash"'` / grace 20s / force_fallback `kill -TERM {pid}` /
+start `open -a FlClash` / verify.ports `[7890]`。
+
+- 采集前: 未运行 → `open -a FlClash` + 等 **7890 LISTEN** (≤180s) → 采集后**释放**;
+  原本就在运行 → 只复用, 采集后**保持运行不动**。
+- 就绪判据只用端口, 不判"是否已把系统代理切过去"; 实测 `open -a` 后 7890 很快 LISTEN
+  (2026-10-09 14:52 实测: 启动到就绪 <10s)。
+- 检测不用 `pgrep -f FlClash`(会被 `osascript -e 'quit app "FlClash"'` 自身命中), 改
+  `pgrep -x FlClash` ∨ `pgrep -f '/Applications/FlClash.app'` 双判据。
+- `TWITTER_FLCLASH_ENSURE=0` 关闭本层 (退回旧行为: 由 `twitter-collector.py` 的 `_is_flclash_running()`
+  检测, 未运行则 exit 1 + 本地通知)。
+- 未就绪 → exit 1, 不进入采集 (也不会拉起 Chrome)。
 
 ## 观察项 O-X: 收尾兜底缺口 (2026-10-07, 暂不实现)
 
