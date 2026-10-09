@@ -29,6 +29,7 @@ import re
 import json
 import sys
 import time
+import shutil
 import subprocess
 import platform
 import socket
@@ -41,9 +42,20 @@ from prettytable import PrettyTable
 
 
 # FlClash 探测唯一真源 = scripts/flclash_proxy.py
-# 本文件在仓根, helper 在 scripts/ ⇒ 显式注入 scripts 路径 (勿在此重写 pgrep 逻辑)。
+# 本文件在仓根, helper 在 scripts/ ⇒ 显式注入 scripts 路径 (勿在此重写 pgrep/osascript 逻辑)。
 sys.path.insert(0, str(Path(__file__).resolve().parent / 'scripts'))
-from flclash_proxy import is_running as _flclash_is_running  # noqa: E402  (须在 sys.path 注入之后)
+from flclash_proxy import (  # noqa: E402  (须在 sys.path 注入之后)
+    ensure_ready as _flclash_ensure_ready,
+    is_running as _flclash_is_running,
+    release as _flclash_release,
+)
+
+# 海外源就绪等待 (对齐声明层真源 macosx-service-policy.json: verify.wait=180s / ports=[7890])
+FLCLASH_READY_TIMEOUT = float(os.environ.get('LLM_RADAR_FLCLASH_READY_TIMEOUT', '180'))
+# 源降级: 连续失败 ≥ DEGRADED_FAILS → 本轮跳过; 但距上次真实尝试超过 DEGRADED_RETRY_HOURS 会放行重试一次。
+# (2026-10-09 实锤: 一次 chromedriver 环境故障让 qbitai 累计 18 次并被永久判「已降级」, 永不重试)
+DEGRADED_FAILS = int(os.environ.get('LLM_RADAR_DEGRADED_FAILS', '3'))
+DEGRADED_RETRY_HOURS = float(os.environ.get('LLM_RADAR_DEGRADED_RETRY_HOURS', '6'))
 
 
 def _is_flclash_running():
@@ -53,6 +65,24 @@ def _is_flclash_running():
     口径真源: scripts/flclash_proxy.py（精确名 ∪ 应用路径双判据）。
     """
     return _flclash_is_running()
+
+
+def _ensure_flclash_ready(timeout=FLCLASH_READY_TIMEOUT):
+    """确保 FlClash 就绪（未运行 → 拉起 + 等端口 LISTEN）; 真源 = scripts/flclash_proxy.py。"""
+    try:
+        return bool(_flclash_ensure_ready(timeout=timeout).get('ok'))
+    except Exception as e:
+        print(f'{datetime.now().strftime("%Y-%m-%d %H:%M:%S")} ⚠️  FlClash 启动异常: {e}')
+        return False
+
+
+def _release_flclash():
+    """释放 FlClash（真源; 未运行时空操作, 幂等）。"""
+    try:
+        return bool(_flclash_release().get('ok'))
+    except Exception as e:
+        print(f'{datetime.now().strftime("%Y-%m-%d %H:%M:%S")} ⚠️  FlClash 释放异常: {e}')
+        return False
 
 # ===== Constants =====
 PROJECT_ROOT = Path(__file__).resolve().parent
@@ -125,10 +155,12 @@ DIM_LABELS = {
 # 选择器取不到时 fallback 到通用智能链接检测（找页面上所有有效链接）
 SCRAPERS = {
     'qbitai': {
-        'wait_sel': 'h2 a',  # 等待此元素出现即认为页面加载完成
-        'title_sel': 'h2 a',
-        'link_sel': 'h2 a',
-        'date_sel': '.entry-date, time, .date',
+        # 2026-10-09 改版: 标题从 h2 a 迁到 .picture_text 内 h4 a（文章 URL 也从 /archives/<id> 变 /YYYY/MM/<id>.html）
+        # 旧 wait_sel='h2 a' 会静默等满 25s 超时 → 每次抓取都失败（qbitai 累计 18 次降级的一半原因）
+        'wait_sel': '.picture_text, .article_list, body',
+        'title_sel': 'h4 a',
+        'link_sel': 'h4 a',
+        'date_sel': '.time, .entry-date, time, .date',
         'link_filter': lambda h: 'qbitai.com' in h,
     },
     'jiqizhixin': {
@@ -193,6 +225,8 @@ class LLMRadarCollector:
         self.base_url = "https://api.deepseek.com/v1"
         self._quality_detail = ''
         self._quality_warnings = []
+        self.fetch_skipped = {}       # 本轮被跳过的源: key → 'degraded' / 'no_flclash'（跳过 ≠ 失败）
+        self._flclash_owned = False   # 本轮由本采集器拉起的 FlClash（仅此情形采集后释放）
 
     def _load_api_key(self):
         """从环境变量加载 DeepSeek API key"""
@@ -762,20 +796,88 @@ class LLMRadarCollector:
         return None
 
     @staticmethod
-    def _resolve_chromedriver():
-        import os, glob, shutil
-        found = shutil.which("chromedriver")
-        if found: return found
-        wdm = os.path.expanduser("~/.wdm")
-        if not os.path.isdir(wdm): return None
+    def _driver_major_version(path):
+        """实跑 `<path> --version` 验明真身: 返回主版本号, 非驱动（脚本 wrapper/坏文件）→ None。
+
+        2026-10-09 实锤: `~/.local/bin/chromedriver` 是 script-miner 的 chromedriver-manager
+        CLI wrapper（不是驱动二进制）, 命令行含 `chromedriver` 字样但 `--version` 输出
+        「❌ 未知命令」⇒ Selenium 报 `Can not connect to the Service`。
+        只有输出匹配 `ChromeDriver <主版本>.` 才认。
+        """
+        if not path:
+            return None
+        try:
+            if not os.path.exists(path):
+                return None
+            r = subprocess.run([str(path), '--version'], capture_output=True, text=True, timeout=15)
+        except Exception:
+            return None
+        m = re.search(r'ChromeDriver\s+(\d+)\.', (r.stdout or '') + (r.stderr or ''))
+        return int(m.group(1)) if m else None
+
+    @classmethod
+    def _chrome_major_version(cls):
+        """本机 Chrome 主版本号（取不到 → None）。"""
         candidates = []
-        for root, dirs, files in os.walk(wdm):
-            for f in files:
-                if f == "chromedriver":
-                    candidates.append(os.path.join(root, f))
-        if not candidates: return None
-        candidates.sort(key=lambda p: os.path.getmtime(p), reverse=True)
-        return candidates[0]
+        darwin_bin = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
+        candidates.append(darwin_bin)
+        for name in ('google-chrome', 'google-chrome-stable', 'chromium', 'chromium-browser'):
+            found = shutil.which(name)
+            if found:
+                candidates.append(found)
+        for exe in candidates:
+            try:
+                if not os.path.exists(exe):
+                    continue
+                r = subprocess.run([exe, '--version'], capture_output=True, text=True, timeout=15)
+            except Exception:
+                continue
+            m = re.search(r'(\d+)\.', (r.stdout or '') + (r.stderr or ''))
+            if m:
+                return int(m.group(1))
+        return None
+
+    @classmethod
+    def _resolve_chromedriver(cls):
+        """解析可用的 chromedriver **可执行文件**（逐个实跑 --version 验明正身, 按 Chrome 主版本优选）。
+
+        只信 `shutil.which("chromedriver")` 会被同名 CLI wrapper 顶掉（2026-10-09 qbitai 降级根因）,
+        故候选顺序: $CHROMEDRIVER(_PATH) → wdm 缓存(新→旧) → PATH, 再用 --version 过滤 + 主版本匹配。
+        """
+        candidates = []
+        for env_key in ('CHROMEDRIVER', 'CHROMEDRIVER_PATH'):
+            if os.environ.get(env_key):
+                candidates.append(os.environ[env_key])
+        wdm = Path.home() / '.wdm' / 'drivers' / 'chromedriver'
+        if wdm.is_dir():
+            def _ver_key(p):
+                m = re.search(r'/(\d+)\.(\d+)\.(\d+)\.(\d+)/', str(p))
+                return tuple(int(x) for x in m.groups()) if m else (0, 0, 0, 0)
+            candidates.extend(sorted((str(p) for p in wdm.glob('*/*/chromedriver-*/chromedriver')),
+                                     key=_ver_key, reverse=True))
+        found = shutil.which('chromedriver')
+        if found:
+            candidates.append(found)
+
+        probed, seen = [], set()
+        for c in candidates:
+            real = os.path.realpath(c)
+            if real in seen:
+                continue
+            seen.add(real)
+            major = cls._driver_major_version(c)
+            if major:
+                probed.append((major, c))
+        if not probed:
+            return None
+        want = cls._chrome_major_version()
+        for major, c in probed:
+            if want is None or major == want:
+                return c
+        major, c = probed[0]
+        print(f'{datetime.now().strftime("%Y-%m-%d %H:%M:%S")} ⚠️  chromedriver 主版本 {major} '
+              f'与本机 Chrome {want} 不匹配, 仍尝试使用: {c}')
+        return c
 
     def _init_driver(self):
         """初始化 Selenium 无头浏览器（单例）"""
@@ -872,13 +974,16 @@ class LLMRadarCollector:
                             continue
                         if link_filter and not link_filter(href):
                             continue
-                        # 尝试取日期
+                        # 尝试取日期（先看父节点, 再退一级: 标题 a 常在 h4 内, 而 .time 在更外层容器）
                         date_text = ''
                         date_sel = scraper.get('date_sel')
                         if date_sel:
                             try:
-                                parent = el.find_element(By.XPATH, '..')
-                                date_el = parent.find_element(By.CSS_SELECTOR, date_sel)
+                                scope = el.find_element(By.XPATH, '..')
+                                try:
+                                    date_el = scope.find_element(By.CSS_SELECTOR, date_sel)
+                                except Exception:
+                                    date_el = scope.find_element(By.XPATH, '..').find_element(By.CSS_SELECTOR, date_sel)
                                 date_text = date_el.text.strip() or date_el.get_attribute('datetime') or ''
                             except:
                                 pass
@@ -956,11 +1061,17 @@ class LLMRadarCollector:
 
 
     def fetch_all(self, source_keys=None):
-        """抓取所有新闻源（跳过已降级源）"""
+        """抓取所有新闻源（跳过已降级源; 海外源需要 FlClash 代理, 未运行则按需拉起）。
+
+        被跳过的源记入 self.fetch_skipped（key → 'degraded' / 'no_flclash'）,
+        由 run() 交给 _observe 时**不计失败**——「跳过」不是故障, 计失败会让源走向永久降级。
+        """
+        explicit = source_keys is not None   # 显式点名单源（诊断/补采）→ 尊重操作者意图, 不套降级跳过
         if source_keys is None:
             source_keys = list(SOURCES.keys())
+        self.fetch_skipped = {}
 
-        # 加载源健康状态
+        # 加载源健康状态（降级源只在冷却窗口内跳过; 超窗放行重试, 见 _degraded_in_cooldown）
         degraded = set()
         metrics_path = self.data_dir / 'metrics.json'
         if metrics_path.exists():
@@ -968,21 +1079,33 @@ class LLMRadarCollector:
                 metrics = json.loads(metrics_path.read_text())
                 source_health = metrics.get('source_health', {})
                 for key, h in source_health.items():
-                    if h.get('consecutive_fails', 0) >= 3:
+                    if (h.get('consecutive_fails', 0) >= DEGRADED_FAILS
+                            and self._degraded_in_cooldown(h.get('last_time'))):
                         degraded.add(key)
             except:
                 pass
 
-        if degraded:
+        if degraded and explicit:
+            named = [k for k in source_keys if k in degraded]
+            if named:
+                self._print_warn(f'显式点名已降级源, 本轮放行重试: {", ".join(named)}')
+        elif degraded:
             self._print_warn(f'跳过 {len(degraded)} 个已降级源: {", ".join(degraded)}')
+            for key in degraded:
+                self.fetch_skipped[key] = 'degraded'
             source_keys = [k for k in source_keys if k not in degraded]
 
-        # 检测 FlClash 代理（海外源需要）
+        # FlClash 代理（海外源需要）: 未运行 → 本轮按需拉起（采集后释放）; 就绪失败 → 跳过且不计失败
         NEEDS_FLCLASH = {'github-trending', 'huggingface'}
-        if not _is_flclash_running():
-            blocked = [k for k in source_keys if k in NEEDS_FLCLASH]
-            if blocked:
-                self._print_warn(f'FlClash 未运行，跳过海外源: {", ".join(blocked)}')
+        blocked = [k for k in source_keys if k in NEEDS_FLCLASH]
+        if blocked and not _is_flclash_running():
+            if _ensure_flclash_ready():
+                self._flclash_owned = True
+                self._print_ok(f'FlClash 已按需拉起（{", ".join(blocked)} 需要代理）, 采集后释放')
+            else:
+                self._print_warn(f'FlClash 未能就绪，跳过海外源: {", ".join(blocked)}')
+                for key in blocked:
+                    self.fetch_skipped[key] = 'no_flclash'
                 source_keys = [k for k in source_keys if k not in NEEDS_FLCLASH]
 
         results = []
@@ -1003,6 +1126,34 @@ class LLMRadarCollector:
 
         self._print_ok(f'抓取完成，{len(results)}/{len(source_keys)} 个源成功')
         return results
+
+    def _degraded_in_cooldown(self, last_time):
+        """已降级源是否仍在冷却窗口内（窗口外 → 本轮放行重试一次）。
+
+        没有这一步, 任何一次环境类故障（代理没开 / chromedriver 版本不匹配 / 网络抖动）
+        都会把源推进「连续失败 ≥3」的永久跳过态, 只能人工 reset-health 复活。
+        last_time 只由**真实尝试**更新（跳过不写）, 否则冷却窗口会被跳过一次次顶开。
+        """
+        if DEGRADED_RETRY_HOURS <= 0:
+            return True
+        if not last_time:
+            return False
+        try:
+            last = datetime.fromisoformat(str(last_time))
+        except (TypeError, ValueError):
+            return False
+        return (datetime.now() - last).total_seconds() < DEGRADED_RETRY_HOURS * 3600
+
+    def release_flclash_if_owned(self):
+        """采集后释放「本轮由本采集器拉起」的 FlClash; 原本就在运行的（非本进程拉起）不动。"""
+        if not self._flclash_owned:
+            return False
+        self._flclash_owned = False
+        if _release_flclash():
+            self._print_ok('FlClash 已释放（本轮按需拉起）')
+            return True
+        self._print_warn('FlClash 释放失败（仍在运行, 见 stderr 诊断）')
+        return False
 
     # ===== Extract =====
     def extract_entities(self, fetch_results):
@@ -1974,7 +2125,7 @@ hotspots 数组中每个元素格式：
         else:
             metrics['consecutive_fails'] = metrics.get('consecutive_fails', 0) + 1
 
-        # 源成功率
+        # 源成功率（跳过 ≠ 失败: 降级/无代理被跳过的源既不计数也不改 consecutive_fails）
         if fetch_results:
             source_health = metrics.get('source_health', {})
             success_count = 0
@@ -1982,15 +2133,21 @@ hotspots 数组中每个元素格式：
             for key, r in fetch_results.items():
                 if key.startswith('_'):
                     continue
-                total += 1
-                ok = r.get('success', False) if isinstance(r, dict) else bool(r)
+                ok = r.get('success') if isinstance(r, dict) else bool(r)
                 sh = source_health.setdefault(key, {'consecutive_fails': 0, 'last_result': None})
+                if ok is None:                     # 本轮跳过: 只留痕, 不动 last_time（降级冷却以真实尝试计时）
+                    sh['last_skipped'] = (r.get('skipped') if isinstance(r, dict) else 'skipped') or 'skipped'
+                    sh['last_skipped_time'] = now_iso
+                    continue
+                total += 1
                 if ok:
                     sh['consecutive_fails'] = 0
                     success_count += 1
                 else:
                     sh['consecutive_fails'] = sh.get('consecutive_fails', 0) + 1
                 sh['last_result'] = 'ok' if ok else 'fail'
+                sh.pop('last_skipped', None)       # 本轮真跑过 ⇒ 清掉上一轮的跳过痕迹
+                sh.pop('last_skipped_time', None)
                 sh['last_time'] = now_iso
             metrics['source_health'] = source_health
             metrics['source_success_rate'] = round(success_count / total, 3) if total else 0
@@ -2054,11 +2211,17 @@ hotspots 数组中每个元素格式：
         self._print_info('[1/3] 抓取新闻源...')
         target_keys = source_keys or list(SOURCES.keys())
         fetch_results = self.fetch_all(source_keys)
-        # 构建源级结果字典（用于指标跟踪）
+        # 代理只在 fetch 阶段需要: 本轮自启的立即释放（原本在运行的不动）
+        self.release_flclash_if_owned()
+        # 构建源级结果字典（用于指标跟踪）: 本轮被跳过的源标 success=None ⇒ 不计失败
         source_results = {}
         successful = {r['source'] for r in fetch_results} if fetch_results else set()
         for k in target_keys:
-            source_results[k] = {'success': k in successful}
+            reason = self.fetch_skipped.get(k)
+            if reason:
+                source_results[k] = {'success': None, 'skipped': reason}
+            else:
+                source_results[k] = {'success': k in successful}
         source_results['_source_keys'] = target_keys  # 调试信息
 
         if not fetch_results:
@@ -2281,12 +2444,13 @@ hotspots 数组中每个元素格式：
             print(f"     解决方案: 安装 Google Chrome")
             all_pass = False
 
-        # 2. Chromedriver
+        # 2. Chromedriver（解析 + 验明正身: 拒绝同名 CLI wrapper, 见 _resolve_chromedriver）
         driver_path = self._resolve_chromedriver()
         if driver_path and os.path.exists(driver_path):
             r = subprocess.run([driver_path, "--version"], capture_output=True, text=True, timeout=5)
             driver_ver = r.stdout.strip() if r.stdout else "unknown"
             print(f"  ✅ ChromeDriver: {driver_ver}")
+            print(f"     路径: {driver_path}")
             # Check version match (use regex, not split)
             import re as _re
             chrome_m = _re.search(r"(\d+\.\d+\.\d+\.\d+)", chrome_ver if chrome_ver != "unknown" else "")
@@ -2699,6 +2863,7 @@ def main():
     if command == 'fetch':
         source_keys = args if args else None
         collector.fetch_all(source_keys)
+        collector.release_flclash_if_owned()   # 代理只在抓取阶段需要（本轮自启的立即释放）
 
     elif command == 'merge':
         # 从缓存读取上次 fetch 结果
