@@ -2,6 +2,7 @@
 _union_snapshot / _merge_semantic (D1) and _converge_fork (D2, CL006 v1.1-r2)."""
 import json
 import subprocess
+from pathlib import Path
 
 # helpers ----------------------------------------------------------------
 
@@ -620,3 +621,79 @@ class TestPartialConverge:
                             lambda c, e: wrote.setdefault('err', e))
         collector._auto_push([], partial=True)
         assert 'partial' in wrote.get('err', '')
+
+
+# auto-push 提交范围（2026-10-09 收窄: 仅数据产物, 不再 `git add -A`） -------------------
+
+
+class TestAutoPushScope:
+    """auto-push 只提交采集器自己写的数据产物。
+
+    背景: 原 `git add -A` 会把工作树里的源码/测试/文档一并卷进数据 commit（实测 351f020
+    把 collector 239 行 + 新增测试 240 行卷进 `update data (43 changes)`）; 远端 clone 的
+    本地改动（.cli-registry.yaml 机器值等）同样会被卷走。
+    """
+
+    DATA = ('timestamp.json', 'overview.json', 'data/snapshot.json')
+
+    def _prep(self, collector, tmp_path):
+        collector._skip_push = False
+        collector.project_root = tmp_path
+        for rel in self.DATA:
+            p = tmp_path / rel
+            p.parent.mkdir(parents=True, exist_ok=True)
+            p.write_text('{}')
+        return collector
+
+    @staticmethod
+    def _record(monkeypatch, collector):
+        calls, msgs = [], []
+
+        def fake_run(cmd, **kw):
+            calls.append(list(cmd))
+            return subprocess.CompletedProcess(cmd, 0, stdout='', stderr='')
+
+        monkeypatch.setattr(subprocess, 'run', fake_run)
+        monkeypatch.setattr(collector, '_push_with_recovery', lambda changelog, msg: msgs.append(msg))
+        return calls, msgs
+
+    def test_auto_push_stages_only_data_paths(self, collector, monkeypatch, tmp_path):
+        self._prep(collector, tmp_path)
+        (tmp_path / 'llm-radar-collector.py').write_text('# 未提交的源码改动（不得被卷入）')
+        calls, msgs = self._record(monkeypatch, collector)
+
+        collector._auto_push([{'type': 'new'}])
+
+        add = next(c for c in calls if c[:2] == ['git', 'add'])
+        commit = next(c for c in calls if c[:2] == ['git', 'commit'])
+        assert add == ['git', 'add', '--'] + list(self.DATA)
+        assert commit[:3] == ['git', 'commit', '-m'] and commit[-4:] == ['--'] + list(self.DATA)
+        assert not any('-A' in c for c in calls), 'auto-push 不得再 git add -A'
+        assert msgs == ['auto-push@llm-radar: update data (1 changes)']
+
+    def test_missing_data_path_is_skipped(self, collector, monkeypatch, tmp_path):
+        """缺文件不产生 pathspec 错误（首次运行/远端场景）。"""
+        self._prep(collector, tmp_path)
+        (tmp_path / 'overview.json').unlink()
+        calls, _ = self._record(monkeypatch, collector)
+        collector._auto_push([{'type': 'new'}])
+        add = next(c for c in calls if c[:2] == ['git', 'add'])
+        assert add == ['git', 'add', '--', 'timestamp.json', 'data/snapshot.json']
+
+    def test_partial_push_scoped_to_timestamp(self, collector, monkeypatch, tmp_path):
+        self._prep(collector, tmp_path)
+        calls, _ = self._record(monkeypatch, collector)
+        collector._auto_push([], partial=True)
+        assert calls[0][:2] == ['git', 'add'] and calls[0][2].endswith('timestamp.json')
+        commit = next(c for c in calls if c[:2] == ['git', 'commit'])
+        assert commit[-2] == '--' and commit[-1].endswith('timestamp.json')
+        assert not any('-A' in c for c in calls)
+
+    def test_add_all_left_only_in_manual_commit(self):
+        """源码守卫: `add -A` 只允许留在人工 `lr commit` 里（auto-push 路径不得回归）。"""
+        src = (Path(__file__).resolve().parent.parent / 'llm-radar-collector.py').read_text(encoding='utf-8')
+        hits = [i for i in range(len(src)) if src.startswith("'add', '-A'", i)]
+        assert hits, '人工 commit 若也收窄了, 请同步本守卫'
+        for i in hits:
+            assert "command == 'commit'" in src[max(0, i - 800):i], \
+                'add -A 只允许出现在人工 lr commit 分支'

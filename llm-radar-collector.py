@@ -91,6 +91,18 @@ CACHE_DIR = PROJECT_ROOT / 'cache'
 SNAPSHOT_PATH = DATA_DIR / 'snapshot.json'
 # 运行时产物按 cli-runtime-files v1.0 规范进 cache/ (gitignored); data/ 只留真实数据
 FETCH_CACHE_PATH = CACHE_DIR / 'llm-radar-collector' / 'fetch-cache.json'
+
+# auto-push 允许提交的路径 = 采集器自己写的数据产物（2026-10-09 收窄）。
+# 原实现 `git add -A` 会把工作树里任何未提交改动一起卷进数据 commit —— 实测 351f020 把
+# llm-radar-collector.py(239 行) + 新增测试(240 行) 卷进 `update data (43 changes)`；
+# 远端 clone 的本地改动（如 .cli-registry.yaml 机器值）同样会被卷走。manual `lr commit` 仍按人工意图走 -A。
+AUTO_PUSH_PATHS = ('timestamp.json', 'overview.json', 'data/snapshot.json')
+
+
+def _auto_push_paths(root=None):
+    """auto-push 本轮要提交的现存数据产物路径（缺文件的自动跳过, 避免 pathspec 报错）。"""
+    base = root or PROJECT_ROOT
+    return [rel for rel in AUTO_PUSH_PATHS if (base / rel).exists()]
 COLLECTOR_LOG = CACHE_DIR / 'logs' / 'llm-radar-collector' / 'collector.log'
 SKILLS_DIR = PROJECT_ROOT / 'skills'
 
@@ -725,8 +737,8 @@ class LLMRadarCollector:
                 subprocess.run(['git', 'add', str(ts_path)], cwd=self.project_root,
                                check=True, capture_output=True)
                 msg = 'auto-push@llm-radar: timestamp.json (quality gate failed)'
-                r = subprocess.run(['git', 'commit', '-m', msg], cwd=self.project_root,
-                                   capture_output=True, text=True)
+                r = subprocess.run(['git', 'commit', '-m', msg, '--', str(ts_path)],
+                                   cwd=self.project_root, capture_output=True, text=True)
                 if r.returncode != 0:
                     err = r.stderr.strip()
                     if 'nothing to commit' in err:
@@ -760,14 +772,16 @@ class LLMRadarCollector:
             self._print_info('无新增/更新实体，跳过 auto-push')
             return
         self._print_info(f'检测到 {count} 条变更，执行 auto-push...')
+        paths = _auto_push_paths(self.project_root)
         try:
-            subprocess.run(['git', 'add', '-A'], cwd=self.project_root, check=True, capture_output=True)
+            subprocess.run(['git', 'add', '--'] + paths, cwd=self.project_root, check=True, capture_output=True)
         except subprocess.CalledProcessError as e:
             stderr = e.stderr.decode() if e.stderr else str(e)
             self._print_warn(f'git add 失败: {stderr[:200]}')
             return
         msg = f'auto-push@llm-radar: update data ({count} changes)'
-        r = subprocess.run(['git', 'commit', '-m', msg], cwd=self.project_root, capture_output=True, text=True)
+        r = subprocess.run(['git', 'commit', '-m', msg, '--'] + paths,
+                           cwd=self.project_root, capture_output=True, text=True)
         if r.returncode != 0:
             err = r.stderr.strip()
             if 'nothing to commit' in err:
@@ -2921,11 +2935,12 @@ def main():
 
     elif command == 'auto-push':
         try:
-            subprocess.run(['git', 'add', '-A'], cwd=PROJECT_ROOT, check=True, capture_output=True)
+            paths = _auto_push_paths()
+            subprocess.run(['git', 'add', '--'] + paths, cwd=PROJECT_ROOT, check=True, capture_output=True)
             msg = f'manual@llm-radar: auto push ({datetime.now().strftime("%Y-%m-%d %H:%M")})'
-            subprocess.run(['git', 'commit', '-m', msg], cwd=PROJECT_ROOT, capture_output=True)
+            subprocess.run(['git', 'commit', '-m', msg, '--'] + paths, cwd=PROJECT_ROOT, capture_output=True)
             subprocess.run(['git', 'push'], cwd=PROJECT_ROOT, check=True, capture_output=True)
-            print('✅ auto-push 完成')
+            print(f'✅ auto-push 完成（仅数据产物: {", ".join(paths)}）')
         except subprocess.CalledProcessError as e:
             print(f'ℹ️ auto-push 跳过: {e.stderr.decode()[:200] if e.stderr else str(e)}')
 
