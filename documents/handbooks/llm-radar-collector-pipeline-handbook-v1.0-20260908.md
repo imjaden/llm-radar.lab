@@ -24,7 +24,7 @@ date: 2026-09-08
 主流程链：**Think → Fetch → Extract → Verify → Merge → Observe → Push**。
 
 - 调度：`CRON_SCHEDULE`（code L2389）Darwin **每小时 `0 * * * *`** / Linux `0 7,14,21 * * *`；`_think` 6h 防抖 + 连续失败≥3 告警。启动器 `llm-radar-run.sh`（跨平台，加载 .env + conda）。
-- Fetch：**6 源**（qbitai/jiqizhixin/infoq/36kr/github-trending/huggingface；TechCrunch 已移除——`# techcrunch REMOVED - Selenium page load timeout` L99）；Selenium 无头 + requests+BS4 fallback；FlClash 代理未运行则跳过 github-trending/huggingface（见 §3.3）。
+- Fetch：**6 源**（qbitai/jiqizhixin/infoq/36kr/github-trending/huggingface；TechCrunch 已移除——`# techcrunch REMOVED - Selenium page load timeout` L99）；Selenium 无头 + requests+BS4 fallback；FlClash 代理未运行则**按需拉起**（真源 `scripts/flclash_proxy.py::ensure_ready`），采集后仅释放自启实例；起不来才跳过 github-trending/huggingface 且**不计失败**（见 §2.3）。
 - Extract：DeepSeek LLM（默认 **deepseek-chat**，L221-226，2026-08-10 因 v4-flash 长 prompt 空 content 变更；max_tokens 8192）按内联 prompt 抽 5 类实体（providers/people/tools/llms/hotspots）；重试 5→3（CL005）。
 - Verify（`_verify` L1746-1796）：中位新鲜度 >168h（7 天）=issue、4 实体维度全 0=issue、**hotspots<3=warning**（CL005 由阻断降级）、空 URL>5/截断>0/裸域名>2=warning（方案 D 降级为不阻断 push）。
 - Merge（`merge_entities`）：按 dimension 遍历 → id 精确 → name 精确 → 新增（>14 天新实体拒绝）→ `_fuzzy_name_dedup`（KNOWN_ALIASES/括号后缀剥离）→ `_apply_time_decay` → **留存 100+15 天滑动窗口** → changelog 过滤 → stats → `_save_snapshot` → `_auto_push`（partial=not quality_ok）。紧凑单行写盘（CL002）。
@@ -44,10 +44,16 @@ date: 2026-09-08
 
 ### 2.3 网络前置（flclash, 2026-09-04）
 
-`_is_flclash_running()`（code 两个 python 入口的薄包装，真源 = `scripts/flclash_proxy.py::is_running`）：非 Darwin → True（CI/Linux 不误伤）；探测口径 = 精确名 `pgrep -x FlClash` ∪ 应用路径 `pgrep -f '/Applications/FlClash.app'` 双判据（2026-10-09 收敛前为单一 `-f` + 应用名，会被 `osascript -e 'quit app "FlClash"'` 自命中）；异常 → False（fail-closed 保守）。collector 侧 `NEEDS_FLCLASH = {'github-trending','huggingface'}`（L979-985），单源运行仅命中该集才跳；twitter-collector 侧检测在 login/dry-run/空 targets 分支之后、cmd_collect 之前（L910-915），仅 collect/attach 需代理，未运行时提前 exit 1 避免无谓 Chrome 启动。
+`_is_flclash_running()`（code 两个 python 入口的薄包装，真源 = `scripts/flclash_proxy.py::is_running`）：非 Darwin → True（CI/Linux 不误伤）；探测口径 = 精确名 `pgrep -x FlClash` ∪ 应用路径 `pgrep -f '/Applications/FlClash.app'` 双判据（2026-10-09 收敛前为单一 `-f` + 应用名，会被 `osascript -e 'quit app "FlClash"'` 自命中）；异常 → False（fail-closed 保守）。collector 侧 `NEEDS_FLCLASH = {'github-trending','huggingface'}`（L≈1089），未运行 → `ensure_ready` 按需拉起、起不来才跳过；twitter-collector 侧检测在 login/dry-run/空 targets 分支之后、cmd_collect 之前（L910-915），仅 collect/attach 需代理，未运行时提前 exit 1 避免无谓 Chrome 启动。
 
 - 2026-10-09 X 侧起停接管：`scripts/twitter-collector-cron.sh` 采集前确保代理就位（未运行 → `open -a FlClash` + 等 7890 LISTEN ≤180s），采集后**只释放本脚本拉起的**实例（原本在运行的一律不动，真源同 `macosx-service-policy.json`）；python 侧 `_is_flclash_running()` 降为兜底（绕过包装脚本直跑 python 时仍生效）。`TWITTER_FLCLASH_ENSURE=0` 可退回旧行为。
 - 2026-10-09 实现收敛（同日第二笔）：FlClash 探测/起停从**三处实现两种口径**收敛为**唯一真源 `scripts/flclash_proxy.py`**（`flclash_pids/is_running/ensure_ready/release/notify_required` + CLI）；包装脚本只编排（调子命令，不再自持 pgrep/osascript/nc），两个 python 入口改 import（仓根 `llm-radar-collector.py` 显式注入 `scripts/` 路径）。回归: `tests/test_flclash_proxy.py`（18 用例）含判别力反例与 policy 对齐断言；`tests/test_twitter_cron.py` 增「命令位不得出现旧口径」守卫。
+- 2026-10-09 主采集侧接管（同日第三笔）：`fetch_all` 对 `NEEDS_FLCLASH` 源改为**按需拉起**（未运行 → `flclash_proxy.ensure_ready(timeout=180)`，`FLCLASH_READY_TIMEOUT` 可调），`release_flclash_if_owned()` 在 fetch 结束立即释放**本轮自启**实例（原本在运行的不动；调用点 = `run` L≈2130 与 CLI `fetch` L≈2790）；起不来才跳过并记 `fetch_skipped[key]='no_flclash'`。语义与 X 侧一致（同 helper、同归属原则）。
+- **源健康: 跳过 ≠ 失败**（同日）：`run()` 把被跳过的源标 `{'success': None, 'skipped': reason}`；`_observe` 对 `None` 只写 `last_skipped`/`last_skipped_time`（**不动 `consecutive_fails`、不写 `last_time`**）且不计入 `source_success_rate` 分母。修复前「跳过」也 `consecutive_fails += 1` ⇒ 任何一次环境故障（代理没开 / chromedriver 坏 / 网络抖动）都会被推向「≥3 永久降级」（qbitai 实测累计 18 次仍不复活，是 chromedriver 事故拖 9 天的同源码）。
+- **降级冷却窗口**：`DEGRADED_FAILS=3` + `DEGRADED_RETRY_HOURS=6`（env `LLM_RADAR_DEGRADED_FAILS` / `LLM_RADAR_DEGRADED_RETRY_HOURS`；窗口 ≤0 = 旧行为「永久跳过」）。冷却窗外的降级源本轮放行重试一次（`last_time` 因此只由真实尝试更新）；**显式点名**（`run`/`fetch <source>`）一律放行，不被降级态挡住。
+- **chromedriver 解析**（同日第四笔, qbitai 降级根因）：`_resolve_chromedriver()` 不再采信 `shutil.which('chromedriver')` 的返回值——`~/.local/bin/chromedriver` 是 script-miner 的 `chromedriver-manager` **CLI wrapper**（非驱动, `--version` 输出「❌ 未知命令」）⇒ Selenium 报 `Can not connect to the Service /Users/jadenli/.local/bin/chromedriver`。新口径：候选（`$CHROMEDRIVER`/`$CHROMEDRIVER_PATH` → `~/.wdm/drivers/**` 新→旧 → PATH）逐个**实跑 `--version`**，只认输出匹配 `ChromeDriver <主版本>.` 者，并优先与本机 Chrome 主版本一致；全都验不过 → None（由 `selenium-check` 显式报错，不再静默当驱动用）。`selenium-check` 增打印解析到的驱动路径。
+- **qbitai 选择器**（同日）：站点改版，标题由 `h2 a` 迁至 `.picture_text` 内 `h4 a`（文章 URL `/archives/<id>` → `/YYYY/MM/<id>.html`），旧 `wait_sel='h2 a'` 会静默等满 25s 超时；另 `_selenium_extract` 取日期补「父→祖父」一级（`.time` 在 `h4` 之外的 `.text_box`）。实测 20 篇 / 2.5s（改前 25s 超时失败）。
+- 回归护栏（同日）：`tests/test_source_health_skip_semantics.py` 14 用例 —— 跳过不计数 / 真失败仍计数 / 冷却窗口 / 显式点名放行 / 代理归属（自启才释放）/ chromedriver 拒同名 wrapper；判别力自证脚本 `cache/scratch/chromedriver_discriminator_demo.py`（旧实现返回 wrapper=不可用, 新实现返回 wdm 真驱动=可用）。
 
 ## 三、机制与指令说明
 
@@ -106,6 +112,7 @@ python3 -c "import json;d=json.load(open('data/twitter.json'));print(d['retentio
 
 - 决策：采集前检测 FlClash 进程，未运行跳过两海外源 + X 采集提前 exit 1；非 Darwin return True（CI/Linux 直通）；fail-closed。OBS-1（两脚本重复实现，符合无 package 布局）/ OBS-2（跳过路径无独立单测，degraded-source 兜底低风险）。
 - **OBS-1 已闭（2026-10-09）**：跨项目转交件（daily-checker 侧只读核查 @ 707ab3c）指出同一事实三处实现、两种口径（包装脚本精确名+路径 vs 两 python 入口单一 `-f`），已收敛为唯一真源 `scripts/flclash_proxy.py`；口径统一为「精确名 ∪ 应用路径」，并加「命令行含 FlClash 的旁观/osascript 形态进程不算在跑」的判别力反例用例。OBS-2 仍在。
+- **OBS-2 已闭（2026-10-09 第三/四笔）**：跳过路径现有独立单测（`tests/test_source_health_skip_semantics.py` 14 用例），并顺带修掉更严重的语义缺陷——「跳过被计为失败」会把环境类故障固化成永久降级；同批修好 chromedriver 解析（同名 CLI wrapper 顶替真驱动）与 qbitai 改版选择器。真机复跑：`reset-health` → `run --force` ⇒ FlClash 按需拉起→6/6 源成功（qbitai 20 篇）→代理释放（事后 FlClash/7890/9222 = 0）→`source_success_rate=1.0`、全源 `consecutive_fails=0`。
 - 终审：**PASS — 100/100 (A)**；+44/−0 两文件，222 passed。
 
 ## 六、已知坑
