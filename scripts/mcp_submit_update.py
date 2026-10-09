@@ -17,6 +17,11 @@ if not API_KEY:
     print('  export LLM_RADAR_MCP_KEY=<your-secure-key>', file=sys.stderr)
     sys.exit(1)
 PROJECT_DIR = str(_PROJECT_ROOT)
+# 本脚本可提交的路径白名单（= MCP server 唯一写出的数据产物: scripts/llm-radar-mcp-server.py
+# SNAPSHOT_PATH）。真源 = 根 llm-radar-collector.py 的 AUTO_PUSH_PATHS;
+# tests/test_gitflow.py::TestAutoPushScope 断言本列表是其子集（防漂移）。
+# 勿改回 `git add -A`: 会把工作树里未提交的源码/测试/文档卷进数据提交（2026-10-09 收窄）。
+MCP_COMMIT_PATHS = ('data/snapshot.json',)
 
 def send(proc, msg):
     line = json.dumps(msg, ensure_ascii=False)
@@ -112,11 +117,13 @@ def main():
     stats = submit_result.get('stats', {})
     print(f'✅ 提交成功: 新增 {stats.get("new", 0)} / 更新 {stats.get("updated", 0)} / 拒绝 {stats.get("rejected", 0)}')
 
-    # Git commit
+    # Git commit（2026-10-09 收窄: 只提交白名单数据产物, 见 MCP_COMMIT_PATHS）
     try:
-        subprocess.run(['git', 'add', '-A'], cwd=PROJECT_DIR, check=True, capture_output=True)
+        paths = list(MCP_COMMIT_PATHS)
+        subprocess.run(['git', 'add', '--'] + paths, cwd=PROJECT_DIR, check=True, capture_output=True)
         msg = f'mcp@llm-radar: submit update ({stats.get("new", 0)} new, {stats.get("updated", 0)} updated)'
-        r = subprocess.run(['git', 'commit', '-m', msg], cwd=PROJECT_DIR, capture_output=True, text=True)
+        r = subprocess.run(['git', 'commit', '-m', msg, '--'] + paths,
+                           cwd=PROJECT_DIR, capture_output=True, text=True)
         if r.returncode == 0:
             print('✅ Git commit 完成')
         elif 'nothing to commit' in (r.stdout + r.stderr):

@@ -1,6 +1,7 @@
 """Test git flow: _sync_remote, _push_with_recovery, _clean_conflict_file,
 _union_snapshot / _merge_semantic (D1) and _converge_fork (D2, CL006 v1.1-r2)."""
 import json
+import re
 import subprocess
 from pathlib import Path
 
@@ -697,3 +698,21 @@ class TestAutoPushScope:
         for i in hits:
             assert "command == 'commit'" in src[max(0, i - 800):i], \
                 'add -A 只允许出现在人工 lr commit 分支'
+
+    def test_mcp_commit_paths_subset_of_data_whitelist(self):
+        """MCP 提交路径（scripts/mcp_submit_update.py）必须是数据产物白名单的子集, 且不再 add -A。"""
+        root = Path(__file__).resolve().parent.parent
+        mcp_src = (root / 'scripts' / 'mcp_submit_update.py').read_text(encoding='utf-8')
+        col_src = (root / 'llm-radar-collector.py').read_text(encoding='utf-8')
+
+        def _tuple(src, name):
+            m = re.search(rf'{name} = \(([^)]*)\)', src)
+            assert m, f'未找到 {name} 定义'
+            return tuple(re.findall(r"'([^']+)'", m.group(1)))
+
+        mcp_paths = _tuple(mcp_src, 'MCP_COMMIT_PATHS')
+        auto_paths = _tuple(col_src, 'AUTO_PUSH_PATHS')
+        assert mcp_paths, 'MCP_COMMIT_PATHS 不得为空'
+        assert set(mcp_paths) <= set(auto_paths), \
+            f'MCP 提交路径 {mcp_paths} 超出数据产物白名单 {auto_paths}'
+        assert "'add', '-A'" not in mcp_src, 'mcp_submit_update.py 不得再用 git add -A'

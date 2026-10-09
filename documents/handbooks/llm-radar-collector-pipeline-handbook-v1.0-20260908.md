@@ -29,7 +29,7 @@ date: 2026-09-08
 - Verify（`_verify` L1746-1796）：中位新鲜度 >168h（7 天）=issue、4 实体维度全 0=issue、**hotspots<3=warning**（CL005 由阻断降级）、空 URL>5/截断>0/裸域名>2=warning（方案 D 降级为不阻断 push）。
 - Merge（`merge_entities`）：按 dimension 遍历 → id 精确 → name 精确 → 新增（>14 天新实体拒绝）→ `_fuzzy_name_dedup`（KNOWN_ALIASES/括号后缀剥离）→ `_apply_time_decay` → **留存 100+15 天滑动窗口** → changelog 过滤 → stats → `_save_snapshot` → `_auto_push`（partial=not quality_ok）。紧凑单行写盘（CL002）。
 - 数据文件：`data/snapshot.json`（提交）+ `overview.json` + `timestamp.json`（提交）；`metrics.json`/`dead-letter.json`/fetch-cache 与日志在 **cache/**（cli-runtime-files v1.0，详见 cli-governance handbook）。
-- **auto-push 提交范围（2026-10-09 收窄）**：`git add -- timestamp.json overview.json data/snapshot.json` + `git commit -m … -- <同列表>`（常量 `AUTO_PUSH_PATHS` / `_auto_push_paths()`，缺文件自动跳过）。原实现 `git add -A` 会把工作树里任何未提交改动卷进数据 commit（实测 `351f020` 卷入 collector 239 行 + 新增测试 240 行；远端 clone 的本地改动同样会被卷走）。**人工 `lr commit` 仍 `-A`**（人工意图），CLI `lr auto-push` 同收窄；守卫 `tests/test_gitflow.py::TestAutoPushScope`（4 用例，含「`add -A` 只允许出现在人工 commit 分支」源码扫描）。
+- **auto-push 提交范围（2026-10-09 收窄）**：`git add -- timestamp.json overview.json data/snapshot.json` + `git commit -m … -- <同列表>`（常量 `AUTO_PUSH_PATHS` / `_auto_push_paths()`，缺文件自动跳过）。原实现 `git add -A` 会把工作树里任何未提交改动卷进数据 commit（实测 `351f020` 卷入 collector 239 行 + 新增测试 240 行；远端 clone 的本地改动同样会被卷走）。**人工 `lr commit` 仍 `-A`**（人工意图），CLI `lr auto-push` 与 MCP 提交路径 `scripts/mcp_submit_update.py`（`MCP_COMMIT_PATHS=('data/snapshot.json',)`，MCP server 唯一写出的产物）同收窄；守卫 `tests/test_gitflow.py::TestAutoPushScope`（5 用例，含「`add -A` 只允许出现在人工 commit 分支」源码扫描 + MCP 白名单子集断言）。
 - 前端 6 tab（tools/llms/providers/people/hotspots/**xhotspots**）——前端渲染见 frontend handbook。
 
 ### 2.2 Pipeline B X 热点采集（x-hotspot, CL-SEC19 + CL-SEC20 终态 v1.3）
