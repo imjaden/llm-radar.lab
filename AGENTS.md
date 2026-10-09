@@ -17,7 +17,7 @@ Compact single-project dashboard. One Python collector, one Vanilla JS frontend,
 ## Ask First
 
 - 改 `_verify()` 质量门禁阈值 / 阻断维度（决定数据是否被推送，details §7）。
-- 改 crontab / 调度：主采集与 X 采集 09:20/21:20 错峰约定（防双 Chrome 与 `git add` 竞争）；用户 crontab 由 ops 侧接入，dev 不直接改（details §3）。
+- 改 crontab / 调度：主采集 `40 * * * *`、X 采集 `20 * * * *`（:20/:40 错峰，防双 Chrome 与 `git add` 竞争；X 行实际采集频率由脚本内 5h 节流决定——固定槽位遇 Mac 休眠会整槽丢失，2026-10-09 已改，details §3）；用户 crontab 由 ops 侧接入，dev 不直接改（details §3）。
 - 改 `.cli-registry.yaml` 的 `env.conda`（Mac `py3.12` ↔ Linux `llm-radar`，details §2）。
 - 改数据保留窗口（每维 100 实体 / 15 天滑动窗口）与归档口径（details §9）。
 - 改 wrapper 生成物链：`~/.local/bin/{llm-radar,lr}` → gitignored `cache/system-command/`；`.env` 段为手工 patch，install.py 重生成即丢（GOV-1 未闭，details §2）。
