@@ -41,37 +41,30 @@ except ImportError:  # pragma: no cover
     yaml = None
 
 
+# FlClash 探测唯一真源 = scripts/flclash_proxy.py
+# 本文件在 scripts/ 下, 脚本直跑时 sys.path[0] 已是此处; 但测试用 importlib 从别处加载 ⇒ 显式注入一次。
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from flclash_proxy import (  # noqa: E402  (须在 sys.path 注入之后)
+    is_running as _flclash_is_running,
+    notify_required as _flclash_notify_required,
+)
+
+
 def _is_flclash_running():
-    """检测 FlClash 代理是否运行（macOS）"""
-    if platform.system() != 'Darwin':
-        return True  # 非 macOS 跳过检测
-    try:
-        result = subprocess.run(
-            ['pgrep', '-f', 'FlClash'],
-            capture_output=True, text=True, timeout=5
-        )
-        return result.returncode == 0
-    except Exception:
-        return False
+    """FlClash 代理是否运行（macOS）。
+
+    非 macOS 恒 True（跳过检测）; 探测异常 → False。
+    口径真源: scripts/flclash_proxy.py（精确名 ∪ 应用路径双判据）。
+    """
+    return _flclash_is_running()
 
 
 def _notify_flclash_required():
     """macOS 本地通知: 提示启动 FlClash (best-effort, 失败静默)。
 
-    仅 macOS 发送 (非 Darwin 时 _is_flclash_running 恒 True, 不会触发,
-    此处再防御一次)。实现参考 macosx-manager.py 通知逻辑。
+    真源: scripts/flclash_proxy.py::notify_required (非 Darwin 直接返回 False)。
     """
-    if platform.system() != 'Darwin':
-        return
-    try:
-        subprocess.run(
-            ['osascript', '-e',
-             'display notification "采集 X 数据需启动 flClash 应用" '
-             'with title "llm-radar"'],
-            capture_output=True, timeout=3
-        )
-    except Exception:
-        pass
+    return _flclash_notify_required()
 
 # ===== Constants =====
 PROJECT_ROOT = Path(__file__).resolve().parent.parent

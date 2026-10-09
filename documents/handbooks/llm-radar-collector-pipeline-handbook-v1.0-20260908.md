@@ -44,9 +44,10 @@ date: 2026-09-08
 
 ### 2.3 网络前置（flclash, 2026-09-04）
 
-`_is_flclash_running()`（code 两脚本同源，collector.py:44 / twitter-collector.py:44）：非 Darwin → return True（CI/Linux 不误伤）；`pgrep -f FlClash`（list-form，timeout 5）；异常 → False（fail-closed 保守）。collector 侧 `NEEDS_FLCLASH = {'github-trending','huggingface'}`（L979-985），单源运行仅命中该集才跳；twitter-collector 侧检测在 login/dry-run/空 targets 分支之后、cmd_collect 之前（L910-915），仅 collect/attach 需代理，未运行时提前 exit 1 避免无谓 Chrome 启动。
+`_is_flclash_running()`（code 两个 python 入口的薄包装，真源 = `scripts/flclash_proxy.py::is_running`）：非 Darwin → True（CI/Linux 不误伤）；探测口径 = 精确名 `pgrep -x FlClash` ∪ 应用路径 `pgrep -f '/Applications/FlClash.app'` 双判据（2026-10-09 收敛前为单一 `-f` + 应用名，会被 `osascript -e 'quit app "FlClash"'` 自命中）；异常 → False（fail-closed 保守）。collector 侧 `NEEDS_FLCLASH = {'github-trending','huggingface'}`（L979-985），单源运行仅命中该集才跳；twitter-collector 侧检测在 login/dry-run/空 targets 分支之后、cmd_collect 之前（L910-915），仅 collect/attach 需代理，未运行时提前 exit 1 避免无谓 Chrome 启动。
 
 - 2026-10-09 X 侧起停接管：`scripts/twitter-collector-cron.sh` 采集前确保代理就位（未运行 → `open -a FlClash` + 等 7890 LISTEN ≤180s），采集后**只释放本脚本拉起的**实例（原本在运行的一律不动，真源同 `macosx-service-policy.json`）；python 侧 `_is_flclash_running()` 降为兜底（绕过包装脚本直跑 python 时仍生效）。`TWITTER_FLCLASH_ENSURE=0` 可退回旧行为。
+- 2026-10-09 实现收敛（同日第二笔）：FlClash 探测/起停从**三处实现两种口径**收敛为**唯一真源 `scripts/flclash_proxy.py`**（`flclash_pids/is_running/ensure_ready/release/notify_required` + CLI）；包装脚本只编排（调子命令，不再自持 pgrep/osascript/nc），两个 python 入口改 import（仓根 `llm-radar-collector.py` 显式注入 `scripts/` 路径）。回归: `tests/test_flclash_proxy.py`（17 用例）含判别力反例与 policy 对齐断言；`tests/test_twitter_cron.py` 增「命令位不得出现旧口径」守卫。
 
 ## 三、机制与指令说明
 
@@ -104,6 +105,7 @@ python3 -c "import json;d=json.load(open('data/twitter.json'));print(d['retentio
 ### C flclash（2026-09-04, commit d73188b）
 
 - 决策：采集前检测 FlClash 进程，未运行跳过两海外源 + X 采集提前 exit 1；非 Darwin return True（CI/Linux 直通）；fail-closed。OBS-1（两脚本重复实现，符合无 package 布局）/ OBS-2（跳过路径无独立单测，degraded-source 兜底低风险）。
+- **OBS-1 已闭（2026-10-09）**：跨项目转交件（daily-checker 侧只读核查 @ 707ab3c）指出同一事实三处实现、两种口径（包装脚本精确名+路径 vs 两 python 入口单一 `-f`），已收敛为唯一真源 `scripts/flclash_proxy.py`；口径统一为「精确名 ∪ 应用路径」，并加「命令行含 FlClash 的旁观/osascript 形态进程不算在跑」的判别力反例用例。OBS-2 仍在。
 - 终审：**PASS — 100/100 (A)**；+44/−0 两文件，222 passed。
 
 ## 六、已知坑

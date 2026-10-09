@@ -4,8 +4,10 @@
 # 生命周期 (按序):
 #   0) 节流: twitter.json 生成 < TWITTER_THROTTLE_HOURS 则跳过 (`--force` 绕过) —— 支持 cron 每小时尝试,
 #      任意一次唤醒都能补上被休眠错过的槽位 (固定 09:20/21:20 会整槽丢失: 2026-10-07~09 实测断 3 天)。
-#   1) FlClash 代理 (X 必需): 未运行 → `open -a FlClash` + 等 7890 LISTEN (≤180s) → 采集后释放;
-#      原本就在运行 → 采集后保持运行不动。真源 = script-miner/projects/macosx/macosx-service-policy.json
+#   1) FlClash 代理 (X 必需): 未运行 → 拉起 + 等 7890 LISTEN (≤180s) → 采集后释放;
+#      原本就在运行 → 采集后保持运行不动。
+#      **探测/就绪/起停唯一真源 = scripts/flclash_proxy.py** (本脚本只编排, 不自持 pgrep/osascript/nc);
+#      命令与阈值对齐声明层真源 script-miner/projects/macosx/macosx-service-policy.json
 #      (services[FlClash].restart: stop=`osascript -e 'quit app "FlClash"'` / grace 20s /
 #       force_fallback=`kill -TERM {pid}` / start=`open -a FlClash` / verify.ports=[7890])。
 #   2) 调试 Chrome (默认 9222): 未就绪则拉起 (独立 profile, 复用登录态) → 采集 → 释放本脚本拉起的实例。
@@ -117,29 +119,22 @@ shutdown_chrome() {
 }
 
 # ===== FlClash 代理 (X 必需) =====
-# 精确名 + 应用路径双判据: 避开 `pgrep -f FlClash` 被 `osascript -e 'quit app "FlClash"'` 自身命中的假阳性
-flclash_pids() {
-  { pgrep -x FlClash 2>/dev/null; pgrep -f '/Applications/FlClash.app' 2>/dev/null; } | sort -u
-}
+# 唯一真源 = scripts/flclash_proxy.py: 探测(精确名 ∪ 应用路径双判据) / 就绪(端口 LISTEN) / 起停 / 通知。
+# 本脚本只做编排: 消假阳性(单一 `pgrep -f` + 应用名的老口径会被 `osascript -e 'quit app "FlClash"'` 这类
+# 命令行含 FlClash 的进程自身命中)与阈值口径都在 helper 里, 勿在此重写。
+FLCLASH_PY="$PROJ_DIR/scripts/flclash_proxy.py"
 
-flclash_running() { [ -n "$(flclash_pids)" ]; }
+flclash_pids() { python3 "$FLCLASH_PY" pids 2>/dev/null; }
 
-proxy_ready() { nc -z 127.0.0.1 "$FLCLASH_PORT" >/dev/null 2>&1; }
+flclash_running() { python3 "$FLCLASH_PY" is-running >/dev/null 2>&1; }
 
 ensure_flclash() {
-  local i=0 tries=$(( FLCLASH_READY_TIMEOUT > 4 ? FLCLASH_READY_TIMEOUT / 2 : 2 ))
   if flclash_running; then
-    echo "[twitter-cron] FlClash 已在运行 (pid: $(printf '%s' "$(flclash_pids)" | tr '\n' ' ')) ⇒ 采集后保持运行"
+    echo "[twitter-cron] FlClash 已在运行 (pid: $(flclash_pids | tr '\n' ' ')) ⇒ 采集后保持运行"
     return 0
   fi
   echo "[twitter-cron] FlClash 未运行, 启动 (open -a FlClash; 就绪判据 ${FLCLASH_PORT} LISTEN ≤${FLCLASH_READY_TIMEOUT}s)"
-  open -a FlClash >/dev/null 2>&1 || true
-  while [ "$i" -lt "$tries" ]; do
-    sleep 2
-    proxy_ready && break
-    i=$((i + 1))
-  done
-  if proxy_ready; then
+  if python3 "$FLCLASH_PY" ensure --timeout "$FLCLASH_READY_TIMEOUT" --port "$FLCLASH_PORT" >/dev/null; then
     OWNED_FLCLASH=1
     echo "[twitter-cron] FlClash 就绪 (${FLCLASH_PORT} LISTEN), 采集后释放"
     return 0
@@ -149,26 +144,11 @@ ensure_flclash() {
 }
 
 release_flclash() {
-  local i=0 pids
-  echo "[twitter-cron] 释放 FlClash (osascript quit app, 宽限 ${FLCLASH_GRACE}s)"
-  osascript -e 'quit app "FlClash"' >/dev/null 2>&1 || true
-  while [ "$i" -lt "$FLCLASH_GRACE" ]; do
-    sleep 1
-    flclash_running || break
-    i=$((i + 1))
-  done
-
-  pids="$(flclash_pids)"
-  if [ -n "$pids" ]; then
-    echo "[twitter-cron] ⚠️  优雅退出超时 ${FLCLASH_GRACE}s, kill -TERM: $(printf '%s' "$pids" | tr '\n' ' ')"
-    kill -TERM $pids 2>/dev/null
-    sleep 3
-  fi
-
-  if flclash_running; then
-    echo "[twitter-cron] ⚠️  FlClash 仍在运行 (pid: $(printf '%s' "$(flclash_pids)" | tr '\n' ' '))" >&2
-  else
+  echo "[twitter-cron] 释放 FlClash (真源 helper: osascript quit → 宽限 ${FLCLASH_GRACE}s → kill -TERM 兜底)"
+  if python3 "$FLCLASH_PY" release --grace "$FLCLASH_GRACE" >/dev/null; then
     echo "[twitter-cron] ✅ FlClash 已释放"
+  else
+    echo "[twitter-cron] ⚠️  FlClash 仍在运行 (pid: $(flclash_pids | tr '\n' ' '))" >&2
   fi
 }
 

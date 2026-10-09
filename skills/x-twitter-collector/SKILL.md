@@ -103,7 +103,7 @@ retention 规则 (条数优先滑动窗口):
 
 `scripts/twitter-collector-cron.sh` = 节流判定 → FlClash 就位 → 检查 CDP → 未就绪拉起 (独立 profile)
 → 等 ready (≤30s) → 采集 → **收尾释放本脚本拉起的 Chrome 与 FlClash**（SIGTERM 优雅, 超时 SIGKILL）,
-退出码原样透传。
+退出码原样透传。FlClash 环节本脚本只**编排**（调 `scripts/flclash_proxy.py` 子命令）, 不自持 pgrep/osascript/nc。
 
 - 幂等边界: pidfile `cache/pids/twitter-chrome-<port>.pid` 存在 ⇒ 视为本脚本实例 (上轮被强杀
   的遗留) → 本轮收编并释放; 无 pidfile 的就绪实例视为**外部常驻**, 只复用不杀。
@@ -117,8 +117,9 @@ retention 规则 (条数优先滑动窗口):
   `TWITTER_CHROME_SHUTDOWN_TIMEOUT` / `TWITTER_CHROME_READY_TRIES` / `TWITTER_CHROME_KEEP`。
 - 不得改回 `exec python3 …`: exec 会顶掉包装进程, 收尾释放永不执行 (测试有回归守卫)。
 - 验证 (判据): 采集前/后 `pgrep -f 'remote-debugging-port=9222' | wc -l` 均为 0, 采集期间 ≥1;
-  生命周期 + 节流 + FlClash 回归 `python3 -m pytest tests/test_twitter_cron.py -q`
-  (19 用例; 桩 Chrome/桩采集器/桩 FlClash, 端口 19222)。
+  生命周期 + 节流回归 `python3 -m pytest tests/test_twitter_cron.py -q` (19 用例; 桩 Chrome/桩采集器/
+  桩 FlClash 真源, 端口 19222) + 真源单测 `python3 -m pytest tests/test_flclash_proxy.py -q`
+  (17 用例: 探测口径 / 判别力反例 / ensure / release / CLI 契约 / 与 policy 对齐)。
 
 ### FlClash 代理生命周期 (X 必需)
 
@@ -130,10 +131,16 @@ start `open -a FlClash` / verify.ports `[7890]`。
   原本就在运行 → 只复用, 采集后**保持运行不动**。
 - 就绪判据只用端口, 不判"是否已把系统代理切过去"; 实测 `open -a` 后 7890 很快 LISTEN
   (2026-10-09 14:52 实测: 启动到就绪 <10s)。
-- 检测不用 `pgrep -f FlClash`(会被 `osascript -e 'quit app "FlClash"'` 自身命中), 改
-  `pgrep -x FlClash` ∨ `pgrep -f '/Applications/FlClash.app'` 双判据。
-- `TWITTER_FLCLASH_ENSURE=0` 关闭本层 (退回旧行为: 由 `twitter-collector.py` 的 `_is_flclash_running()`
-  检测, 未运行则 exit 1 + 本地通知)。
+- **实现唯一真源 = `scripts/flclash_proxy.py`**（2026-10-09 收敛）: `flclash_pids()` / `is_running()` /
+  `ensure_ready()` / `release()` / `notify_required()` + CLI 子命令 (`is-running|pids|ensure|release|notify`)。
+  包装脚本与两个 python 入口 (`llm-radar-collector.py` / `scripts/twitter-collector.py`) 全部走它,
+  **不得各自 pgrep/osascript**（`tests/test_twitter_cron.py` 有回归守卫: 包装脚本命令位出现旧口径即红）。
+- 检测口径: 精确名 `pgrep -x FlClash` ∪ 应用路径 `pgrep -f '/Applications/FlClash.app'` 双判据 ——
+  单一 `-f` + 应用名 会被 `osascript -e 'quit app "FlClash"'` 这类"命令行含 FlClash"的进程自命中(假阳性);
+  判别力反例见 `tests/test_flclash_proxy.py::test_counterexample_osascript_shaped_process_not_matched`
+  (内含旧口径对照断言, 保证该用例不是空护栏)。
+- `TWITTER_FLCLASH_ENSURE=0` 关闭**包装层**管理 (`twitter-collector.py` 仍用同一真源探测, 未运行则
+  exit 1 + 本地通知)。
 - 未就绪 → exit 1, 不进入采集 (也不会拉起 Chrome)。
 
 ## 观察项 O-X: 收尾兜底缺口 (2026-10-07, 暂不实现)

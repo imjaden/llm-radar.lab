@@ -40,18 +40,19 @@ from openai import OpenAI
 from prettytable import PrettyTable
 
 
+# FlClash 探测唯一真源 = scripts/flclash_proxy.py
+# 本文件在仓根, helper 在 scripts/ ⇒ 显式注入 scripts 路径 (勿在此重写 pgrep 逻辑)。
+sys.path.insert(0, str(Path(__file__).resolve().parent / 'scripts'))
+from flclash_proxy import is_running as _flclash_is_running  # noqa: E402  (须在 sys.path 注入之后)
+
+
 def _is_flclash_running():
-    """检测 FlClash 代理是否运行（macOS）"""
-    if platform.system() != 'Darwin':
-        return True  # 非 macOS 跳过检测
-    try:
-        result = subprocess.run(
-            ['pgrep', '-f', 'FlClash'],
-            capture_output=True, text=True, timeout=5
-        )
-        return result.returncode == 0
-    except Exception:
-        return False
+    """FlClash 代理是否运行（macOS）。
+
+    非 macOS 恒 True（跳过检测）; 探测异常 → False。
+    口径真源: scripts/flclash_proxy.py（精确名 ∪ 应用路径双判据）。
+    """
+    return _flclash_is_running()
 
 # ===== Constants =====
 PROJECT_ROOT = Path(__file__).resolve().parent
