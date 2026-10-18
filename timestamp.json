@@ -1,11 +1,11 @@
 {
-  "generated_at": "2026-10-18T11:03:34.372243",
+  "generated_at": "2026-10-18T11:41:42.278256",
   "last_news_date": "2026-10-18",
-  "last_run_at": "2026-10-18T11:03:34.401261",
+  "last_run_at": "2026-10-18T11:41:42.295212",
   "last_run_status": "success",
   "last_run_detail": "",
-  "server": "linux",
-  "hostname": "iZ2ze0mvn4qle5b5jp7ndlZ",
+  "server": "mac",
+  "hostname": "Jaden.Tech",
   "entity_count": 364,
   "period": "2026-10-11 ~ 2026-10-18",
   "version": "1.0"
