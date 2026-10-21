@@ -553,6 +553,54 @@ class FetchError(Exception):
     """抓取失败 (单 target)"""
 
 
+def _resolve_chromedriver(cdp_port=None):
+    """定位 chromedriver 可执行文件 → (路径|None, 来源说明)。
+
+    目的: attach 模式显式传 Service(...), 绕开 Selenium Manager 的版本匹配 stall
+    (SKILL 故障排查 #2: 9222 活着, 但 attach 可卡数分钟)。优先级:
+      TWITTER_CHROMEDRIVER 环境变量 > PATH > Selenium Manager 缓存(~/.cache/selenium) >
+      webdriver-manager 缓存(~/.wdm)
+    版本: 优先「与目标 Chrome 同 major」的最高 patch (major 从 CDP /json/version 读; 读不到取最高版本)。
+    """
+    import glob
+    import shutil
+    import urllib.request
+
+    env_path = os.environ.get('TWITTER_CHROMEDRIVER')
+    if env_path and Path(env_path).is_file():
+        return env_path, 'env:TWITTER_CHROMEDRIVER'
+    on_path = shutil.which('chromedriver')
+    if on_path:
+        return on_path, 'PATH'
+
+    home = Path.home()
+    cands = []
+    for pat in ('.cache/selenium/chromedriver/*/*/chromedriver',
+                '.wdm/drivers/chromedriver/*/*/chromedriver-*/chromedriver',
+                '.wdm/drivers/chromedriver/*/*/chromedriver'):
+        cands += [p for p in glob.glob(str(home / pat)) if os.access(p, os.X_OK)]
+    if not cands:
+        return None, 'none'
+
+    def vkey(path):
+        found = re.findall(r'\d+\.\d+\.\d+\.\d+', path)
+        return tuple(int(x) for x in found[-1].split('.')) if found else (0, 0, 0, 0)
+
+    major = None
+    if cdp_port:
+        try:
+            with urllib.request.urlopen(
+                    f'http://127.0.0.1:{cdp_port}/json/version', timeout=2) as r:
+                major = int(json.load(r).get('Browser', '').split('/')[-1].split('.')[0])
+        except Exception:
+            major = None
+    if major:
+        same = [p for p in cands if vkey(p)[0] == major]
+        if same:
+            return max(same, key=vkey), f'selenium-cache(chrome-major={major})'
+    return max(cands, key=vkey), 'selenium-cache(newest)'
+
+
 def start_driver(profile_dir, headed=False, cdp_port=None):
     """启动 Chrome (持久化 profile + headless=new / 有头)。selenium 惰性导入。
 
@@ -564,14 +612,27 @@ def start_driver(profile_dir, headed=False, cdp_port=None):
     opts = Options()
     if cdp_port:
         opts.debugger_address = f'127.0.0.1:{cdp_port}'
+        hint = (f'请先启动: bash scripts/twitter-collector-cron.sh (或手动: lr chrome)')
+        drv_path, drv_src = _resolve_chromedriver(cdp_port)
+        kwargs = {}
+        if drv_path:
+            from selenium.webdriver.chrome.service import Service
+            kwargs['service'] = Service(executable_path=drv_path)
         try:
-            return webdriver.Chrome(options=opts)
+            driver = webdriver.Chrome(options=opts, **kwargs)
         except Exception as e:
-            raise FetchError(
-                f'无法连接调试 Chrome (127.0.0.1:{cdp_port}): '
-                f'{str(e)[:120]}. 请先启动: bash scripts/twitter-collector-cron.sh '
-                f'(或手动: Chrome --remote-debugging-port=9222 '
-                f'--user-data-dir=~/chrome-twitter-cdp)')
+            if not kwargs:
+                raise FetchError(f'无法连接调试 Chrome (127.0.0.1:{cdp_port}): '
+                                 f'{str(e)[:120]}. {hint}')
+            print(f'[twitter-collector] ⚠️  显式 chromedriver 不可用 ({drv_src}: '
+                  f'{str(e)[:80]}), 回退 Selenium Manager', file=sys.stderr)
+            try:
+                driver = webdriver.Chrome(options=opts)
+            except Exception as e2:
+                raise FetchError(f'无法连接调试 Chrome (127.0.0.1:{cdp_port}): '
+                                 f'{str(e2)[:120]}. {hint}')
+        print(f'[twitter-collector] chromedriver: {drv_path or "Selenium Manager"} ({drv_src})')
+        return driver
     opts.add_argument(f'--user-data-dir={Path(profile_dir)}')
     if not headed:
         opts.add_argument('--headless=new')

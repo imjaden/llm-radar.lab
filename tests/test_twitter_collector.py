@@ -812,6 +812,125 @@ class TestFetchNoArticlesDiagnostic:
         assert '最小化' not in msg
 
 
+# ===== chromedriver 显式解析 + attach 传 Service (2026-10-21) =====
+
+class _FakeResp:
+    def __init__(self, payload):
+        self.payload = payload
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *_a):
+        return False
+
+    def read(self, *_a):
+        return self.payload
+
+
+class TestResolveChromedriver:
+    """attach 显式传 Service 的前置: 定位 chromedriver (绕 Selenium Manager stall)。"""
+
+    def _clear(self, monkeypatch):
+        import glob
+        import os
+        import shutil
+        monkeypatch.delenv('TWITTER_CHROMEDRIVER', raising=False)
+        monkeypatch.setattr(shutil, 'which', lambda _n: None)
+        monkeypatch.setattr(glob, 'glob', lambda _pat: [])
+        return os
+
+    def test_env_override_wins(self, tc, monkeypatch, tmp_path):
+        p = tmp_path / 'chromedriver'
+        p.write_text('#!/bin/sh\n', encoding='utf-8')
+        monkeypatch.setenv('TWITTER_CHROMEDRIVER', str(p))
+        assert tc._resolve_chromedriver(9222) == (str(p), 'env:TWITTER_CHROMEDRIVER')
+
+    def test_none_when_nothing_found(self, tc, monkeypatch):
+        self._clear(monkeypatch)
+        assert tc._resolve_chromedriver(9222) == (None, 'none')
+
+    def test_prefers_target_chrome_major(self, tc, monkeypatch):
+        import glob
+        import os
+        import urllib.request
+        self._clear(monkeypatch)
+        paths = ['/c/153.0.1.1/chromedriver',
+                 '/c/155.0.2.2/chromedriver',
+                 '/c/155.0.9.9/chromedriver']
+        monkeypatch.setattr(glob, 'glob', lambda _pat: list(paths))
+        monkeypatch.setattr(os, 'access', lambda _p, _m: True)
+        monkeypatch.setattr(urllib.request, 'urlopen',
+                            lambda *_a, **_k: _FakeResp(b'{"Browser":"Chrome/155.0.8059.85"}'))
+        path, src = tc._resolve_chromedriver(9222)
+        assert path == '/c/155.0.9.9/chromedriver'
+        assert 'chrome-major=155' in src
+
+    def test_newest_when_cdp_unavailable(self, tc, monkeypatch):
+        import glob
+        import os
+        import urllib.request
+        self._clear(monkeypatch)
+        paths = ['/c/153.0.1.1/chromedriver', '/c/155.0.9.9/chromedriver']
+        monkeypatch.setattr(glob, 'glob', lambda _pat: list(paths))
+        monkeypatch.setattr(os, 'access', lambda _p, _m: True)
+
+        def boom(*_a, **_k):
+            raise OSError('no cdp')
+        monkeypatch.setattr(urllib.request, 'urlopen', boom)
+        path, src = tc._resolve_chromedriver(9222)
+        assert path == '/c/155.0.9.9/chromedriver'
+        assert src == 'selenium-cache(newest)'
+
+
+class TestAttachService:
+    """attach 分支: 用显式 Service; 失败则回退 Selenium Manager。"""
+
+    def _fake_selenium(self, monkeypatch, calls, fail_with_service=False):
+        import sys
+        import types
+
+        class FakeService:
+            def __init__(self, executable_path=None):
+                calls['service'] = executable_path
+
+        class FakeDriver:
+            pass
+
+        def fake_chrome(options=None, **kw):
+            if fail_with_service and 'service' in kw:
+                raise RuntimeError('This version of ChromeDriver only supports Chrome version 154')
+            calls['kwargs'] = kw
+            return FakeDriver()
+
+        fake_wd = types.SimpleNamespace(Chrome=fake_chrome)
+        fake_opts = types.SimpleNamespace(Options=lambda: types.SimpleNamespace())
+        fake_service_mod = types.SimpleNamespace(Service=FakeService)
+        monkeypatch.setitem(sys.modules, 'selenium', types.SimpleNamespace(webdriver=fake_wd))
+        monkeypatch.setitem(sys.modules, 'selenium.webdriver', fake_wd)
+        monkeypatch.setitem(sys.modules, 'selenium.webdriver.chrome',
+                            types.SimpleNamespace(options=fake_opts, service=fake_service_mod))
+        monkeypatch.setitem(sys.modules, 'selenium.webdriver.chrome.options', fake_opts)
+        monkeypatch.setitem(sys.modules, 'selenium.webdriver.chrome.service', fake_service_mod)
+
+    def test_attach_passes_explicit_service(self, tc, monkeypatch):
+        calls = {}
+        self._fake_selenium(monkeypatch, calls)
+        monkeypatch.setattr(tc, '_resolve_chromedriver', lambda port=None: ('/fake/cd', 'env'))
+        driver = tc.start_driver('/tmp/p', cdp_port=9222)
+        assert driver is not None
+        assert calls['service'] == '/fake/cd'
+        assert calls['kwargs'].get('service') is not None
+
+    def test_falls_back_when_service_rejected(self, tc, monkeypatch):
+        calls = {}
+        self._fake_selenium(monkeypatch, calls, fail_with_service=True)
+        monkeypatch.setattr(tc, '_resolve_chromedriver', lambda port=None: ('/fake/cd', 'env'))
+        driver = tc.start_driver('/tmp/p', cdp_port=9222)
+        assert driver is not None
+        assert calls['kwargs'] == {}      # 回退那次不带 service
+
+
 # ===== 登录墙 → 本地异常通知 (2026-10-21) =====
 
 class TestLoginNotify:
