@@ -623,7 +623,22 @@ def fetch_target(driver, target, retention_hours=RETENTION_HOURS, scrolls=SCROLL
             break
         time.sleep(2)
     if not articles:
-        raise FetchError('未找到 tweet 元素 (可能页面结构变化或登录态异常)')
+        vis = '?'
+        cur = '?'
+        try:
+            vis = driver.execute_script('return document.visibilityState') or '?'
+        except Exception:
+            pass
+        try:
+            cur = driver.current_url or '?'
+        except Exception:
+            pass
+        if vis == 'hidden':
+            hint = ('页面处于 hidden (窗口被最小化/隐藏) ⇒ 首屏不渲染, 采集必然为空; '
+                    '请保持窗口 visible (副屏小窗), 不要最小化')
+        else:
+            hint = '可能页面结构变化、登录态异常或风控'
+        raise FetchError(f'未找到 tweet 元素: {hint} (url={cur}, visibility={vis})')
 
     # 首屏解析 (X 虚拟列表滚动后会回收首屏 DOM — 最新推文必须先抓)
     tweets = []

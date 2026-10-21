@@ -768,3 +768,45 @@ targets:
         cfg.write_text('targets:\n  - name: A\n    handle: a\n    url: https://x.com/a\n    enabled: false\n')
         monkeypatch.setattr(tc, 'CONFIG_PATH', cfg)
         assert tc.main(['--dry-run']) == 1
+
+
+# ===== 未找到 tweet 元素时的诊断语 (2026-10-21) =====
+
+class TestFetchNoArticlesDiagnostic:
+    """hidden(最小化/隐藏) 与「结构变化/登录态」必须分开报。
+
+    背景 (2026-10-21 实测): 窗口最小化 ⇒ 页面 hidden ⇒ 首屏不渲染、scroll 事件不派发,
+    但旧错误语只写「可能页面结构变化或登录态异常」, 会把窗口态问题误导成站点/登录问题。
+    """
+
+    class _Driver:
+        current_url = 'https://x.com/a'
+
+        def __init__(self, vis):
+            self.vis = vis
+
+        def get(self, *_a, **_k):
+            pass
+
+        def find_elements(self, *_a, **_k):
+            return []
+
+        def execute_script(self, *_a, **_k):
+            return self.vis
+
+    def test_hidden_mentions_window_state(self, tc):
+        with pytest.raises(tc.FetchError) as ei:
+            tc.fetch_target(self._Driver('hidden'),
+                            {'url': 'https://x.com/a', 'handle': 'a'}, wait_timeout=0)
+        msg = str(ei.value)
+        assert 'hidden' in msg
+        assert '最小化' in msg
+        assert 'visibility=hidden' in msg
+
+    def test_visible_mentions_structure_or_login(self, tc):
+        with pytest.raises(tc.FetchError) as ei:
+            tc.fetch_target(self._Driver('visible'),
+                            {'url': 'https://x.com/a', 'handle': 'a'}, wait_timeout=0)
+        msg = str(ei.value)
+        assert '页面结构变化' in msg
+        assert '最小化' not in msg

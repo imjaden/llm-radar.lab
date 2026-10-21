@@ -35,6 +35,12 @@ STUB_CHROME = '''#!/usr/bin/env python3
 """CDP 桩: 仅供 twitter-collector-cron.sh 生命周期测试。"""
 import http.server, os, signal, socketserver, sys
 
+# 记录本次拉起时的实参, 供「窗口摆位参数」用例断言
+_state = os.environ.get('STUB_STATE')
+if _state:
+    with open(os.path.join(_state, 'chrome-argv.log'), 'a', encoding='utf-8') as _fh:
+        _fh.write(' '.join(sys.argv[1:]) + '\\n')
+
 port = 0
 for a in sys.argv[1:]:
     if a.startswith('--remote-debugging-port='):
@@ -217,6 +223,12 @@ def sandbox(tmp_path):
 def flclash_calls(sandbox):
     """shell 对真源 helper 的调用流水 (每行一个 argv)。"""
     f = sandbox['argv_log']
+    return f.read_text(encoding='utf-8').splitlines() if f.exists() else []
+
+
+def chrome_argv(sandbox):
+    """桩 Chrome 每次被拉起时的实参 (每行一条命令)。"""
+    f = sandbox['state'] / 'chrome-argv.log'
     return f.read_text(encoding='utf-8').splitlines() if f.exists() else []
 
 
@@ -524,3 +536,49 @@ def test_throttle_disabled_when_zero(sandbox):
     out = r.stdout + r.stderr
     assert r.returncode == 0, out
     assert '[stub-collector] run' in out
+
+
+# ── 窗口摆位 (2026-10-21): 采集 Chrome 必须保持 visible ────────────────────────
+# 背景: 最小化/隐藏 ⇒ 页面 hidden ⇒ scroll 事件 0 派发 ⇒ X 时间线不加载更多 (实测)。
+# 断言面 = 桩 Chrome 收到的实参 (有副屏 → 带副屏坐标/尺寸; 单屏或坐标非法 → 不传)。
+
+def test_window_args_on_multi_display(sandbox):
+    """检出副屏 → 传 --window-position/--window-size (附在启动命令行)"""
+    r = run_cron(sandbox, env_for(sandbox, TWITTER_DISPLAY_COUNT='2'))
+    assert r.returncode == 0, r.stdout + r.stderr
+    argv = chrome_argv(sandbox)
+    assert argv, '桩 Chrome 未记录实参'
+    assert '--window-position=-1900,-297' in argv[0]
+    assert '--window-size=880,1000' in argv[0]
+    # 反向断言: 本次改动不允许把窗口最小化 (最小化 = 静默少数据)
+    for flag in ('--start-minimized', '--minimized', '--headless'):
+        assert flag not in argv[0]
+
+
+def test_window_args_skipped_on_single_display(sandbox):
+    """单屏 (display_count=1) → 不传坐标, 走 Chrome 默认位 (仍 visible)"""
+    r = run_cron(sandbox, env_for(sandbox, TWITTER_DISPLAY_COUNT='1'))
+    assert r.returncode == 0, r.stdout + r.stderr
+    argv = chrome_argv(sandbox)
+    assert argv
+    assert '--window-position' not in argv[0]
+    assert '--window-size' not in argv[0]
+
+
+def test_window_args_env_override(sandbox):
+    """TWITTER_WINDOW_POS/SIZE 可覆盖默认副屏坐标 (换机/换摆位)"""
+    r = run_cron(sandbox, env_for(sandbox, TWITTER_DISPLAY_COUNT='2',
+                                  TWITTER_WINDOW_POS='100,200',
+                                  TWITTER_WINDOW_SIZE='640,480'))
+    assert r.returncode == 0, r.stdout + r.stderr
+    argv = chrome_argv(sandbox)
+    assert '--window-position=100,200' in argv[0]
+    assert '--window-size=640,480' in argv[0]
+
+
+def test_window_args_invalid_skipped(sandbox):
+    """坐标非法 → 不传 (宁可用默认位, 也不给 Chrome 传垃圾参数)"""
+    r = run_cron(sandbox, env_for(sandbox, TWITTER_DISPLAY_COUNT='2',
+                                  TWITTER_WINDOW_POS='bad'))
+    assert r.returncode == 0, r.stdout + r.stderr
+    assert '--window-position' not in chrome_argv(sandbox)[0]

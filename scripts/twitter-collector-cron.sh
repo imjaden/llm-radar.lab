@@ -25,6 +25,9 @@
 #   TWITTER_CHROME_LOG              拉起 Chrome 的 stdout/stderr (默认 /tmp/twitter-chrome.log)
 #   TWITTER_CHROME_SHUTDOWN_TIMEOUT 优雅退出等待秒数, 超时 SIGKILL (默认 15)
 #   TWITTER_CHROME_READY_TRIES      启动后就绪轮询次数, 每次 2s (默认 15 = ≤30s)
+#   TWITTER_WINDOW_POS              采集 Chrome 窗口左上角 x,y (默认 -1900,-297 = 本机副屏左上)
+#   TWITTER_WINDOW_SIZE             采集 Chrome 窗口 w,h (默认 880,1000)
+#   TWITTER_DISPLAY_COUNT           覆盖「副屏探测」结果 (测试用; 未设则 system_profiler 实测)
 #   TWITTER_CHROME_KEEP=1           采集后不释放任何本脚本拉起的资源 (人工登录/调试用)
 #
 # 用法: bash scripts/twitter-collector-cron.sh [--force]
@@ -36,6 +39,8 @@ CHROME="${TWITTER_CHROME_BIN:-/Applications/Google Chrome.app/Contents/MacOS/Goo
 CHROME_LOG="${TWITTER_CHROME_LOG:-/tmp/twitter-chrome.log}"
 SHUTDOWN_TIMEOUT="${TWITTER_CHROME_SHUTDOWN_TIMEOUT:-15}"
 READY_TRIES="${TWITTER_CHROME_READY_TRIES:-15}"
+WIN_POS="${TWITTER_WINDOW_POS:--1900,-297}"
+WIN_SIZE="${TWITTER_WINDOW_SIZE:-880,1000}"
 THROTTLE_HOURS="${TWITTER_THROTTLE_HOURS:-5}"
 FLCLASH_ENSURE="${TWITTER_FLCLASH_ENSURE:-1}"
 FLCLASH_PORT="${TWITTER_FLCLASH_PORT:-7890}"
@@ -50,6 +55,36 @@ mkdir -p "$(dirname "$PIDFILE")"
 
 is_ready() {
   curl -s --max-time 2 "http://127.0.0.1:${PORT}/json/version" >/dev/null 2>&1
+}
+
+# ── 窗口摆位: 采集 Chrome 必须保持 visible ────────────────────────────────────
+# 实测 (2026-10-21, Chrome 155 + 9210px 测试页): 窗口最小化/隐藏 ⇒ document.visibilityState=hidden,
+# scrollTo 执行成功但 **scroll 事件 0 次派发、IntersectionObserver 0 次、DOM 0 增长**;
+# 同一页面 visible 下滚 3 次 = scroll 172 次 / DOM +172 项。X 时间线靠滚动加载 ⇒
+# 最小化会让采集静默少数据 (不报错, 只是拿不到)。故摆到副屏小窗: 保持 visible, 且不 activate 抢前台。
+# 单屏 / 坐标非法 / 探测不到副屏 → 不传坐标 (退化为 Chrome 默认位, 仍 visible)。
+# 默认坐标 (-1900,-297, 880x1000) 实测标定: 起窗后 rect=(-1900,-297,880,1000), 页面内
+# screen.availLeft/Top=[-1920,-297] 与之一致 (WindowServer 把副屏放在主屏上方 → y 为负)。
+# 注意: Chrome 会把窗口夹进所在屏, 超出部分被推回 (曾传 y=240/727 均被夹到 -297 附近)。
+display_count() {
+  if [ -n "${TWITTER_DISPLAY_COUNT:-}" ]; then printf '%s' "$TWITTER_DISPLAY_COUNT"; return 0; fi
+  local n
+  n="$(system_profiler SPDisplaysDataType 2>/dev/null | grep -c 'Resolution:')"
+  printf '%s' "${n:-0}"
+}
+
+window_args() {
+  local n
+  case "${WIN_POS}${WIN_SIZE}" in
+    *[!0-9,.-]*) echo "[twitter-cron] ⚠️  窗口坐标非法 (${WIN_POS} / ${WIN_SIZE}), 不传窗口参数" >&2; return 0 ;;
+  esac
+  n="$(display_count)"
+  case "$n" in ''|*[!0-9]*) n=0 ;; esac
+  if [ "$n" -lt 2 ]; then
+    echo "[twitter-cron] 未检出副屏 (display_count=${n}), 不传窗口参数 (Chrome 默认位)" >&2
+    return 0
+  fi
+  printf '%s' "--window-position=${WIN_POS} --window-size=${WIN_SIZE}"
 }
 
 # 调试 Chrome 主进程 PID = 命令行含调试端口 ∧ 非 Helper 子进程 (Helper 均带 --type=) ∧ 是 Chrome 程序本身。
@@ -222,9 +257,14 @@ if is_ready; then
   fi
 else
   echo "[twitter-cron] ${PORT} 未就绪, 启动调试 Chrome (profile: ${PROFILE})"
-  "$CHROME" --remote-debugging-port="$PORT" --user-data-dir="$PROFILE" \
+  WINDOW_ARGS="$(window_args)"
+  # shellcheck disable=SC2086  # WINDOW_ARGS 是受控的 `--k=v --k=v`; 不用数组: macOS /bin/bash 3.2 + set -u 下空数组展开会报 unbound variable
+  "$CHROME" --remote-debugging-port="$PORT" --user-data-dir="$PROFILE" $WINDOW_ARGS \
     >>"$CHROME_LOG" 2>&1 &
   OWNED=1
+  if [ -n "$WINDOW_ARGS" ]; then
+    echo "[twitter-cron] 窗口摆位 (保持 visible, 不抢前台): ${WINDOW_ARGS}"
+  fi
   for _ in $(seq 1 "$READY_TRIES"); do
     sleep 2
     is_ready && break
