@@ -810,3 +810,35 @@ class TestFetchNoArticlesDiagnostic:
         msg = str(ei.value)
         assert '页面结构变化' in msg
         assert '最小化' not in msg
+
+
+# ===== 登录墙 → 本地异常通知 (2026-10-21) =====
+
+class TestLoginNotify:
+    """exit 2 (登录墙) 要额外发一条本地通知; 其它退出码不发。"""
+
+    def _run(self, tc, monkeypatch, rc):
+        calls = []
+        monkeypatch.setattr(tc, '_is_flclash_running', lambda: True)
+        monkeypatch.setattr(tc, 'load_config', lambda: [
+            {'name': 'a', 'handle': 'a', 'url': 'https://x.com/a',
+             'enabled': True, 'max_tweets': 30}])
+        monkeypatch.setattr(tc, 'cmd_collect', lambda *a, **k: rc)
+        monkeypatch.setattr(tc, '_notify_login_required',
+                            lambda: (calls.append(1), True)[1])
+        got = tc.main(['--collect'])
+        return got, calls
+
+    def test_exit2_notifies(self, tc, monkeypatch):
+        got, calls = self._run(tc, monkeypatch, 2)
+        assert got == 2
+        assert calls == [1]
+
+    def test_exit0_silent(self, tc, monkeypatch):
+        got, calls = self._run(tc, monkeypatch, 0)
+        assert got == 0
+        assert calls == []
+
+    def test_notifier_noop_off_darwin(self, tc, monkeypatch):
+        monkeypatch.setattr(tc.platform, 'system', lambda: 'Linux')
+        assert tc._notify_login_required() is False

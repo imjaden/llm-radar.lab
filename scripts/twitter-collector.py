@@ -66,6 +66,26 @@ def _notify_flclash_required():
     """
     return _flclash_notify_required()
 
+
+def _notify_login_required():
+    """macOS 本地通知: 登录态失效需人工登录 (best-effort, 失败静默)。
+
+    与 FlClash 通知同通道 (osascript display notification, title=llm-radar), 不引入飞书/webhook。
+    触发点: main() 收到 cmd_collect 的 exit 2 (登录墙) 时, 每轮最多一次。
+    """
+    if platform.system() != 'Darwin':
+        return False
+    msg = 'X 登录态失效，需人工登录: lr chrome --wait'
+    try:
+        r = subprocess.run(
+            ['osascript', '-e',
+             f'display notification "{msg}" with title "llm-radar"'],
+            capture_output=True, timeout=5)
+        return r.returncode == 0
+    except Exception:
+        return False
+
+
 # ===== Constants =====
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 CONFIG_PATH = PROJECT_ROOT / 'data' / 'twitter-targets.yaml'
@@ -926,7 +946,10 @@ def main(argv=None):
     if mode == 'attach':
         cdp_port = int(os.environ.get('TWITTER_CDP_PORT', '9222'))
         print(f'[twitter-collector] attach 模式: CDP 127.0.0.1:{cdp_port}')
-    return cmd_collect(enabled, profile_dir, cdp_port=cdp_port)
+    rc = cmd_collect(enabled, profile_dir, cdp_port=cdp_port)
+    if rc == 2:      # 登录墙: stderr 已有提示, 再补一条本地异常通知 (best-effort, 不影响退出码)
+        _notify_login_required()
+    return rc
 
 
 if __name__ == '__main__':

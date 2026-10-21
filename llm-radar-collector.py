@@ -2653,6 +2653,140 @@ def crontab_status():
         print('⚪ 定时任务: 未启用')
 
 
+# ===== 调试 Chrome 子指令 (2026-10-21): 手工拉起/检查 chrome-twitter-cdp =====
+CHROME_BIN = (os.environ.get('TWITTER_CHROME_BIN')
+              or '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome')
+CHROME_LOG = os.environ.get('TWITTER_CHROME_LOG') or '/tmp/twitter-chrome.log'
+
+
+def _chrome_arg(args, name, default=None):
+    """取 `--name VALUE` 的值 (缺省 default)。"""
+    if name in args:
+        i = args.index(name)
+        if i + 1 < len(args):
+            return args[i + 1]
+    return default
+
+
+def _chrome_profile_dir(args):
+    return Path(_chrome_arg(args, '--profile')
+                or os.environ.get('TWITTER_PROFILE_DIR')
+                or (Path.home() / 'chrome-twitter-cdp')).expanduser()
+
+
+def _cdp_ready(port, timeout=0.6):
+    """端口层面判就绪 (不依赖 HTTP 解析, 与 cron 的 is_ready 同口径的轻量版)。"""
+    try:
+        with socket.create_connection(('127.0.0.1', port), timeout=timeout):
+            return True
+    except OSError:
+        return False
+
+
+def _attach_driver(port):
+    """attach 到调试 Chrome (只读用途: 读 cookie)。调用方负责 quit (只断 CDP, 不关 Chrome)。"""
+    from selenium import webdriver
+    from selenium.webdriver.chrome.options import Options
+    opts = Options()
+    opts.debugger_address = f'127.0.0.1:{port}'
+    return webdriver.Chrome(options=opts)
+
+
+def _logged_in(driver):
+    try:
+        return 'auth_token' in {c.get('name') for c in driver.get_cookies()}
+    except Exception:
+        return False
+
+
+def _cmd_chrome(args):
+    """lr chrome — 手工启动/检查 chrome-twitter-cdp 调试 Chrome (人工登录用)。
+
+    默认: 拉起 → 打开 x.com/login → 打印端点后立即返回 (不阻塞, 窗口留在前台便于登录)。
+    --wait       轮询 auth_token 直到登录完成或超时 (默认 600s)
+    --status     只查状态 (CDP 是否就绪 / 是否已登录), 不启动
+    --port N     调试端口 (默认 TWITTER_CDP_PORT 或 9222)
+    --profile D  user-data-dir (默认 TWITTER_PROFILE_DIR 或 ~/chrome-twitter-cdp)
+    --secondary  摆到副屏小窗 (坐标同 cron: TWITTER_WINDOW_POS/SIZE, 默认 -1900,-297 / 880x1000)
+    --timeout N  --wait 的超时秒数
+    """
+    port = int(_chrome_arg(args, '--port') or os.environ.get('TWITTER_CDP_PORT') or 9222)
+    profile = _chrome_profile_dir(args)
+    timeout = int(_chrome_arg(args, '--timeout') or 600)
+
+    if '--status' in args:
+        ready = _cdp_ready(port)
+        logged = False
+        if ready:
+            try:
+                d = _attach_driver(port)
+                try:
+                    logged = _logged_in(d)
+                finally:
+                    d.quit()
+            except Exception as e:
+                print(f'⚠️  无法读 cookie: {str(e)[:100]}', file=sys.stderr)
+        print(f'CDP 127.0.0.1:{port}: {"就绪" if ready else "未就绪"}')
+        print(f'登录态: {"已登录 (auth_token 在)" if logged else "未登录"}')
+        print(f'profile: {profile}')
+        return 0 if (ready and logged) else 1
+
+    launched = False
+    if _cdp_ready(port):
+        print(f'CDP 127.0.0.1:{port} 已就绪 (外部实例), 不重复启动')
+    else:
+        if not Path(CHROME_BIN).exists():
+            print(f'❌ 找不到 Chrome: {CHROME_BIN}', file=sys.stderr)
+            return 1
+        cmd = [CHROME_BIN, f'--remote-debugging-port={port}',
+               f'--user-data-dir={profile}']
+        if '--secondary' in args:
+            cmd += [f'--window-position={os.environ.get("TWITTER_WINDOW_POS", "-1900,-297")}',
+                    f'--window-size={os.environ.get("TWITTER_WINDOW_SIZE", "880,1000")}']
+        cmd.append('https://x.com/login')
+        with open(CHROME_LOG, 'ab') as log:
+            subprocess.Popen(cmd, stdout=log, stderr=subprocess.STDOUT,
+                             start_new_session=True)
+        launched = True
+        for _ in range(30):
+            if _cdp_ready(port):
+                break
+            time.sleep(1)
+        if not _cdp_ready(port):
+            print(f'❌ 30s 内 CDP 未就绪, 见日志 {CHROME_LOG}', file=sys.stderr)
+            return 1
+
+    print(f'🧭 调试 Chrome {"已启动" if launched else "已复用"}')
+    print(f'   CDP:     http://127.0.0.1:{port}')
+    print(f'   profile: {profile}')
+    print(f'   日志:    {CHROME_LOG}')
+    print('   下一步:  在窗口登录 x.com → 完成后 `lr chrome --wait` 自动确认; 或 Cmd+Q 退出')
+
+    if '--wait' not in args:
+        return 0
+
+    print(f'⏳ 等待登录 (轮询 auth_token, ≤{timeout}s) …')
+    try:
+        d = _attach_driver(port)
+    except Exception as e:
+        print(f'❌ attach 失败: {str(e)[:120]}', file=sys.stderr)
+        return 1
+    try:
+        deadline = time.time() + timeout
+        while time.time() < deadline:
+            if _logged_in(d):
+                print('✅ 已检测到 auth_token, 登录完成')
+                return 0
+            time.sleep(3)
+    finally:
+        try:
+            d.quit()
+        except Exception:
+            pass
+    print('❌ 超时仍未检测到登录 cookie', file=sys.stderr)
+    return 1
+
+
 # ===== CLI 治理: 分组 help / positional 拦截 (2026-08-23) =====
 def print_grouped_help():
     """hm-style 分组帮助 (📖 标题 + 【】分类 + 2/10 空格缩进)"""
@@ -2675,6 +2809,8 @@ def print_grouped_help():
     print('          重置源连续失败计数')
     print('  selenium-check')
     print('          检查 Chrome/ChromeDriver 环境')
+    print('  chrome [--wait|--status] [--port N] [--profile DIR] [--secondary]')
+    print('          手工启动/检查调试 Chrome (chrome-twitter-cdp), 人工登录 X 用')
     print()
     print('【数据管理】')
     print('  status [--json]')
@@ -2709,6 +2845,8 @@ def print_command_usage(command):
         'run': '用法: lr run [source] [--force]  — 采集+提取+合并+推送（6h 节流, --force 绕过）',
         'commit': '用法: lr commit [message]  — git add + commit',
         'crontab': '用法: lr crontab --add|--remove|--list|--update|--status [schedule]',
+        'chrome': '用法: lr chrome [--wait] [--status] [--port N] [--profile DIR] '
+                  '[--secondary] [--timeout N]  — 手工启动/检查调试 Chrome (人工登录用)',
     }
     print(usages.get(command, f'用法: lr {command}'))
 
@@ -2852,7 +2990,7 @@ def main():
 
     # positional help 拦截: 带参子命令 (fetch/run/commit/crontab) 的 HELP 禁止当参数执行
     # 全 args 扫描 (LR-SEC-011): 防 `run --force help` / `fetch qbitai help` 绕过首位检查
-    if command in ('fetch', 'run', 'commit', 'crontab') and any(
+    if command in ('fetch', 'run', 'commit', 'crontab', 'chrome') and any(
         a.upper() == 'HELP' for a in args
     ):
         print_command_usage(command)
@@ -2867,6 +3005,10 @@ def main():
     if command == 'prompt':
         _cmd_prompt(args)
         sys.exit(0)
+
+    # chrome: 手工启动/检查调试 Chrome (人工登录用) — 不需要 collector / API key
+    if command == 'chrome':
+        sys.exit(_cmd_chrome(args))
 
     # status 是只读查询: 抑制构造期日志, 保持输出纯净 (--json 纯 JSON / 文本单行摘要)
     if command == 'status':

@@ -24,6 +24,8 @@ python3 scripts/twitter-collector.py --collect  显式采集 (等价默认)
 python3 scripts/twitter-collector.py --login    有头模式打开登录页, 人工登录一次
 python3 scripts/twitter-collector.py --dry-run  只解析配置+探测登录态, 不抓取不写盘
 python3 scripts/twitter-collector.py --attach   attach 到已运行 Chrome (CDP 9222) 采集
+lr chrome [--wait|--status] [--port N] [--profile DIR] [--secondary]
+                                                手工拉起/检查调试 Chrome (人工登录, 2026-10-21)
 ```
 
 退出码:
@@ -74,6 +76,15 @@ retention 规则 (条数优先滑动窗口):
   (2026-10-06 实测: 曾常驻 1d7h / 家族 10 进程 660MB) ⇒ 释放实例由 `scripts/twitter-collector-cron.sh` 收尾负责。
 - 登录墙检测: URL 重定向 `/login` 或出现登录按钮 → exit 2 + 提示
   `python3 scripts/twitter-collector.py --login`。
+- `lr chrome` (2026-10-21): 手工拉起调试 Chrome（`~/chrome-twitter-cdp` + 9222）打开 `x.com/login`，
+  打印端点后立即返回；`--wait` 轮询 `auth_token` 直到登录完成（默认 600s）；`--status` 只查
+  「CDP 就绪 / 是否已登录」；`--secondary` 用副屏坐标起窗。等价于 cron 的起窗参数，专供人工登录/排障。
+- **窗口必须保持 visible（2026-10-21 实测，硬约束）**：最小化 / Cmd+H / 隐藏 ⇒
+  `document.visibilityState=hidden` ⇒ **scroll 事件一次都不派发**、IntersectionObserver 不触发、
+  DOM 不增长（同一页 visible 下滚 3 次 = scroll 172 次 / DOM +172 项）。X 时间线靠滚动加载
+  ⇒ 最小化会让采集**静默少数据**（不报错，只是拿不到）。故 cron 起窗用
+  `--window-position/--window-size` 摆副屏小窗（`TWITTER_WINDOW_POS/SIZE`，默认 `-1900,-297` /
+  `880,1000`，单屏或坐标非法则自动不传），保持 visible 且不抢前台。
 - Profile 互斥: `cache/twitter-profile/.collector.lock` pidfile 防 --login 与 cron 并发双 Chrome。
 
 ## 入库 auto-push 语义
@@ -167,6 +178,14 @@ start `open -a FlClash` / verify.ports `[7890]`。
    "http://127.0.0.1:9222/json/new?https://x.com"` 开新 tab 再 attach。
 4. 通用 X 深坑 (虚拟列表 DOM 回收 / 动态滚动 / 自动化登录被拦截 / 无限滚动降级) →
    Hermes skill `x-twitter-scraping`, 不在此复制。
+5. 「未找到 tweet 元素」(2026-10-21 起诊断语已分流, 照文案走即可):
+   - `visibility=hidden` ⇒ 窗口被最小化/隐藏, 首屏不渲染; 保持 visible 重跑 (见「窗口必须保持 visible」)。
+   - `visibility=visible` 且 `article[data-testid="tweet"]` 计数 = 0 ⇒ 大概率拿到 **guest 版新皮肤**:
+     实测未登录视图已改成无 `data-testid`、无 `<time datetime>` 的 DOM (article 仍在, 但选择器全失效);
+     登录态仍是经典 DOM (同一账号实测 `article[data-testid="tweet"]`=6/tweetText=9/time=10, fetch 30 条)。
+   - 登录态判断看 profile 里 `auth_token` / `ct0` 是否在; exit 2 (登录墙) 现在会**额外发一条
+     macOS 本地通知** (osascript, best-effort, title=`llm-radar`, 文案含 `lr chrome --wait`) ——
+     与「FlClash 未启动」同一条通道, 不引入飞书/webhook。
 
 验证: 登录态 `curl -s http://127.0.0.1:9222/json/version`; 注意 shell 管道取退出码用
 `${PIPESTATUS[0]}`。
