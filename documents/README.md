@@ -9,7 +9,7 @@
 | 手册 | 覆盖主题 | 素材桶（份数） | 说明 |
 |---|---|---|---|
 | [git-sync](handbooks/llm-radar-git-sync-handbook-v1.0-20260908.md) | 双机同步与 git 自愈：force 决策反转史、方案 D 全链自愈、语义并集收敛（CL006） | solutions+reviews（18） | 决策史索引，机制以 code 现行行号锚点为准 |
-| [cli-governance](handbooks/llm-radar-cli-governance-handbook-v1.0-20260908.md) | CLI/工程治理：12 子命令面、CL-SEC11 决策、prompt 供给、runtime-files 布局 | solutions+reviews（13） | 含 LR-SEC-011~017 注册 |
+| [cli-governance](handbooks/llm-radar-cli-governance-handbook-v1.0-20260908.md) | CLI/工程治理：13 子命令面（含 2026-10-21 新增 `chrome`）、CL-SEC11 决策、prompt 供给、runtime-files 布局 | solutions+reviews（13） | 含 LR-SEC-011~017 注册 |
 | [collector-pipeline](handbooks/llm-radar-collector-pipeline-handbook-v1.0-20260908.md) | 采集与数据流双 pipeline：data-flow 骨架 + X 热点 v1.3 终态（CL-SEC19/20） | 主题子目录+solutions+reviews（10） | twitter-collector CLI/常量逐字实核 |
 | [frontend](handbooks/llm-radar-frontend-handbook-v1.0-20260908.md) | 站点渲染/前端：emoji 约定 + CL001 弹框/CL002 加载/CL003 拷贝降级 | emoji-mapping+solutions+reviews（11） | index.html 现行行号锚点 |
 | [ops](handbooks/llm-radar-ops-handbook-v1.0-20260908.md) | 部署/cron/探针：Linux 环境、CI、health 三态退出契约、hermes cron wrapper | 主题子目录+solutions+reviews（8） | O-1/O-2 编号出处 |

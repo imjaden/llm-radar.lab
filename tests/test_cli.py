@@ -9,6 +9,52 @@ COLLECTOR = str(Path(__file__).resolve().parent.parent / "llm-radar-collector.py
 GROUPS = ["【采集执行】", "【数据管理】", "【Git 集成】", "【定时任务】", "【其他】"]
 
 
+def _load_cli_module():
+    """按路径导入 llm-radar-collector.py (文件名含连字符, 不能常规 import)。"""
+    import importlib.util
+    spec = importlib.util.spec_from_file_location('lr_cli', COLLECTOR)
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return mod
+
+
+def test_chrome_status_not_ready_returns_1(monkeypatch, capsys):
+    """`lr chrome --status`: CDP 未就绪 → 快速 exit 1 + 起窗提示 (不依赖 chromedriver)。"""
+    mod = _load_cli_module()
+    monkeypatch.setattr(mod, '_cdp_ready', lambda *a, **k: False)
+    assert mod._cmd_chrome(['--status', '--port', '19999']) == 1
+    out = capsys.readouterr().out
+    assert '未就绪' in out
+    assert 'lr chrome' in out
+
+
+def test_chrome_state_logged_in_vs_not(monkeypatch):
+    """已登录判据 = 浏览器级 cookie 有 auth_token (与页面停在哪个域无关)。"""
+    mod = _load_cli_module()
+    monkeypatch.setattr(mod, '_cdp_ready', lambda *a, **k: True)
+    monkeypatch.setattr(mod, '_cdp_call',
+                        lambda *a, **k: {'cookies': [{'name': 'auth_token'},
+                                                     {'name': 'guest_id'}]})
+    assert mod._chrome_state(9222) == (True, True, '2 个 cookie')
+    monkeypatch.setattr(mod, '_cdp_call',
+                        lambda *a, **k: {'cookies': [{'name': 'guest_id'}]})
+    ready, logged, _note = mod._chrome_state(9222)
+    assert ready is True and logged is False
+
+
+def test_chrome_state_survives_cdp_error(monkeypatch):
+    """读 cookie 失败: 仍报告 CDP 就绪, 但登录态 False (不误报已登录)。"""
+    mod = _load_cli_module()
+    monkeypatch.setattr(mod, '_cdp_ready', lambda *a, **k: True)
+
+    def boom(*_a, **_k):
+        raise RuntimeError('ws closed')
+    monkeypatch.setattr(mod, '_cdp_call', boom)
+    ready, logged, note = mod._chrome_state(9222)
+    assert ready is True and logged is False
+    assert '读 cookie 失败' in note
+
+
 def test_cli_sources():
     r = subprocess.run(
         ["python3", COLLECTOR, "sources"],

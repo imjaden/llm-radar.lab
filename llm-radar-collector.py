@@ -2683,20 +2683,109 @@ def _cdp_ready(port, timeout=0.6):
         return False
 
 
-def _attach_driver(port):
-    """attach 到调试 Chrome (只读用途: 读 cookie)。调用方负责 quit (只断 CDP, 不关 Chrome)。"""
-    from selenium import webdriver
-    from selenium.webdriver.chrome.options import Options
-    opts = Options()
-    opts.debugger_address = f'127.0.0.1:{port}'
-    return webdriver.Chrome(options=opts)
+def _recv_exact(sock, n):
+    buf = b''
+    while len(buf) < n:
+        chunk = sock.recv(n - len(buf))
+        if not chunk:
+            raise OSError('CDP 连接已关闭')
+        buf += chunk
+    return buf
 
 
-def _logged_in(driver):
+def _cdp_call(port, method, params=None, timeout=4):
+    """最小 CDP 客户端 (requests 取 WS 端点 + stdlib socket 收发一条命令)。
+
+    为什么不用 Selenium: attach 走 chromedriver 时, Selenium Manager 的版本匹配会 stall
+    (SKILL 故障排查 #2, 实测可卡数分钟); 且 driver.get_cookies() 只返回**当前页面**域的
+    cookie —— 页面停在 about:blank/newtab 时会误判「未登录」。这里用浏览器级
+    `Storage.getCookies` 拿全量 cookie, 既快又准, 且不依赖 chromedriver。
+    """
+    import base64
+    import os as _os
+    import socket as _socket
+    import struct
+
     try:
-        return 'auth_token' in {c.get('name') for c in driver.get_cookies()}
-    except Exception:
-        return False
+        info = requests.get(f'http://127.0.0.1:{port}/json/version', timeout=timeout).json()
+        ws_url = info['webSocketDebuggerUrl']
+    except Exception as e:
+        raise RuntimeError(f'CDP 端不可用: {str(e)[:80]}')
+
+    rest = ws_url.split('://', 1)[-1]
+    hostport, _, path = rest.partition('/')
+    path = '/' + path
+    host, _, host_port = hostport.partition(':')
+    sock = _socket.create_connection((host, int(host_port or 80)), timeout=timeout)
+    try:
+        key = base64.b64encode(_os.urandom(16)).decode()
+        sock.sendall((f'GET {path} HTTP/1.1\r\nHost: {hostport}\r\n'
+                      f'Upgrade: websocket\r\nConnection: Upgrade\r\n'
+                      f'Sec-WebSocket-Key: {key}\r\n'
+                      f'Sec-WebSocket-Version: 13\r\n\r\n').encode())
+        head = b''
+        while b'\r\n\r\n' not in head:
+            head += sock.recv(4096)
+            if len(head) > 65536:
+                raise RuntimeError('握手响应过大')
+        first_line = head.split(b'\r\n', 1)[0]
+        if b' 101 ' not in first_line:
+            raise RuntimeError(f'WS 握手失败: {first_line[:60]!r}')
+
+        payload = json.dumps({'id': 1, 'method': method,
+                              'params': params or {}}).encode()
+        mask = _os.urandom(4)
+        header = bytearray([0x81])            # FIN + text
+        n = len(payload)
+        if n < 126:
+            header.append(0x80 | n)
+        elif n < 65536:
+            header.append(0x80 | 126)
+            header += struct.pack('>H', n)
+        else:
+            header.append(0x80 | 127)
+            header += struct.pack('>Q', n)
+        header += mask
+        sock.sendall(bytes(header) + bytes(b ^ mask[i % 4] for i, b in enumerate(payload)))
+
+        while True:
+            b1, b2 = _recv_exact(sock, 2)
+            opcode, ln = b1 & 0x0F, b2 & 0x7F
+            if ln == 126:
+                ln = struct.unpack('>H', _recv_exact(sock, 2))[0]
+            elif ln == 127:
+                ln = struct.unpack('>Q', _recv_exact(sock, 8))[0]
+            data = _recv_exact(sock, ln) if ln else b''
+            if opcode == 0x8:
+                raise RuntimeError('CDP 关闭了连接')
+            if opcode == 0x9:                 # ping → pong
+                sock.sendall(bytes([0x8A, 0x80]) + _os.urandom(4))
+                continue
+            if opcode != 0x1:
+                continue
+            msg = json.loads(data.decode('utf-8', 'replace'))
+            if msg.get('id') == 1:
+                if 'error' in msg:
+                    raise RuntimeError(str(msg['error'])[:120])
+                return msg.get('result', {})
+    finally:
+        try:
+            sock.close()
+        except Exception:
+            pass
+
+
+def _chrome_state(port):
+    """(CDP 就绪, 已登录, 说明)。已登录判据 = 浏览器级 cookie 里有 auth_token。"""
+    if not _cdp_ready(port):
+        return False, False, 'CDP 未就绪'
+    try:
+        res = _cdp_call(port, 'Storage.getCookies', {})
+        names = {c.get('name') for c in res.get('cookies', [])}
+        return True, 'auth_token' in names, f'{len(names)} 个 cookie'
+    except Exception as e:
+        return True, False, f'读 cookie 失败: {str(e)[:80]}'
+
 
 
 def _cmd_chrome(args):
@@ -2715,20 +2804,12 @@ def _cmd_chrome(args):
     timeout = int(_chrome_arg(args, '--timeout') or 600)
 
     if '--status' in args:
-        ready = _cdp_ready(port)
-        logged = False
-        if ready:
-            try:
-                d = _attach_driver(port)
-                try:
-                    logged = _logged_in(d)
-                finally:
-                    d.quit()
-            except Exception as e:
-                print(f'⚠️  无法读 cookie: {str(e)[:100]}', file=sys.stderr)
+        ready, logged, note = _chrome_state(port)
         print(f'CDP 127.0.0.1:{port}: {"就绪" if ready else "未就绪"}')
-        print(f'登录态: {"已登录 (auth_token 在)" if logged else "未登录"}')
+        print(f'登录态: {"已登录 (auth_token 在)" if logged else "未登录"} ({note})')
         print(f'profile: {profile}')
+        if not ready:
+            print('提示: 先 `lr chrome` 起调试 Chrome（或 `lr chrome --wait` 起窗并等登录）')
         return 0 if (ready and logged) else 1
 
     launched = False
@@ -2765,24 +2846,14 @@ def _cmd_chrome(args):
     if '--wait' not in args:
         return 0
 
-    print(f'⏳ 等待登录 (轮询 auth_token, ≤{timeout}s) …')
-    try:
-        d = _attach_driver(port)
-    except Exception as e:
-        print(f'❌ attach 失败: {str(e)[:120]}', file=sys.stderr)
-        return 1
-    try:
-        deadline = time.time() + timeout
-        while time.time() < deadline:
-            if _logged_in(d):
-                print('✅ 已检测到 auth_token, 登录完成')
-                return 0
-            time.sleep(3)
-    finally:
-        try:
-            d.quit()
-        except Exception:
-            pass
+    print(f'⏳ 等待登录 (轮询 auth_token, ≤{timeout}s) …', flush=True)
+    deadline = time.time() + timeout
+    while time.time() < deadline:
+        _, logged, _ = _chrome_state(port)
+        if logged:
+            print('✅ 已检测到 auth_token, 登录完成')
+            return 0
+        time.sleep(3)
     print('❌ 超时仍未检测到登录 cookie', file=sys.stderr)
     return 1
 

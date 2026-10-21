@@ -174,6 +174,8 @@ start `open -a FlClash` / verify.ports `[7890]`。
    删 profile 目录 `Singleton*` 文件; 若 SIGKILL 过, 同步清 `.collector.lock` pidfile。
 2. chromedriver pin: attach 卡死数分钟即使 9222 活着 — Selenium Manager 版本匹配下载
    stall。显式 `Service('/path/to/chromedriver')` 绕过 (attach 变 <1s)。
+   **`lr chrome --status/--wait` 已不依赖 chromedriver**（直连 CDP WebSocket 读浏览器级
+   `Storage.getCookies`）：1s 内返回，且不受「页面停在 newtab ⇒ 按页面域取 cookie 误判未登录」影响。
 3. attach 后零页面: 上次 `driver.close()` 关掉最后一个 tab → `curl -X PUT
    "http://127.0.0.1:9222/json/new?https://x.com"` 开新 tab 再 attach。
 4. 通用 X 深坑 (虚拟列表 DOM 回收 / 动态滚动 / 自动化登录被拦截 / 无限滚动降级) →
