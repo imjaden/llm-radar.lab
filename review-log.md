@@ -1547,3 +1547,44 @@
 - 未修改任何项目数据文件; 报告 + review-log + .review-level.yaml 三件产物 commit 用 audit@review 并 push。
 
 ---
+
+## 2026-10-23 — 2026-10-23 ops 交接评审 (2 份 ops 文档 + 系统层落地件)
+
+- **review者**: Security Reviewer (review profile)
+- **范围**: 已 push 历史 b89b123 / ae8b6e3 / bc7fcae（docs@ops 3 个 + README 索引 2 行）+ 当日 auto-push 数据 commit；系统层只读核对 LaunchAgent / chromedriver 双缓存 / ops 4 脚本 / 2 cron
+- **Tracking**: SEC-1 LR-SEC-020 / SEC-2 LR-SEC-021 / SEC-3 LR-SEC-022（🟡，SEC-1 已登记入文档）; DOC-4~DOC-6 ✅ 已修; OPS-1~OPS-5 ⬜ 待 ops; OBS-5 🟢; findings_open 5
+- **状态**: ⏳ CONDITIONAL PASS — 80/100 (B)
+- **报告**: documents/reviews/llm-radar-ops-handoff-review-v1.0-20261023.md
+- **实现 prompt**: ⬜ 无需生成 (文档/运维交付；OPS-1~4 的 patch 已在报告 §10.2 给出)
+
+### 发现摘要
+
+| # | Severity | Title | Status |
+|---|----------|-------|--------|
+| SEC-1 / LR-SEC-020 | 🟡 | 常驻 CDP 9222（24/7 + 有效 X 登录态）= 全天候会话接管面，原文档 O-1~O-4 未覆盖 | ✅ 已登记 O-5 + §8 安全影响（方案 a/b 待决策） |
+| SEC-2 / LR-SEC-021 | 🟡 | /tmp/twitter-chrome.log 固定路径、644、2.1MB 无轮转（已核无凭据串） | ✅ 附录 A 注明；改 ~/Library/Logs 可选 |
+| SEC-3 / LR-SEC-022 | 🟡 | 留档校验只数 page target，不查 visibilityState / /login ⇒ hidden 空采与登录墙回归不可发现 | ✅ O-6 给判据；脚本待 ops |
+| DOC-4 | 🟡 | 17:35 假 FAIL 年龄口径混用（记录 4.1h vs 正文 3.9h）；「定时留档」实为两个已 disabled 的 once job | ✅ Fixed（改为实测日志值 + 调度实况） |
+| DOC-5 | 🟡 | O-4 只写 ~/.cache/selenium，漏主采集 ~/.wdm（今日 11 轮 0/6 正是 .wdm 侧 154 vs 156） | ✅ Fixed |
+| DOC-6 | 🟡 | collect-report §2.1 信源三分支口径不全（缺「部分失败」）+ reset 态未写 | ✅ Fixed |
+| OPS-1 | 🟡 | age 解析遇 `...Z` 在 py3.9 抛错被吞 ⇒ age=None ⇒ 陈旧告警静默失效（隔离副本 30h stale 输出 0 字节） | ⬜ 待 ops（最高优先） |
+| OPS-2 | 🟡 | 首败取 run_history 最早失败而非本轮连败起点（演练打出 10-20 首败） | ⬜ 待 ops |
+| OPS-3 | 🟡 | FRESH_HOURS=6.5 套两条管线（5h/6h），主采集余量仅 0.25h（实测正常峰值 ≈7.0h） | ⬜ 待 ops（建议主 7.5h） |
+| OPS-4 | 🟡 | driver 主版本不匹配只作根因行、不作触发条件（今日白等 2 轮） | ⬜ 待 ops |
+| OPS-5 | 🟢 | twitter-login-verify.py:12 docstring 仍写 <2h（改常量未同步） | ⬜ 待 ops |
+| OBS-5 | 🟢 | 生产 collect-report-state.json 从未生成 ⇒ 告警/恢复路径生产未触发，本次用隔离副本演练闭环 | ✅ 文档 §5 已注明 |
+
+### 数据验证要点
+
+- twitter.log: `grep -c 本轮无可用数据` = 214、`未找到 tweet 元素` = 2313（与文档逐字一致）；/tmp/twitter-chrome.log `Failed to decrypt` = 11。
+- X 侧: eff931a 98 条（11:25）、09d4dce/0fd08eb 各 300 条（10 账号 × 30）、1b2eef8 102 条（19:25，19:20 槽位）；冻结前 eff931a~1 = `2026-10-21T10:02:28Z` ✓。
+- 主采集: SCRAPERS 6 键（qbitai/jiqizhixin/infoq/36kr/github-trending/huggingface），`run_history[-1].source_rate`=1.0 ⇒ 6/6 ✓；source_health 另有 techcrunch/help=reset（历史残留键，不计分母）✓。
+- LaunchAgent: `launchctl print` state=running / pid=8334 / runs=2 / last exit code=0；`lsof` 9222 仅 127.0.0.1；cache/pids 空、pid 未变 ✓。
+- cookie: 复制库只查 name/expires —— auth_token 2027-10-23、ct0 2027-11-27、twid 2027-10-23，共 49 条 ✓（未打印任何值）。
+- 阈值实证: collector.log `01:40 距上次成功采集仅 6.0h，跳过` → `02:40` 真采；主采集节流 = llm-radar-collector.py:1898 `hours_since < 6`。
+- 今日事故: 09:40–18:40 每轮 `chromedriver 主版本 154 与本机 Chrome 156 不匹配` → 0/6，consecutive_fails 累至 11，快照 gen 03:02→11:03→19:03（告警若在: 09:55 stale、11:55 fails）。
+- 隔离副本演练（cache/scratch/simrepo，替换 REPO 常量）: 告警模板 5 行全成立 / 同指纹 0 字节 / 恢复模板成立且 state 转 active:false / `...Z` + 30h stale ⇒ 0 字节（fail-open 复现）。
+- git 状态: 评审开始时 clean + `origin/main...HEAD` = 0 0；reflog 仅 commit / Fast-forward，无 force；`git log --since=2026-10-22 -- AGENTS.md CLAUDE.md` 为空。
+- 未改任何数据产物 / 未跑全量测试；仅跑文档 §5/§6 的只读命令（--digest / --alert / launchctl print / lsof / log show）。
+
+---

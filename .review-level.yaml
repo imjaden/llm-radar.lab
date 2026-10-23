@@ -464,6 +464,15 @@ review_history:
     findings_open: 0
     tracking: 部署收尾审计 (843feb1/c678e70) — 无阻塞; conda_sh 对齐 Linux 路径 (/root/miniconda3) 正确 / cron 实况注记与源码 L2389 (CRON_SCHEDULE 非 Darwin '0 7,14,21') + COLLECTOR_LOG L63 一致 / 调度行为零改动; OBS-1 🟢 (.cli-registry.yaml 机器特定值入共享 origin, Mac wrapper 硬编码 conda 路径不受影响)
     report: documents/reviews/llm-radar-deploy-closeout-audit-20260909.md
+  - date: 2026-10-23
+    reviewer: Security Reviewer
+    review_level: L2
+    verdict: CONDITIONAL_PASS
+    score: 80
+    findings_total: 12
+    findings_open: 5
+    tracking: 2026-10-23 ops 交接评审 (b89b123/ae8b6e3/bc7fcae + 系统层 LaunchAgent/chromedriver/ops 脚本/2 cron) — 16 项事实复算一致; SEC-1 LR-SEC-020 常驻 CDP 9222 全天候会话接管面 (文档已登记 O-5) / SEC-2 LR-SEC-021 /tmp 可预测日志 / SEC-3 LR-SEC-022 留档校验缺 visibilityState+登录墙; DOC-4~DOC-6 已修并 push; OPS-1~OPS-5 待 ops (OPS-1 age 解析 fail-open 最高优先); 待确认 Q-1~Q-5
+    report: documents/reviews/llm-radar-ops-handoff-review-v1.0-20261023.md
 
 # ------------------------------------------------------------------
 # 注记 (2026-09-08 docs@sync): 以下 8 份 review 报告存在但未在 review_history 注册
