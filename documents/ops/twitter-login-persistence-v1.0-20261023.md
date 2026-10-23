@@ -98,10 +98,23 @@ bash scripts/twitter-collector-cron.sh --force
 python3 -c "import json;d=json.load(open('data/twitter.json'));print(d['generated_at'],len(d['targets']),sum(len(t['tweets']) for t in d['targets']))"
 ```
 
+## 6.1 定时留档（校验脚本）
+
+- 脚本：`~/.hermes/profiles/ops/scripts/llm-radar-twitter-login-verify.py`（`no_agent`，零 LLM）；
+  记录：`cache/records/twitter-login-persistence.log`（gitignored，append-only）；cron 用 `deliver=local` 只存档不发飞书。
+- 四项校验：数据（10 账号且每账号 >0、`generated_at` 年龄）、`git origin/main...HEAD = 0 0`、
+  调试 Chrome 主进程存活、CDP 有 page target。
+- **年龄阈值 `FRESH_HOURS=6.5`，必须大于 5h 节流**。X 侧是「每小时 :20 尝试 + `twitter.json` < 5h 跳过」⇒
+  正常年龄上限 ≈ 5h + 一轮耗时。2026-10-23 17:35 首次触发时阈值误写 2h：13:28 生成 → 17:20 槽位年龄 3.9h
+  属于**正常节流跳过**（当轮 cron 日志确有 `跳过: twitter.json 生成于 3.9h 前`），却被记成 FAIL；
+  同轮其余三项全 OK。已改 6.5h，17:46 重测 PASS（4.3h / 300 条 / git `0 0` / pid 8334 / page 1）。
+- 槽位推算口令：`generated_at + 5h` 之后的**首个 :20 才真采**（例：13:28 生成 → 18:20 仍跳过(4.87h) → 19:20 采(5.87h)）。
+
 ## 7. 观察项
 
 - **O-1 节流与本修复的关系**：X 侧 5h 节流不变（`:20` 每小时尝试、`twitter.json` < 5h 跳过），所以「每小时都能看到采集」
-  仍不成立，正常间隔 5–7h；判断回归不要用「今天只跑了一次」当证据。
+  仍不成立，正常间隔 5–7h；判断回归不要用「今天只跑了一次」当证据，也不要给新鲜度校验设 ≤5h 的阈值
+  （否则每一个被节流的整点都会被误判为失败）。
 - **O-2 崩溃兜底**：LaunchAgent KeepAlive 负责重拉；若 Chrome 连续崩溃退出（last exit code 非 0 且 runs 猛增），
   `ThrottleInterval 30` 会限速，需人工看 `/tmp/twitter-chrome.log`。
 - **O-3 登录态真实过期**：cookie 到 2027 年才过期；若未来真登出，仍按老办法在有头窗口登一次（`lr chrome` 或
