@@ -28,6 +28,7 @@
 - 主题说明（现行参考/骨架，手册 §参考文档 列明漂移点）：
   `emoji-mapping-v1.0-20260713.md`（根）、`pipeline/data-flow-v1.0-20260622.md`、
   `ops/linux-deployment-v1.0-20260701.md`、`ops/github-ci-issues-v1.0-20260704.md`、
+  `ops/twitter-login-persistence-v1.0-20261023.md`（cron Chrome 读不到 keychain ⇒ X 登录态失效；LaunchAgent 常驻 GUI 会话修复 + 验收证据）、
   `mcp/mcp-protocol-design-v1.0-20260623.md`、`integ/hermes-integration-v1.0-20260624.md`
 - 流程/交接件：`handoff/`（跨 profile 交接清单；.hermes-project.yaml 引用 ops 一份）
 - 治理/工作流面（仓库根或独立体系，不在本目录）：`review-log.md`、`.review-level.yaml`、
