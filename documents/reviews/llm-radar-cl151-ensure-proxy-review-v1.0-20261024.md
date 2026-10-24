@@ -11,6 +11,8 @@
   （`codesign` / `spctl` / `Info.plist` / `crontab -l`）
 - **结论**：**CONDITIONAL PASS — 86/100**（跳过语义与 `-g` 对齐成立；主要缺口 = 就绪判据在「已在运行」分支不探端口，
   与 CL151 §2/§3 偏差且此前未声明；重连分支补测前零覆盖）
+- **delta 复审结论**（2026-10-24 23:00，范围 `9662e3f`/`799ca8e`/`a9a83a0`）：**PASS — 93/100**；
+  SEC-1 / LR-SEC-023 与 DOC-2 已闭合，新增 RIG-1 / DOC-3 / TST-2 本批修复并验证（§11）
 
 ---
 
@@ -175,17 +177,25 @@ probe3 non-attach:  rc=1  start_driver_attempts=1  ensure_calls=0
 
 | # | Severity | 标题 | 状态 |
 |:--|:---:|:---|:---|
-| SEC-1 / LR-SEC-023 | 🟡 | 「在运行但 7890 关闭」不判未就绪 ⇒ 走采集失败（与 CL151 §3 偏差，未声明） | ⬜ 待确认 Q-1（建议 CL152）；文档已纠偏 |
+| SEC-1 / LR-SEC-023 | 🟡 | 「在运行但 7890 关闭」不判未就绪 ⇒ 走采集失败（与 CL151 §3 偏差，未声明） | ✅ **已闭合**（`799ca8e` 端口判据下推 + 短预算 `port_closed`；§11.1/§11.4/§11.6 复核） |
 | SEC-2 / LR-SEC-024 | 🟡 | cron 自动拉起 quarantine/adhoc 签名 app，Gatekeeper 摩擦被绕过且失败静默 | ⬜ 待用户接受（O-4 已登记） |
 | TST-1 | 🟡 | attach 重连分支零覆盖（删除逻辑 119 例全绿） | ✅ 已修（+5 例；变异 3/3 变红） |
 | DOC-1 | 🟡 | cron 头注释/日志、handbook §2.3、SKILL.md 仍写 `open -a` + 「未就绪 exit 1」 | ✅ 已修 |
-| DOC-2 | 🟡 | `TWITTER_FLCLASH_ENSURE=0` 语义漂移：python 入口仍拉起且不释放（FlClash 可常驻） | ✅ 已声明（O-5）+ 待确认 Q-2 |
+| DOC-2 | 🟡 | `TWITTER_FLCLASH_ENSURE=0` 语义漂移：python 入口仍拉起且不释放（FlClash 可常驻） | ✅ **已闭合**（Q-2：`799ca8e` 注入 `TWITTER_PROXY_NO_ENSURE=1`；本批补接线钉子 + 文档纠偏） |
 | OBS-1 | 🟢 | 跳过路径仍印 `❌ … 无法访问 X`（易被日志侧误判失败） | ✅ 已修为 `⏸️ … 本轮跳过` |
 | OBS-2 | 🟢 | 重连守卫近乎恒真（入口已 ensure）⇒ 等价无条件重试一次；锁持有期间可等 ensure ≤180s | ✅ 已记录（不改） |
 | OBS-3 | 🟢 | 同一轮 ensure 调 2~3 次（cron → python main → 重连）；已在运行分支零成本 | ✅ 已记录（不改） |
 | OBS-4 | 🟢 | `twitter-collector._is_flclash_running` 现仅被「两入口委托一致」测试使用 | ✅ 保留（有测试价值） |
+| RIG-1 | 🟡 | 端口两侧不同源（Q-1 使端口成硬门禁后新增的永久跳过路径） | ✅ 已修（本批：wrapper `export` + 采集器 `_flclash_port()`；N3/N4 变异验证） |
+| DOC-3 | 🟡 | ops §1/§4-3/O-5/O-6、handbook §2.3、SKILL、cron 头注释仍描述修复前行为 | ✅ 已修（本批） |
+| TST-2 | 🟡 | `RUNNING_PORT_GRACE` 默认值 + `ENSURE=0` 接线 两处零覆盖 | ✅ 已补 2 钉（N1/N2 变异验证） |
+| RIG-2 | 🟢 | `_flclash_owned` 用 `was_running` 而非 `started`（文述不符）+ µs 级竞态 | ⬜ 记录不改（建议另开一笔） |
+| OBS-5 | 🟢 | 10s 预算实测 10.21s（末次探针在 deadline 后） | ✅ 已记录 |
 
-findings_total = 9；findings_open = 2（SEC-1 待 CL152 / SEC-2 待接受）。
+findings_total = 14；findings_open = 1（SEC-2 待用户接受）；🟢 记录项 2（RIG-2 / OBS-5）。
+
+> **§delta 复审后的状态（2026-10-24 23:00）**：SEC-1 / LR-SEC-023 ✅、DOC-2 ✅ 已闭合；
+> 新增 RIG-1 / DOC-3 / TST-2 均已在本批修复并验证；判定升级为 **PASS 93/100**（§11.9）。
 
 ---
 
@@ -193,8 +203,8 @@ findings_total = 9；findings_open = 2（SEC-1 待 CL152 / SEC-2 待接受）。
 
 | # | 问题 | 建议 |
 |:--|:---|:---|
-| Q-1 | 是否把端口判据下推到 `already_running` 分支（CL151 §3 原口径）？涉及：`ensure_ready` 语义、cron 归属判定改 `ensure --json`、主采集海外源共用真源 | 建议 CL152 采纳；等待超时用短预算（如 ≤15s）+ 不改 `verify.wait` |
-| Q-2 | `TWITTER_FLCLASH_ENSURE=0` 是否保留？若保留，python 侧 `=0` 应退化为「只探测不拉起」（否则 FlClash 被拉起却无人释放） | 建议保留 + 退化；生产 cron 未设该变量（默认 1），可低优先 |
+| Q-1 | 是否把端口判据下推到 `already_running` 分支（CL151 §3 原口径）？涉及：`ensure_ready` 语义、cron 归属判定改 `ensure --json`、主采集海外源共用真源 | ✅ **已决策并落地**（`799ca8e`）：判据下推 + `RUNNING_PORT_GRACE=10s`；cron 采用「始终 ensure + `was_running` 定归属」（未用 `--json` 读 `started`，见 RIG-2） |
+| Q-2 | `TWITTER_FLCLASH_ENSURE=0` 是否保留？若保留，python 侧 `=0` 应退化为「只探测不拉起」（否则 FlClash 被拉起却无人释放） | ✅ **已决策并落地**（`799ca8e` + 本批接线钉子）；生产 cron 未设该变量（默认 1） |
 | Q-3 | O-1 是否需要「代理状态」进日报（长期静默跳过的唯一可见性来源） | 建议加（与 SEC-2 同一缓解） |
 
 ---
@@ -234,3 +244,151 @@ findings_total = 9；findings_open = 2（SEC-1 待 CL152 / SEC-2 待接受）。
 扣分集中在三处——就绪判据的「已在运行」分支不探端口（与 CL151 §3 偏差、此前未声明）、attach 重连分支补测前零覆盖、
 以及 `open -g` 拉起 adhoc/quarantine app 的可感知风险未文档化。以上均已按「能直接修的就修、需口径决策的挂待确认」处理：
 6 项文档/测试修订已提交 push，2 项行为变更留 Q-1/Q-2。
+
+> **状态变更（2026-10-24 23:00，delta 复审）**：Q-1/Q-2 已由 `799ca8e` 落地并经本报告 §11 复核 ——
+> **SEC-1 / LR-SEC-023 ✅ 已闭合、DOC-2 ✅ 已闭合**；本批复审另发现并修复 3 项（RIG-1 / DOC-3 / TST-2）。
+> 现行判定：**PASS 93/100**（见 §11）。
+
+---
+
+## 11. §delta — Q-1/Q-2 闭环复审（2026-10-24 22:20–23:00）
+
+- **复审范围**（`origin/main...HEAD` = `0 0`，全程无 force push）：
+  `9662e3f`（docstring 同步 `open -g`）、`799ca8e`（Q-1 端口判据 + Q-2 只探测，含 4 处测试）、
+  `a9a83a0`（ops 文档 §2b + 回执补实测）。
+- **方法**：逐行核对 5 处改动 → 变异矩阵 **14 组**（delta 自带 10 组 + 本批新增 4 组）→ mock 端口探针（不启 GUI/不建连）→
+  全量复跑 → 文档一致性 + 治理核对。
+- **结论**：**PASS 93/100**。Q-1/Q-2 的**行为**修得对，但 delta 自身引入 1 个新的永久跳过路径（RIG-1）与 1 套
+  自相矛盾的文档（DOC-3），且新增测试有 2 处零覆盖（TST-2）；三项均在本批复审**直接修复并验证**。
+
+### 11.1 请求 §1 逐项核对
+
+| # | 断言 | 代码位置 | 复核结果 |
+|:--|:---|:---|:---:|
+| 1 | `RUNNING_PORT_GRACE=10`；在运行 → 先探端口；不通 → 短预算轮询 → `port_closed` 且不发 `open` | `scripts/flclash_proxy.py:52,100-116` | ✅（探针 A/B：10.21s 返回 `port_closed`，外部命令调用 `[]`） |
+| 2 | cron 取消「在运行即 return 0」；`was_running` 决定 `OWNED_FLCLASH`；两种跳过文案；`ENSURE=0` 注入 `NO_ENSURE` | `scripts/twitter-collector-cron.sh:166-192,258-264` | ✅（变异 M3/M5/M6 全红） |
+| 3 | `TWITTER_PROXY_NO_ENSURE=1` ⇒ 只探测（进程 ∧ 端口）不拉起 + 打日志 | `scripts/twitter-collector.py:81-107` | ✅（变异 M9/M10 全红） |
+| 4 | 主采集 `if blocked:` + `was_running` ⇒ `_flclash_owned = not was_running` | `llm-radar-collector.py:1112-1131` | ✅（变异 M7/M8 全红） |
+| 5 | 4 处新增/改写测试 | `tests/test_flclash_proxy.py:155-168`、`test_twitter_cron.py:438-476`、`test_twitter_collector.py:995-1010`、`test_source_health_skip_semantics.py:187-201` | ✅ 存在且有效（判别力见 §11.4） |
+
+### 11.2 请求 §2.1：跳过风暴 —— 口径建议（不改代码）
+
+**实测成本**：X 侧 `:20` 每小时唤醒，但 **step 0 节流先于 step 1 代理**（`twitter-collector-cron.sh:240-250`，
+`TWITTER_THROTTLE_HOURS` 默认 **5h**）⇒ 「代理暂停、数据新鲜」时**根本到不了 ensure**，等 0s。
+只有「节流已过（数据 ≥5h）」的轮次才付 `RUNNING_PORT_GRACE`：实测 **10.21s/轮**，即 **≤10.2s/h ≈ 4min/天**；
+主采集 `:40` 同为 10.21s/轮、且每轮只调一次（`fetch_all` 内单点）。两者都是后台 cron，无用户可感。
+
+**建议口径（三层，全部不违背 R1）**：
+
+| 场景 | 是否告警 | 理由 |
+|:---|:---|:---|
+| FlClash 未运行（本轮也没拉起来） | **不上报** | 维持 R1 原口径（用户主动关代理是合法状态） |
+| FlClash 在运行但端口不通，**且 X 数据仍新鲜（<2× 节流阈值）** | **不上报** | 与「未运行」同属环境未就绪；10.2s 成本可忽略，逐轮告警会变成整点刷屏 |
+| 同上，但 **X 数据年龄 > 2× 节流阈值（默认 10h）** | **上报一次（降噪指纹）** | 这才是「在跑却不通」的真实后果：永久静默跳过。用数据年龄作判据可复用现成阈值，避免新增状态机 |
+
+落地面在 ops 侧（仓外只读核对）：`~/.hermes/profiles/ops/scripts/llm-radar-collect-report.py` 的
+`alert_reasons()` **只看主快照 age / consecutive_fails / degraded**（L214-222），**完全没有 X 侧判据**；
+digest 里 X 只有一行「N 账号・M 条（hh:mm 采）」（L204）。⇒ 建议另开一笔：给 `alert_reasons` 加 `x_stale`
+（`data/twitter.json.generated_at` 年龄 > 2×`TWITTER_THROTTLE_HOURS`）+ digest 该行补 age 与 ⚠️。
+**不建议**把「port_closed」做成逐轮 reason（会与 R1「不当异常」冲突，且与现有指纹去重机制不匹配）。
+
+### 11.3 请求 §2.2：主采集侧影响（`_flclash_owned = not was_running`）
+
+| 子问题 | 判定 | 依据 |
+|:---|:---:|:---|
+| 采集期间端口断开 ⇒ 「未拉起却释放」？ | ❌ 不会 | `owned=True` 仅当 `was_running=False` ∧ `ensure.ok`；端口断了不影响 flag；`release()` 对已退出进程返回 `{'ok': True, 'reason': 'not_running'}`（`flclash_proxy.py:142-143`），**幂等** |
+| 「反之」（拉起却不释放）？ | ⚠️ 仅 µs 级竞态 | 检查 `was_running=True` 后、`ensure` 自己的 `is_running()` 之前进程若退出 ⇒ ensure 会 `open`（`started=True`）但 `owned=False` ⇒ 不释放（孤儿实例）。反向：检查 `False` 后用户手动打开 ⇒ `owned=True` ⇒ 本轮结束误释放用户实例。两向都由「读 `started`」消除（见 RIG-2） |
+| `release_flclash_if_owned()` 幂等 | ✅ 成立 | `_flclash_owned = False` 在调用 `_release_flclash()` **之前**置位（`llm-radar-collector.py:1167-1172`）⇒ 重入直接返回 False；`run()` L2235 与 CLI `fetch` L3099 双调用点安全 |
+
+### 11.4 请求 §2.3：10s 预算 + 与 `verify.wait=180s` 的关系
+
+mock 端口探针（`cache/scratch/cl151_grace_probe.py`，无 GUI、无真实连接）：
+
+```
+A 端口恒不通 : {'ok': False, 'reason': 'port_closed', 'port': 7890}  实测 10.21s   外部命令调用 []
+B 第3次就绪  : {'ok': True,  'reason': 'already_running'}            实测  4.14s   （覆盖「刚 open 完端口未 LISTEN」窗口）
+C 非默认端口 : {'ok': False, 'reason': 'port_closed', 'port': 7899}  实测 10.28s
+```
+
+- **够不够**：够用于设计目标（代理暂停），因为「刚 `open` 完」的窗口在**同一轮**由 180s 分支覆盖；跨轮次撞上该窗口只可能是
+  上一轮在 180s 内被杀/超时（Gatekeeper 对话框），此时 10s 判未就绪 → 跳过，语义正确（下轮重试）。
+- **会不会太久**：单轮 10.21s（`RUNNING_PORT_GRACE` + 最后一次探针，超预算 ≈0.2s），相对 180s 与 6h 节流可忽略。
+- **取值约束已锁**：`>0` ∧ `≥3×POLL_INTERVAL` ∧ `<READY_TIMEOUT/4`（`test_running_port_grace_is_declared_and_bounded`）。
+- **文档**：`verify.wait=180s` 与 10s 的**分工**此前只在代码注释里，已补进 ops 文档 §2b「预算关系」段（本批）。
+
+### 11.5 请求 §2.4：测试判别力（变异实测 14 组）
+
+delta 自带钉子（变异施加在 `799ca8e` 的代码上，只跑受影响文件）：
+
+| 变异 | 位置 | 结果 |
+|:---|:---|:---|
+| M1 `RUNNING_PORT_GRACE` 10→0 | `flclash_proxy.py` | **19 passed ⇒ 零判别**（该用例显式传 `running_grace=0.05`，默认常量无人管）🟡 → TST-2 |
+| M2 删 `port_closed` 分支（恢复旧短路） | 同上 | 1 failed ✅ |
+| M3 cron「在运行即 `return 0`」 | `twitter-collector-cron.sh` | 2 failed ✅ |
+| M4 删 `export TWITTER_PROXY_NO_ENSURE=1` | 同上 | **1 passed ⇒ 零判别**（只测了采集器侧分支，没测 wrapper→采集器接线）🟡 → TST-2 |
+| M5 成功一律 `OWNED_FLCLASH=1` | 同上 | 1 failed ✅ |
+| M6 「在运行但不可达」文案回落通用版 | 同上 | 1 failed ✅ |
+| M7 `_flclash_owned = True` | `llm-radar-collector.py` | 1 failed ✅ |
+| M8 `was_running = False` | 同上 | 1 failed ✅ |
+| M9 删采集器 `NO_ENSURE` 分支 | `twitter-collector.py` | 1 failed ✅ |
+| M10 `NO_ENSURE` 恒就绪（不探端口） | 同上 | 1 failed ✅ |
+
+本批新增 4 钉的判别力（变异施加在**含修复**的副本上）：
+
+| 变异 | 期望变红的钉子 | 结果 |
+|:---|:---|:---|
+| N1 `RUNNING_PORT_GRACE=0` | `test_running_port_grace_is_declared_and_bounded` | **1 failed** ✅ |
+| N2 删 `export TWITTER_PROXY_NO_ENSURE=1` | `test_flclash_ensure_disabled_exports_probe_only_flag` | **1 failed** ✅ |
+| N3 删 `export TWITTER_FLCLASH_PORT` | 上述 + `test_flclash_started_then_released` | **2 failed** ✅ |
+| N4 采集器忽略 `TWITTER_FLCLASH_PORT` | `test_flclash_port_env_is_honored` / `test_no_ensure_mode_probes_same_port` | **2 failed** ✅ |
+
+复跑：`tests/` 全量（非 selenium，ignore test_cli/test_selenium）⇒ **329 passed, 2 deselected**（324 + 本批 5 钉）；
+跑后 `git checkout -- data/snapshot.json overview.json timestamp.json` 已还原（`git status` 无数据产物）。
+
+### 11.6 安全复核（🟡 SEC-1 闭合依据）
+
+| 判定项 | 结论 |
+|:---|:---:|
+| 「在运行但 7890 关闭」现在判未就绪 → 跳过（exit 0、不计连败、不通知） | ✅ 闭合（SEC-1 / LR-SEC-023） |
+| 端口不通时**不重复拉起**（避免双实例/配置互踩） | ✅ 探针 A 外部命令 `[]`；M2 变异即变红 |
+| `ENSURE=0` 不再「拉起后常驻」 | ✅ 闭合（DOC-2）；且接线已有钉子（N2） |
+| 新增代码的注入面 | 🟢 无（仍是固定 argv；cron 只新增两个 `export`，值为已校验的整数/端口串） |
+| 凭据/敏感面 | 🟢 未变（日志仅端口/pid/超时值） |
+
+### 11.7 本批复审发现与处置
+
+| # | Severity | 发现 | 处置 |
+|:--|:---:|:---|:---|
+| RIG-1 | 🟡 | **端口两侧不再同源**：Q-1 让端口成为硬门禁后，wrapper 用 `TWITTER_FLCLASH_PORT`、采集器却恒探 `READY_PORT(7890)`。设 `TWITTER_FLCLASH_PORT=7899`（文档公开的环境变量）⇒ wrapper 通过、采集器 10s 后 `port_closed` ⇒ **每轮静默跳过、永不采集**（Q-1 前被「在运行即 ok」掩盖） | ✅ 已修：wrapper `export TWITTER_FLCLASH_PORT`；采集器 `_flclash_port()` 读同一变量（非法值回退默认并告警）+ 3 例回归 |
+| DOC-3 | 🟡 | **文档自相矛盾**：`a9a83a0` 只在 ops 文档**追加** §2b，§1 四口径表、§4 差异 3、§5 O-5/O-6 仍写「已在运行不探端口 / 待决策 / 仍会拉起不释放」；`handbook §2.3`、`skills/x-twitter-collector/SKILL.md`、cron 头注释同款（上一轮 DOC-1/DOC-2 的同一类漂移复发） | ✅ 已修：§1/§4-3/O-5/O-6 就地改写并标注历史、handbook/SKILL/cron 头注释同步 |
+| TST-2 | 🟡 | 2 处零覆盖：`RUNNING_PORT_GRACE` 默认值无人断言（改 0 全绿）；`ENSURE=0` 的 `export` 无接线测试（删掉全绿） | ✅ 已补：`test_running_port_grace_is_declared_and_bounded` + `test_flclash_ensure_disabled_exports_probe_only_flag`（N1/N2 变异验证） |
+| RIG-2 | 🟢 | `_flclash_owned` 用 `was_running` 而非真源 `started`（ops §2b 文述与实现不符）+ 两个 µs 级竞态（误释放用户实例 / 拉起不释放） | ⬜ 记录不改（改动需变 `_ensure_flclash_ready` 返回契约，3 个调用点受影响）；建议后续 `owned = res['started']` |
+| OBS-5 | 🟢 | 10s 预算实际 10.21s（末次探针在 deadline 之后跑），文案「10s 内不可达」略保守 | ✅ 已记录（§11.4）；不影响语义 |
+
+### 11.8 治理核对
+
+- `git rev-list --left-right --count origin/main...HEAD` 全程 `0 0`；`git reflog -30` 无 `force`/`amend`。
+- `git log --since=2026-10-20 -- AGENTS.md CLAUDE.md` = **0 条**（未改 `AGENTS.md`）。
+- `crontab -l` 未变（`:40` 主采集 / `:20` X），未设 `TWITTER_FLCLASH_ENSURE`（生产走默认 1）⇒ 本批修复对生产为纯行为增强。
+- 真机侧**未启动 FlClash**（评审开始时 `pgrep -x FlClash` 空、7890 未监听）⇒ 请求 §3 的
+  `ensure --port 7899` **未重跑**（该命令在「未运行」时会拉起用户 app）；改用 mock 端口探针（§11.4）+
+  沿用 ops §2b 的真机证据（`{"ok": false, "reason": "port_closed", "pids": [67192, 67199]}`）。
+
+### 11.9 delta 评分
+
+| 维度 | 权重 | 得分 | 依据 |
+|:---|:---:|:---:|:---|
+| Q-1 语义正确性（进程在≠代理通） | 25 | 24 | 两分支都探端口、不重复拉起；扣 1：端口同源缺口（RIG-1，已修） |
+| Q-2 语义正确性（`ENSURE=0` 只探测） | 15 | 14 | 只探测分支实现正确；扣 1：接线零覆盖（TST-2，已补） |
+| 归属判定（不误杀外部实例） | 15 | 13 | `was_running` 主路径正确、`release` 幂等；扣 2：与文述不一致 + 竞态（RIG-2） |
+| 测试判别力 | 20 | 17 | 自带钉子 8/10 命中；2 缺口已补（N1–N4 全红） |
+| 文档一致性 | 15 | 11 | ops 文档自相矛盾 + handbook/SKILL/cron 头注释残留旧行为（DOC-3，已修） |
+| 安全 | 10 | 9 | 无注入/凭据面；SEC-1 已闭合 |
+| **合计** | **100** | **93** | **PASS** |
+
+### 11.10 建议再开一笔（非阻塞）
+
+1. **ops 侧 X 陈旧告警**（§11.2）：`llm-radar-collect-report.py` 的 `alert_reasons()` 加 `x_stale`
+   （`twitter.json` 年龄 > 2×`TWITTER_THROTTLE_HOURS`），digest 的 X 行补 age/⚠️。
+2. **归属判定改读 `started`**（RIG-2）：`_ensure_flclash_ready()` 返回完整 dict，`owned = bool(res['started'])`，
+   顺带把「拉起但未就绪」的实例纳入释放（当前会留孤儿 FlClash）。

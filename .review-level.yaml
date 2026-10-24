@@ -482,6 +482,15 @@ review_history:
     findings_open: 2
     tracking: '2026-10-24 CL151 ensure-proxy 实现评审 (0044fb5/1c2e21b) — 跳过语义与 -g 对齐成立, 变异 6/6 命中; SEC-1 LR-SEC-023 就绪判据 already_running 分支不探 7890 (与 CL151 §3 偏差, 已声明 O-6); SEC-2 LR-SEC-024 cron 拉起 quarantine+adhoc 签名 app (O-4); TST-1 重连分支零覆盖已补 5 例; DOC-1/DOC-2 已修; 待确认 Q-1~Q-3'
     report: documents/reviews/llm-radar-cl151-ensure-proxy-review-v1.0-20261024.md
+  - date: 2026-10-24
+    reviewer: Security Reviewer
+    review_level: L2
+    verdict: PASS
+    score: 93
+    findings_total: 6
+    findings_open: 1
+    tracking: '2026-10-24 CL151 Q-1/Q-2 闭环 delta 复审 (9662e3f/799ca8e/a9a83a0) — SEC-1 LR-SEC-023 已闭合 + DOC-2 已闭合; 新增 RIG-1 端口两侧不同源 / DOC-3 文档自相矛盾 / TST-2 两处零覆盖, 均本批修复; RIG-2 归属判定用 was_running 非 started (🟢 记录) + OBS-5 10.21s 实测 (🟢); SEC-2 LR-SEC-024 仍待用户接受; 变异 14 组: 自带 8/10 命中, 新 4 钉全红; 全量 329 passed / 2 deselected'
+    report: documents/reviews/llm-radar-cl151-ensure-proxy-review-v1.0-20261024.md
 
 # ------------------------------------------------------------------
 # 注记 (2026-09-08 docs@sync): 以下 8 份 review 报告存在但未在 review_history 注册

@@ -1622,3 +1622,38 @@
 - git：评审开始 `origin/main...HEAD` = `0 0`；reflog 全为普通 commit（无 force/amend）；`git log --since=2026-10-20 -- AGENTS.md CLAUDE.md` 为空。
 
 ---
+
+## 2026-10-24 — CL151 Q-1/Q-2 闭环 delta 复审 (9662e3f + 799ca8e + a9a83a0)
+
+- **review者**: Security Reviewer (review profile)
+- **范围**: 已 push `9662e3f`（docstring 同步 `open -g`）/ `799ca8e`（Q-1 端口判据 + Q-2 只探测 + 4 处测试）/ `a9a83a0`（ops §2b + 回执补实测）；`origin/main...HEAD` = `0 0`
+- **Tracking**: SEC-1 LR-SEC-023 ✅ **已闭合**; DOC-2 ✅ **已闭合**; 新增 RIG-1 🟡 / DOC-3 🟡 / TST-2 🟡（均本批修复）; RIG-2 / OBS-5 🟢 记录; SEC-2 LR-SEC-024 仍 ⬜ 待用户接受; findings_open 1
+- **状态**: ✅ PASS — 93/100（delta 评分，见报告 §11.9）
+- **报告**: documents/reviews/llm-radar-cl151-ensure-proxy-review-v1.0-20261024.md（**追加 §11 delta**，未新开文件）
+- **实现 prompt**: ⬜ 无需生成（PASS；两项非阻塞建议见报告 §11.10，其中 ops 侧告警属另仓）
+
+### 发现摘要
+
+| # | Severity | Title | Status |
+|---|----------|-------|--------|
+| SEC-1 / LR-SEC-023 | 🟡 | 就绪判据「已在运行」分支不探端口 ⇒ 代理暂停时走采集失败 | ✅ **闭合**（`799ca8e`：先探端口 + 10s 短预算 + `port_closed` 不拉起；探针实测 10.21s / 外部命令 `[]`） |
+| DOC-2 | 🟡 | `TWITTER_FLCLASH_ENSURE=0` 语义漂移（python 入口仍拉起且不释放） | ✅ **闭合**（`799ca8e` 注入 `TWITTER_PROXY_NO_ENSURE=1`；本批补 wrapper→采集器接线钉子） |
+| RIG-1 | 🟡 | 端口两侧不同源：Q-1 使端口成硬门禁后，`TWITTER_FLCLASH_PORT=7899` 会被 wrapper 放过、采集器按默认 7890 判 `port_closed` ⇒ 每轮静默跳过、永不采集 | ✅ 已修（wrapper `export TWITTER_FLCLASH_PORT` + 采集器 `_flclash_port()`；N3/N4 变异变红） |
+| DOC-3 | 🟡 | ops 文档 §1/§4-3/O-5/O-6、handbook §2.3、SKILL、cron 头注释仍描述修复前行为（`a9a83a0` 只追加 §2b，没改既有断言） | ✅ 已修（本批就地改写 + 标注历史） |
+| TST-2 | 🟡 | 两处零覆盖：`RUNNING_PORT_GRACE` 改 0 全绿；删 `export TWITTER_PROXY_NO_ENSURE=1` 全绿 | ✅ 已补 2 钉（`test_running_port_grace_is_declared_and_bounded` / `test_flclash_ensure_disabled_exports_probe_only_flag`） |
+| RIG-2 | 🟢 | `_flclash_owned` 用 `was_running` 而非真源 `started`（ops §2b 文述与实现不符）+ 两个 µs 级竞态 | ⬜ 记录不改（建议后续 `owned = res['started']`） |
+| OBS-5 | 🟢 | 10s 预算实际 10.21s（末次探针在 deadline 之后） | ✅ 已记录 |
+| SEC-2 / LR-SEC-024 | 🟡 | cron 拉起 quarantine + adhoc 签名 app（上一轮遗留） | ⬜ 待用户接受（O-4） |
+
+### 数据验证要点
+
+- 逐项核对请求 §1 的 5 项改动 → 全部落地（报告 §11.1 表）；请求 §2 四问 → §11.2/§11.3/§11.4/§11.5。
+- 变异矩阵 14 组（全部真跑）：delta 自带钉子 **8/10 命中**（M2/M3/M5/M6/M7/M8/M9/M10 红），2 缺口（M1 `RUNNING_PORT_GRACE` 改 0、M4 删 `NO_ENSURE` 注入）⇒ 已补钉，新 4 钉在 N1–N4 变异下 **1/1/2/2 failed**。
+- mock 端口探针（未启 GUI / 无真实连接）：端口恒不通 ⇒ `port_closed` **10.21s** 且外部命令调用 `[]`（不二次拉起）；第 3 次探测起来 ⇒ `already_running` **4.14s**；`port=7899` ⇒ 响应含 `"port": 7899`。
+- 复跑：全量（非 selenium）**329 passed, 2 deselected**（324 + 本批 5 钉）；跑后 `git checkout -- data/snapshot.json overview.json timestamp.json` 已还原。
+- 主采集归属：`release_flclash_if_owned()` 先清 flag 再释放 ⇒ 幂等成立；`release()` 对已退出进程返回 `not_running` ⇒「端口中途断开」不会造成误动作。
+- 真机侧**未启动 FlClash**（`pgrep -x FlClash` 空、7890 未监听）⇒ 请求 §3 的 `ensure --port 7899` 未重跑（会拉起用户 app），改用 mock 探针 + 沿用 ops §2b 真机证据。
+- 治理：reflog 无 force/amend；`git log --since=2026-10-20 -- AGENTS.md CLAUDE.md` = 0 条；`crontab -l` 未变（`:40` / `:20`），未设 `TWITTER_FLCLASH_ENSURE`。
+- 注：`documents/handoff/cl151-ensure-proxy-receipt-20261024.md` 评审期间出现**并发未提交改动**（ops 侧在改 SC1–SC5 状态表），本批按路径提交、未触碰该文件。
+
+---
