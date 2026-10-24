@@ -30,6 +30,7 @@
   `ops/linux-deployment-v1.0-20260701.md`、`ops/github-ci-issues-v1.0-20260704.md`、
   `ops/twitter-login-persistence-v1.0-20261023.md`（cron Chrome 读不到 keychain ⇒ X 登录态失效；LaunchAgent 常驻 GUI 会话修复 + 验收证据）、
   `ops/collect-report-notify-v1.0-20261023.md`（采集报告飞书日报/异常告警模板定稿 + 阈值去重 + cron 清单）、
+  `ops/cl151-ensure-proxy-v1.0-20261024.md`（代理按需开启 ensure-proxy：四口径对照 + SC 实测 + 与上游差异），
   `mcp/mcp-protocol-design-v1.0-20260623.md`、`integ/hermes-integration-v1.0-20260624.md`
 - 流程/交接件：`handoff/`（跨 profile 交接清单；.hermes-project.yaml 引用 ops 一份）
 - 治理/工作流面（仓库根或独立体系，不在本目录）：`review-log.md`、`.review-level.yaml`、
