@@ -161,7 +161,7 @@ def test_ensure_ready_starts_and_waits_for_port(fp, monkeypatch):
     monkeypatch.setattr(fp, 'flclash_pids', lambda: [7])
     res = fp.ensure_ready(timeout=1, port=fp.READY_PORT)
     assert res['ok'] is True and res['started'] is True and res['reason'] == 'started'
-    assert fp.rec.issued('open -a FlClash'), '未发出启动命令'
+    assert fp.rec.issued('open -g -a FlClash'), '未发出启动命令 (CL151 要求 -g 不抢焦点)'
 
 
 def test_ensure_ready_times_out_when_port_never_listens(fp, monkeypatch):
@@ -271,7 +271,9 @@ def test_commands_and_thresholds_match_declaration_policy(fpreal):
     def seconds(text):
         return float(str(text).rstrip('s'))
 
-    assert fpreal.START_CMD == tuple(shlex.split(restart['start']))
+    # 上游 policy 与 CL151 口径一致 = `open -g -a FlClash`; 本仓曾漏 `-g`(已对齐), 此断言防再次漂移
+    assert fpreal.START_CMD == tuple(shlex.split(restart['start'])), fpreal.START_CMD
+    assert '-g' in fpreal.START_CMD
     assert fpreal.STOP_CMD == tuple(shlex.split(restart['stop']))
     assert fpreal.READY_PORT == int(restart['verify']['ports'][0])
     assert fpreal.READY_TIMEOUT == seconds(restart['verify']['wait'])

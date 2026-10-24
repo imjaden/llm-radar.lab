@@ -240,7 +240,11 @@ fi
 
 # ===== 1) FlClash 代理 =====
 if [ "$FLCLASH_ENSURE" = "1" ]; then
-  ensure_flclash || exit 1
+  # CL151: 就绪失败 ⇒ 本轮静默跳过（跳过 ≠ 失败: 不计连败、不告警、不发通知）
+  if ! ensure_flclash; then
+    echo "[twitter-cron] ⏸️  跳过本轮: FlClash 代理未就绪 (非异常, 不计失败; CL151)"
+    exit 0
+  fi
 else
   echo "[twitter-cron] TWITTER_FLCLASH_ENSURE=0, 不管理 FlClash 生命周期"
 fi

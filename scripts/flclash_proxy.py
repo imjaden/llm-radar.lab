@@ -7,7 +7,9 @@
 命令与阈值口径对齐**声明层真源**(跨项目只读引用, 不在本仓另立一套):
   /Users/jadenli/CodeSpace/script-miner/projects/macosx/macosx-service-policy.json
   `services[FlClash].restart` = stop `osascript -e 'quit app "FlClash"'` / grace 20s /
-  force_fallback `kill -TERM {pid}` / start `open -a FlClash` / verify `{ports:[7890], wait:180s}`。
+  force_fallback `kill -TERM {pid}` / start `open -g -a FlClash` / verify `{ports:[7890], wait:180s}`。
+  ⚠️ 历史上本仓 START_CMD 少了 `-g`（与上游 policy 及 daily-checker CL151 口径均不符），
+  2026-10-23 已对齐为 `open -g -a FlClash`（`-g` = 不抢焦点，采集可能在用户前台工作时触发）。
 
 检测口径(勿改回单一 `pgrep -f` + 应用名): 形如 `osascript -e 'quit app "FlClash"'` 的进程
 命令行里同样出现 "FlClash" ⇒ `-f` 会把它自己命中, 产生**假阳性**(判"在跑"却没跑)。
@@ -35,7 +37,7 @@ import time
 
 APP_NAME = 'FlClash'
 APP_PATH = '/Applications/FlClash.app'
-START_CMD = ('open', '-a', APP_NAME)
+START_CMD = ('open', '-g', '-a', APP_NAME)   # -g: 不抢焦点 (CL151)
 STOP_CMD = ('osascript', '-e', 'quit app "FlClash"')
 NOTIFY_CMD = ('osascript', '-e',
               'display notification "采集 X 数据需启动 flClash 应用" with title "llm-radar"')

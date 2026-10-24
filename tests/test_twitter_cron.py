@@ -468,14 +468,15 @@ def test_flclash_release_failure_warns(sandbox):
     assert '[stub-collector] run' in out, '释放失败不得影响采集结果'
 
 
-def test_flclash_start_not_ready_exits_1(sandbox):
-    """helper ensure 报未就绪 → exit 1, 且不进入采集 (不拉起 Chrome)。"""
+def test_flclash_start_not_ready_skips_round(sandbox):
+    """helper ensure 报未就绪 → 静默跳过本轮 (exit 0, 不计失败), 且不进入采集 (不拉起 Chrome)。CL151 SC4。"""
     (sandbox['state'] / 'flclash.no_ready').write_text('1', encoding='utf-8')
     env = env_for(sandbox, TWITTER_FLCLASH_ENSURE='1', TWITTER_FLCLASH_READY_TIMEOUT='2')
     r = run_cron(sandbox, env)
     out = r.stdout + r.stderr
-    assert r.returncode == 1, out
+    assert r.returncode == 0, out
     assert '未 LISTEN, 无法访问 X' in out
+    assert '跳过本轮: FlClash 代理未就绪' in out
     assert 'ensure --timeout 2 --port 7890' in flclash_calls(sandbox)
     assert '[stub-collector] run' not in out
     assert _pids() == []

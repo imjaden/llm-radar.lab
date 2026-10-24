@@ -938,7 +938,7 @@ class TestLoginNotify:
 
     def _run(self, tc, monkeypatch, rc):
         calls = []
-        monkeypatch.setattr(tc, '_is_flclash_running', lambda: True)
+        monkeypatch.setattr(tc, '_ensure_proxy_ready', lambda *a, **k: True)
         monkeypatch.setattr(tc, 'load_config', lambda: [
             {'name': 'a', 'handle': 'a', 'url': 'https://x.com/a',
              'enabled': True, 'max_tweets': 30}])
@@ -961,3 +961,32 @@ class TestLoginNotify:
     def test_notifier_noop_off_darwin(self, tc, monkeypatch):
         monkeypatch.setattr(tc.platform, 'system', lambda: 'Linux')
         assert tc._notify_login_required() is False
+
+
+# ===== CL151: 代理未就绪 ⇒ 跳过本轮 (exit 0, 不通知, 不采集) =====
+
+class TestProxyEnsureSkip:
+    def test_proxy_not_ready_skips_without_notify(self, tc, monkeypatch):
+        calls = []
+        monkeypatch.setattr(tc, '_ensure_proxy_ready', lambda *a, **k: False)
+        monkeypatch.setattr(tc, 'load_config', lambda: [
+            {'name': 'a', 'handle': 'a', 'url': 'https://x.com/a',
+             'enabled': True, 'max_tweets': 30}])
+        monkeypatch.setattr(tc, 'cmd_collect', lambda *a, **k: calls.append('collect') or 0)
+        monkeypatch.setattr(tc, '_notify_login_required', lambda: calls.append('notify'))
+        got = tc.main(['--collect'])
+        assert got == 0, '代理未就绪应静默跳过 (exit 0), 不得记为失败'
+        assert calls == [], f'跳过时不得进入采集或发通知: {calls}'
+
+    def test_ensure_proxy_ready_delegates_to_helper(self, tc, monkeypatch):
+        seen = {}
+        monkeypatch.setattr(tc, '_flclash_ensure_ready',
+                            lambda **k: (seen.update(k), {'ok': True})[1])
+        assert tc._ensure_proxy_ready() is True
+        assert seen == {}, '默认不得覆盖真源预算'
+
+    def test_ensure_proxy_ready_false_on_helper_error(self, tc, monkeypatch):
+        def boom(**k):
+            raise RuntimeError('helper gone')
+        monkeypatch.setattr(tc, '_flclash_ensure_ready', boom)
+        assert tc._ensure_proxy_ready() is False

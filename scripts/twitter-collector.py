@@ -41,12 +41,12 @@ except ImportError:  # pragma: no cover
     yaml = None
 
 
-# FlClash 探测唯一真源 = scripts/flclash_proxy.py
+# FlClash 探测/就绪唯一真源 = scripts/flclash_proxy.py
 # 本文件在 scripts/ 下, 脚本直跑时 sys.path[0] 已是此处; 但测试用 importlib 从别处加载 ⇒ 显式注入一次。
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from flclash_proxy import (  # noqa: E402  (须在 sys.path 注入之后)
+    ensure_ready as _flclash_ensure_ready,
     is_running as _flclash_is_running,
-    notify_required as _flclash_notify_required,
 )
 
 
@@ -59,12 +59,19 @@ def _is_flclash_running():
     return _flclash_is_running()
 
 
-def _notify_flclash_required():
-    """macOS 本地通知: 提示启动 FlClash (best-effort, 失败静默)。
+def _ensure_proxy_ready(timeout=None):
+    """确保代理就绪（CL151: 采集入口与 CDP 断连重连两处都调）。
 
-    真源: scripts/flclash_proxy.py::notify_required (非 Darwin 直接返回 False)。
+    已在运行 → 立即 True（不做任何动作）; 未运行 → `open -g -a FlClash` 并等端口可连。
+    超时预算默认沿用真源 READY_TIMEOUT(180s, 对齐上游 verify.wait)。
     """
-    return _flclash_notify_required()
+    kwargs = {} if timeout is None else {'timeout': timeout}
+    try:
+        return bool(_flclash_ensure_ready(**kwargs).get('ok'))
+    except Exception as e:  # noqa: BLE001  真源不可用时不阻塞采集判定
+        print(f'[twitter-collector] ⚠️  代理就绪探测异常: {type(e).__name__}: {e}',
+              file=sys.stderr)
+        return False
 
 
 def _notify_login_required():
@@ -873,8 +880,17 @@ def cmd_collect(targets, profile_dir, cdp_port=None):
         try:
             driver = start_driver(profile_dir, headed=False, cdp_port=cdp_port)
         except FetchError as e:
-            print(f'[twitter-collector] ❌ {e}', file=sys.stderr)
-            return 1
+            # CL151: CDP 断连重连点 —— 先确保代理就绪, 再重试一次 attach
+            if not cdp_port or not _ensure_proxy_ready():
+                print(f'[twitter-collector] ❌ {e}', file=sys.stderr)
+                return 1
+            print('[twitter-collector] ℹ️  代理已就绪, 重试 attach 调试 Chrome…')
+            try:
+                driver = start_driver(profile_dir, headed=False, cdp_port=cdp_port)
+            except FetchError as e2:
+                print(f'[twitter-collector] ❌ 代理就绪后仍无法连接调试 Chrome: {e2}',
+                      file=sys.stderr)
+                return 1
         results = []
         login_wall = False
         challenge_streak = 0          # RIG-2: 连续验证挑战计数
@@ -996,12 +1012,11 @@ def main(argv=None):
         commit_and_push(0)
         return 0
 
-    # 检测 FlClash 代理（X 需要）; macOS 未运行时发本地通知提醒
-    if not _is_flclash_running():
-        _notify_flclash_required()
-        print('[twitter-collector] ❌ FlClash 未运行，无法访问 X (exit 1)',
-              file=sys.stderr)
-        return 1
+    # FlClash 代理（X 需要）: 按需拉起（CL151）; 就绪失败 ⇒ 本轮跳过（不计失败/不通知/exit 0）
+    if not _ensure_proxy_ready():
+        print('[twitter-collector] ⏸️  跳过本轮: FlClash 代理未就绪'
+              ' (非异常, 不计失败; 见 daily-checker CL151)', file=sys.stderr)
+        return 0
 
     cdp_port = None
     if mode == 'attach':
