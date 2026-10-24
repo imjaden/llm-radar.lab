@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-24T13:05:34Z",
+  "generated_at": "2026-10-24T18:25:30Z",
   "retention": "30/24h",
   "targets": [
     {
@@ -8,27 +8,125 @@
       "url": "https://x.com/dhh",
       "tweets": [
         {
-          "id": "2113978379976450421",
-          "text": "\"The pace, and the expectations that came with it, felt almost as jarring [in China] compared with America as America's pace does compared with Europe. Everyone was just on it, all the time.\"",
+          "id": "2114019501255569724",
+          "text": "A beautiful jade theme to celebrate the year of the horse. https:// github.com/dhh/omarchy-ja de-horse-theme …",
           "forward": null,
-          "posted_at": "2026-10-24T12:58:16Z",
-          "url": "https://x.com/dhh/status/2113978379976450421",
-          "views": 1055,
-          "replies": 2,
-          "retweets": 0,
-          "likes": 11,
+          "posted_at": "2026-10-24T15:41:40Z",
+          "url": "https://x.com/dhh/status/2114019501255569724",
+          "views": 22468,
+          "replies": 47,
+          "retweets": 16,
+          "likes": 586,
           "images": null
         },
         {
-          "id": "2113939231089570084",
-          "text": "Omarchy Meetup in one of my new favorite cities in the world! 🤘",
-          "forward": "by @dhh: 杭州首场 Omarchy Meetup · 11 月 15 日\n\n想改变世界？带上你正在做的东西，来认识同类。\n\n还有一个和 @dhh 一起的小惊喜，敬请期待。\n\nHangzhou’s first Omarchy meetup · Nov 15\n\nWant to change the world? Bring what you’re building. Meet your people.\n\nAnd a little surprise with @dhh . Stay",
-          "posted_at": "2026-10-24T10:22:42Z",
-          "url": "https://x.com/dhh/status/2113939231089570084",
-          "views": 15656,
-          "replies": 19,
-          "retweets": 7,
-          "likes": 160,
+          "id": "2113842556005924940",
+          "text": "The good news is that the bulk of the work was already done by bsky and mastodon! Honey-potting the most miserable people. Just being on X is perhaps the single most effective pruning technique.",
+          "forward": null,
+          "posted_at": "2026-10-24T03:58:33Z",
+          "url": "https://x.com/dhh/status/2113842556005924940",
+          "views": 11890,
+          "replies": 16,
+          "retweets": 5,
+          "likes": 297,
+          "images": null
+        },
+        {
+          "id": "2113825159589102052",
+          "text": "This broadly matches my experience.",
+          "forward": "by @dhh: I agree with everything OP says except \"watching all of those years go down the drain.\" \n\nAI might have made it almost meaningless to write code by hand anymore. But the people who have spent years/decades writing code are now in the best position to leverage AI coding tools.",
+          "posted_at": "2026-10-24T02:49:25Z",
+          "url": "https://x.com/dhh/status/2113825159589102052",
+          "views": 80106,
+          "replies": 60,
+          "retweets": 48,
+          "likes": 1294,
+          "images": null
+        },
+        {
+          "id": "2113681466517561495",
+          "text": "It's been a while since I've been back to SF! Do come say hi if you're running or curious about Omarchy.",
+          "forward": "by @dhh: Yes, it’s true! @dhh is speaking at Fireworks Forge sharing his new thoughts on AI coding.\n\nIn a fireside chat, we'll talk controlling the AI stack and what that means for small teams building specialized intelligence.\n\nJoin us Nov 3 in SF: https:// bit.ly/3TxgUuB",
+          "posted_at": "2026-10-23T17:18:26Z",
+          "url": "https://x.com/dhh/status/2113681466517561495",
+          "views": 26968,
+          "replies": 18,
+          "retweets": 8,
+          "likes": 268,
+          "images": null
+        },
+        {
+          "id": "2113613193364795686",
+          "text": "If this is the excuse Brussels need to turn the ship around, I personally don't much care. It's hard to do a 180 on failed policies. Maybe they can also blame anti-nuclear sentiments on the KGB and GDPR bureaucraziness on CIA while at it? Let's just clear the whole plate.",
+          "forward": "by @dhh: 🇪🇺🇷🇺 Ursula von der Leyen says RUSSIA IS USING MASS MIGRATION as a weapon against EUROPE\n\nThe EU chief accuses Russia of deliberately pushing migrants toward European borders to overwhelm authorities, spread fear and divide the continent.\n\nShe now wants new emergency powers to",
+          "posted_at": "2026-10-23T12:47:08Z",
+          "url": "https://x.com/dhh/status/2113613193364795686",
+          "views": 101666,
+          "replies": 152,
+          "retweets": 125,
+          "likes": 2852,
+          "images": null
+        },
+        {
+          "id": "2113607322362671393",
+          "text": "Europe can rediscover its vitality any time it decides to with a coherent culture, debureaucratization, and abundant energy.\n\nHere's a three-step starter pack:\n\n1) Start remigration \n2) Drop GDPR\n3) Build nuclear\n\nWe could start on Monday.",
+          "forward": null,
+          "posted_at": "2026-10-23T12:23:49Z",
+          "url": "https://x.com/dhh/status/2113607322362671393",
+          "views": 217600,
+          "replies": 496,
+          "retweets": 574,
+          "likes": 7910,
+          "images": null
+        },
+        {
+          "id": "2113605539858952387",
+          "text": "Perfect fit for an agent-native OS like Omarchy. If you haven't switched already, just go Install > Service > 1Password.",
+          "forward": "by @dhh: Today we announce 1Password for Agents platform, building with companies @Muse , SpaceX Super Intelligence Grok @Bot , @AnthropicAI ’s @Claudeai , @OpenAI , @TownAI , @Browserbase , @Browser_use , @heydana_ai , Instinct, @usekernel , @Perplexity_ai , @tryramp , @Tomo , and @wajo_ai ,  with",
+          "posted_at": "2026-10-23T12:16:44Z",
+          "url": "https://x.com/dhh/status/2113605539858952387",
+          "views": 84108,
+          "replies": 79,
+          "retweets": 57,
+          "likes": 1279,
+          "images": [
+            "https://pbs.twimg.com/media/HVPQXrgW4AEL7SU.jpg"
+          ]
+        },
+        {
+          "id": "2113534951597408735",
+          "text": "You must learn to reverse the polarity of the negative energy your best ideas will inevitably generate and turn it into positive, forward momentum.",
+          "forward": "by @dhh: I love this idea from @dhh : \n\nAll the best ideas that actually turn out to have an impact sound stupid at first.\n\n“You've got to have a high tolerance for people telling you:\n\n-What you're building is stupid.\n-What you're building is ugly.\n-What you're building is never going to",
+          "posted_at": "2026-10-23T07:36:14Z",
+          "url": "https://x.com/dhh/status/2113534951597408735",
+          "views": 81482,
+          "replies": 83,
+          "retweets": 127,
+          "likes": 1991,
+          "images": null
+        },
+        {
+          "id": "2113506313732821144",
+          "text": "It would behove all Western politicians and entrepreneurs to spend at least a week here. Simply to soak in the ambition and to truly internalize the magnitude of the competition. I'd put the best brains in Europe and America up against anyone, but they have to be set free.",
+          "forward": null,
+          "posted_at": "2026-10-23T05:42:26Z",
+          "url": "https://x.com/dhh/status/2113506313732821144",
+          "views": 71511,
+          "replies": 26,
+          "retweets": 17,
+          "likes": 789,
+          "images": null
+        },
+        {
+          "id": "2113505009476190666",
+          "text": "I've been blown away by the energy, optimism, and hard work that has created the China I've seen on this trip. It had been seven years since I was last here, and it might as well have been forty. Invigorating to see what's possible. The West has no excuse for its managed decline.",
+          "forward": null,
+          "posted_at": "2026-10-23T05:37:15Z",
+          "url": "https://x.com/dhh/status/2113505009476190666",
+          "views": 430027,
+          "replies": 249,
+          "retweets": 370,
+          "likes": 6719,
           "images": null
         },
         {
@@ -37,10 +135,10 @@
           "forward": null,
           "posted_at": "2026-09-24T01:40:05Z",
           "url": "https://x.com/dhh/status/2102936073642869121",
-          "views": 3147071,
+          "views": 3151114,
           "replies": 414,
           "retweets": 1497,
-          "likes": 9201,
+          "likes": 9203,
           "images": null
         }
       ]
@@ -56,10 +154,10 @@
           "forward": "by @bcherny: We're donating Agent Skills to the Agentic AI Foundation ( @AgenticAIFdn ), the same foundation we donated MCP to.\n\nSince December 2025, 70+ agent platforms have integrated the standard, including ChatGPT, Cursor, GitHub Copilot, and VS Code. \n\nHere's what that means for you:",
           "posted_at": "2026-10-22T18:17:10Z",
           "url": "https://x.com/bcherny/status/2113333859907747871",
-          "views": 233498,
-          "replies": 217,
-          "retweets": 123,
-          "likes": 2521,
+          "views": 247929,
+          "replies": 224,
+          "retweets": 124,
+          "likes": 2555,
           "images": null
         },
         {
@@ -68,22 +166,64 @@
           "forward": null,
           "posted_at": "2026-10-16T18:13:42Z",
           "url": "https://x.com/bcherny/status/2111158659971699136",
-          "views": 443678,
+          "views": 449765,
           "replies": 200,
-          "retweets": 189,
-          "likes": 4648,
+          "retweets": 190,
+          "likes": 4664,
           "images": null
         },
         {
-          "id": "2111158313463525518",
-          "text": "I could not imagine being productive without Claude Code Review. It runs on all of my PRs, and catches almost every bug before it goes it. This is a piece of the secret sauce that lets the team and I move so quickly while raising the quality bar",
-          "forward": "by @bcherny: Code Review is now generally available for Claude Team and Enterprise plans. \n\nReviews are now faster, catch more of the bugs that matter, and admins can pick from Quick, Standard, or Deep review levels for each repo.",
-          "posted_at": "2026-10-16T18:12:20Z",
-          "url": "https://x.com/bcherny/status/2111158313463525518",
-          "views": 447363,
-          "replies": 354,
-          "retweets": 213,
-          "likes": 5016,
+          "id": "2100639991244427490",
+          "text": "Projects are how I write a lot of my code these days. Really excited for everyone to try the new experience! Rolling out now",
+          "forward": "by @bcherny: Projects now run from one conversation, starting in Claude Code. You describe what needs doing, and Claude directs parallel threads that keep working after you close your laptop.\n\nIn beta today for select Pro and Max users in cloud sessions; coming to all Claude users soon.",
+          "posted_at": "2026-09-17T17:36:16Z",
+          "url": "https://x.com/bcherny/status/2100639991244427490",
+          "views": 422282,
+          "replies": 159,
+          "retweets": 79,
+          "likes": 2336,
+          "images": [
+            "https://pbs.twimg.com/media/HSbyf9bWAAAV6Bd.jpg"
+          ]
+        },
+        {
+          "id": "2100260544087535639",
+          "text": "Also today: Claude Docs, Claude Slides, and Claude Design are in every conversation.\n\nAsk Claude for a presentation and you get one you can open, edit, and export as PowerPoint or PDF. Same for a document or a design. There's no separate tool to navigate to. They're just in the",
+          "forward": "by @bcherny: You can also now make decks, docs, and designs in your conversation.\n\nDraft the one-pager in Claude Docs, turn it into a deck with Claude Slides, and mock up a matching visual in Claude Design, all from one place.",
+          "posted_at": "2026-09-16T16:28:29Z",
+          "url": "https://x.com/bcherny/status/2100260544087535639",
+          "views": 338297,
+          "replies": 145,
+          "retweets": 173,
+          "likes": 2583,
+          "images": [
+            "https://pbs.twimg.com/media/HSWePXcXQAAAj1F.jpg"
+          ]
+        },
+        {
+          "id": "2100259951398789487",
+          "text": "Claude Code showed that AI could do real work, not just answer questions. Developers hand Claude a feature, come back to shipped code. That's where much of the industry's serious engineering runs now.\n\nCowork proved knowledge workers could do the same: hand Claude the brief, come",
+          "forward": "by @bcherny: Claude Cowork and chat are merging into one Claude.\n\nAsk a quick question or hand over a report, and Claude takes it from there, even after you close your laptop. If something's unclear, Claude asks—you keep the final say.\n\nRolling out to Pro and Max over the next few weeks.",
+          "posted_at": "2026-09-16T16:26:08Z",
+          "url": "https://x.com/bcherny/status/2100259951398789487",
+          "views": 277771,
+          "replies": 181,
+          "retweets": 93,
+          "likes": 1598,
+          "images": [
+            "https://pbs.twimg.com/media/HSWeH9NXMAAJvUC.png"
+          ]
+        },
+        {
+          "id": "2099551291601248485",
+          "text": "Claude Mods are landing now. Someone already built a Tetris-in-Claude mod 🤯\n\nSee issue for the latest community update, technical details, and more cool demos https:// github.com/anthropics/cla ude-code/issues/91870#issuecomment-5666255143 …",
+          "forward": null,
+          "posted_at": "2026-09-14T17:30:10Z",
+          "url": "https://x.com/bcherny/status/2099551291601248485",
+          "views": 619830,
+          "replies": 313,
+          "retweets": 290,
+          "likes": 2730,
           "images": null
         }
       ]
@@ -99,10 +239,10 @@
           "forward": "by @sama: Personal update: Turns out that what I thought was leaving OpenAI became more of a sabbatical.\n\nWhen I left a few months ago, I felt that the most important thing to focus on was making AI more useful to people. But we’ve since entered a different regime of AI progress. One in",
           "posted_at": "2026-10-20T21:10:19Z",
           "url": "https://x.com/sama/status/2112652656602923366",
-          "views": 1350688,
-          "replies": 667,
+          "views": 1357000,
+          "replies": 681,
           "retweets": 306,
-          "likes": 6996,
+          "likes": 7005,
           "images": null
         },
         {
@@ -111,22 +251,34 @@
           "forward": null,
           "posted_at": "2026-10-16T16:56:29Z",
           "url": "https://x.com/sama/status/2111139227761266699",
-          "views": 1016463,
-          "replies": 829,
+          "views": 1018913,
+          "replies": 832,
           "retweets": 647,
-          "likes": 11009,
+          "likes": 11015,
           "images": null
         },
         {
-          "id": "2111131677351432197",
-          "text": "Wow the new roadster looks quite amazing, good job @elonmusk",
+          "id": "2104994601140711896",
+          "text": "Ultrafast is\n\nso fast\n\nI do not ever want to go back",
           "forward": null,
-          "posted_at": "2026-10-16T16:26:29Z",
-          "url": "https://x.com/sama/status/2111131677351432197",
-          "views": 6873559,
-          "replies": 2660,
-          "retweets": 2912,
-          "likes": 65971,
+          "posted_at": "2026-09-29T17:59:56Z",
+          "url": "https://x.com/sama/status/2104994601140711896",
+          "views": 1233664,
+          "replies": 1337,
+          "retweets": 504,
+          "likes": 12037,
+          "images": null
+        },
+        {
+          "id": "2104994395980533804",
+          "text": "6.1 Sol at 1/5th of the price of Astra, and 95% cache read discount! Extremely capable model.",
+          "forward": "by @sama: Introducing 6.1 Sol, near Astra intelligence at one fifth of the price of Astra and 95% cache read discount. It is an absolute workhorse.\n\nCombined with ultrafast for 8X speeded available today for Astra and coming soon for 6.1 Sol.",
+          "posted_at": "2026-09-29T17:59:07Z",
+          "url": "https://x.com/sama/status/2104994395980533804",
+          "views": 812977,
+          "replies": 576,
+          "retweets": 348,
+          "likes": 8420,
           "images": null
         },
         {
@@ -135,9 +287,9 @@
           "forward": null,
           "posted_at": "2026-09-29T15:04:12Z",
           "url": "https://x.com/sama/status/2104950376466362578",
-          "views": 763745,
+          "views": 763918,
           "replies": 905,
-          "retweets": 604,
+          "retweets": 603,
           "likes": 9481,
           "images": null
         },
@@ -147,10 +299,10 @@
           "forward": "by @sama: After the Hugging Face incident, we committed to conducting a much broader review of actions taken by our models during training and evaluation and to being transparent about our findings. This is an extensive review that is ongoing.\n\nThe vast majority of actions we’ve reviewed",
           "posted_at": "2026-09-25T19:27:57Z",
           "url": "https://x.com/sama/status/2103567198690349362",
-          "views": 2747344,
-          "replies": 1488,
+          "views": 2747571,
+          "replies": 1487,
           "retweets": 831,
-          "likes": 7987,
+          "likes": 7989,
           "images": null
         },
         {
@@ -159,7 +311,7 @@
           "forward": "by @sama: OpenAI's superpower is the ability to swiftly assemble an empowered group of highly capable people to work on the most important and urgent thing at any point of time. \n\nNo one really cares for org lines. It's how we stay nimble, seize opportunities, and recover from mistakes.",
           "posted_at": "2026-09-22T18:44:08Z",
           "url": "https://x.com/sama/status/2102469008079679640",
-          "views": 968499,
+          "views": 968609,
           "replies": 528,
           "retweets": 218,
           "likes": 5260,
@@ -178,10 +330,10 @@
           "forward": null,
           "posted_at": "2026-10-22T21:21:01Z",
           "url": "https://x.com/claudeai/status/2113380126561800305",
-          "views": 98307,
-          "replies": 28,
-          "retweets": 24,
-          "likes": 294,
+          "views": 101822,
+          "replies": 29,
+          "retweets": 26,
+          "likes": 302,
           "images": null
         },
         {
@@ -190,22 +342,10 @@
           "forward": null,
           "posted_at": "2026-10-22T21:21:00Z",
           "url": "https://x.com/claudeai/status/2113380122468454765",
-          "views": 668377,
-          "replies": 285,
-          "retweets": 498,
-          "likes": 6181,
-          "images": null
-        },
-        {
-          "id": "2113360845409583307",
-          "text": "Starting next week, sessions across Claude web, desktop, and mobile apps will run in auto mode by default on Pro, Max, and Team plans.\n\nRather than asking you to approve each step, an automated check blocks risky actions. Switch back to manual anytime.",
-          "forward": "by @claudeai: Starting August 14, auto mode will be the default permission mode in Claude Code for Pro, Max, and Team users.\n\nAuto mode reviews shell commands and actions with a separate classifier. In testing, it caught 89% of dangerous commands. Manual approval caught 14%.",
-          "posted_at": "2026-10-22T20:04:24Z",
-          "url": "https://x.com/claudeai/status/2113360845409583307",
-          "views": 2431370,
-          "replies": 772,
-          "retweets": 1278,
-          "likes": 20591,
+          "views": 686166,
+          "replies": 291,
+          "retweets": 508,
+          "likes": 6256,
           "images": null
         },
         {
@@ -214,7 +354,7 @@
           "forward": null,
           "posted_at": "2026-09-17T17:07:13Z",
           "url": "https://x.com/claudeai/status/2100632681180520861",
-          "views": 189999,
+          "views": 190083,
           "replies": 45,
           "retweets": 38,
           "likes": 817,
@@ -226,10 +366,10 @@
           "forward": null,
           "posted_at": "2026-09-17T17:07:12Z",
           "url": "https://x.com/claudeai/status/2100632677904744716",
-          "views": 3546083,
+          "views": 3546536,
           "replies": 611,
           "retweets": 1281,
-          "likes": 11622,
+          "likes": 11618,
           "images": [
             "https://pbs.twimg.com/media/HSbyf9bWAAAV6Bd.jpg"
           ]
@@ -240,10 +380,10 @@
           "forward": null,
           "posted_at": "2026-09-16T16:20:20Z",
           "url": "https://x.com/claudeai/status/2100258492590207079",
-          "views": 4368442,
+          "views": 4368874,
           "replies": 128,
           "retweets": 560,
-          "likes": 4527,
+          "likes": 4529,
           "images": [
             "https://pbs.twimg.com/media/HSWePXcXQAAAj1F.jpg"
           ]
@@ -254,10 +394,10 @@
           "forward": null,
           "posted_at": "2026-09-16T16:20:19Z",
           "url": "https://x.com/claudeai/status/2100258490740539730",
-          "views": 3343462,
+          "views": 3343911,
           "replies": 756,
           "retweets": 1963,
-          "likes": 14477,
+          "likes": 14475,
           "images": [
             "https://pbs.twimg.com/media/HSWeH9NXMAAJvUC.png"
           ]
@@ -275,22 +415,22 @@
           "forward": null,
           "posted_at": "2026-10-23T22:18:03Z",
           "url": "https://x.com/openclaw/status/2113756866300010520",
-          "views": 22518,
-          "replies": 11,
-          "retweets": 15,
-          "likes": 156,
+          "views": 25308,
+          "replies": 12,
+          "retweets": 17,
+          "likes": 187,
           "images": null
         },
         {
-          "id": "2113756869064110267",
-          "text": "The #1 blocker for enterprise agents is security. \n\nAgents are powerful because they're non-deterministic, so the question isn't just what an agent can do, but whether you can enforce what it can't.",
-          "forward": null,
-          "posted_at": "2026-10-23T22:18:03Z",
-          "url": "https://x.com/openclaw/status/2113756869064110267",
-          "views": 1348,
-          "replies": 1,
-          "retweets": 2,
-          "likes": 10,
+          "id": "2111137678406381614",
+          "text": "Donna burns a trillion tokens a month\n\nShe runs loops you haven't even conceived of",
+          "forward": "by @openclaw: I love hearing from people like @ArkStabler who are using OpenClaw to help businesses grow\n\nBut I REALLY love hearing that he helps people like Donna become OpenClaw power users",
+          "posted_at": "2026-10-16T16:50:20Z",
+          "url": "https://x.com/openclaw/status/2111137678406381614",
+          "views": 76895,
+          "replies": 27,
+          "retweets": 33,
+          "likes": 519,
           "images": null
         },
         {
@@ -299,7 +439,7 @@
           "forward": null,
           "posted_at": "2026-10-16T03:22:53Z",
           "url": "https://x.com/openclaw/status/2110934479569379617",
-          "views": 31891,
+          "views": 31907,
           "replies": 28,
           "retweets": 34,
           "likes": 285,
@@ -311,7 +451,7 @@
           "forward": "by @openclaw: Here's everything that happened in Personal AI Agents this week from OpenAI, SpaceXSI, Meta, Google, Anthropic, OpenClaw, Nous Research, Perplexity, Manus, Genspark, Lindy, Underdog, MacPaw, Persona, and more.\n\n(save for later + share with your team) 🧵\n\nDid I miss anything?",
           "posted_at": "2026-10-15T20:23:25Z",
           "url": "https://x.com/openclaw/status/2110828915866628236",
-          "views": 117601,
+          "views": 117624,
           "replies": 22,
           "retweets": 92,
           "likes": 1093,
@@ -323,7 +463,7 @@
           "forward": null,
           "posted_at": "2026-10-15T00:53:00Z",
           "url": "https://x.com/openclaw/status/2110534370167865792",
-          "views": 28742,
+          "views": 28757,
           "replies": 19,
           "retweets": 30,
           "likes": 187,
@@ -335,7 +475,7 @@
           "forward": null,
           "posted_at": "2026-07-08T23:37:42Z",
           "url": "https://x.com/openclaw/status/2075001411939815589",
-          "views": 246974,
+          "views": 247256,
           "replies": 84,
           "retweets": 137,
           "likes": 1051,
@@ -349,27 +489,27 @@
       "url": "https://x.com/NousResearch",
       "tweets": [
         {
+          "id": "2114029282892595467",
+          "text": "Hermes Agent gives you control",
+          "forward": "by @NousResearch: banned for reverse engineering work? that’s wild\n\noh well, -$500, and a bunch of banked resets) but gained motivation to get 3 more machines and finish my cluster.\n\ni have never used openai to exploit or find vulnerabilities, only local reverse engineering which tripped daybreak.",
+          "posted_at": "2026-10-24T16:20:32Z",
+          "url": "https://x.com/NousResearch/status/2114029282892595467",
+          "views": 21696,
+          "replies": 28,
+          "retweets": 20,
+          "likes": 587,
+          "images": null
+        },
+        {
           "id": "2113638609794293773",
           "text": "See you next week in NYC!",
           "forward": "by @NousResearch: NousCon 2026\n\nOctober 30th, NYC https:// luma.com/y0y9ngkm",
           "posted_at": "2026-10-23T14:28:08Z",
           "url": "https://x.com/NousResearch/status/2113638609794293773",
-          "views": 24625,
-          "replies": 44,
-          "retweets": 18,
-          "likes": 367,
-          "images": null
-        },
-        {
-          "id": "2113391397760041329",
-          "text": "Your team and your Hermes can now share a computer.\n\nThe new @trycua Spaces plugin gives Hermes its own Linux, macOS, or Windows Space on hardware you already own. Anyone on your team can open it, watch live, step in, and hand it back while Hermes keeps working.",
-          "forward": "by @NousResearch: 1/ Introducing the Cua Spaces SDK.\n\nEvery big lab now ships a bot with its own computer: Grok Bot, Muse, dots. None let you bring your own. With Cua Spaces, now you can. \n\nPut Claude Code, Codex or any agent on compute you choose, and run jobs across all your computers at once.",
-          "posted_at": "2026-10-22T22:05:48Z",
-          "url": "https://x.com/NousResearch/status/2113391397760041329",
-          "views": 200836,
-          "replies": 74,
-          "retweets": 188,
-          "likes": 2426,
+          "views": 27663,
+          "replies": 45,
+          "retweets": 21,
+          "likes": 417,
           "images": null
         },
         {
@@ -378,7 +518,7 @@
           "forward": "by @NousResearch: Just heard people walking down the street outside my apartment talking excitedly about Hermes @NousResearch",
           "posted_at": "2026-10-14T18:31:12Z",
           "url": "https://x.com/NousResearch/status/2110438287399698522",
-          "views": 31925,
+          "views": 31982,
           "replies": 21,
           "retweets": 9,
           "likes": 453,
@@ -390,7 +530,7 @@
           "forward": null,
           "posted_at": "2026-10-14T15:00:02Z",
           "url": "https://x.com/NousResearch/status/2110385144284725592",
-          "views": 34479,
+          "views": 34527,
           "replies": 14,
           "retweets": 12,
           "likes": 236,
@@ -402,10 +542,10 @@
           "forward": null,
           "posted_at": "2026-10-14T15:00:01Z",
           "url": "https://x.com/NousResearch/status/2110385143643091204",
-          "views": 554122,
+          "views": 554281,
           "replies": 119,
           "retweets": 229,
-          "likes": 1997,
+          "likes": 1998,
           "images": null
         },
         {
@@ -414,22 +554,10 @@
           "forward": null,
           "posted_at": "2026-10-14T03:23:32Z",
           "url": "https://x.com/NousResearch/status/2110209866996252729",
-          "views": 42416,
+          "views": 42457,
           "replies": 48,
           "retweets": 24,
-          "likes": 694,
-          "images": null
-        },
-        {
-          "id": "2109301268955181334",
-          "text": "Hermes Agent is yours",
-          "forward": null,
-          "posted_at": "2026-10-11T15:13:06Z",
-          "url": "https://x.com/NousResearch/status/2109301268955181334",
-          "views": 344712,
-          "replies": 235,
-          "retweets": 166,
-          "likes": 3142,
+          "likes": 693,
           "images": null
         },
         {
@@ -438,10 +566,10 @@
           "forward": null,
           "posted_at": "2026-09-29T21:15:21Z",
           "url": "https://x.com/NousResearch/status/2105043777706754213",
-          "views": 869571,
-          "replies": 220,
-          "retweets": 206,
-          "likes": 2617,
+          "views": 873255,
+          "replies": 222,
+          "retweets": 207,
+          "likes": 2625,
           "images": null
         }
       ]
@@ -457,10 +585,10 @@
           "forward": null,
           "posted_at": "2026-10-20T09:30:19Z",
           "url": "https://x.com/deepseek_ai/status/2112476496283775135",
-          "views": 6601254,
-          "replies": 1609,
-          "retweets": 7177,
-          "likes": 42870,
+          "views": 6621573,
+          "replies": 1614,
+          "retweets": 7188,
+          "likes": 42917,
           "images": null
         },
         {
@@ -469,34 +597,10 @@
           "forward": null,
           "posted_at": "2026-10-20T09:30:19Z",
           "url": "https://x.com/deepseek_ai/status/2112476498598957056",
-          "views": 389881,
+          "views": 392191,
           "replies": 26,
-          "retweets": 72,
-          "likes": 2472,
-          "images": null
-        },
-        {
-          "id": "2111375640717033777",
-          "text": "🚀 DeepSeek-V4.1-Flash-1017 is here!\n\nStronger benchmark performance, faster task completion, and shorter outputs than the previous version—a Pareto improvement in performance and cost. Now live on our website, app, and API.\n\n🛠️ Optimized for @DeepSeekHarness , Tencent CodeBuddy,",
-          "forward": null,
-          "posted_at": "2026-10-17T08:35:54Z",
-          "url": "https://x.com/deepseek_ai/status/2111375640717033777",
-          "views": 7994491,
-          "replies": 1623,
-          "retweets": 6972,
-          "likes": 37117,
-          "images": null
-        },
-        {
-          "id": "1970117812279718197",
-          "text": "📊 DeepSeek-V3.1-Terminus delivers more stable & reliable outputs across benchmarks compared to the previous version.\n\n👉 Available now on: App / Web / API\n🔗 Open-source weights here: https:// huggingface.co/deepseek-ai/De epSeek-V3.1-Terminus … Thanks to everyone for your feedback. It drives us to keep improving",
-          "forward": null,
-          "posted_at": "2025-09-22T13:27:44Z",
-          "url": "https://x.com/deepseek_ai/status/1970117812279718197",
-          "views": 164364,
-          "replies": 22,
-          "retweets": 84,
-          "likes": 862,
+          "retweets": 73,
+          "likes": 2478,
           "images": null
         },
         {
@@ -505,22 +609,10 @@
           "forward": null,
           "posted_at": "2025-08-21T06:33:08Z",
           "url": "https://x.com/deepseek_ai/status/1958417064789754323",
-          "views": 137682,
+          "views": 137697,
           "replies": 13,
           "retweets": 61,
           "likes": 791,
-          "images": null
-        },
-        {
-          "id": "1958417062008918312",
-          "text": "Introducing DeepSeek-V3.1: our first step toward the agent era! 🚀\n\n🧠 Hybrid inference: Think & Non-Think — one model, two modes\n⚡️ Faster thinking: DeepSeek-V3.1-Think reaches answers in less time vs. DeepSeek-R1-0528\n🛠️ Stronger agent skills: Post-training boosts tool use and",
-          "forward": null,
-          "posted_at": "2025-08-21T06:33:07Z",
-          "url": "https://x.com/deepseek_ai/status/1958417062008918312",
-          "views": 2099712,
-          "replies": 502,
-          "retweets": 2237,
-          "likes": 14637,
           "images": null
         },
         {
@@ -529,10 +621,10 @@
           "forward": null,
           "posted_at": "2025-05-29T12:11:19Z",
           "url": "https://x.com/deepseek_ai/status/1928061589107900779",
-          "views": 1495673,
+          "views": 1495701,
           "replies": 551,
           "retweets": 1816,
-          "likes": 9579,
+          "likes": 9578,
           "images": null
         },
         {
@@ -541,10 +633,10 @@
           "forward": null,
           "posted_at": "2025-03-25T13:32:43Z",
           "url": "https://x.com/deepseek_ai/status/1904526863604883661",
-          "views": 1569813,
+          "views": 1569834,
           "replies": 671,
           "retweets": 2259,
-          "likes": 11555,
+          "likes": 11557,
           "images": null
         }
       ]
@@ -560,22 +652,22 @@
           "forward": "by @JeffDean: Spent years watching models ace a single image and completely whiff on anything that moves or changes angle. Today we’re fixing that.\n\nTry Glimpse now, our first visual thinking model with competitive frontier performance compared to Astra on key public visual reasoning",
           "posted_at": "2026-10-16T17:29:45Z",
           "url": "https://x.com/JeffDean/status/2111147597159415874",
-          "views": 103857,
+          "views": 104154,
           "replies": 41,
           "retweets": 56,
-          "likes": 825,
+          "likes": 826,
           "images": null
         },
         {
-          "id": "2109841404239417415",
-          "text": "I've been a personal supporter (through our family foundation) of @Khipu_AI & @DeepIndaba , which are  fantastic events for AI researchers in Africa and South America. I've encouraged Google to support these in the past.  Discovery Loop ( @DiscoLoopAI ) is thrilled to support!",
-          "forward": "by @JeffDean: For the last 10 years we've been raising funds to bring AI to Africa ( @DeepIndaba ) and South America ( @Khipu_AI ). The efforts have been very successful, but this year we are finding it hard to raise money. If you work for an AI company, please share the following with the right",
-          "posted_at": "2026-10-13T02:59:24Z",
-          "url": "https://x.com/JeffDean/status/2109841404239417415",
-          "views": 67969,
-          "replies": 40,
-          "retweets": 48,
-          "likes": 713,
+          "id": "2079210091870388437",
+          "text": "Yesterday I was fortunate enough to go to my first-ever World Cup game, with my long-time colleagues/friends @OriolVinyalsML and @quocleix and their spouses).  We were sitting in the corner area and had a quite good view of the goal!\n\nI present to you a 43 second multi-part drama",
+          "forward": null,
+          "posted_at": "2026-07-20T14:21:30Z",
+          "url": "https://x.com/JeffDean/status/2079210091870388437",
+          "views": 194642,
+          "replies": 59,
+          "retweets": 53,
+          "likes": 2104,
           "images": null
         },
         {
@@ -584,7 +676,7 @@
           "forward": "by @JeffDean: I enjoyed giving the commencement address at the University of Washington Allen School @uwcse graduation this evening.  So many happy students and their families and friends!\n\nCongratulations to all the graduates of the class of 2026! 🎓\n\nThanks for inviting me, @MBalazinska !",
           "posted_at": "2026-06-30T23:22:11Z",
           "url": "https://x.com/JeffDean/status/2072098401022517513",
-          "views": 99107,
+          "views": 99117,
           "replies": 18,
           "retweets": 12,
           "likes": 203,
@@ -596,7 +688,7 @@
           "forward": null,
           "posted_at": "2026-06-18T18:51:38Z",
           "url": "https://x.com/JeffDean/status/2067681662318924244",
-          "views": 133501,
+          "views": 133509,
           "replies": 31,
           "retweets": 170,
           "likes": 1160,
@@ -608,7 +700,7 @@
           "forward": null,
           "posted_at": "2026-06-16T03:36:00Z",
           "url": "https://x.com/JeffDean/status/2066726460426158381",
-          "views": 33319,
+          "views": 33323,
           "replies": 17,
           "retweets": 3,
           "likes": 182,
@@ -623,7 +715,7 @@
           "views": null,
           "replies": 410,
           "retweets": 1453,
-          "likes": 5915,
+          "likes": 5916,
           "images": null
         }
       ]
@@ -639,22 +731,10 @@
           "forward": "by @AndrewYNg: I have some big news to share. Workera is being acquired by Pearson!\n\nOver six years ago, I was teaching at Stanford and thinking about a simple question: what if we could understand everyone's skills as precisely as the best teachers understand their students?\n\nI believed it",
           "posted_at": "2026-09-29T16:11:18Z",
           "url": "https://x.com/AndrewYNg/status/2104967263757713432",
-          "views": 105065,
+          "views": 105418,
           "replies": 105,
-          "retweets": 27,
+          "retweets": 28,
           "likes": 257,
-          "images": null
-        },
-        {
-          "id": "2102140576498065758",
-          "text": "The loudest voices stoking fears about AI dangers have made tremendous headway in the past two weeks. AI technology has not taken some unexpected, dangerous turn, but the hype around it — propelled by what appears to be a well orchestrated PR campaign — has drummed up",
-          "forward": null,
-          "posted_at": "2026-09-21T20:59:03Z",
-          "url": "https://x.com/AndrewYNg/status/2102140576498065758",
-          "views": 8007637,
-          "replies": 959,
-          "retweets": 2345,
-          "likes": 8846,
           "images": null
         },
         {
@@ -663,10 +743,10 @@
           "forward": null,
           "posted_at": "2026-08-14T16:29:42Z",
           "url": "https://x.com/AndrewYNg/status/2088302050706686198",
-          "views": 6973352,
-          "replies": 561,
-          "retweets": 4612,
-          "likes": 24539,
+          "views": 6974199,
+          "replies": 563,
+          "retweets": 4613,
+          "likes": 24543,
           "images": null
         },
         {
@@ -675,10 +755,10 @@
           "forward": null,
           "posted_at": "2026-06-30T16:04:04Z",
           "url": "https://x.com/AndrewYNg/status/2071988145667928442",
-          "views": 691433,
-          "replies": 414,
+          "views": 691465,
+          "replies": 415,
           "retweets": 1832,
-          "likes": 8538,
+          "likes": 8537,
           "images": null
         },
         {
@@ -687,10 +767,10 @@
           "forward": null,
           "posted_at": "2026-06-19T18:34:23Z",
           "url": "https://x.com/AndrewYNg/status/2068039709126017356",
-          "views": 183182,
+          "views": 183203,
           "replies": 176,
           "retweets": 343,
-          "likes": 1357,
+          "likes": 1354,
           "images": null
         },
         {
@@ -699,7 +779,7 @@
           "forward": null,
           "posted_at": "2026-06-18T17:00:03Z",
           "url": "https://x.com/AndrewYNg/status/2067653578945359898",
-          "views": 99384,
+          "views": 99403,
           "replies": 58,
           "retweets": 67,
           "likes": 378,
@@ -711,10 +791,10 @@
           "forward": null,
           "posted_at": "2026-06-04T16:44:13Z",
           "url": "https://x.com/AndrewYNg/status/2062576164657664469",
-          "views": 138193,
+          "views": 138211,
           "replies": 111,
           "retweets": 155,
-          "likes": 1116,
+          "likes": 1115,
           "images": null
         }
       ]
@@ -730,10 +810,10 @@
           "forward": "by @karpathy: Judging by my tl there is a growing gap in understanding of AI capability.\n\nThe first issue I think is around recency and tier of use. I think a lot of people tried the free tier of ChatGPT somewhere  last year and allowed it to inform their views on AI a little too much. This is x.com/staysaasy/stat…",
           "posted_at": "2026-10-11T19:12:37Z",
           "url": "https://x.com/karpathy/status/2109361546505966046",
-          "views": 6731068,
+          "views": 6734934,
           "replies": 2174,
-          "retweets": 8107,
-          "likes": 43756,
+          "retweets": 8110,
+          "likes": 43762,
           "images": null
         },
         {
@@ -742,22 +822,10 @@
           "forward": "by @karpathy: results for all claudes",
           "posted_at": "2026-10-02T06:35:51Z",
           "url": "https://x.com/karpathy/status/2105909609487872075",
-          "views": 1473006,
-          "replies": 707,
+          "views": 1474679,
+          "replies": 708,
           "retweets": 1234,
-          "likes": 19132,
-          "images": null
-        },
-        {
-          "id": "2105819303471976479",
-          "text": "We'll be spending a lot more time trying to understand the outputs of language models. A few thoughts, tips & tricks:\n\nWriting. Something I've had success with: Ask your LLM to explain something in ASD-STE100, it's a controlled language specification originally developed for",
-          "forward": null,
-          "posted_at": "2026-10-02T00:37:00Z",
-          "url": "https://x.com/karpathy/status/2105819303471976479",
-          "views": 7971284,
-          "replies": 1666,
-          "retweets": 8169,
-          "likes": 55952,
+          "likes": 19133,
           "images": null
         },
         {
@@ -766,22 +834,10 @@
           "forward": null,
           "posted_at": "2026-04-05T14:58:44Z",
           "url": "https://x.com/karpathy/status/2040806346556428585",
-          "views": 518759,
+          "views": 518825,
           "replies": 184,
           "retweets": 59,
           "likes": 1229,
-          "images": null
-        },
-        {
-          "id": "2040572272944324650",
-          "text": "Farzapedia, personal wikipedia of Farza, good example following my Wiki LLM tweet.\n\nI really like this approach to personalization in a number of ways, compared to \"status quo\" of an AI that allegedly gets better the more you use it or something:\n\n1. Explicit. The memory artifact",
-          "forward": "by @karpathy: This is Farzapedia.\n\nI had an LLM take 2,500 entries from my diary, Apple Notes, and some iMessage convos to create a personal Wikipedia for me.\n\nIt made 400 detailed articles for my friends, my startups, research areas, and even my favorite animes and their impact on me complete x.com/karpathy/statu…",
-          "posted_at": "2026-04-04T23:28:36Z",
-          "url": "https://x.com/karpathy/status/2040572272944324650",
-          "views": 1525393,
-          "replies": 473,
-          "retweets": 963,
-          "likes": 9118,
           "images": null
         },
         {
@@ -790,10 +846,10 @@
           "forward": "by @karpathy: The British Government is a complicated beast. Dozens of departments, hundreds of public bodies, more corporations than one can count...\n\nSuch is its complexity that there isn't an org chart for it.\n\nWell, there wasn't...\n\nIntroducing ⚙️Machinery of Government⚙️",
           "posted_at": "2026-04-04T21:57:57Z",
           "url": "https://x.com/karpathy/status/2040549459193704852",
-          "views": 1096683,
+          "views": 1096765,
           "replies": 411,
           "retweets": 886,
-          "likes": 5954,
+          "likes": 5956,
           "images": null
         },
         {
@@ -802,7 +858,7 @@
           "forward": "by @karpathy: LLM Knowledge Bases\n\nSomething I'm finding very useful recently: using LLMs to build personal knowledge bases for various topics of research interest. In this way, a large fraction of my recent token throughput is going less into manipulating code, and more into manipulating",
           "posted_at": "2026-04-04T16:45:23Z",
           "url": "https://x.com/karpathy/status/2040470801506541998",
-          "views": 7337653,
+          "views": 7337811,
           "replies": 1128,
           "retweets": 3516,
           "likes": 26805,
@@ -814,10 +870,10 @@
           "forward": null,
           "posted_at": "2026-04-02T20:42:21Z",
           "url": "https://x.com/karpathy/status/2039805659525644595",
-          "views": 21990902,
+          "views": 21991358,
           "replies": 2939,
-          "retweets": 9613,
-          "likes": 61026,
+          "retweets": 9614,
+          "likes": 61024,
           "images": null
         },
         {
@@ -826,10 +882,10 @@
           "forward": "by @karpathy: 🚨 CRITICAL: Active supply chain attack on axios -- one of npm's most depended-on packages.\n\nThe latest axios@1.14.1 now pulls in plain-crypto-js@4.2.1, a package that did not exist before today. This is a live compromise.\n\nThis is textbook supply chain installer malware. axios",
           "posted_at": "2026-03-31T05:23:32Z",
           "url": "https://x.com/karpathy/status/2038849654423798197",
-          "views": 1634918,
+          "views": 1634974,
           "replies": 559,
           "retweets": 1308,
-          "likes": 10419,
+          "likes": 10420,
           "images": null
         },
         {
@@ -838,10 +894,10 @@
           "forward": null,
           "posted_at": "2026-03-28T15:56:10Z",
           "url": "https://x.com/karpathy/status/2037921699824607591",
-          "views": 3543571,
+          "views": 3543623,
           "replies": 1708,
           "retweets": 3057,
-          "likes": 30938,
+          "likes": 30937,
           "images": null
         },
         {
@@ -850,10 +906,10 @@
           "forward": "by @karpathy: When @karpathy built MenuGen ( https:// karpathy.bearblog.dev/vibe-coding-me nugen/ … ), he said:\n\n\"Vibe coding menugen was exhilarating and fun escapade as a local demo, but a bit of a painful slog as a deployed, real app. Building a modern app is a bit like assembling IKEA future. There are all these services,",
           "posted_at": "2026-03-26T16:10:52Z",
           "url": "https://x.com/karpathy/status/2037200624450936940",
-          "views": 2507808,
-          "replies": 623,
+          "views": 2507862,
+          "replies": 622,
           "retweets": 726,
-          "likes": 6352,
+          "likes": 6351,
           "images": null
         },
         {
@@ -862,10 +918,10 @@
           "forward": null,
           "posted_at": "2026-03-25T16:22:08Z",
           "url": "https://x.com/karpathy/status/2036841069636370467",
-          "views": 330104,
+          "views": 330159,
           "replies": 150,
           "retweets": 56,
-          "likes": 1691,
+          "likes": 1689,
           "images": null
         },
         {
@@ -874,10 +930,10 @@
           "forward": null,
           "posted_at": "2026-03-25T16:05:14Z",
           "url": "https://x.com/karpathy/status/2036836816654147718",
-          "views": 2789953,
+          "views": 2790017,
           "replies": 1719,
           "retweets": 1514,
-          "likes": 20899,
+          "likes": 20898,
           "images": null
         }
       ]
