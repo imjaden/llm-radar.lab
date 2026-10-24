@@ -145,13 +145,27 @@ def test_counterexample_osascript_shaped_process_not_matched(fpreal):
 # ===== ensure_ready =====
 
 def test_ensure_ready_skips_when_already_running(fp, monkeypatch):
-    """已在运行 → 零动作复用 (不动外部实例)。"""
+    """已在运行且端口通 → 零动作复用 (不动外部实例)。"""
     monkeypatch.setattr(fp, '_is_darwin', lambda: True)
     monkeypatch.setattr(fp, 'is_running', lambda: True)
+    monkeypatch.setattr(fp, 'is_port_listening', lambda port=fp.READY_PORT: True)
     monkeypatch.setattr(fp, 'flclash_pids', lambda: [42])
     res = fp.ensure_ready()
     assert res == {'ok': True, 'started': False, 'reason': 'already_running', 'pids': [42]}
     assert fp.rec.calls == [], '已在运行却发了动作命令'
+
+
+def test_ensure_ready_running_but_port_closed_is_not_ready(fp, monkeypatch):
+    """Q-1: 进程在但端口不通 ⇒ 短预算等待后判 not_ready (reason=port_closed), 且不重复拉起。"""
+    monkeypatch.setattr(fp, '_is_darwin', lambda: True)
+    monkeypatch.setattr(fp, 'is_running', lambda: True)
+    monkeypatch.setattr(fp, 'is_port_listening', lambda port=fp.READY_PORT: False)
+    monkeypatch.setattr(fp, 'flclash_pids', lambda: [42])
+    monkeypatch.setattr(fp, 'POLL_INTERVAL', 0.01)
+    res = fp.ensure_ready(running_grace=0.05)
+    assert res['ok'] is False and res['reason'] == 'port_closed'
+    assert res['started'] is False and res['pids'] == [42]
+    assert fp.rec.calls == [], f'端口不通时不得再发 open (会变成两个实例): {fp.rec.calls}'
 
 
 def test_ensure_ready_starts_and_waits_for_port(fp, monkeypatch):

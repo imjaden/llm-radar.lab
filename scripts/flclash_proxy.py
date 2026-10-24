@@ -47,6 +47,9 @@ STOP_GRACE = 20.0          # 对齐 policy ...restart.grace
 POLL_INTERVAL = 2.0
 PROBE_TIMEOUT = 2.0
 TERM_WAIT = 3.0
+# Q-1 (CL151 review SEC-1/LR-SEC-023): 「进程在」≠「代理通」。已在运行但端口未 LISTEN 时
+# （代理暂停 / 端口改配 / 上轮 open 后端口尚未起的窗口）先给这么长的短预算, 仍不通 ⇒ not_ready。
+RUNNING_PORT_GRACE = 10.0
 
 
 def _run(argv, timeout=30):
@@ -94,12 +97,23 @@ def is_port_listening(port=READY_PORT, host='127.0.0.1', timeout=PROBE_TIMEOUT):
         return False
 
 
-def ensure_ready(timeout=READY_TIMEOUT, port=READY_PORT):
-    """未运行 → `open -g -a FlClash` + 轮询等端口 LISTEN; 已在运行 → 直接复用, 不做任何动作。"""
+def ensure_ready(timeout=READY_TIMEOUT, port=READY_PORT, running_grace=RUNNING_PORT_GRACE):
+    """未运行 → `open -g -a FlClash` + 轮询等端口 LISTEN; 已在运行 → 先验端口, 通则复用、不通则短预算等待后判 not_ready。"""
     if not _is_darwin():
         return {'ok': True, 'started': False, 'reason': 'non_darwin', 'pids': []}
     if is_running():
-        return {'ok': True, 'started': False, 'reason': 'already_running', 'pids': flclash_pids()}
+        pids = flclash_pids()
+        if is_port_listening(port):
+            return {'ok': True, 'started': False, 'reason': 'already_running', 'pids': pids}
+        # Q-1: 进程在但端口不通 —— 短预算等待（覆盖「刚 open 完端口还没起」的窗口), 仍不通 ⇒ 未就绪
+        deadline = time.time() + max(float(running_grace), 0.0)
+        while time.time() < deadline:
+            time.sleep(POLL_INTERVAL)
+            if is_port_listening(port):
+                return {'ok': True, 'started': False, 'reason': 'already_running', 'pids': pids}
+        _warn(f'[flclash] ⚠️  进程在运行(pid: {" ".join(map(str, pids))}) 但 {port} 在 {running_grace:g}s 内不可达 '
+              f'⇒ 未就绪 (代理可能被暂停/端口改配)')
+        return {'ok': False, 'started': False, 'reason': 'port_closed', 'pids': pids, 'port': port}
 
     _warn(f'[flclash] 启动: {" ".join(START_CMD)} (等 {port} LISTEN ≤{timeout:g}s)')
     try:

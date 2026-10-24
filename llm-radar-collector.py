@@ -1109,15 +1109,21 @@ class LLMRadarCollector:
                 self.fetch_skipped[key] = 'degraded'
             source_keys = [k for k in source_keys if k not in degraded]
 
-        # FlClash 代理（海外源需要）: 未运行 → 本轮按需拉起（采集后释放）; 就绪失败 → 跳过且不计失败
+        # FlClash 代理（海外源需要）: 就绪失败 → 跳过且不计失败。
+        # Q-1(2026-10-24, CL151 review): 「进程在」≠「代理通」⇒ 无论是否在运行都走 ensure
+        # （已在运行且端口通时即时返回, 不会重复拉起; 端口不通则 helper 判 not_ready）
         NEEDS_FLCLASH = {'github-trending', 'huggingface'}
         blocked = [k for k in source_keys if k in NEEDS_FLCLASH]
-        if blocked and not _is_flclash_running():
+        if blocked:
+            was_running = _is_flclash_running()
             if _ensure_flclash_ready():
-                self._flclash_owned = True
-                self._print_ok(f'FlClash 已按需拉起（{", ".join(blocked)} 需要代理）, 采集后释放')
+                self._flclash_owned = not was_running
+                if self._flclash_owned:
+                    self._print_ok(f'FlClash 已按需拉起（{", ".join(blocked)} 需要代理）, 采集后释放')
+                else:
+                    self._print_info(f'FlClash 已在运行且端口就绪（{", ".join(blocked)} 需要代理）, 沿用外部实例')
             else:
-                self._print_warn(f'FlClash 未能就绪，跳过海外源: {", ".join(blocked)}')
+                self._print_warn(f'FlClash 未能就绪（进程在={was_running}）, 跳过海外源: {", ".join(blocked)}')
                 for key in blocked:
                     self.fetch_skipped[key] = 'no_flclash'
                 source_keys = [k for k in source_keys if k not in NEEDS_FLCLASH]

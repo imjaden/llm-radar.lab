@@ -117,9 +117,12 @@ def main(argv):
         print('running' if running() else 'stopped')
         return 0 if running() else 1
     if cmd == 'ensure':
-        if running():
+        if running() and not _flag('flclash.port_closed'):
             print('ready')
             return 0
+        if running() and _flag('flclash.port_closed'):
+            print('not-ready')          # Q-1: 进程在但端口不可达
+            return 1
         if _flag('flclash.no_ready'):
             print('not-ready')
             return 1
@@ -435,21 +438,43 @@ def test_flclash_started_then_released(sandbox):
 
 
 def test_flclash_kept_if_already_running(sandbox):
-    """原本就在运行: 只探测, 不由本脚本拉起/释放 (不调 ensure/release)。"""
+    """原本就在运行: 仍要验端口(Q-1), 但不由本脚本拉起/释放。"""
     proc = _seed_flclash_running(sandbox)
     try:
         env = env_for(sandbox, TWITTER_FLCLASH_ENSURE='1')
         r = run_cron(sandbox, env)
         out = r.stdout + r.stderr
         assert r.returncode == 0, out
-        assert 'FlClash 已在运行' in out and '⇒ 采集后保持运行' in out
-        assert '启动 (open -a FlClash' not in out
+        assert 'FlClash 已在运行' in out and '⇒ 验' in out
+        assert '启动 (open -g -a FlClash' not in out
         assert '释放 FlClash' not in out
         calls = flclash_calls(sandbox)
-        assert 'is-running' in calls and 'pids' in calls, calls   # 只为把 pid 写进日志
-        assert not [c for c in calls if c.startswith(('ensure', 'release'))], calls
+        assert 'is-running' in calls and 'pids' in calls, calls   # pid 写日志
+        assert 'ensure --timeout 180 --port 7890' in calls, calls   # Q-1: 在运行也必须验端口
+        assert not [c for c in calls if c.startswith('release')], calls
+        assert '沿用外部实例' in out
         assert (sandbox['state'] / 'flclash.running').exists(), '不该动外部实例'
         assert proc.poll() is None, '外部 FlClash 被误杀'
+    finally:
+        proc.kill()
+        proc.wait(timeout=10)
+
+
+def test_flclash_running_but_port_closed_skips_round(sandbox):
+    """Q-1: 进程在但端口不可达 ⇒ 跳过本轮(exit 0), 不采集、不释放外部实例。"""
+    proc = _seed_flclash_running(sandbox)
+    (sandbox['state'] / 'flclash.port_closed').write_text('1', encoding='utf-8')
+    try:
+        env = env_for(sandbox, TWITTER_FLCLASH_ENSURE='1')
+        r = run_cron(sandbox, env)
+        out = r.stdout + r.stderr
+        assert r.returncode == 0, out
+        assert '在运行但 7890 不可达' in out
+        assert '跳过本轮' in out
+        assert '[stub-collector] run' not in out, '端口不通不得进入采集'
+        assert '释放 FlClash' not in out
+        assert (sandbox['state'] / 'flclash.running').exists()
+        assert proc.poll() is None
     finally:
         proc.kill()
         proc.wait(timeout=10)

@@ -46,6 +46,7 @@ except ImportError:  # pragma: no cover
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from flclash_proxy import (  # noqa: E402  (须在 sys.path 注入之后)
     ensure_ready as _flclash_ensure_ready,
+    is_port_listening as _flclash_is_port_listening,
     is_running as _flclash_is_running,
 )
 
@@ -62,9 +63,15 @@ def _is_flclash_running():
 def _ensure_proxy_ready(timeout=None):
     """确保代理就绪（CL151: 采集入口与 CDP 断连重连两处都调）。
 
-    已在运行 → 立即 True（不做任何动作）; 未运行 → `open -g -a FlClash` 并等端口可连。
+    已在运行 → 验端口后立即复用; 未运行 → `open -g -a FlClash` 并等端口可连。
     超时预算默认沿用真源 READY_TIMEOUT(180s, 对齐上游 verify.wait)。
+    Q-2: `TWITTER_PROXY_NO_ENSURE=1`（wrapper 在 TWITTER_FLCLASH_ENSURE=0 时注入）⇒ 只探测、不拉起。
     """
+    if str(os.environ.get('TWITTER_PROXY_NO_ENSURE', '')).strip().lower() in ('1', 'true', 'yes'):
+        ok = bool(_is_flclash_running() and _flclash_is_port_listening())
+        print(f"[twitter-collector] ℹ️  TWITTER_PROXY_NO_ENSURE=1, 只探测不拉起: "
+              f"{'就绪' if ok else '未就绪'}", file=sys.stderr)
+        return ok
     kwargs = {} if timeout is None else {'timeout': timeout}
     try:
         return bool(_flclash_ensure_ready(**kwargs).get('ok'))

@@ -185,7 +185,7 @@ def test_fetch_all_skips_overseas_when_flclash_not_ready(mod, coll, tmp_path, mo
 
 
 def test_already_running_flclash_is_never_owned(mod, coll, tmp_path, monkeypatch):
-    """原本就在运行的 FlClash: 不起、不关（不动别人的实例）。"""
+    """原本就在运行的 FlClash: 仍走一次 ensure 验端口(Q-1), 但不起、不关（不动别人的实例）。"""
     write_health(tmp_path, {})
     monkeypatch.setattr(coll, 'fetch_source', lambda k: {'source': k, 'content': 'x'})
     monkeypatch.setattr(mod, '_is_flclash_running', lambda: True)
@@ -194,7 +194,9 @@ def test_already_running_flclash_is_never_owned(mod, coll, tmp_path, monkeypatch
     monkeypatch.setattr(mod, '_release_flclash', lambda: released.append(1) or True)
 
     coll.fetch_all(['github-trending'])
-    assert ensured == [] and coll._flclash_owned is False
+    assert ensured == [1], 'Q-1: 在运行也必须验端口 (进程在 != 代理通)'
+    assert coll.fetch_skipped == {}, '端口通就该继续抓, 不该跳过'
+    assert coll._flclash_owned is False
     assert coll.release_flclash_if_owned() is False
     assert released == []
 

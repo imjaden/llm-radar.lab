@@ -992,6 +992,18 @@ class TestProxyEnsureSkip:
         monkeypatch.setattr(tc, '_flclash_ensure_ready', boom)
         assert tc._ensure_proxy_ready() is False
 
+    def test_no_ensure_mode_only_probes(self, tc, monkeypatch):
+        """Q-2: TWITTER_PROXY_NO_ENSURE=1 ⇒ 只探测(进程 ∧ 端口), 绝不拉起。"""
+        monkeypatch.setenv('TWITTER_PROXY_NO_ENSURE', '1')
+        monkeypatch.setattr(tc, '_flclash_ensure_ready',
+                            lambda **k: pytest.fail('NO_ENSURE 模式不得调用 ensure(会拉起)'))
+        monkeypatch.setattr(tc, '_is_flclash_running', lambda: True)
+        monkeypatch.setattr(tc, '_flclash_is_port_listening', lambda *a, **k: True)
+        assert tc._ensure_proxy_ready() is True
+
+        monkeypatch.setattr(tc, '_is_flclash_running', lambda: False)
+        assert tc._ensure_proxy_ready() is False, '进程不在 ⇒ 探测为未就绪, 但不拉起'
+
     def test_ensure_proxy_ready_true_on_non_darwin(self, tc, monkeypatch):
         """非 macOS 恒 True, 且不得执行任何外部命令 (CI/Linux 不误伤, 也不误拉起)。"""
         fp = sys.modules['flclash_proxy']

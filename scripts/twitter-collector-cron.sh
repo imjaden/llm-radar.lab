@@ -164,17 +164,28 @@ flclash_pids() { python3 "$FLCLASH_PY" pids 2>/dev/null; }
 flclash_running() { python3 "$FLCLASH_PY" is-running >/dev/null 2>&1; }
 
 ensure_flclash() {
+  local was_running=0
   if flclash_running; then
-    echo "[twitter-cron] FlClash 已在运行 (pid: $(flclash_pids | tr '\n' ' ')) ⇒ 采集后保持运行"
-    return 0
+    was_running=1
+    echo "[twitter-cron] FlClash 已在运行 (pid: $(flclash_pids | tr '\n' ' ')) ⇒ 验 ${FLCLASH_PORT} 后复用, 采集后保持运行"
+  else
+    echo "[twitter-cron] FlClash 未运行, 启动 (open -g -a FlClash; 就绪判据 ${FLCLASH_PORT} LISTEN ≤${FLCLASH_READY_TIMEOUT}s)"
   fi
-  echo "[twitter-cron] FlClash 未运行, 启动 (open -g -a FlClash; 就绪判据 ${FLCLASH_PORT} LISTEN ≤${FLCLASH_READY_TIMEOUT}s)"
+  # Q-1: 「进程在」≠「代理通」⇒ 无论是否在运行都走 ensure（已在运行且端口通时即时返回, 不会重复拉起）
   if python3 "$FLCLASH_PY" ensure --timeout "$FLCLASH_READY_TIMEOUT" --port "$FLCLASH_PORT" >/dev/null; then
-    OWNED_FLCLASH=1
-    echo "[twitter-cron] FlClash 就绪 (${FLCLASH_PORT} LISTEN), 采集后释放"
+    if [ "$was_running" = "0" ]; then
+      OWNED_FLCLASH=1
+      echo "[twitter-cron] FlClash 就绪 (${FLCLASH_PORT} LISTEN), 采集后释放"
+    else
+      echo "[twitter-cron] FlClash 就绪 (${FLCLASH_PORT} LISTEN), 沿用外部实例"
+    fi
     return 0
   fi
-  echo "[twitter-cron] ⏸️  FlClash 启动后 ${FLCLASH_READY_TIMEOUT}s 内 ${FLCLASH_PORT} 未 LISTEN, 本轮跳过 (不计失败; CL151)" >&2
+  if [ "$was_running" = "1" ]; then
+    echo "[twitter-cron] ⏸️  FlClash 在运行但 ${FLCLASH_PORT} 不可达, 本轮跳过 (不计失败; CL151/Q-1)" >&2
+  else
+    echo "[twitter-cron] ⏸️  FlClash 启动后 ${FLCLASH_READY_TIMEOUT}s 内 ${FLCLASH_PORT} 未 LISTEN, 本轮跳过 (不计失败; CL151)" >&2
+  fi
   return 1
 }
 
@@ -247,6 +258,8 @@ if [ "$FLCLASH_ENSURE" = "1" ]; then
   fi
 else
   echo "[twitter-cron] TWITTER_FLCLASH_ENSURE=0, 不管理 FlClash 生命周期"
+  # Q-2: 关掉生命周期管理时, 采集器只允许探测、不得自行拉起（否则可能被拉起后常驻）
+  export TWITTER_PROXY_NO_ENSURE=1
 fi
 
 # ===== 2) 调试 Chrome =====
