@@ -295,3 +295,16 @@ def test_commands_and_thresholds_match_declaration_policy(fpreal):
     assert str(restart['force_fallback']).split()[0] == 'kill'
     assert restart['force_fallback'].split()[1:2] == ['-TERM']
     assert svc['match']['path'] == fpreal.APP_PATH
+
+
+def test_running_port_grace_is_declared_and_bounded(fpreal):
+    """Q-1 短预算: 本仓自定 (上游 policy 无对应项) ⇒ 锁区间, 防被误改回 0 或拉长。
+
+    - `>0`: 0 = 取消等待, 与「刚 open 完端口还没起」的窗口冲突（旧短路只是不探, 0 则是探一次就判死）;
+    - `>= 3×POLL_INTERVAL`: 至少 3 次探测, 否则等于只探一次;
+    - `< READY_TIMEOUT/4`: 一轮采集不得为「代理暂停」多等 ≥45s（180s 预算是「要拉起」分支的冷启动用）。
+    """
+    grace = fpreal.RUNNING_PORT_GRACE
+    assert grace > 0, grace
+    assert grace >= fpreal.POLL_INTERVAL * 3, (grace, fpreal.POLL_INTERVAL)
+    assert grace < fpreal.READY_TIMEOUT / 4, (grace, fpreal.READY_TIMEOUT)

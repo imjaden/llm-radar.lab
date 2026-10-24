@@ -12,7 +12,7 @@
 | 口径 | CL151 要求 | 本仓实现 | 结论 |
 |:---|:---|:---|:---|
 | 需要信号 | 采集要发起（不是 CDP 9222） | 节流判断（wrapper step 0）先于代理（step 1）；只有真要采集才 ensure | ✅ |
-| 代理就绪 | FlClash 在运行 **且** 7890 可连（CL151 §2） | 未运行 → `open -g -a FlClash` 后轮询 `is_port_listening(7890)`；**已在运行 → 只判进程，不探端口**（真源 `ensure_ready` 的 `already_running` 短路） | ⚠️ 端口判据只覆盖「本轮拉起」分支：「在运行但 7890 关闭」不门禁（→ §4 差异 3 / O-6 待决策）；进程判据用 pgrep 双判据（→ §4 差异 1） |
+| 代理就绪 | FlClash 在运行 **且** 7890 可连（CL151 §2） | 未运行 → `open -g -a FlClash` 后轮询 `is_port_listening(7890)`；**已在运行 → 先探端口**：可连 ⇒ 复用，不可连 ⇒ 短预算 `RUNNING_PORT_GRACE=10s` 后再探，仍不可连 ⇒ `not_ready(reason=port_closed)`（2026-10-24 评审后修复，见 §2b） | ✅ 两分支都探端口（此前「已在运行」分支短路，见 §4 差异 3 历史）；进程判据仍用 pgrep 双判据（→ §4 差异 1） |
 | 开启命令 | `open -g -a FlClash`（禁 `service restart`） | `START_CMD=('open','-g','-a','FlClash')` | ✅（此前漏 `-g`，本批修正，见 §2-1） |
 | CDP 9222 | 只代表浏览器在，不能当代理就绪 | 代理判定不读 9222；SC4b 实测「浏览器在 + 代理停」仍会拉起 | ✅ |
 
@@ -40,6 +40,12 @@
 
 新增回归：`test_ensure_ready_running_but_port_closed_is_not_ready`（真源）、`test_flclash_running_but_port_closed_skips_round`（cron 编排）、`test_no_ensure_mode_only_probes`（采集器）、`test_already_running_flclash_is_never_owned`（改为「仍验端口但不接管」）。全量 **324 passed, 2 deselected**。
 
+**delta 复审注记（review profile，2026-10-24 22:5x）**：
+
+- **端口两侧同源（本批复审发现并修复）**：Q-1 后端口是**硬门禁**（不再只作用于「要拉起」分支）⇒ wrapper 与采集器必须验同一端口。wrapper 现 `export TWITTER_FLCLASH_PORT="$FLCLASH_PORT"`，`twitter-collector.py::_flclash_port()` 读同一变量（未设 ⇒ 真源默认 `READY_PORT`）。修复前：`TWITTER_FLCLASH_PORT=7899` 时 wrapper 验 7899 通过、采集器再验默认 7890 ⇒ 每轮静默跳到「未就绪」，一次都采不到（只读探针 C：`ensure(port=7899)` ⇒ `reason=port_closed` 且响应含 `port` 键）。新增 3 例回归（端口透传 / 非法值回退 / `NO_ENSURE` 分支同端口）+ 1 例接线回归（`ENSURE=0` 必须真把 `TWITTER_PROXY_NO_ENSURE=1` 传给采集器——原来只测了采集器侧分支，删掉 wrapper 的 `export` 仍全绿）。
+- **归属判定的实现与文述不一致**：上表写「用 `started` 语义决定 `_flclash_owned`」，实际实现是 `_flclash_ensure_ready()` 只返回 `ok` 布尔 + `was_running = _is_flclash_running()`。正常路径等价；残留两个 µs 级竞态（检查后用户手动打开 ⇒ 可能误释放；检查与 ensure 之间进程退出 ⇒ 可能拉起却不释放）。建议后续把 helper 返回值改为完整 dict、`owned = res['started']`（见评审报告 OBS-5，🟢 不改）。
+- **预算关系（请求 §2.3）**：`RUNNING_PORT_GRACE=10s` 只覆盖「进程在、端口未 LISTEN」的短窗口；`READY_TIMEOUT=180s`（= 上游 `verify.wait`）只用于「本轮需拉起」的冷启动；两者不叠加。实测（mock 端口探针，未起 GUI）：端口恒不通 ⇒ **10.21s** 返回 `port_closed` 且**未发 `open`**（实例数不变）；第 3 次探测起来 ⇒ **4.14s** 返回 `already_running`。10s 的取值约束 = `≥3×POLL_INTERVAL` 且 `< READY_TIMEOUT/4`，已加断言锁定（`test_running_port_grace_is_declared_and_bounded`；把常量改回 0 该用例变红）。
+
 ## 3. SC 实测（2026-10-24 20:59–21:05，真机）
 
 | SC | 前置 | 命令 | 实测 |
@@ -55,7 +61,7 @@
 
 1. **进程判据**：CL151 建议 `macosx service check --json` → `decisions[FlClash].found`；本仓保留 `pgrep -x` ∪ 应用路径双判据。理由：`macosx` 只存在于 `~/.local/bin`，**cron PATH 不可见**（实测 `env -i PATH=… sh -lc 'command -v macosx'` 为空），改用需硬编码绝对路径并承担每次 1.3s（降级时 20s）子进程开销；且 2026-10-09 已把 pgrep 双判据收敛为本仓唯一真源（防 `osascript … 'quit app "FlClash"'` 自命中）。端口判据两侧同源（7890）。
 2. **预算**：CL151 例给 90s；本仓沿用 `READY_TIMEOUT=180s`（对齐上游 `verify.wait`，冷启动实测 1–30s，180s 留足余量）。
-3. **就绪判据的两分支**（2026-10-24 评审补记）：CL151 §3 口径是 `port_open(7890) and found`，**两个分支都探端口**；本仓 `ensure_ready` 在 `is_running()` 为真时**短路返回 `ok=True`、不再探 7890**（对齐上游 policy「已在运行 → 直接复用」语义，也是 `llm-radar-collector.py` 海外源共用同一真源的原因）。后果：`FlClash 在运行但 7890 关闭`（暂停代理 / 改端口 / 拉起后端口尚未 LISTEN 的窗口）**不会被判未就绪** ⇒ 本轮继续采集 ⇒ 全部 target 网络失败 ⇒ `evaluate_results` 走「本轮无可用数据」`exit 1`（= 记失败），与 R1「不当异常」的意图相反。修复需要同时改真源分支与包装层归属判定（`ensure --json` 读 `started` 才能保住「只释放自启实例」），属跨项目口径变更 ⇒ 挂 O-6 待决策（建议 CL152 处理）。
+3. **就绪判据的两分支**（2026-10-24 评审补记 → **当日评审后已消除**）：CL151 §3 口径是 `port_open(7890) and found`，**两个分支都探端口**；修复前本仓 `ensure_ready` 在 `is_running()` 为真时短路返回 `ok=True`、不探 7890，后果是「FlClash 在运行但 7890 关闭」（暂停代理 / 改端口 / 拉起后端口尚未 LISTEN 的窗口）不判未就绪 ⇒ 本轮继续采集 ⇒ 全部 target 网络失败 ⇒ `evaluate_results` 走「本轮无可用数据」`exit 1`（= 记失败），与 R1「不当异常」的意图相反。**2026-10-24 评审后已按建议修复**：真源下推端口判据 + 短预算 `RUNNING_PORT_GRACE=10s`（仍沿用上游「已在运行 → 直接复用」的快路径，只是复用前先验端口）+ 包装层取消短路、按 `was_running` 定归属（见 §2b）。
 
 ## 5. 观察项
 
@@ -63,8 +69,8 @@
 - **O-2** 采集后释放与用户日常使用：本批保留「仅释放本脚本拉起的实例」；用户自行开的 FlClash 不会被关。
 - **O-3** `flclash_proxy.py::notify_required()` 现在无人调用（保留函数，`notify` 子命令仍在）；R3「只保留 FlClash 侧超时重启一条通知」据此成立。
 - **O-4** `open -g` 的用户可感知副作用（2026-10-24 评审补记）：`-g` 只保证**不抢焦点/不激活**，FlClash 是常规 app（`Info.plist` 无 `LSUIElement` ⇒ Dock 图标仍会出现）。更关键的是本机 app 带 `com.apple.quarantine` 且为 adhoc 签名（`codesign -dv` → `Signature=adhoc`；`spctl -a -vv` → `rejected`）：**FlClash 升级/重装后首次拉起若需用户在 GUI 确认「仍要打开」，cron 侧无交互 ⇒ ensure 超时 ⇒ 每轮静默跳过**（正是 O-1 的不可见区）。缓解：升级后手工启动一次并确认；日报建议带代理状态行。
-- **O-5** `TWITTER_FLCLASH_ENSURE=0` 的语义已漂移（评审补记）：该开关现在只停用**包装层编排**；`twitter-collector.py` 入口无条件 `_ensure_proxy_ready()` ⇒ 仍会拉起 FlClash，而包装层不接管（`OWNED_FLCLASH=0`）⇒ 本轮**不释放** ⇒ FlClash 常驻，与「默认关闭、按需开启、用后释放」不符。生产 cron 未设该变量（默认 1），属潜在路径；若确认要保留该开关，应让 python 侧在 `=0` 时退化为「只探测不拉起」。
-- **O-6** 「在运行但 7890 不可连」不门禁（= §4 差异 3）：待决策是否把端口判据下推到 `already_running` 分支（`already_running` + 端口不通 ⇒ 短预算等待/直接判未就绪）+ 包装层改用 `ensure --json` 读 `started` 维持归属判定。
+- **O-5** `TWITTER_FLCLASH_ENSURE=0` 的语义已漂移（评审补记 → **已闭合，Q-2**）：修复前该开关只停用**包装层编排**，而 `twitter-collector.py` 入口无条件 `_ensure_proxy_ready()` ⇒ 仍会拉起 FlClash，包装层不接管（`OWNED_FLCLASH=0`）⇒ 本轮**不释放** ⇒ 常驻。**2026-10-24 评审后**：包装层在 `=0` 分支注入 `TWITTER_PROXY_NO_ENSURE=1`，采集器在该模式下只探测（进程 ∧ 端口）不拉起。生产 cron 未设该变量（默认 1）。
+- **O-6** 「在运行但 7890 不可连」不门禁（= §4 差异 3）→ **已闭合，Q-1**：端口判据已下推到 `already_running` 分支（短预算 10s 后 `port_closed`）；包装层改用「始终 ensure + `was_running` 定归属」维持「只释放自启实例」（未采用 `ensure --json` 读 `started` 的方案，理由见 §2b 评审注记）。
 
 ## 6. 评审修订（2026-10-24，review profile）
 

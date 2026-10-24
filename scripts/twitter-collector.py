@@ -60,21 +60,51 @@ def _is_flclash_running():
     return _flclash_is_running()
 
 
+def _flclash_port():
+    """就绪端口: 与 wrapper 同一环境变量 `TWITTER_FLCLASH_PORT`（未设 → 返回 None, 走真源默认 `READY_PORT`）。
+
+    Q-1 后端口是**硬门禁**（不再只作用于「要拉起」分支）⇒ 两侧端口必须同源；否则 wrapper 验
+    `7899` 通过、采集器再验默认 `7890` 必失败 ⇒ 每轮静默跳过（新增回归：
+    `test_flclash_port_env_is_honored`）。
+    """
+    raw = str(os.environ.get('TWITTER_FLCLASH_PORT', '')).strip()
+    if not raw:
+        return None
+    try:
+        return int(raw)
+    except ValueError:
+        print(f'[twitter-collector] ⚠️  TWITTER_FLCLASH_PORT={raw!r} 非整数, 回退真源默认端口',
+              file=sys.stderr)
+        return None
+
+
 def _ensure_proxy_ready(timeout=None):
     """确保代理就绪（CL151: 采集入口与 CDP 断连重连两处都调）。
 
     已在运行 → 验端口后立即复用; 未运行 → `open -g -a FlClash` 并等端口可连。
     超时预算默认沿用真源 READY_TIMEOUT(180s, 对齐上游 verify.wait)。
-    Q-2: `TWITTER_PROXY_NO_ENSURE=1`（wrapper 在 TWITTER_FLCLASH_ENSURE=0 时注入）⇒ 只探测、不拉起。
+    Q-2: `TWITTER_PROXY_NO_ENSURE=1`（wrapper 在 `TWITTER_FLCLASH_ENSURE=0` 时注入）⇒ 只探测、不拉起。
     """
+    port = _flclash_port()
+
+    def _probe():
+        """只探测: 进程 ∧ 端口 (不拉起)。"""
+        if not _is_flclash_running():
+            return False
+        return _flclash_is_port_listening() if port is None else _flclash_is_port_listening(port)
+
     if str(os.environ.get('TWITTER_PROXY_NO_ENSURE', '')).strip().lower() in ('1', 'true', 'yes'):
-        ok = bool(_is_flclash_running() and _flclash_is_port_listening())
-        print(f"[twitter-collector] ℹ️  TWITTER_PROXY_NO_ENSURE=1, 只探测不拉起: "
+        ok = _probe()
+        print(f"[twitter-collector] ℹ️  TWITTER_PROXY_NO_ENSURE=1, 只探测不拉起 (端口 {port or '默认'}): "
               f"{'就绪' if ok else '未就绪'}", file=sys.stderr)
         return ok
-    kwargs = {} if timeout is None else {'timeout': timeout}
     try:
-        return bool(_flclash_ensure_ready(**kwargs).get('ok'))
+        if port is None:
+            res = _flclash_ensure_ready() if timeout is None else _flclash_ensure_ready(timeout=timeout)
+        else:
+            res = (_flclash_ensure_ready(port=port) if timeout is None
+                   else _flclash_ensure_ready(port=port, timeout=timeout))
+        return bool(res.get('ok'))
     except Exception as e:  # noqa: BLE001  真源不可用时不阻塞采集判定
         print(f'[twitter-collector] ⚠️  代理就绪探测异常: {type(e).__name__}: {e}',
               file=sys.stderr)

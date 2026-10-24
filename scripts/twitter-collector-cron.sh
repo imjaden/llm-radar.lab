@@ -5,7 +5,7 @@
 #   0) 节流: twitter.json 生成 < TWITTER_THROTTLE_HOURS 则跳过 (`--force` 绕过) —— 支持 cron 每小时尝试,
 #      任意一次唤醒都能补上被休眠错过的槽位 (固定 09:20/21:20 会整槽丢失: 2026-10-07~09 实测断 3 天)。
 #   1) FlClash 代理 (X 必需): 未运行 → 拉起 + 等 7890 LISTEN (≤180s) → 采集后释放;
-#      原本就在运行 → 采集后保持运行不动。
+#      原本就在运行 → 先验端口 (不通 ⇒ 短预算 10s 后判未就绪, 不重复拉起) → 采集后保持运行不动。
 #      **探测/就绪/起停唯一真源 = scripts/flclash_proxy.py** (本脚本只编排, 不自持 pgrep/osascript/nc);
 #      命令与阈值对齐声明层真源 script-miner/projects/macosx/macosx-service-policy.json
 #      (services[FlClash].restart: stop=`osascript -e 'quit app "FlClash"'` / grace 20s /
@@ -15,7 +15,7 @@
 #
 # 环境变量:
 #   TWITTER_THROTTLE_HOURS          数据新鲜度节流阈值 h (默认 5; 0 = 关闭节流)
-#   TWITTER_FLCLASH_ENSURE          1=管理 FlClash 起停 (默认), 0=不管理 (仅沿用旧的 python 侧检测)
+#   TWITTER_FLCLASH_ENSURE          1=管理 FlClash 起停 (默认), 0=不管理生命周期 (采集器只探测不拉起)
 #   TWITTER_FLCLASH_PORT            就绪判据端口 (默认 7890)
 #   TWITTER_FLCLASH_READY_TIMEOUT   启动后等就绪秒数 (默认 180)
 #   TWITTER_FLCLASH_GRACE           优雅退出宽限秒数 (默认 20)
@@ -250,6 +250,9 @@ if [ "$FORCE" != "1" ] && [ "$THROTTLE_HOURS" != "0" ]; then
 fi
 
 # ===== 1) FlClash 代理 =====
+# 端口两侧同源 (Q-1 后端口是硬门禁): 采集器子进程按同一 TWITTER_FLCLASH_PORT 探测;
+# 否则本脚本验 A 端口通过、采集器再验真源默认 7890 失败 ⇒ 每轮静默跳到「未就绪」。
+export TWITTER_FLCLASH_PORT="$FLCLASH_PORT"
 if [ "$FLCLASH_ENSURE" = "1" ]; then
   # CL151: 就绪失败 ⇒ 本轮静默跳过（跳过 ≠ 失败: 不计连败、不告警、不发通知）
   if ! ensure_flclash; then

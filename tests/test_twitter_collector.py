@@ -1012,6 +1012,42 @@ class TestProxyEnsureSkip:
                             lambda *a, **k: pytest.fail('非 macOS 不得执行 open/pgrep'))
         assert tc._ensure_proxy_ready() is True
 
+    def test_flclash_port_env_is_honored(self, tc, monkeypatch):
+        """Q-1 端口同源: wrapper 注入的 `TWITTER_FLCLASH_PORT` 必须透传给真源。
+
+        否则 wrapper 验 7899 通过、采集器再验默认 7890 失败 ⇒ 每轮静默跳到「未就绪」（端口成硬门禁后才会暴露）。
+        """
+        monkeypatch.setenv('TWITTER_FLCLASH_PORT', '7899')
+        seen = {}
+        monkeypatch.setattr(tc, '_flclash_ensure_ready',
+                            lambda **k: (seen.update(k), {'ok': True})[1])
+        assert tc._ensure_proxy_ready() is True
+        assert seen == {'port': 7899}, seen
+
+    def test_flclash_port_env_bad_value_falls_back(self, tc, monkeypatch):
+        """非法端口值 → 回退真源默认 (不抛栈, 不误判)。"""
+        monkeypatch.setenv('TWITTER_FLCLASH_PORT', 'not-a-port')
+        seen = {}
+        monkeypatch.setattr(tc, '_flclash_ensure_ready',
+                            lambda **k: (seen.update(k), {'ok': True})[1])
+        assert tc._ensure_proxy_ready() is True
+        assert seen == {}, seen
+
+    def test_no_ensure_mode_probes_same_port(self, tc, monkeypatch):
+        """Q-2 只探测分支也必须用同一端口 (否则 ENSURE=0 下同样永久误判未就绪)。"""
+        monkeypatch.setenv('TWITTER_PROXY_NO_ENSURE', '1')
+        monkeypatch.setenv('TWITTER_FLCLASH_PORT', '7899')
+        monkeypatch.setattr(tc, '_is_flclash_running', lambda: True)
+        seen = {}
+
+        def fake_probe(*a, **k):
+            seen['port'] = a[0] if a else k.get('port')
+            return True
+
+        monkeypatch.setattr(tc, '_flclash_is_port_listening', fake_probe)
+        assert tc._ensure_proxy_ready() is True
+        assert seen['port'] == 7899, seen
+
 
 # ===== CL151: CDP 断连重连点 (attach 失败 → ensure + 只重试一次) =====
 

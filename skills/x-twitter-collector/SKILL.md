@@ -150,8 +150,11 @@ start `open -g -a FlClash`（`-g` 不抢焦点；本仓 2026-10-24 CL151 才补�
   单一 `-f` + 应用名 会被 `osascript -e 'quit app "FlClash"'` 这类"命令行含 FlClash"的进程自命中(假阳性);
   判别力反例见 `tests/test_flclash_proxy.py::test_counterexample_osascript_shaped_process_not_matched`
   (内含旧口径对照断言, 保证该用例不是空护栏)。
-- `TWITTER_FLCLASH_ENSURE=0` 只关闭**包装层**编排；`twitter-collector.py` 入口仍走同一真源
-  `_ensure_proxy_ready()` ⇒ 未运行会**按需拉起**（且包装层不接管 ⇒ 本轮不释放；见 ops 文档 O-5）。
+- `TWITTER_FLCLASH_ENSURE=0` 只关闭**包装层**编排, 并向采集器注入 `TWITTER_PROXY_NO_ENSURE=1`
+  (2026-10-24 评审后 Q-2) ⇒ `twitter-collector.py` 的 `_ensure_proxy_ready()` **只探测 (进程 ∧ 端口) 不拉起**,
+  不会再「被拉起后常驻」(ops 文档 O-5 已闭合)。
+- 就绪判据**两个分支都探端口** (2026-10-24 评审后 Q-1): 已在运行 → 先探; 不通 ⇒ 短预算 `RUNNING_PORT_GRACE=10s`
+  再探, 仍不通 ⇒ `not_ready(reason=port_closed)`, 入口按「未就绪」跳轮 (不再把「FlClash 开着但代理暂停」当可采集)。
 - 未就绪 → `⏸️ 跳过本轮` + **exit 0**, 不进入采集 (也不会拉起 Chrome); 跳过 ≠ 失败 (不计连败、不发通知, CL151 2026-10-24)。
   attach 失败的重连点: 先 `ensure` 再重试一次 (仅 attach 模式, 只重试一次)。
 

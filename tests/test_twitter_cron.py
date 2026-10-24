@@ -67,9 +67,12 @@ with socketserver.TCPServer(('127.0.0.1', port), Handler) as srv:
     srv.serve_forever()
 '''
 
-# 桩采集器: 睡 1s 后正常退出 (替代真实 Selenium 采集)
-COLLECTOR_STUB = '''import time
+# 桩采集器: 睡 1s 后正常退出 (替代真实 Selenium 采集); 顺带回显 wrapper 注入的代理环境变量
+COLLECTOR_STUB = '''import os, time
 print('[stub-collector] run', flush=True)
+print('[stub-collector] no_ensure=%s flclash_port=%s' % (
+    os.environ.get('TWITTER_PROXY_NO_ENSURE', ''),
+    os.environ.get('TWITTER_FLCLASH_PORT', '')), flush=True)
 time.sleep(1.0)
 '''
 
@@ -435,6 +438,8 @@ def test_flclash_started_then_released(sandbox):
     assert 'release --grace 20' in calls, calls
     assert not (sandbox['state'] / 'flclash.running').exists(), '运行态标记未清'
     assert _pids() == []
+    # ENSURE=1 (默认) 不得注入「只探测」开关; 端口须与真源调用同源透传给采集器
+    assert 'no_ensure= flclash_port=7890' in out, out
 
 
 def test_flclash_kept_if_already_running(sandbox):
@@ -518,6 +523,15 @@ def test_flclash_ensure_disabled_keeps_legacy_behavior(sandbox):
     assert '不管理 FlClash 生命周期' in out
     assert 'FlClash 未运行, 启动' not in out
     assert flclash_calls(sandbox) == [], flclash_calls(sandbox)
+
+
+def test_flclash_ensure_disabled_exports_probe_only_flag(sandbox):
+    """Q-2 接线: ENSURE=0 必须把 TWITTER_PROXY_NO_ENSURE=1 传给采集器 (否则「只探测」压根没生效)。"""
+    env = env_for(sandbox, TWITTER_FLCLASH_ENSURE='0')
+    r = run_cron(sandbox, env)
+    out = r.stdout + r.stderr
+    assert r.returncode == 0, out
+    assert '[stub-collector] no_ensure=1 flclash_port=7890' in out, out
 
 
 # ===== 节流 (§0 数据新鲜度, 支撑 cron 每小时尝试) =====
