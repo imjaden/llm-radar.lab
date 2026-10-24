@@ -9,7 +9,7 @@
 #      **探测/就绪/起停唯一真源 = scripts/flclash_proxy.py** (本脚本只编排, 不自持 pgrep/osascript/nc);
 #      命令与阈值对齐声明层真源 script-miner/projects/macosx/macosx-service-policy.json
 #      (services[FlClash].restart: stop=`osascript -e 'quit app "FlClash"'` / grace 20s /
-#       force_fallback=`kill -TERM {pid}` / start=`open -a FlClash` / verify.ports=[7890])。
+#       force_fallback=`kill -TERM {pid}` / start=`open -g -a FlClash` / verify.ports=[7890])。
 #   2) 调试 Chrome (默认 9222): 未就绪则拉起 (独立 profile, 复用登录态) → 采集 → 释放本脚本拉起的实例。
 # 幂等/安全: 只关「本脚本拉起的」「上轮遗留(pidfile)的」调试 Chrome 与 FlClash; 外部常驻实例一律不动。
 #
@@ -168,13 +168,13 @@ ensure_flclash() {
     echo "[twitter-cron] FlClash 已在运行 (pid: $(flclash_pids | tr '\n' ' ')) ⇒ 采集后保持运行"
     return 0
   fi
-  echo "[twitter-cron] FlClash 未运行, 启动 (open -a FlClash; 就绪判据 ${FLCLASH_PORT} LISTEN ≤${FLCLASH_READY_TIMEOUT}s)"
+  echo "[twitter-cron] FlClash 未运行, 启动 (open -g -a FlClash; 就绪判据 ${FLCLASH_PORT} LISTEN ≤${FLCLASH_READY_TIMEOUT}s)"
   if python3 "$FLCLASH_PY" ensure --timeout "$FLCLASH_READY_TIMEOUT" --port "$FLCLASH_PORT" >/dev/null; then
     OWNED_FLCLASH=1
     echo "[twitter-cron] FlClash 就绪 (${FLCLASH_PORT} LISTEN), 采集后释放"
     return 0
   fi
-  echo "[twitter-cron] ❌ FlClash 启动后 ${FLCLASH_READY_TIMEOUT}s 内 ${FLCLASH_PORT} 未 LISTEN, 无法访问 X" >&2
+  echo "[twitter-cron] ⏸️  FlClash 启动后 ${FLCLASH_READY_TIMEOUT}s 内 ${FLCLASH_PORT} 未 LISTEN, 本轮跳过 (不计失败; CL151)" >&2
   return 1
 }
 

@@ -12,6 +12,7 @@
 import importlib.util
 import json
 import re
+import sys
 from pathlib import Path
 
 import pytest
@@ -990,3 +991,89 @@ class TestProxyEnsureSkip:
             raise RuntimeError('helper gone')
         monkeypatch.setattr(tc, '_flclash_ensure_ready', boom)
         assert tc._ensure_proxy_ready() is False
+
+    def test_ensure_proxy_ready_true_on_non_darwin(self, tc, monkeypatch):
+        """非 macOS 恒 True, 且不得执行任何外部命令 (CI/Linux 不误伤, 也不误拉起)。"""
+        fp = sys.modules['flclash_proxy']
+        monkeypatch.setattr(tc.platform, 'system', lambda: 'Linux')
+        monkeypatch.setattr(fp, '_run',
+                            lambda *a, **k: pytest.fail('非 macOS 不得执行 open/pgrep'))
+        assert tc._ensure_proxy_ready() is True
+
+
+# ===== CL151: CDP 断连重连点 (attach 失败 → ensure + 只重试一次) =====
+
+class TestAttachReconnect:
+    """cmd_collect 的重连语义: 只在 attach 模式、只在 ensure 成功后, 且只重试一次。"""
+
+    def _targets(self):
+        return [{'name': 'A', 'handle': 'a', 'url': 'https://x.com/a',
+                 'enabled': True, 'max_tweets': 30}]
+
+    def _patch_collect_success(self, tc, monkeypatch):
+        written = {}
+        monkeypatch.setattr(tc, 'write_document',
+                            lambda doc, path=None: written.update(doc))
+        monkeypatch.setattr(tc, 'commit_and_push', lambda n: None)
+
+        def fake_fetch(driver, target, **kw):
+            return [{'id': '1', 'text': 'ok'}]
+
+        monkeypatch.setattr(tc, 'fetch_target', fake_fetch)
+        return written
+
+    def test_attach_retries_once_after_ensure(self, tc, monkeypatch, tmp_path):
+        attempts, ensured = [], []
+
+        def always_fail(*a, **k):
+            attempts.append(k.get('cdp_port'))
+            raise tc.FetchError('无法连接调试 Chrome (127.0.0.1:9222)')
+
+        monkeypatch.setattr(tc, 'start_driver', always_fail)
+        monkeypatch.setattr(tc, '_ensure_proxy_ready',
+                            lambda *a, **k: (ensured.append(1), True)[1])
+        assert tc.cmd_collect(self._targets(), tmp_path, cdp_port=9222) == 1
+        assert attempts == [9222, 9222], 'attach 失败应 ensure 后恰好重试一次'
+        assert ensured == [1], '重连前必须调一次 ensure (CL151 重连点)'
+
+    def test_attach_retry_recovers_and_collects(self, tc, monkeypatch, tmp_path):
+        attempts = []
+
+        def flaky(*a, **k):
+            attempts.append(k.get('cdp_port'))
+            if len(attempts) == 1:
+                raise tc.FetchError('无法连接调试 Chrome (127.0.0.1:9222)')
+            return object()
+
+        monkeypatch.setattr(tc, 'start_driver', flaky)
+        monkeypatch.setattr(tc, '_ensure_proxy_ready', lambda *a, **k: True)
+        written = self._patch_collect_success(tc, monkeypatch)
+        assert tc.cmd_collect(self._targets(), tmp_path, cdp_port=9222) == 0
+        assert len(attempts) == 2
+        assert len(written.get('targets') or []) == 1, '重连成功后应继续采集并写盘'
+
+    def test_attach_no_retry_when_proxy_not_ready(self, tc, monkeypatch, tmp_path):
+        attempts = []
+
+        def always_fail(*a, **k):
+            attempts.append(k.get('cdp_port'))
+            raise tc.FetchError('无法连接调试 Chrome (127.0.0.1:9222)')
+
+        monkeypatch.setattr(tc, 'start_driver', always_fail)
+        monkeypatch.setattr(tc, '_ensure_proxy_ready', lambda *a, **k: False)
+        assert tc.cmd_collect(self._targets(), tmp_path, cdp_port=9222) == 1
+        assert len(attempts) == 1, 'ensure 不就绪时不得重试 (避免无谓等待/掩盖真实断连)'
+
+    def test_non_attach_never_ensures_or_retries(self, tc, monkeypatch, tmp_path):
+        attempts, ensured = [], []
+
+        def always_fail(*a, **k):
+            attempts.append(k.get('cdp_port'))
+            raise tc.FetchError('有头 Chrome 启动失败')
+
+        monkeypatch.setattr(tc, 'start_driver', always_fail)
+        monkeypatch.setattr(tc, '_ensure_proxy_ready',
+                            lambda *a, **k: (ensured.append(1), True)[1])
+        assert tc.cmd_collect(self._targets(), tmp_path, cdp_port=None) == 1
+        assert attempts == [None], '非 attach 模式失败不得重试'
+        assert ensured == [], '非 attach 模式失败不得触发代理 ensure'

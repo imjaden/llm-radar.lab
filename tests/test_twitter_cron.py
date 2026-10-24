@@ -423,6 +423,7 @@ def test_flclash_started_then_released(sandbox):
     out = r.stdout + r.stderr
     assert r.returncode == 0, out
     assert 'FlClash 未运行, 启动' in out
+    assert 'open -g -a FlClash' in out, '日志须显示真源实际命令 (含 -g 不抢焦点)'
     assert 'FlClash 就绪 (7890 LISTEN), 采集后释放' in out
     assert '✅ FlClash 已释放' in out
     calls = flclash_calls(sandbox)
@@ -475,7 +476,8 @@ def test_flclash_start_not_ready_skips_round(sandbox):
     r = run_cron(sandbox, env)
     out = r.stdout + r.stderr
     assert r.returncode == 0, out
-    assert '未 LISTEN, 无法访问 X' in out
+    assert '未 LISTEN' in out
+    assert '无法访问 X' not in out, '跳过语义下不得再输出「无法访问 X」这类异常文案'
     assert '跳过本轮: FlClash 代理未就绪' in out
     assert 'ensure --timeout 2 --port 7890' in flclash_calls(sandbox)
     assert '[stub-collector] run' not in out
