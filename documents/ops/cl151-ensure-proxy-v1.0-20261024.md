@@ -29,6 +29,17 @@
 测试（`tests/`）：`test_flclash_proxy.py`（`-g` 与 policy 一致性断言，防再漂移）、`test_twitter_cron.py`（`test_flclash_start_not_ready_skips_round`：exit 0 + 跳过文案 + 不进采集 + 无残留 pid；另断言日志里出现 `open -g -a FlClash` 且**不得**出现 `无法访问 X`）、`test_twitter_collector.py`（`TestProxyEnsureSkip` 四例：跳过不采集不通知 / 委托真源 / 真源异常返回 False / 非 Darwin 恒 True 且不执行外部命令；`TestAttachReconnect` 四例：attach 失败恰好重试一次 / 重试成功后继续采集写盘 / ensure 不就绪时不重试 / 非 attach 模式不 ensure 不重试）。
 全量结果：`321 passed, 2 deselected`（非 selenium，`--ignore test_cli/test_selenium`；三件针对性复跑 `142 passed`）。
 
+## 2b. 评审反馈闭环（2026-10-24 21:40，CONDITIONAL PASS 86/100 → Q-1/Q-2 已修）
+
+评审提出两个真问题，均按推荐修复并真机验证：
+
+| 项 | 问题 | 修复 | 真机证据 |
+|:---|:---|:---|:---|
+| Q-1（SEC-1 / LR-SEC-023） | `ensure_ready()` 在「已在运行」分支直接返回 ok、**不探 7890**；CL151 §3 要求 `port_open and found`。后果：代理暂停/端口未起时判「就绪」⇒ 整轮抓取失败（表现成「未找到 tweet 元素」，易误判登录态/风控） | 新增 `RUNNING_PORT_GRACE=10s`：已在运行但端口不通 ⇒ 短预算等待后返回 `not_ready(reason=port_closed)`；wrapper 取消「在运行就直接返回」的短路，改为**始终 ensure + was_running 决定归属**（不重复拉起、不误释放）；主采集同步改为「无论是否在运行都 ensure」，并用 `started` 语义决定 `_flclash_owned`（此前若在运行则不会走到这段，改后必须靠 was_running 防误杀） | `python3 scripts/flclash_proxy.py ensure --port 7899`（FlClash 在跑、端口关）⇒ `{"ok": false, "reason": "port_closed", "pids": [67192, 67199]}`，10s 内不可达告警，**未二次拉起**（实例数仍 1） |
+| Q-2（DOC-2） | `TWITTER_FLCLASH_ENSURE=0` 时 python 入口仍会 ensure 拉起，而释放只在 wrapper 的 owned 分支 ⇒ 可能「拉起后常驻」 | wrapper 在 ENSURE=0 时注入 `TWITTER_PROXY_NO_ENSURE=1`；`_ensure_proxy_ready()` 在该模式下**只探测（进程 ∧ 端口）不拉起** | `TWITTER_FLCLASH_ENSURE=0 … --force` ⇒ 日志 `ℹ️ TWITTER_PROXY_NO_ENSURE=1, 只探测不拉起: 未就绪` → `⏸️ 跳过本轮`，exit 0，代理**未被拉起** |
+
+新增回归：`test_ensure_ready_running_but_port_closed_is_not_ready`（真源）、`test_flclash_running_but_port_closed_skips_round`（cron 编排）、`test_no_ensure_mode_only_probes`（采集器）、`test_already_running_flclash_is_never_owned`（改为「仍验端口但不接管」）。全量 **324 passed, 2 deselected**。
+
 ## 3. SC 实测（2026-10-24 20:59–21:05，真机）
 
 | SC | 前置 | 命令 | 实测 |
