@@ -95,7 +95,7 @@ def is_port_listening(port=READY_PORT, host='127.0.0.1', timeout=PROBE_TIMEOUT):
 
 
 def ensure_ready(timeout=READY_TIMEOUT, port=READY_PORT):
-    """未运行 → `open -a FlClash` + 轮询等端口 LISTEN; 已在运行 → 直接复用, 不做任何动作。"""
+    """未运行 → `open -g -a FlClash` + 轮询等端口 LISTEN; 已在运行 → 直接复用, 不做任何动作。"""
     if not _is_darwin():
         return {'ok': True, 'started': False, 'reason': 'non_darwin', 'pids': []}
     if is_running():
