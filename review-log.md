@@ -1588,3 +1588,37 @@
 - 未改任何数据产物 / 未跑全量测试；仅跑文档 §5/§6 的只读命令（--digest / --alert / launchctl print / lsof / log show）。
 
 ---
+
+## 2026-10-24 — CL151 ensure-proxy 实现评审 (0044fb5 + 1c2e21b)
+
+- **review者**: Security Reviewer (review profile)
+- **范围**: 已 push `0044fb5`（`flclash_proxy` 补 `-g` / cron「跳过≠失败」/ `_ensure_proxy_ready()` / attach 重连一次）+ `1c2e21b`（ops 实施记录 + daily-checker 回执 + README 索引）；对照件 = `daily-checker/.../CL151-twitter-collector-ensure-proxy-20261024.md`（仓外只读）
+- **Tracking**: SEC-1 LR-SEC-023 就绪判据「已在运行」分支不探 7890（与 CL151 §3 偏差，未声明）; SEC-2 LR-SEC-024 cron 自动拉起 quarantine+adhoc 签名 app; TST-1 attach 重连分支零覆盖; DOC-1 三处仍写 `open -a` / exit 1; DOC-2 `ENSURE=0` 语义漂移; OBS-1~4 🟢; findings_open 2
+- **状态**: ⏳ CONDITIONAL PASS — 86/100 (B+)
+- **报告**: documents/reviews/llm-radar-cl151-ensure-proxy-review-v1.0-20261024.md
+- **实现 prompt**: ⬜ 无需生成 (2 项行为变更挂 Q-1/Q-2 待决策；6 项文档/测试修订已 push)
+
+### 发现摘要
+
+| # | Severity | Title | Status |
+|---|----------|-------|--------|
+| SEC-1 / LR-SEC-023 | 🟡 | `ensure_ready` 在 `is_running()` 真时短路 ok、不探 7890（cron 同款短路）⇒「在运行但端口关闭」走采集失败 exit 1，与 CL151 §2/§3「代理未就绪 ⇒ 跳过」相反 | ⬜ 待确认 Q-1（建议 CL152）；文档已纠偏（§1/§4-3/O-6） |
+| SEC-2 / LR-SEC-024 | 🟡 | cron `open -g` 拉起带 `com.apple.quarantine` + adhoc 签名的 FlClash（`spctl` rejected）；升级/重装后首次需 GUI 确认 ⇒ 每轮静默跳过；O-1/O-2 未覆盖 | ⬜ 待用户接受；O-4 已登记 |
+| TST-1 | 🟡 | attach 重连分支零覆盖：删掉整段逻辑 119 例全绿 | ✅ 补 `TestAttachReconnect` 4 例 + 非 Darwin 1 例；3 组变异全变红 |
+| DOC-1 | 🟡 | cron 头注释/日志、handbook §2.3、SKILL.md 仍写 `open -a FlClash` 与「未就绪 exit 1」 | ✅ 已修 |
+| DOC-2 | 🟡 | `TWITTER_FLCLASH_ENSURE=0` 只停包装层，python 入口仍拉起且不释放（FlClash 可常驻） | ✅ O-5 已声明；Q-2 待决策 |
+| OBS-1 | 🟢 | 跳过路径仍印 `❌ … 无法访问 X`（日志侧易误判失败） | ✅ 改为 `⏸️ … 本轮跳过` |
+| OBS-2 | 🟢 | 重连守卫近乎恒真（入口已 ensure）⇒ 等价无条件重试一次；锁持有期间可等 ensure ≤180s | ✅ 记录不改 |
+| OBS-3 | 🟢 | 同轮 ensure 调 2~3 次（cron → python → 重连），已在运行分支零成本 | ✅ 记录不改 |
+| OBS-4 | 🟢 | `twitter-collector._is_flclash_running` 仅被「两入口委托一致」测试使用 | ✅ 保留 |
+
+### 数据验证要点
+
+- 变异矩阵（真跑）：M1 去 `-g` → 2 failed；M2 cron `exit 0`→`1` → 1 failed；M3 python `return 0`→`1` → 1 failed；补测前删整段重连 → **119 passed（零覆盖）**；补测后 M4/M5/M6 → 2/1/2 failed。
+- 只读探针：`ensure_ready(running=True, port7890=False)` → `{'ok': True, 'reason': 'already_running'}`；attach 失败 = 2 次 `start_driver` + 1 次 ensure；非 attach = 1 次 + 0 次 ensure；无 `.collector.lock` 残留。
+- 复跑：三件 **142 passed**；全量（非 selenium）**321 passed, 2 deselected**；跑后 `git checkout -- data/snapshot.json overview.json timestamp.json` 已还原。
+- `grep -rn "无法访问 X" scripts/` = 空（修前命中 `twitter-collector-cron.sh:177`）；X 管线无连败计数器（`grep consecutive scripts/` 仅注释）⇒「不计连败」天然成立。
+- 系统层只读：`Info.plist` 无 `LSUIElement`（Dock 图标仍现）；`codesign -dv` → `Signature=adhoc`；`xattr` 有 `com.apple.quarantine`；`spctl -a -vv` → rejected；`crontab -l` 未设 `TWITTER_FLCLASH_ENSURE`（默认 1）；评审侧未启动 FlClash（`pgrep -x FlClash` 空、7890 未监听）。
+- git：评审开始 `origin/main...HEAD` = `0 0`；reflog 全为普通 commit（无 force/amend）；`git log --since=2026-10-20 -- AGENTS.md CLAUDE.md` 为空。
+
+---

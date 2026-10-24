@@ -136,9 +136,9 @@ retention 规则 (条数优先滑动窗口):
 
 真源 = `script-miner/projects/macosx/macosx-service-policy.json` (`services[FlClash].restart`):
 stop `osascript -e 'quit app "FlClash"'` / grace 20s / force_fallback `kill -TERM {pid}` /
-start `open -a FlClash` / verify.ports `[7890]`。
+start `open -g -a FlClash`（`-g` 不抢焦点；本仓 2026-10-24 CL151 才补齐）/ verify.ports `[7890]`。
 
-- 采集前: 未运行 → `open -a FlClash` + 等 **7890 LISTEN** (≤180s) → 采集后**释放**;
+- 采集前: 未运行 → `open -g -a FlClash` + 等 **7890 LISTEN** (≤180s) → 采集后**释放**;
   原本就在运行 → 只复用, 采集后**保持运行不动**。
 - 就绪判据只用端口, 不判"是否已把系统代理切过去"; 实测 `open -a` 后 7890 很快 LISTEN
   (2026-10-09 14:52 实测: 启动到就绪 <10s)。
@@ -150,9 +150,10 @@ start `open -a FlClash` / verify.ports `[7890]`。
   单一 `-f` + 应用名 会被 `osascript -e 'quit app "FlClash"'` 这类"命令行含 FlClash"的进程自命中(假阳性);
   判别力反例见 `tests/test_flclash_proxy.py::test_counterexample_osascript_shaped_process_not_matched`
   (内含旧口径对照断言, 保证该用例不是空护栏)。
-- `TWITTER_FLCLASH_ENSURE=0` 关闭**包装层**管理 (`twitter-collector.py` 仍用同一真源探测, 未运行则
-  exit 1 + 本地通知)。
-- 未就绪 → exit 1, 不进入采集 (也不会拉起 Chrome)。
+- `TWITTER_FLCLASH_ENSURE=0` 只关闭**包装层**编排；`twitter-collector.py` 入口仍走同一真源
+  `_ensure_proxy_ready()` ⇒ 未运行会**按需拉起**（且包装层不接管 ⇒ 本轮不释放；见 ops 文档 O-5）。
+- 未就绪 → `⏸️ 跳过本轮` + **exit 0**, 不进入采集 (也不会拉起 Chrome); 跳过 ≠ 失败 (不计连败、不发通知, CL151 2026-10-24)。
+  attach 失败的重连点: 先 `ensure` 再重试一次 (仅 attach 模式, 只重试一次)。
 
 ## 观察项 O-X: 收尾兜底缺口 (2026-10-07, 暂不实现)
 
