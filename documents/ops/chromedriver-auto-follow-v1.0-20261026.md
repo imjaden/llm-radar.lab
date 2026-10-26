@@ -130,6 +130,52 @@ watch 静默·去重·恢复 / CLI 退出码）+ 既有套件 ⇒ 全量 **343 p
 每小时守卫 `:05` **不带预算**（它不在采集路径上，最坏仍可达 ~990s），三入口并发由 `flock` 兜住
 （拿不到锁立即 `busy`）。文档此前「三入口同用 60s」的说法不成立，已改。
 
+## 4.4 运维卫生（2026-10-26 v1.4：日志轮转 + 代理可见性）
+
+### 4.4.1 日志轮转（copytruncate）
+
+- `scripts/rotate-logs.sh`：`cp -p` 出档 → `: >` 原地清零 → gzip → 保留最近 `--keep 7` 份；
+  触发 = `≥5MB` **或** 当天未轮转过（cron 每天 06:10 ⇒ 等价按日归档，保证「最近 N 天」语义可靠）。
+- **不 rename 的理由**：写入方每轮重新 `open(>>)`，但长跑进程（tail/grep 巡检、采集器继承的 stdout）可能仍持 fd
+  ⇒ rename 后新行写进旧 inode，表现为「日志突然不再增长」。copytruncate 保持路径与 inode 不变（实测 inode 前后一致）。
+- 覆盖目录：`cache/logs/*/*.log` + `~/Library/Logs/llm-radar/*.log`；空文件跳过；同秒多次轮转自动加序号避免覆盖。
+- cron：`llm-radar-rotate-logs`（`5a712b85b874`，`10 6 * * *`，`no_agent`，`deliver=local` —— 轮转不该发消息）。
+- 首次实跑（2026-10-26 12:20）：collector.log 1.46MB / twitter.log 785KB / mcp-server.log 159B 三档归档，
+  gz 合计 ~103KB，活文件归零。
+- 钉子：`tests/test_rotate_logs.py` 6 例（inode 不变 / 同日再跑无动作 / 超阈值同日仍轮转 / 保留 N 份 / dry-run 不落地 / 空文件跳过）。
+
+### 4.4.2 代理状态可见性（SEC-2 / LR-SEC-024 缓解）
+
+- 事实：`/Applications/FlClash.app` 带 `com.apple.quarantine`、`Signature=adhoc`、`spctl` 判 `rejected`
+  ⇒ Gatekeeper 首次打开需人工点「仍要打开」。本机已放行，但**升级/重装后**首次拉起会卡弹窗：
+  `open` 返回 0、app 未启动、7890 不通 ⇒ 采集按设计**静默跳过**（跳过 ≠ 异常）。
+- 处置（不改启动策略，只加可见性）：
+  1. `llm-radar-collect-report.py::proxy_state()` 三态：`未运行（按需启动）` /
+     `运行中・7890 可用` / `在运行但 7890 不可达（疑似待确认 Gatekeeper 授权）`；
+  2. **日报**固定多一行 `- 代理：…`（正常态不打扰，每天本来一条）；
+  3. **告警**：只有第三态才插到根因首位（`代理异常：…`），否则不出现；
+  4. 写进 SOP（见 §4.4.3），30 天后按出现次数决定是否把该态升级为独立告警。
+- 钉子：`tests/test_report_driver_facts.py` 新增 3 例（三态枚举 / 日报含行 / 告警根因首位）。
+
+### 4.4.3 SOP：FlClash 升级/重装后
+
+```bash
+open -a FlClash          # 走一次 GUI, 若弹「无法验证开发者」点「仍要打开」
+lsof -nP -iTCP:7890 -sTCP:LISTEN   # 确认代理端口起来
+python3 scripts/flclash_proxy.py ensure --port 7890   # 确认 helper 判 ok
+```
+之后无需人工干预：cron 需要代理时会自己 `open -g -a FlClash` 并在采集后释放。
+
+### 4.4.4 日志位置迁移（关闭 LR-SEC-021）
+
+- `twitter-chrome.log` 从 `/tmp/twitter-chrome.log`（可预测路径 + 644）迁到 `~/Library/Logs/llm-radar/`（目录 700）；
+  已迁移历史内容，并在 `/tmp` 留软链兜住旧配置。
+- 三处已改：LaunchAgent plist 的 `StandardOutPath`/`StandardErrorPath`、`scripts/twitter-collector-cron.sh` 的
+  `TWITTER_CHROME_LOG` 默认值（并 `mkdir -p`）、`cache/install-twitter-chrome-agent.sh`（`LOG_DIR` + 提示路径）。
+- ⚠️ plist 变更需重载才生效：`launchctl` 在网关会话被硬门禁拦截 ⇒ 需在 **Terminal.app** 里执行
+  `bash cache/install-twitter-chrome-agent.sh`（或 `launchctl bootout gui/$(id -u)/com.jaden.llm-radar-twitter-chrome && launchctl bootstrap gui/$(id -u) ~/Library/LaunchAgents/com.jaden.llm-radar-twitter-chrome.plist`）。
+  未重载期间 Chrome 的 stdout fd 仍指向旧 inode（只是日志缺失，不影响采集）。
+
 ## 5. 已知边界
 
 1. **采集进行中 Chrome 升级**：本次覆盖的是「采集开始前」与「每小时兜底」；会话中途升级仍会失败一轮，
