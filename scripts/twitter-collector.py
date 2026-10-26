@@ -606,6 +606,29 @@ class FetchError(Exception):
     """抓取失败 (单 target)"""
 
 
+def _target_major(cdp_port=None):
+    """从 CDP /json/version 读目标 Chrome 主版本（读不到 → None）。"""
+    if not cdp_port:
+        return None
+    import urllib.request
+    try:
+        with urllib.request.urlopen(
+                f'http://127.0.0.1:{cdp_port}/json/version', timeout=2) as r:
+            return int(json.load(r).get('Browser', '').split('/')[-1].split('.')[0])
+    except Exception:
+        return None
+
+
+def _driver_major(path):
+    """实跑 `<driver> --version` 取主版本（LR-CDG-008: 注入路径也要复核, 不能 100% 托付 manager）。"""
+    try:
+        p = subprocess.run([str(path), '--version'], capture_output=True, text=True, timeout=20)
+        mt = re.search(r'ChromeDriver\s+(\d+)\.', (p.stdout or '') + (p.stderr or ''))
+        return int(mt.group(1)) if mt else None
+    except Exception:
+        return None
+
+
 def _resolve_chromedriver(cdp_port=None):
     """定位 chromedriver 可执行文件 → (路径|None, 来源说明)。
 
@@ -614,14 +637,25 @@ def _resolve_chromedriver(cdp_port=None):
       TWITTER_CHROMEDRIVER 环境变量 > PATH > Selenium Manager 缓存(~/.cache/selenium) >
       webdriver-manager 缓存(~/.wdm)
     版本: 优先「与目标 Chrome 同 major」的最高 patch (major 从 CDP /json/version 读; 读不到取最高版本)。
+    LR-CDG-008: 注入路径也**实跑 --version 复核** main major（manager 判错时不能把 X 采集一起带错）;
+    复核不过 → 落到后面的缓存扫描。
     """
     import glob
     import shutil
-    import urllib.request
+
+    major = _target_major(cdp_port)
 
     env_path = os.environ.get('TWITTER_CHROMEDRIVER')
     if env_path and Path(env_path).is_file():
-        return env_path, 'env:TWITTER_CHROMEDRIVER'
+        env_major = _driver_major(env_path)
+        if env_major is None:
+            print(f'[twitter-collector] ⚠️  TWITTER_CHROMEDRIVER 无法读出主版本, 跳过: {env_path}',
+                  file=sys.stderr)
+        elif major is not None and env_major != major:
+            print(f'[twitter-collector] ⚠️  TWITTER_CHROMEDRIVER 主版本 {env_major} ≠ 目标 Chrome {major}, '
+                  f'回退缓存扫描: {env_path}', file=sys.stderr)
+        else:
+            return env_path, 'env:TWITTER_CHROMEDRIVER'
     on_path = shutil.which('chromedriver')
     if on_path:
         return on_path, 'PATH'
@@ -639,14 +673,6 @@ def _resolve_chromedriver(cdp_port=None):
         found = re.findall(r'\d+\.\d+\.\d+\.\d+', path)
         return tuple(int(x) for x in found[-1].split('.')) if found else (0, 0, 0, 0)
 
-    major = None
-    if cdp_port:
-        try:
-            with urllib.request.urlopen(
-                    f'http://127.0.0.1:{cdp_port}/json/version', timeout=2) as r:
-                major = int(json.load(r).get('Browser', '').split('/')[-1].split('.')[0])
-        except Exception:
-            major = None
     if major:
         same = [p for p in cands if vkey(p)[0] == major]
         if same:

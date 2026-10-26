@@ -305,8 +305,8 @@ fi
 if [ -z "${TWITTER_CHROMEDRIVER:-}" ] && [ -f "scripts/chromedriver_bootstrap.py" ]; then
   _drv="$(python3 scripts/chromedriver_bootstrap.py --print-path 2>/dev/null || true)"
   if [ -z "$_drv" ]; then
-    echo "[twitter-cron] chromedriver 未就绪 ⇒ 尝试自动跟随（ensure）"
-    python3 scripts/chromedriver_bootstrap.py --ensure >/dev/null 2>&1 || true
+    echo "[twitter-cron] chromedriver 未就绪 ⇒ 尝试自动跟随（ensure, 预算 60s）"
+    python3 scripts/chromedriver_bootstrap.py --ensure --deadline 60 >/dev/null 2>&1 || true
     _drv="$(python3 scripts/chromedriver_bootstrap.py --print-path 2>/dev/null || true)"
   fi
   if [ -n "$_drv" ]; then

@@ -23,6 +23,7 @@ import os
 import shutil
 import subprocess
 import sys
+import time
 from datetime import datetime
 from pathlib import Path
 
@@ -165,14 +166,25 @@ def _release_lock(fh):
         pass
 
 
-def ensure(timeout=90, download_timeout=300):
+def ensure(timeout=90, download_timeout=300, deadline=None):
     """就绪则零动作; 否则 upgrade（必要时先 download）→ 复核。
 
+    `deadline`（秒）: 总预算上限（LR-CDG-007）。采集前置守卫用它把最坏等待从 990s 压到 ~60s,
+    超预算 ⇒ action='deadline', 交回每小时 :05 的 cron 继续跟随（采集不陪等）。
     → (ok: bool, action: str, summary: dict, detail: str)
-      action ∈ noop / busy / upgraded / download_failed / upgrade_failed /
+      action ∈ noop / busy / upgraded / deadline / download_failed / upgrade_failed /
                stable_unmanaged / still_incompatible / no_manager
     """
-    st = check(timeout=timeout)
+    start = time.monotonic()
+
+    def budget(base):
+        left = _left(start, deadline)
+        return base if left is None else min(base, left)
+
+    def exhausted():
+        return deadline is not None and (_left(start, deadline) or 0.0) <= 0
+
+    st = check(timeout=budget(timeout))
     if st is None:
         return False, 'no_manager', {}, f'manager 不可用: {MANAGER}'
     s = state_summary(st)
@@ -183,31 +195,42 @@ def ensure(timeout=90, download_timeout=300):
     if lock_state == 'busy':
         return True, 'busy', s, '另一个入口正在 download/upgrade, 本入口跳过（不排队）'
     try:
-        return _follow(s, timeout, download_timeout)
+        return _follow(s, budget, exhausted, timeout, download_timeout)
     finally:
         _release_lock(holder)
 
 
-def _follow(s, timeout, download_timeout):
+def _left(start, deadline):
+    """→ None = 无预算限制; 否则剩余秒数（可为 0）。"""
+    return None if deadline is None else max(0.0, float(deadline) - (time.monotonic() - start))
+
+
+def _follow(s, budget, exhausted, timeout=90, download_timeout=300):
     detail = []
     if not s['icloud_has_compatible']:
-        rc, out = _run([MANAGER, 'download', '--json'], timeout=download_timeout)
+        if exhausted():
+            return False, 'deadline', s, '预算耗尽: 未开始 download'
+        rc, out = _run([MANAGER, 'download', '--json'], timeout=budget(download_timeout))
         detail.append(f'download rc={rc} {out.splitlines()[-1][:120] if out else ""}')
         if rc != 0:
             if _looks_permanent(out):
                 return False, 'download_failed', s, ' | '.join(detail)   # 永久性失败: 重试无意义
-            rc2, out2 = _run([MANAGER, 'download', '--json'], timeout=download_timeout)   # 网络抖动重试一次
+            if exhausted():
+                return False, 'deadline', s, '预算耗尽: 放弃 download 重试'
+            rc2, out2 = _run([MANAGER, 'download', '--json'], timeout=budget(download_timeout))
             detail.append(f'download retry rc={rc2} {out2.splitlines()[-1][:120] if out2 else ""}')
             if rc2 != 0:
                 return False, 'download_failed', s, ' | '.join(detail)
 
+    if exhausted():
+        return False, 'deadline', s, '预算耗尽: 未开始 upgrade'
     # --all --json: 非交互地升级**全部**注册路径（不加 --json 会 input() 等待, cron 下会挂住）
-    rc, out = _run([MANAGER, 'upgrade', '--all', '--json'], timeout=download_timeout)
+    rc, out = _run([MANAGER, 'upgrade', '--all', '--json'], timeout=budget(download_timeout))
     detail.append(f'upgrade rc={rc} {out.splitlines()[-1][:120] if out else ""}')
     if rc not in (0, UPGRADE_NOOP_RC):
         return False, 'upgrade_failed', s, ' | '.join(detail)
 
-    st2 = check(timeout=timeout)
+    st2 = check(timeout=budget(timeout))
     s2 = state_summary(st2)
     if _ready(s2):
         return True, ('upgraded' if rc == 0 else 'noop'), s2, ' | '.join(detail)
@@ -278,7 +301,21 @@ def _fingerprint(action, s) -> str:
 
 
 def watch(force=False):
-    """cron 入口: 状态变化才输出。→ (message_or_empty, exit_code)"""
+    """cron 入口: 状态变化才输出。
+
+    退出码**恒 0**（Q-4）：no_agent cron 对 rc≠0 会另发一条引擎级错误通知，
+    与「正文去重」叠加就变成每小时重复响；失败信息一律走正文（兄弟 watchdog 同口径）。
+    """
+    try:
+        return _watch(force)
+    except Exception as e:  # noqa: BLE001  写盘/manager 异常不得静默
+        return (f'🔴 LLM Radar chromedriver 守卫执行异常\n---\n**根因分析**\n'
+                f'- {type(e).__name__}: {str(e)[:160]}\n'
+                f'- 修复指令：python3 scripts/chromedriver_bootstrap.py --check\n'
+                f'---\n来源：cron job llm-radar-chromedriver-guard', 0)
+
+
+def _watch(force=False):
     prev = load_state()
     ok, action, after, detail = ensure()
     sig = _fingerprint(action, after)
@@ -296,8 +333,8 @@ def watch(force=False):
     if action == 'upgraded':          # 「事件」不是「状态」: 每次真升级都要报, 不做指纹去重
         return message(action, ok, prev.get('summary') or {}, after, detail), 0
     if prev.get('sig') == sig and not force:      # 同一故障指纹不重复发
-        return '', 0 if ok else 1
-    return message(action, ok, prev.get('summary') or {}, after, detail), (0 if ok else 1)
+        return '', 0
+    return message(action, ok, prev.get('summary') or {}, after, detail), 0
 
 
 def main(argv=None):
@@ -309,6 +346,8 @@ def main(argv=None):
     g.add_argument('--watch', action='store_true', help='cron 入口: 状态变化才输出消息')
     g.add_argument('--version', action='store_true', help='打印 chromedriver --version')
     ap.add_argument('--force', action='store_true', help='--watch 时忽略指纹去重')
+    ap.add_argument('--deadline', type=float, default=None,
+                    help='--ensure 的总预算秒数（采集前置守卫用 60；超预算即交回 cron）')
     a = ap.parse_args(argv)
 
     if a.print_path:
@@ -322,7 +361,7 @@ def main(argv=None):
         print(json.dumps(s, ensure_ascii=False))
         return 0 if _ready(s) else 1        # 退出码 = 「采集是否真的可用」, 不是 manager 的全局 verdict
     if a.ensure:
-        ok, action, after, detail = ensure()
+        ok, action, after, detail = ensure(deadline=a.deadline)
         print(json.dumps({'ok': ok, 'action': action, 'detail': detail,
                           **after}, ensure_ascii=False))
         return 0 if ok else 1

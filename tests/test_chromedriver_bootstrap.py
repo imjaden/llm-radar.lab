@@ -164,14 +164,64 @@ def test_watch_failure_deduped_then_recovery(cb, sandbox, monkeypatch):
            'good': [], 'stable': None}
     monkeypatch.setattr(cb, 'ensure', lambda **k: (False, 'still_incompatible', bad, 'upgrade rc=2'))
     m1, rc1 = cb.watch()
-    assert rc1 == 1 and '未能跟随' in m1
+    assert rc1 == 0 and '未能跟随' in m1, 'Q-4: 失败也只给正文, 退出码恒 0（避免引擎级重复告警）'
     m2, rc2 = cb.watch()
-    assert (m2, rc2) == ('', 1), '同一故障指纹不重复发（但退出码保持非零）'
+    assert (m2, rc2) == ('', 0), '同一故障指纹不重复发'
 
     good = {'verdict': 'compatible', 'chrome': '157.0.1.1', 'drivers': [], 'good': ['157.0.1.1']}
     monkeypatch.setattr(cb, 'ensure', lambda **k: (True, 'noop', good, ''))
     m3, rc3 = cb.watch()
     assert rc3 == 0 and '已恢复' in m3
+
+
+# ---------- deadline / 异常兜底（LR-CDG-007 / Q-4） ----------
+def test_ensure_deadline_short_circuits(cb, sandbox, monkeypatch):
+    """采集前置守卫的硬预算: 预算耗尽即返回 deadline, 不发起 download/upgrade（采集不陪等）。"""
+    monkeypatch.setattr(cb, 'check', lambda timeout=90: _check_payload(sandbox['stable'], '154.0.8037.92',
+                                                                      icloud=False))
+    monkeypatch.setattr(cb, '_run', lambda argv, timeout=120: sandbox['calls'].append(list(argv)) or (0, ''))
+    ok, action, after, detail = cb.ensure(deadline=0)
+    assert (ok, action) == (False, 'deadline'), detail
+    assert sandbox['calls'] == [], f'预算耗尽仍动了 manager: {sandbox["calls"]}'
+
+
+def test_ensure_deadline_bounds_subprocess_timeout(cb, sandbox, monkeypatch):
+    """剩余预算必须抬成子进程 timeout 上限（否则 300s 的 download 照样能压过 60s 预算）。"""
+    seq = iter([
+        _check_payload(sandbox['stable'], '154.0.8037.92'),       # 稳定路径旧
+        _check_payload(sandbox['stable'], '156.0.8078.47'),       # upgrade 后 ok
+    ])
+    monkeypatch.setattr(cb, 'check', lambda timeout=90: next(seq))
+    seen = []
+
+    def fake_run(argv, timeout=120):
+        seen.append((list(argv), timeout))
+        return 0, '✅ 升级完成'
+
+    monkeypatch.setattr(cb, '_run', fake_run)
+    ok, action, _, _ = cb.ensure(deadline=60)
+    assert (ok, action) == (True, 'upgraded')
+    assert seen and all(t <= 60.001 for _, t in seen), f'子进程 timeout 超出预算: {seen}'
+
+
+def test_watch_never_returns_nonzero_on_exception(cb, sandbox, monkeypatch):
+    """写盘/manager 异常不得静默, 也不得用 rc≠0 触发引擎级重复告警（Q-4）。"""
+    def boom(*a, **k):
+        raise OSError('disk full')
+
+    monkeypatch.setattr(cb, '_watch', boom)
+    msg, rc = cb.watch()
+    assert rc == 0, 'rc 必须恒 0'
+    assert '守卫执行异常' in msg and 'disk full' in msg
+
+
+def test_cli_ensure_accepts_deadline(cb, sandbox, monkeypatch, capsys):
+    monkeypatch.setattr(cb, 'check', lambda timeout=90: _check_payload(sandbox['stable'], '154.0.8037.92',
+                                                                      icloud=False))
+    monkeypatch.setattr(cb, '_run', lambda argv, timeout=120: sandbox['calls'].append(list(argv)) or (0, ''))
+    rc = cb.main(['--ensure', '--deadline', '0'])
+    out = capsys.readouterr().out
+    assert rc == 1 and '"action": "deadline"' in out, out
 
 
 # ---------- CLI ----------
@@ -227,7 +277,7 @@ def test_watch_reports_failure_when_verdict_unchanged(cb, sandbox, monkeypatch):
     monkeypatch.setattr(cb, 'ensure', lambda **k: (False, 'download_failed', _stale_stable(sandbox['stable']),
                                                    'download rc=1 网络不可达'))
     msg, rc = cb.watch()
-    assert rc == 1 and '未能跟随' in msg, 'verdict/good 不变时失败消息不得被去重'
+    assert rc == 0 and '未能跟随' in msg, 'verdict/good 不变时失败消息不得被去重'
 
 
 def test_watch_reports_each_upgrade_event(cb, sandbox, monkeypatch):

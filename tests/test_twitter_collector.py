@@ -842,10 +842,42 @@ class TestResolveChromedriver:
         return os
 
     def test_env_override_wins(self, tc, monkeypatch, tmp_path):
+        """注入口径：--version 读出主版本且与目标 Chrome 一致 ⇒ 采用（LR-CDG-008 复核通过）。"""
         p = tmp_path / 'chromedriver'
-        p.write_text('#!/bin/sh\n', encoding='utf-8')
+        p.write_text('#!/bin/sh\necho "ChromeDriver 156.0.8078.47 (abc)"\n', encoding='utf-8')
+        p.chmod(0o755)
         monkeypatch.setenv('TWITTER_CHROMEDRIVER', str(p))
+        monkeypatch.setattr(tc, '_target_major', lambda port=None: 156)
         assert tc._resolve_chromedriver(9222) == (str(p), 'env:TWITTER_CHROMEDRIVER')
+
+    def test_env_override_rejected_on_major_mismatch(self, tc, monkeypatch, tmp_path, capsys):
+        """LR-CDG-008: 注入路径主版本与目标 Chrome 不符 ⇒ 不得直接采用, 回退缓存扫描。"""
+        import glob
+        import os
+        p = tmp_path / 'chromedriver'
+        p.write_text('#!/bin/sh\necho "ChromeDriver 154.0.8037.92 (abc)"\n', encoding='utf-8')
+        p.chmod(0o755)
+        monkeypatch.setenv('TWITTER_CHROMEDRIVER', str(p))
+        monkeypatch.setattr(tc, '_target_major', lambda port=None: 156)
+        import shutil
+        monkeypatch.setattr(shutil, 'which', lambda _n: None)
+        monkeypatch.setattr(glob, 'glob', lambda _pat: ['/c/156.0.9.9/chromedriver'])
+        monkeypatch.setattr(os, 'access', lambda _p, _m: True)
+        path, src = tc._resolve_chromedriver(9222)
+        assert path == '/c/156.0.9.9/chromedriver'
+        assert 'chrome-major=156' in src
+        assert '主版本 154' in capsys.readouterr().err
+
+    def test_env_override_unreadable_version_falls_back(self, tc, monkeypatch, tmp_path, capsys):
+        """读不出 --version ⇒ 不信任注入路径（宁可回退缓存也不把采集带错）。"""
+        self._clear(monkeypatch)          # 先清 PATH/全局缓存/旧 env
+        p = tmp_path / 'chromedriver'
+        p.write_text('#!/bin/sh\nexit 0\n', encoding='utf-8')
+        p.chmod(0o755)
+        monkeypatch.setenv('TWITTER_CHROMEDRIVER', str(p))
+        monkeypatch.setattr(tc, '_target_major', lambda port=None: 156)
+        assert tc._resolve_chromedriver(9222) == (None, 'none')
+        assert '无法读出主版本' in capsys.readouterr().err
 
     def test_none_when_nothing_found(self, tc, monkeypatch):
         self._clear(monkeypatch)
