@@ -60,6 +60,18 @@ if [ -z "$DEEPSEEK_API_KEY" ]; then
     exit 1
 fi
 
+# ===== chromedriver 版本守卫（Chrome 自动升级后自动跟随；无 chromedriver-manager 的平台自动跳过） =====
+# 单一真源: script-miner 的 chromedriver-manager（download/upgrade/iCloud 归档）。
+# 这里只问「哪个驱动已被验证兼容」，拿到就注入 $CHROMEDRIVER（collector 候选序第一位）。
+if [ -z "${CHROMEDRIVER:-}" ] && [ -f "$SCRIPT_DIR/scripts/chromedriver_bootstrap.py" ]; then
+    _drv="$($PYTHON "$SCRIPT_DIR/scripts/chromedriver_bootstrap.py" --print-path 2>/dev/null || true)"
+    if [ -n "$_drv" ]; then
+        export CHROMEDRIVER="$_drv"
+        export TWITTER_CHROMEDRIVER="${TWITTER_CHROMEDRIVER:-$_drv}"
+        echo "[run] chromedriver: $_drv"
+    fi
+fi
+
 # ===== 执行 =====
 if [ $# -eq 0 ]; then
     exec $PYTHON llm-radar-collector.py run

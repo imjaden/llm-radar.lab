@@ -19,6 +19,7 @@
 #   TWITTER_FLCLASH_PORT            就绪判据端口 (默认 7890)
 #   TWITTER_FLCLASH_READY_TIMEOUT   启动后等就绪秒数 (默认 180)
 #   TWITTER_FLCLASH_GRACE           优雅退出宽限秒数 (默认 20)
+#   TWITTER_CHROMEDRIVER           chromedriver 可执行文件（默认由 scripts/chromedriver_bootstrap.py 给出已验证兼容路径）
 #   TWITTER_CDP_PORT                调试端口 (默认 9222)
 #   TWITTER_PROFILE_DIR             user-data-dir (默认 ~/chrome-twitter-cdp)
 #   TWITTER_CHROME_BIN              Chrome 可执行文件 (默认 macOS 标准路径)
@@ -298,6 +299,15 @@ fi
 
 if [ "$OWNED" = "1" ]; then
   main_pids > "$PIDFILE" 2>/dev/null || true
+fi
+
+# ── chromedriver 版本守卫（Chrome 自动升级后自动跟随; 无 chromedriver-manager 的平台自动跳过）──
+if [ -z "${TWITTER_CHROMEDRIVER:-}" ] && [ -f "scripts/chromedriver_bootstrap.py" ]; then
+  _drv="$(python3 scripts/chromedriver_bootstrap.py --print-path 2>/dev/null || true)"
+  if [ -n "$_drv" ]; then
+    export TWITTER_CHROMEDRIVER="$_drv"
+    echo "[twitter-cron] chromedriver: $_drv"
+  fi
 fi
 
 python3 scripts/twitter-collector.py --attach
