@@ -143,7 +143,8 @@ start `open -g -a FlClash`（`-g` 不抢焦点；本仓 2026-10-24 CL151 才补�
 - 就绪判据只用端口, 不判"是否已把系统代理切过去"; 实测 `open -a` 后 7890 很快 LISTEN
   (2026-10-09 14:52 实测: 启动到就绪 <10s)。
 - **实现唯一真源 = `scripts/flclash_proxy.py`**（2026-10-09 收敛）: `flclash_pids()` / `is_running()` /
-  `ensure_ready()` / `release()` / `notify_required()` + CLI 子命令 (`is-running|pids|ensure|release|notify`)。
+  `ensure_ready()` / `release()` + CLI 子命令 (`is-running|pids|ensure|release`)。
+  （`notify_required()` / `notify` 子命令 2026-10-26 删除 —— CL151 R3「采集侧不得反向发 FlClash 通知」。）
   包装脚本与两个 python 入口 (`llm-radar-collector.py` / `scripts/twitter-collector.py`) 全部走它,
   **不得各自 pgrep/osascript**（`tests/test_twitter_cron.py` 有回归守卫: 包装脚本命令位出现旧口径即红）。
 - 检测口径: 精确名 `pgrep -x FlClash` ∪ 应用路径 `pgrep -f '/Applications/FlClash.app'` 双判据 ——

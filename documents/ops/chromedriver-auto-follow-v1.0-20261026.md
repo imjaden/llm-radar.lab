@@ -63,16 +63,49 @@ watch 静默·去重·恢复 / CLI 退出码）+ 既有套件 ⇒ 全量 **343 p
 
 ## 4. 运行时契约
 
-- 状态文件：`cache/records/chromedriver-guard.json`（`ts / ok / action / sig / summary / detail`）。
+- 状态文件：`cache/records/chromedriver-guard.json`（`ts / ok / action / sig / since / summary / detail`）。
 - 退出码（供 cron 判失败）：`0` 就绪或已升级｜`1` 未就绪（失败已发消息）｜`2` manager 不可用。
-- 通知纪律：同一 `sig` 不重复发；失败持续期间只发第一条；恢复正常发一条 `✅ 已恢复`。
+- 通知纪律：`sig` = `ready + verdict + chrome + good + action`（**不含 ready 会漏掉本设计的核心场景**：
+  manager 的 `verdict=compatible` 只要任一注册路径兼容，稳定路径被覆盖成旧版时 `verdict/chrome/good`
+  全不变 ⇒ 消息被去重吞掉）；同一 `sig` 不重复发；**真升级是事件，每次都发**（不去重）；
+  失败持续期间只发第一条；恢复正常发一条 `✅ 已恢复`（带故障起点 `since`）。
+- 跨入口互斥：守卫 `:05` / 主采集 `:40` / X 采集 `:20` 都会调 `ensure()`，manager 的 upgrade 是
+  `shutil.copy2` 覆盖同一稳定路径（非原子）⇒ `ensure()` 用 `cache/records/.chromedriver-guard.lock`
+  的 `flock` 串行化；拿不到锁的入口立即返回 `busy`（不排队，采集绝不阻塞）。
 - 手工排查：
   ```bash
-  python3 scripts/chromedriver_bootstrap.py --check          # 当前判定（含 stable_compatible）
+  python3 scripts/chromedriver_bootstrap.py --check          # 当前判定（含 stable_compatible）; rc=0 才算「采集可用」
   python3 scripts/chromedriver_bootstrap.py --print-path     # 采集器会用的路径
   python3 scripts/chromedriver_bootstrap.py --ensure         # 立即跟随（幂等）
   chromedriver-manager check --json                          # 权威真源
   ```
+
+## 4.1 review 修正（2026-10-26 安全评审，v1.1）
+
+| 项 | 问题（实测） | 修法 |
+|:---|:---|:---|
+| 🔴 SIG-1 | `watch()` 指纹只含 `verdict/chrome/good` ⇒ 稳定路径被注入旧驱动（本设计的核心场景）时三项全不变，**升级成功与失败消息都被去重吞掉**（`watch()` 实测返回 `('', 1)`，飞书零告警） | 指纹加 `ready` + `action`；`upgraded` 作为事件永不参与去重；`since` 落盘供恢复消息引用 |
+| 🟡 RIG-1 | `upgrade` 的 `rc=3` 是 manager 的 `noop` 专用码，旧实现当 `upgrade_failed`；且稳定路径**未注册**给 manager 时 upgrade 永远 `noop`，修复指令（`download && upgrade`）无效 ⇒ 每小时误报且不带可执行指令 | `rc=3` 归入非失败分支；`rc=3` 且稳定路径在盘 ⇒ `stable_unmanaged`，消息直接给 `chromedriver-manager add --path` |
+| 🟡 RIG-2 | `download` 对**永久性**失败（无可用下载地址 / 读不到 Chrome 版本）也重试 1 次 ⇒ 白等最多 300s 并多打一次 API | 命中永久性特征即不再重试（网络抖动仍重试 1 次） |
+| 🟡 SEC-1 | 三个入口并发 `ensure()` ⇒ 两路 `shutil.copy2` 覆盖同一稳定路径（非原子），采集器可能 exec 到半个二进制（正是本方案要消灭的失败态） | `flock` 串行化（非阻塞，`busy` 直接跳过） |
+| 🟡 CLI-1 | `--check` 调两次 manager（约 2×0.86s，且打印快照与 rc 不是同一次快照），rc 用**全局 verdict** ⇒ 稳定路径旧了仍返回 0（同 §2 的 pitfall） | 单次调用；rc = `_ready()`（「采集是否真的可用」） |
+| 🟡 ENV-1 | CL151「env 安全解析」只收口了 **int**：`llm-radar-collector.py` 仍有两处模块级 `float(os.environ[...])`，`LLM_RADAR_FLCLASH_READY_TIMEOUT=''` ⇒ import 期 `ValueError` ⇒ 整轮采集失败（实测） | 新增 `_env_float()`（脏值/≤0 回退默认），`FLCLASH_READY_TIMEOUT` / `DEGRADED_RETRY_HOURS` 改走它；`tests/test_env_parsing.py` 19 例锁住 |
+| 🟢 DOC-1 | `flclash_proxy.py` docstring 与 `skills/x-twitter-collector/SKILL.md` 仍写 `notify` 子命令（CL151 R3 已删） | 同步删除 |
+
+测试：`tests/test_chromedriver_bootstrap.py` **20 例**（原 13 + 复核 7：指纹两形态 / 事件不去重 /
+`since` 保留 / `stable_unmanaged` / 永久失败不重试 / 锁 / `--check` rc）、
+`tests/test_env_parsing.py` **19 例**；变异 7 组（`_ready`→verdict、裸 `upgrade`、指纹退回三项、
+`--check` rc 用 verdict、`rc=3` 当失败、去锁、去 upgraded 事件分支）**全部变红**。
+
+### 已知未闭合（下一批，不在本批范围）
+
+1. **告警侧回退分支零测试钉子**：`llm-radar-collect-report.py::driver_facts()` 在 ops profile 下
+   （不入本仓 git），`tests/` 无任何引用 ⇒ 回退分支改回「正序扫」不会变红（变异实测绿）。
+2. **`ensure()` 最坏耗时 ~16.5 分钟**（check 90 + download 300×2 + upgrade 300）发生在采集**之前**，
+   若与下一槽位重叠会推迟一轮采集；建议对采集前置守卫用 `--ensure` 的短超时变体。
+3. **X 采集不看版本**：`_resolve_chromedriver()` 命中 `TWITTER_CHROMEDRIVER` 即返回（不做主版本校验），
+   把版本正确性完全托付给 manager；主采集仍会 `--version` 复核。
+4. **日志轮转未做**：`collector.log` 25k 行无切割（告警已改权威源，故不再复报）。
 
 ## 5. 已知边界
 
