@@ -29,10 +29,10 @@
 ① 稳定指针  ~/Library/Application Support/llm-radar/chromedriver/chromedriver
             （不带版本 → 已用 `chromedriver-manager add --path` 注册; manager 的 upgrade 会写它）
 ② 采集注入  llm-radar-run.sh / scripts/twitter-collector-cron.sh 调
-            scripts/chromedriver_bootstrap.py --print-path → export CHROMEDRIVER / TWITTER_CHROMEDRIVER
+            scripts/chromedriver_bootstrap.py --resolve --deadline 60 → export CHROMEDRIVER / TWITTER_CHROMEDRIVER
             （两采集器的候选序第一位; 只有「已验证兼容」才注入, 拿不到就回退原有扫描逻辑）
-            **前置守卫**: print-path 为空（所有注册路径都不兼容/manager 不在）时才跑 --ensure 再问一次
-            ⇒ 不等每小时 :05 的 cron, 当场跟随; 取不到就静默回退, 绝不阻断采集
+            **前置守卫**: 入口只调一次 `--resolve --deadline 60`（就绪即返回；不就绪则按预算跟随后再给路径；
+            取不到就静默回退既有扫描，绝不阻断采集）⇒ 端到端 ≤ ~60s，实测就绪态 0.89s
 ③ cron 守卫  llm-radar-chromedriver-guard（每 :05）→ --watch
             不就绪 ⇒ iCloud 有匹配版则只 upgrade, 否则先 download(重试 1 次) 再 upgrade, 最后复核
             状态不变 ⇒ 空输出（静默）; 升级/失败/恢复 ⇒ 单条飞书
@@ -117,6 +117,18 @@ watch 静默·去重·恢复 / CLI 退出码）+ 既有套件 ⇒ 全量 **343 p
 | LR-CDG-008（Q-3） | X 采集命中 `TWITTER_CHROMEDRIVER` 即采用，零版本复核（主采集有 `--version` 复核） | 注入路径也实跑 `--version`：读不出主版本 ⇒ 不信任；与 CDP 目标主版本不符 ⇒ 告警并回退缓存扫描 | `test_env_override_rejected_on_major_mismatch`（154 vs 156 ⇒ 回退且 stderr 有 `主版本 154`）+ `test_env_override_unreadable_version_falls_back`；真机 `target_major=156 / driver_major=156 ⇒ env 采用` |
 | Q-4（rc 语义） | no_agent cron 对 rc≠0 会另发**引擎级**错误通知 ⇒ 与正文去重叠加成每小时重复响 | `--watch` 退出码**恒 0**（失败信息一律走正文）；ops 侧薄壳 `llm-radar-chromedriver-guard.py` 同样恒 0，并把真实 rc 打到 stderr；异常也兜底成一条正文（不再 traceback 静默死） | `test_watch_never_returns_nonzero_on_exception`；兄弟 watchdog `llm-radar-collect-watch` 同为恒 0，口径一致 |
 | 回退分支零钉子 | `driver_facts()` 在 ops profile（不入本仓 git）⇒ 变异无从变红 | 本仓新增 `tests/test_report_driver_facts.py`：注入一个 fake manager 输出与一段**含 9 天前命中**的日志窗口，断言「compatible 时不报」「回退只认 24h 内且取最新」「指纹含版本三元组」 | 见该测试文件（用 `importlib` 直接加载 ops 脚本，无需复制实现） |
+
+## 4.3 delta2 复审（PASS 86 → 3 项 🟡 已在本批修掉，2026-10-26 v1.3）
+
+| 项 | 问题（复审实测） | 修法 |
+|:---|:---|:---|
+| RIG-3（LR-CDG-009） | 预算在**首步 `check`** 就用光时被报成 `no_manager`（`detail` 写「manager 不可用」）⇒ 排查方向被误导；两条旧钉子把 `_run` stub 成成功，与生产不等价 | `st is None` 且 `exhausted()` ⇒ 返回 `action='deadline'`、`detail='预算耗尽: check 未完成'`；新增**不 stub `_run`** 的真超时钉子（真起 manager 桩 + 真 timeout） |
+| RIG-4（LR-CDG-010） | LR-CDG-008 只挡了 env 一条路：注入被拒后先命中 `shutil.which('chromedriver')` 并无条件返回 ⇒ 目标 156 时 PATH 上的 154 驱动会被照用 | PATH 分支同样 `_driver_major()` + 主版本比对，不符则告警并继续扫缓存；新增「PATH 命中错版本」钉子 |
+| OBS-6（LR-CDG-011） | 采集入口「print-path → ensure → print-path」三步，两次 `--print-path` 内部的 `check()` 不受 deadline 约束 ⇒ shell 侧最坏 ≈240s，文档写 60s 属高报 | 新增 `--resolve --deadline N`：**单次调用**即完成「就绪判定 → 按预算跟随 → 输出路径」，两处入口改为单次 `--resolve --deadline 60`；实测就绪态 0.89s |
+
+**预算口径（按实现）**：采集前置守卫端到端 ≤ ~60s（单次 `--resolve`，就绪态 ~0.9s）；
+每小时守卫 `:05` **不带预算**（它不在采集路径上，最坏仍可达 ~990s），三入口并发由 `flock` 兜住
+（拿不到锁立即 `busy`）。文档此前「三入口同用 60s」的说法不成立，已改。
 
 ## 5. 已知边界
 
