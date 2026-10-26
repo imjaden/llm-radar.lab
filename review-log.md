@@ -1700,3 +1700,37 @@
 - 治理：`origin/main == HEAD == 4b54e10`、`rev-list --left-right --count` = `0 0`、无 force/amend、`AGENTS.md` 未动、crontab 未改。
 - 并发注记 G-1：评审中 `b9207f6`（采集前置 `--ensure`）由另一 ops 会话追加并推送，已纳入审计（SEC-1 的并发窗口正由它放大）。
 
+
+---
+
+## 2026-10-26 — chromedriver 守卫未闭合项闭环 delta2 复审 (63e9368 + bb60333)
+
+- **review者**: Security Reviewer (review profile, L2)
+- **范围**: 已 push `63e9368`（LR-CDG-007 预算 / LR-CDG-008 注入复核 / Q-4 rc 恒 0 + 新钉子）/ `bb60333`（docs §4.2）；`origin/main...HEAD` = `0 0`（前后各核一次）
+- **Tracking**: LR-CDG-007 ✅ **已闭合**; LR-CDG-008 ✅ **已闭合**; Q-4 ✅ **已闭合**（harness 前提首次拿到源码级证据）;
+  回退钉子 ✅ **已落地**; 新增 LR-CDG-009 RIG-3 / LR-CDG-010 RIG-4 / LR-CDG-011 OBS-6 / LR-CDG-012 TST-3（均 🟡，下一批）; findings_open 4
+- **状态**: ✅ **PASS — 86/100**（无 🔴；4 项 🟡 属标注/覆盖面类，不阻塞）
+- **报告**: documents/reviews/llm-radar-chromedriver-guard-review-delta2-v1.0-20261026.md
+- **实现 prompt**: ✅ 已生成（下一批 4 项，见报告 §7）
+
+### 发现摘要
+
+| # | Severity | Title | Status |
+|---|----------|-------|--------|
+| LR-CDG-007 | 🟡 | 采集前置 `ensure` 无总预算（最坏 990s） | ✅ **闭合**（`ensure(deadline)` + `--ensure --deadline 60`；真 subprocess 探针 0.00/1.00/2.01s 收口；变异 M2 红） |
+| LR-CDG-008 | 🟡 | X 采集注入路径零版本复核 | ✅ **闭合**（`_target_major`/`_driver_major` 三分支 + stderr 告警；变异 M3 2 failed；真机 driver major=156） |
+| Q-4 | 🟡 | `--watch` rc 语义未定义 | ✅ **闭合**（全出口 0 + 异常兜底成正文；`cron/scheduler_script.py:526` rc≠0 → `cron/scheduler.py:1559` 独立 alert 前提核实成立） |
+| 钉子 | 🟡 | 回退分支零钉子（变异无从变红） | ✅ **闭合**（`tests/test_report_driver_facts.py` 5 例；变异 M1 1 failed） |
+| LR-CDG-009 / RIG-3 | 🟡 | 预算在首步 `check` 耗尽 ⇒ 报成 `no_manager`（文档写 `deadline`）；两条钉子靠 stub `_run` 才为真 | ⬜ 下一批（探针实测：`action='no_manager'`, manager 实际可用） |
+| LR-CDG-010 / RIG-4 | 🟡 | 注入被拒后先回落 `shutil.which('chromedriver')` 且**零复核** ⇒ 「回退缓存扫描」不是实际落点（探针：目标 156 仍返回 PATH 的 154） | ⬜ 下一批（钉子把 `which` stub 成 None 故未覆盖） |
+| LR-CDG-011 / OBS-6 | 🟡 | 60s 预算非端到端：两入口 `--print-path`(check timeout=90) 各一次 ⇒ shell 最坏 ≈240s，文档「990s→60s」高报 | ⬜ 下一批（`--ensure` JSON 已带 `stable`，可删二次 print-path） |
+| LR-CDG-012 / TST-3 | 🟡 | 钉子跨仓依赖未版本化 `~/.hermes/profiles/ops/scripts/llm-radar-collect-report.py` + skipif ⇒ 换机静默跳过，`381` 与 M1 变红仅本机成立 | ⬜ 下一批（建议 `driver_facts()` 收进本仓） |
+
+### 数据验证要点
+
+- 复跑：`test_report_driver_facts.py`+`test_chromedriver_bootstrap.py` **30 passed**（5+25）；`test_twitter_collector.py` **108 passed**；全量 **381 passed, 2 deselected**（98.16s）；跑后 `git checkout -- data/snapshot.json overview.json timestamp.json` 已还原。
+- 变异 4 组全部真跑全红：M1 回退改正序 **1 failed**（`test_fallback_takes_latest_recent_hit`，形态为 `msg=None` 的 TypeError）、M2 `budget→base` **1 failed**（观测 upgrade timeout=300）、M3 去注入复核 **2 failed**、M4 `--watch` 失败 rc=1 **2 failed**；改名/还原后逐项复绿（25 / 5 / 108 passed），ops 报告脚本 sha256 复原 `011f9c0a…68e0`。
+- deadline 探针（假 manager，真 subprocess）：预算 0 ⇒ 0.00s `no_manager`；预算 1 ⇒ 1.00s `no_manager`；预算 2（check 快/download 慢）⇒ 2.01s **`deadline`**（`detail='预算耗尽: 放弃 download 重试'`）⇒ 边界收口成立、标签在首步失真。
+- LR-CDG-008 探针：目标 major=156 / 注入 154 ⇒ stderr 告警「主版本 154 ≠ 目标 Chrome 156」；随后解析落点 = **PATH 上的 154 驱动**（`source='PATH'`）。
+- 清口径判定：Q-1 **接受「告警 + `add --path` 指令」不自愈**（自愈会把写面扩到 manager 配置；本机现 `stable_compatible=true` 已注册，属一次性配置债）；Q-2 **接受 60s**（check 1.19s + iCloud copy 亚秒级；需 download 时交回 :05 全预算守卫），但要求按 OBS-6 修正最坏等待表述与「三入口同用 60s」的说法（:05 守卫实际无预算）。
+- 治理：`origin/main...HEAD` = `0 0`（前后各一次）、无 force/amend、`AGENTS.md`/crontab/`.cli-registry.yaml`/`_verify()` 未动；ops cron `llm-radar-chromedriver-guard`（`5 7-23 * * *`, no_agent, 薄壳）口径一致。

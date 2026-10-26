@@ -500,6 +500,15 @@ review_history:
     findings_open: 2
     tracking: '2026-10-26 chromedriver 自动跟随 + CL151 收尾 (b8b4b3c/9a50cee/135a3eb + 评审中并发追加 b9207f6; 修正 fb653c6/4b54e10 push 0 0) — 1 🔴 SIG-1 指纹盲区 (指纹只含 verdict/chrome/good ⇒ 稳定路径被覆盖成旧驱动时三项不变, 升级成功与失败消息全被去重, watch 实测 ("",1) 飞书零告警) 已修 (加 ready+action / upgraded 事件不去重 / since 落盘); 🟡 RIG-1 稳定路径未注册 ⇒ rc=3(noop) 误判 upgrade_failed 且指令无效 已修 stable_unmanaged+add --path; 🟡 SEC-1 三入口(:05/:20/:40)并发 ensure ⇒ copy2 非原子覆盖稳定路径 已修 flock; 🟡 ENV-1 CL151 只收口 int, collector 两处模块级 float(os.environ) 空串即 import 期 ValueError 实测 已修 _env_float; 🟡 RIG-2 永久性 download 失败也重试 已修; 🟡 CLI-1 --check 双调 manager 且 rc 用全局 verdict 已修; 🟢 DOC-1 SKILL/flclash docstring notify 残留 已修. 未闭合: 告警侧 driver_facts 在 ops profile 不入 git ⇒ 回退分支变异无从变红 (M3 绿); 采集前置 ensure 最坏 990s 无 deadline; X 采集对注入路径零版本复核. 数据验证: collector.log 25269 行 / 53 条不匹配 / 窗口起点 24070(10-21 13:40) / 首命中 24104(10-21 17:40) / 末条 10-23 11:40 全中; 变异 8 组全红; 全量 370 passed / 2 deselected (343+27).'
     report: documents/reviews/llm-radar-chromedriver-guard-review-v1.0-20261026.md
+  - date: 2026-10-26
+    reviewer: Security Reviewer
+    review_level: L2
+    verdict: PASS
+    score: 86
+    findings_total: 8
+    findings_open: 4
+    tracking: '2026-10-26 chromedriver 守卫未闭合项闭环 delta2 复审 (63e9368/bb60333, push 后 0 0) — LR-CDG-007 预算 ✅ 闭合 (ensure(deadline)+--ensure --deadline 60 两入口; 真 subprocess 探针 0.00/1.00/2.01s 收口; 变异 M2 红) / LR-CDG-008 注入复核 ✅ 闭合 (_target_major+_driver_major 三分支, 真机 major=156; 变异 M3 2 failed) / Q-4 rc 语义 ✅ 闭合 (--watch 与 ops 薄壳恒 0 + 异常兜底正文; harness 前提首次源码级核实 cron/scheduler_script.py:526 rc≠0 → cron/scheduler.py:1559 独立 alert) / 回退钉子 ✅ 落地 (tests/test_report_driver_facts.py 5 例, 变异 M1 1 failed)。新增 🟡 4 项进下一批: LR-CDG-009 RIG-3 预算首步耗尽标签错 (实测 action=no_manager 而文档写 deadline, 钉子靠 stub _run) / LR-CDG-010 RIG-4 注入被拒后回落 PATH 驱动零复核 (探针: 目标 156 仍返回 154 PATH 驱动, 故「回退缓存扫描」非实际落点) / LR-CDG-011 OBS-6 60s 预算非端到端 (两入口 --print-path check timeout=90 各一次 ⇒ shell 最坏 ≈240s, 文档「990s→60s」高报) / LR-CDG-012 TST-3 钉子跨仓依赖未版本化 ops 脚本 + skipif ⇒ 换机静默跳过。口径: Q-1 接受告警+add --path 不自愈 (写面扩到 manager 配置; 本机 stable_compatible=true 已注册); Q-2 接受 60s (check 1.19s + iCloud copy 亚秒; 需 download 时交回 :05 全预算守卫), 但 :05 守卫实际无预算 ⇒ 「三入口同用 60s」表述需改。复跑: 30 passed (5+25) / 108 passed / 全量 381 passed 2 deselected; 变异 4 组全红; 数据产物已还原。'
+    report: documents/reviews/llm-radar-chromedriver-guard-review-delta2-v1.0-20261026.md
 
 # ------------------------------------------------------------------
 # 注记 (2026-09-08 docs@sync): 以下 8 份 review 报告存在但未在 review_history 注册
