@@ -50,9 +50,6 @@ from flclash_proxy import (  # noqa: E402  (须在 sys.path 注入之后)
     release as _flclash_release,
 )
 
-# 海外源就绪等待 (对齐声明层真源 macosx-service-policy.json: verify.wait=180s / ports=[7890])
-FLCLASH_READY_TIMEOUT = float(os.environ.get('LLM_RADAR_FLCLASH_READY_TIMEOUT', '180'))
-
 
 def _env_int(name, default, lo=None):
     """env 整数安全解析（CL151 §3 坑位: 空串/非数字/越界不得在 import 期 traceback 打死进程）。"""
@@ -63,10 +60,26 @@ def _env_int(name, default, lo=None):
     return default if (lo is not None and n < lo) else n
 
 
+def _env_float(name, default, gt=None):
+    """env 浮点安全解析（与 `_env_int` 同口径; 2026-10-26 review 补齐 float 类未收口项）。
+
+    gt: 必须**严格大于**该值（超时/小时数这类量 0 与负数都无意义 → 回退默认）。
+    """
+    try:
+        n = float(str(os.environ.get(name, '') or default).strip())
+    except (TypeError, ValueError):
+        return default
+    return default if (gt is not None and n <= gt) else n
+
+
+# 海外源就绪等待 (对齐声明层真源 macosx-service-policy.json: verify.wait=180s / ports=[7890])
+FLCLASH_READY_TIMEOUT = _env_float('LLM_RADAR_FLCLASH_READY_TIMEOUT', 180.0, gt=0)
+
+
 # 源降级: 连续失败 ≥ DEGRADED_FAILS → 本轮跳过; 但距上次真实尝试超过 DEGRADED_RETRY_HOURS 会放行重试一次。
 # (2026-10-09 实锤: 一次 chromedriver 环境故障让 qbitai 累计 18 次并被永久判「已降级」, 永不重试)
 DEGRADED_FAILS = _env_int('LLM_RADAR_DEGRADED_FAILS', 3, lo=1)
-DEGRADED_RETRY_HOURS = float(os.environ.get('LLM_RADAR_DEGRADED_RETRY_HOURS', '6'))
+DEGRADED_RETRY_HOURS = _env_float('LLM_RADAR_DEGRADED_RETRY_HOURS', 6.0, gt=0)
 
 
 def _is_flclash_running():

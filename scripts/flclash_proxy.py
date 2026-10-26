@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""FlClash 代理生命周期单一真源: 探测 / 就绪 / 起停 / 通知。
+"""FlClash 代理生命周期单一真源: 探测 / 就绪 / 起停。
 
 本模块是**唯一实现**——`llm-radar-collector.py`、`scripts/twitter-collector.py`(探测) 与
 `scripts/twitter-collector-cron.sh`(起停编排, 经 CLI 子命令) 都必须走这里, 不得各自 pgrep/osascript。

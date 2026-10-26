@@ -192,3 +192,138 @@ def test_cli_print_path_rc1_when_incompatible(cb, sandbox, monkeypatch, capsys):
         'icloud': {'has_compatible': False}})
     assert cb.main(['--print-path']) == 1
     assert capsys.readouterr().out.strip() == ''
+
+
+# ---------- review 2026-10-26 补钉（每例对应一条实测缺口） ----------
+def _healthy(stable):
+    return {'verdict': 'compatible', 'chrome': '156.0.8078.47', 'good': ['156.0.8078.47'],
+            'drivers': [], 'stable': str(stable), 'stable_compatible': True, 'paths': ['/p/other']}
+
+
+def _stale_stable(stable):
+    """核心形态: 稳定路径被覆盖成旧版, 但**另一个**注册路径仍兼容 ⇒ manager verdict 仍是 compatible。"""
+    return {'verdict': 'compatible', 'chrome': '156.0.8078.47', 'good': ['156.0.8078.47'],
+            'drivers': ['154.0.8037.92'], 'stable': None, 'stable_compatible': False,
+            'paths': ['/p/other']}
+
+
+def test_watch_reports_upgrade_when_verdict_unchanged(cb, sandbox, monkeypatch):
+    """REGRESSION（🔴）: verdict/chrome/good 全不变时, 升级成功消息曾被指纹去重吞掉。
+
+    实测: 健康一轮 → 稳定路径注入 154 → 自动跟随成功 ⇒ 旧实现返回 ('', 0) 静默。
+    """
+    monkeypatch.setattr(cb, 'ensure', lambda **k: (True, 'noop', _healthy(sandbox['stable']), ''))
+    assert cb.watch() == ('', 0)                      # 健康基线（写指纹）
+
+    monkeypatch.setattr(cb, 'ensure', lambda **k: (True, 'upgraded', _healthy(sandbox['stable']), 'upgrade rc=0'))
+    msg, rc = cb.watch()
+    assert rc == 0 and '已自动跟随' in msg, 'verdict/good 不变时升级消息不得被去重'
+
+
+def test_watch_reports_failure_when_verdict_unchanged(cb, sandbox, monkeypatch):
+    """REGRESSION（🔴）: 同形态的**失败**也必须发（否则飞书收不到任何告警, 只有 rc=1）。"""
+    monkeypatch.setattr(cb, 'ensure', lambda **k: (True, 'noop', _healthy(sandbox['stable']), ''))
+    cb.watch()
+    monkeypatch.setattr(cb, 'ensure', lambda **k: (False, 'download_failed', _stale_stable(sandbox['stable']),
+                                                   'download rc=1 网络不可达'))
+    msg, rc = cb.watch()
+    assert rc == 1 and '未能跟随' in msg, 'verdict/good 不变时失败消息不得被去重'
+
+
+def test_watch_reports_each_upgrade_event(cb, sandbox, monkeypatch):
+    """「真升级」是事件不是状态: 连着两轮都升级也必须各发一条（指纹去重只适用于故障）。"""
+    monkeypatch.setattr(cb, 'ensure', lambda **k: (True, 'upgraded', _healthy(sandbox['stable']), 'upgrade rc=0'))
+    msg1, rc1 = cb.watch()
+    msg2, rc2 = cb.watch()
+    assert rc1 == 0 and rc2 == 0
+    assert '已自动跟随' in msg1 and '已自动跟随' in msg2, '第二次真升级被指纹吞掉'
+
+
+def test_state_keeps_fault_since_across_repeats(cb, sandbox, monkeypatch):
+    """恢复消息要能说「从什么时候开始坏」: since 必须跨多次失败保留（save_state 全量覆盖易丢）。"""
+    monkeypatch.setattr(cb, 'ensure', lambda **k: (False, 'still_incompatible', _stale_stable(sandbox['stable']), ''))
+    cb.watch()
+    first = cb.load_state()['since']
+    assert first
+    cb.watch()
+    assert cb.load_state()['since'] == first, 'since 被覆盖 ⇒ 恢复消息失去故障起点'
+
+    monkeypatch.setattr(cb, 'ensure', lambda **k: (True, 'noop', _healthy(sandbox['stable']), ''))
+    msg, rc = cb.watch()
+    assert rc == 0 and first in msg, '恢复消息应引用故障起点'
+
+
+def test_ensure_flags_unmanaged_stable_path(cb, sandbox, monkeypatch):
+    """稳定路径在盘上但**未注册**给 manager ⇒ upgrade 返回 rc=3(noop)。
+
+    旧实现把 rc=3 当 upgrade_failed, 且给不出能修好的指令; 正确动作是 stable_unmanaged + add --path。
+    """
+    payload = {'chrome_version': '156.0.8078.47', 'verdict': 'compatible',
+               'paths': [{'path': '/other/chromedriver', 'exists': True,
+                          'version': '156.0.8078.47', 'compatible': True}],
+               'icloud': {'has_compatible': True}}
+    monkeypatch.setattr(cb, 'check', lambda timeout=90: payload)
+    calls = []
+    monkeypatch.setattr(cb, '_run', lambda argv, timeout=120: calls.append(list(argv)) or
+                        (3, '{"command":"upgrade","noop":true,"upgraded":false}'))
+    ok, action, s, detail = cb.ensure()
+    assert (ok, action) == (False, 'stable_unmanaged'), f'rc=3 是 noop 不是失败, 实际 {action}'
+    msg = cb.message(action, ok, {}, s, detail)
+    assert 'add --path' in msg and str(sandbox['stable']) in msg, '消息必须给出可执行的修复指令'
+
+
+def test_ensure_download_permanent_failure_not_retried(cb, sandbox, monkeypatch):
+    """无可用下载地址（永久）⇒ 不得再花一次 5 分钟重试; 网络抖动才重试。"""
+    monkeypatch.setattr(cb, 'check', lambda timeout=90:
+                        _check_payload(sandbox['stable'], '154.0.8037.92', icloud=False))
+    calls = []
+
+    def fake_run(argv, timeout=120):
+        calls.append(list(argv))
+        return 1, '错误: 未找到适配 Chrome 156.0.8078.47 的下载地址（API 不可达 / 该版本未发布）'
+
+    monkeypatch.setattr(cb, '_run', fake_run)
+    ok, action, _, _ = cb.ensure()
+    assert (ok, action) == (False, 'download_failed')
+    assert len([c for c in calls if 'download' in c]) == 1, '永久性失败不得重试'
+
+    calls.clear()
+
+    def flaky(argv, timeout=120):
+        calls.append(list(argv))
+        return (1, 'URLError: <urlopen error timed out>') if len(calls) == 1 else (0, 'ok')
+
+    monkeypatch.setattr(cb, '_run', flaky)
+    ok, action, _, _ = cb.ensure()   # check 仍是 icloud=False 那轮 → 需要 download
+    assert len([c for c in calls if 'download' in c]) == 2, '网络抖动必须重试一次'
+
+
+def test_ensure_single_writer_when_lock_held(cb, sandbox, monkeypatch):
+    """三个入口（守卫 :05 / 主采集 :40 / X :20）并发 ensure 时, manager 的 copy2 覆盖非原子 ⇒ 必须串行。"""
+    monkeypatch.setattr(cb, 'check', lambda timeout=90: _check_payload(sandbox['stable'], '154.0.8037.92'))
+    holder, state = cb._acquire_lock()
+    assert state == 'locked'
+    calls = []
+    monkeypatch.setattr(cb, '_run', lambda argv, timeout=120: calls.append(list(argv)) or (0, ''))
+    try:
+        ok, action, _, _ = cb.ensure()
+        assert action == 'busy' and calls == [], '锁被占用时不得触碰 manager'
+    finally:
+        cb._release_lock(holder)
+    ok, action, _, _ = cb.ensure()          # 锁释放后必须能正常干活
+    assert action != 'busy' and any('upgrade' in c for c in calls), '锁释放后应恢复跟进'
+
+
+def test_cli_check_exit_code_follows_readiness(cb, sandbox, monkeypatch, capsys):
+    """`--check` 的 rc 曾是 manager 全局 verdict ⇒ 稳定路径旧了仍返回 0（同 pitfall #2）。"""
+    monkeypatch.setattr(cb, 'check', lambda timeout=90: {
+        'chrome_version': '156.0.8078.47', 'verdict': 'compatible',
+        'paths': [{'path': '/other/chromedriver', 'exists': True,
+                   'version': '156.0.8078.47', 'compatible': True},
+                  {'path': str(sandbox['stable']), 'exists': True,
+                   'version': '154.0.8037.92', 'compatible': False}],
+        'icloud': {'has_compatible': True}})
+    assert cb.main(['--check']) == 1, '稳定路径不兼容时 --check 必须非零'
+    out = capsys.readouterr().out
+    assert '"stable_compatible": false' in out
+
