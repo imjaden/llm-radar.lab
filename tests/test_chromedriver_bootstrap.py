@@ -224,6 +224,32 @@ def test_cli_ensure_accepts_deadline(cb, sandbox, monkeypatch, capsys):
     assert rc == 1 and '"action": "deadline"' in out, out
 
 
+def test_ensure_deadline_at_first_check_is_not_no_manager(cb, sandbox, monkeypatch, tmp_path):
+    """RIG-3: 预算在首步 check 就用光时必须报 deadline, 不能报「manager 不可用」。
+
+    不 stub `_run`（真起一个 manager 桩 + 真 timeout）—— 旧钉子都 stub 了 `_run`, 与生产不等价。
+    """
+    slow = tmp_path / 'slow-mgr'
+    slow.write_text('#!/bin/sh\nsleep 5\n', encoding='utf-8')
+    slow.chmod(0o755)
+    monkeypatch.setattr(cb, 'MANAGER', slow)
+    ok, action, after, detail = cb.ensure(deadline=0)
+    assert (ok, action) == (False, 'deadline'), f'{action} / {detail}'
+    assert 'no_manager' not in action
+    assert '预算耗尽' in detail, detail
+
+
+def test_resolve_single_call_when_ready(cb, sandbox, monkeypatch, capsys):
+    """OBS-6: 采集入口只需一次 `--resolve` —— 就绪时零 manager 动作, 直接给出稳定路径。"""
+    payload = _check_payload(sandbox['stable'], '156.0.8078.47')
+    monkeypatch.setattr(cb, 'check', lambda timeout=90: payload)
+    monkeypatch.setattr(cb, '_run', lambda argv, timeout=120: sandbox['calls'].append(list(argv)) or (0, ''))
+    rc = cb.main(['--resolve', '--deadline', '60'])
+    assert rc == 0
+    assert capsys.readouterr().out.strip() == str(sandbox['stable'])
+    assert sandbox['calls'] == [], f'就绪时不该再动 manager: {sandbox["calls"]}'
+
+
 # ---------- CLI ----------
 def test_cli_print_path_and_check(cb, sandbox, monkeypatch, capsys):
     monkeypatch.setattr(cb, 'check', lambda timeout=90: _check_payload(sandbox['stable'], '156.0.8078.47'))

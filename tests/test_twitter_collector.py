@@ -879,6 +879,24 @@ class TestResolveChromedriver:
         assert tc._resolve_chromedriver(9222) == (None, 'none')
         assert '无法读出主版本' in capsys.readouterr().err
 
+    def test_path_candidate_also_version_checked(self, tc, monkeypatch, tmp_path, capsys):
+        """RIG-4: 注入被拒后不能直接吃 PATH 上的旧驱动 —— PATH 分支同样要复核主版本。"""
+        import glob
+        import os
+        import shutil
+        p = tmp_path / 'bin154'
+        p.write_text('#!/bin/sh\necho "ChromeDriver 154.0.8037.92 (abc)"\n', encoding='utf-8')
+        p.chmod(0o755)
+        monkeypatch.delenv('TWITTER_CHROMEDRIVER', raising=False)
+        monkeypatch.setattr(tc, '_target_major', lambda port=None: 156)
+        monkeypatch.setattr(shutil, 'which', lambda _n: str(p))
+        monkeypatch.setattr(glob, 'glob', lambda _pat: ['/c/156.0.9.9/chromedriver'])
+        monkeypatch.setattr(os, 'access', lambda _p, _m: True)
+        path, src = tc._resolve_chromedriver(9222)
+        assert path == '/c/156.0.9.9/chromedriver', f'PATH 旧驱动被直接采用: {path}'
+        assert 'chrome-major=156' in src
+        assert 'PATH 上的 chromedriver 主版本 154' in capsys.readouterr().err
+
     def test_none_when_nothing_found(self, tc, monkeypatch):
         self._clear(monkeypatch)
         assert tc._resolve_chromedriver(9222) == (None, 'none')

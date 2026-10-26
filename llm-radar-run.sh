@@ -64,17 +64,14 @@ fi
 # 单一真源: script-miner 的 chromedriver-manager（download/upgrade/iCloud 归档）。
 # 这里只问「哪个驱动已被验证兼容」，拿到就注入 $CHROMEDRIVER（collector 候选序第一位）。
 if [ -z "${CHROMEDRIVER:-}" ] && [ -f "$SCRIPT_DIR/scripts/chromedriver_bootstrap.py" ]; then
-    _drv="$($PYTHON "$SCRIPT_DIR/scripts/chromedriver_bootstrap.py" --print-path 2>/dev/null || true)"
-    if [ -z "$_drv" ]; then
-        # 采集前置守卫（不等每小时 :05 的 cron）：仅在不就绪时触发, 通常只需 iCloud upgrade 几秒
-        echo "[run] chromedriver 未就绪 ⇒ 尝试自动跟随（ensure, 预算 60s）"
-        $PYTHON "$SCRIPT_DIR/scripts/chromedriver_bootstrap.py" --ensure --deadline 60 >/dev/null 2>&1 || true
-        _drv="$($PYTHON "$SCRIPT_DIR/scripts/chromedriver_bootstrap.py" --print-path 2>/dev/null || true)"
-    fi
+    # OBS-6: 单次调用（--resolve 内部: 就绪即返回, 不就绪按预算跟随）, 端到端 ≤ deadline
+    _drv="$($PYTHON "$SCRIPT_DIR/scripts/chromedriver_bootstrap.py" --resolve --deadline 60 2>/dev/null || true)"
     if [ -n "$_drv" ]; then
         export CHROMEDRIVER="$_drv"
         export TWITTER_CHROMEDRIVER="${TWITTER_CHROMEDRIVER:-$_drv}"
         echo "[run] chromedriver: $_drv"
+    else
+        echo "[run] chromedriver 未就绪（已按 60s 预算尝试跟随）⇒ 回退既有扫描逻辑"
     fi
 fi
 

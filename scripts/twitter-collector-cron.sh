@@ -303,15 +303,13 @@ fi
 
 # ── chromedriver 版本守卫（Chrome 自动升级后自动跟随; 无 chromedriver-manager 的平台自动跳过）──
 if [ -z "${TWITTER_CHROMEDRIVER:-}" ] && [ -f "scripts/chromedriver_bootstrap.py" ]; then
-  _drv="$(python3 scripts/chromedriver_bootstrap.py --print-path 2>/dev/null || true)"
-  if [ -z "$_drv" ]; then
-    echo "[twitter-cron] chromedriver 未就绪 ⇒ 尝试自动跟随（ensure, 预算 60s）"
-    python3 scripts/chromedriver_bootstrap.py --ensure --deadline 60 >/dev/null 2>&1 || true
-    _drv="$(python3 scripts/chromedriver_bootstrap.py --print-path 2>/dev/null || true)"
-  fi
+  # OBS-6: 单次调用（就绪即返回, 不就绪按 60s 预算跟随）
+  _drv="$(python3 scripts/chromedriver_bootstrap.py --resolve --deadline 60 2>/dev/null || true)"
   if [ -n "$_drv" ]; then
     export TWITTER_CHROMEDRIVER="$_drv"
     echo "[twitter-cron] chromedriver: $_drv"
+  else
+    echo "[twitter-cron] chromedriver 未就绪（已按 60s 预算尝试跟随）⇒ 回退既有扫描逻辑"
   fi
 fi
 

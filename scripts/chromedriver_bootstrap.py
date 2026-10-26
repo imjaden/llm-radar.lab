@@ -186,6 +186,9 @@ def ensure(timeout=90, download_timeout=300, deadline=None):
 
     st = check(timeout=budget(timeout))
     if st is None:
+        if exhausted():
+            # RIG-3: 首步 check 就被预算掐断 ≠ manager 不可用（旧实现报 no_manager, 会误导排查方向）
+            return False, 'deadline', {}, '预算耗尽: check 未完成（manager 状态未知, 交回 cron）'
         return False, 'no_manager', {}, f'manager 不可用: {MANAGER}'
     s = state_summary(st)
     if _ready(s):
@@ -341,6 +344,8 @@ def main(argv=None):
     ap = argparse.ArgumentParser(description='chromedriver 版本守卫（单一真源: chromedriver-manager）')
     g = ap.add_mutually_exclusive_group()
     g.add_argument('--print-path', action='store_true', help='输出一个已验证兼容的驱动路径（无则空）')
+    g.add_argument('--resolve', action='store_true',
+                   help='单次调用: 不就绪则按 --deadline 预算跟随, 打印可用的稳定路径（OBS-6）')
     g.add_argument('--check', action='store_true', help='打印 check 摘要 JSON')
     g.add_argument('--ensure', action='store_true', help='不就绪则升级并复核')
     g.add_argument('--watch', action='store_true', help='cron 入口: 状态变化才输出消息')
@@ -355,6 +360,15 @@ def main(argv=None):
         if p:
             print(p)
             return 0
+        return 1
+    if a.resolve:
+        # OBS-6: 采集入口只要一次调用 —— 就绪即返回, 不就绪则按预算跟随, 再把路径打出来
+        ok, action, after, detail = ensure(deadline=a.deadline)
+        p = after.get('stable') or next((x for x in (after.get('paths') or []) if x), None)
+        if p and Path(str(p)).is_file():
+            print(p)
+            return 0
+        print(f'[chromedriver] 未就绪: action={action} {detail[:160]}', file=sys.stderr)
         return 1
     if a.check:
         s = state_summary(check())          # 只调一次 manager: 打印快照与退出码必须同源

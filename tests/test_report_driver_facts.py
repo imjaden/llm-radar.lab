@@ -86,6 +86,7 @@ def test_fallback_takes_latest_recent_hit(rf, monkeypatch, tmp_path):
     monkeypatch.setattr(rf, 'CHROMEDRIVER_MANAGER', tmp_path / 'nope')
     monkeypatch.setattr(rf, 'LOG', log)
     msg, sig = rf.driver_facts()
+    assert msg is not None, '必须报出最新一条（None 说明回退分支扫错了方向/时间窗）'
     assert '155' in msg and '156' in msg, f'必须取最新一条, 而不是窗口内最老: {msg}'
     assert '154' not in msg
     assert sig == 'log:155:156'

@@ -658,7 +658,16 @@ def _resolve_chromedriver(cdp_port=None):
             return env_path, 'env:TWITTER_CHROMEDRIVER'
     on_path = shutil.which('chromedriver')
     if on_path:
-        return on_path, 'PATH'
+        # RIG-4: PATH 分支同样要复核主版本 —— 否则注入被拒后照样会把 PATH 上的旧驱动用起来
+        path_major = _driver_major(on_path)
+        if path_major is None:
+            print(f'[twitter-collector] ⚠️  PATH 上的 chromedriver 无法读出主版本, 跳过: {on_path}',
+                  file=sys.stderr)
+        elif major is not None and path_major != major:
+            print(f'[twitter-collector] ⚠️  PATH 上的 chromedriver 主版本 {path_major} ≠ 目标 Chrome {major}, '
+                  f'继续扫缓存: {on_path}', file=sys.stderr)
+        else:
+            return on_path, 'PATH'
 
     home = Path.home()
     cands = []
