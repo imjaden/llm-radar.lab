@@ -41,7 +41,11 @@ GUI 会话拉起的同一 profile 无以上任何报错 ⇒ 对外正常。所�
 | 1 | 盘上登录态 | 读 `Default/Cookies`（只查 name/expires，不打印值） | auth_token/ct0/twid 各 1，未过期 |
 | 2 | GUI 实例 | `curl -s 127.0.0.1:9222/json/list` | `page \| Home / X \| https://x.com/home`（已登录） |
 | 3 | keychain 拒绝 | `log show --start <ts> --end <ts+40s> --predicate 'process == "Google Chrome"' \| grep -cE "security_exception\|ACCESS_DENIED"` | cron 拉起 = **4**；GUI 拉起 = **0** |
-| 4 | 解密失败 | 同上窗口 `grep -c "Failed to decrypt"`；或 `grep -c "Failed to decrypt" /tmp/twitter-chrome.log` | cron 拉起 = 有（每轮 `:20:0x` 一条，共 11 次）；GUI 拉起 = 0 |
+| 4 | 解密失败 | 同上窗口 `grep -c "Failed to decrypt"`；或 `grep -c "Failed to decrypt" ~/Library/Logs/llm-radar/twitter-chrome.log` | cron 拉起 = 有（每轮 `:20:0x` 一条，共 11 次）；GUI 拉起 = 0 |
+
+> **2026-10-26 更新（LR-SEC-021）**：`twitter-chrome.log` 已从 `/tmp/twitter-chrome.log`（可预测路径 + 644）
+> 迁到 `~/Library/Logs/llm-radar/twitter-chrome.log`（目录 700），本文档其余段落里的 `/tmp` 路径属当时现场记录，
+> 排障时请用新路径（`/tmp` 处留了指向新位置的软链）。
 
 自然实验（最强证据）：2026-10-23 11:20 那轮 cron **成功**（`写盘 data/twitter.json (98 条推文)`），
 唯一差别是当时 9222 上恰好有一个 10:22 人工（`open -na …`，GUI 会话）拉起的实例，wrapper 走了

@@ -2686,7 +2686,8 @@ def crontab_status():
 # ===== 调试 Chrome 子指令 (2026-10-21): 手工拉起/检查 chrome-twitter-cdp =====
 CHROME_BIN = (os.environ.get('TWITTER_CHROME_BIN')
               or '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome')
-CHROME_LOG = os.environ.get('TWITTER_CHROME_LOG') or '/tmp/twitter-chrome.log'
+CHROME_LOG = (os.environ.get('TWITTER_CHROME_LOG')
+              or os.path.expanduser('~/Library/Logs/llm-radar/twitter-chrome.log'))   # LR-SEC-021: 不再用 /tmp 可预测路径
 
 
 def _chrome_arg(args, name, default=None):
@@ -2855,6 +2856,7 @@ def _cmd_chrome(args):
             cmd += [f'--window-position={os.environ.get("TWITTER_WINDOW_POS", "-1900,-297")}',
                     f'--window-size={os.environ.get("TWITTER_WINDOW_SIZE", "880,1000")}']
         cmd.append('https://x.com/login')
+        Path(CHROME_LOG).parent.mkdir(parents=True, exist_ok=True)
         with open(CHROME_LOG, 'ab') as log:
             subprocess.Popen(cmd, stdout=log, stderr=subprocess.STDOUT,
                              start_new_session=True)
