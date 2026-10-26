@@ -46,6 +46,14 @@
 - **归属判定的实现与文述不一致**：上表写「用 `started` 语义决定 `_flclash_owned`」，实际实现是 `_flclash_ensure_ready()` 只返回 `ok` 布尔 + `was_running = _is_flclash_running()`。正常路径等价；残留两个 µs 级竞态（检查后用户手动打开 ⇒ 可能误释放；检查与 ensure 之间进程退出 ⇒ 可能拉起却不释放）。建议后续把 helper 返回值改为完整 dict、`owned = res['started']`（见评审报告 OBS-5，🟢 不改）。
 - **预算关系（请求 §2.3）**：`RUNNING_PORT_GRACE=10s` 只覆盖「进程在、端口未 LISTEN」的短窗口；`READY_TIMEOUT=180s`（= 上游 `verify.wait`）只用于「本轮需拉起」的冷启动；两者不叠加。实测（mock 端口探针，未起 GUI）：端口恒不通 ⇒ **10.21s** 返回 `port_closed` 且**未发 `open`**（实例数不变）；第 3 次探测起来 ⇒ **4.14s** 返回 `already_running`。10s 的取值约束 = `≥3×POLL_INTERVAL` 且 `< READY_TIMEOUT/4`，已加断言锁定（`test_running_port_grace_is_declared_and_bounded`；把常量改回 0 该用例变红）。
 
+## 2c. 收尾（2026-10-26，CL151 全部落地）
+
+| 项 | 改动 | 依据 |
+|:---|:---|:---|
+| 通知面 | 删除 `flclash_proxy.py` 的 `notify` 子命令 / `NOTIFY_CMD` / `notify_required()`；钉子 `test_no_notify_surface_left`（源码不得再出现 `display notification`，CLI 不接受 `notify`） | CL151 R3「不得反向发 FlClash 通知」 |
+| env 解析 | 新增 `_env_int()`（主采集 `DEGRADED_FAILS`/`STALE_HOURS`/`CRITICAL_HOURS`、`scripts/llm-radar-health.py`）与 `_env_port()`（`TWITTER_CDP_PORT`）：空串/非数字/越界一律回退默认，不再 traceback | CL151 §3 坑位「端口 env 不得 `int(os.environ[...])`」 |
+| SC5 | 采集侧确认零通知、不参与 heal 重启 | CL151 §4 SC5 |
+
 ## 3. SC 实测（2026-10-24 20:59–21:05，真机）
 
 | SC | 前置 | 命令 | 实测 |
