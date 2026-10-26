@@ -31,6 +31,8 @@
 ② 采集注入  llm-radar-run.sh / scripts/twitter-collector-cron.sh 调
             scripts/chromedriver_bootstrap.py --print-path → export CHROMEDRIVER / TWITTER_CHROMEDRIVER
             （两采集器的候选序第一位; 只有「已验证兼容」才注入, 拿不到就回退原有扫描逻辑）
+            **前置守卫**: print-path 为空（所有注册路径都不兼容/manager 不在）时才跑 --ensure 再问一次
+            ⇒ 不等每小时 :05 的 cron, 当场跟随; 取不到就静默回退, 绝不阻断采集
 ③ cron 守卫  llm-radar-chromedriver-guard（每 :05）→ --watch
             不就绪 ⇒ iCloud 有匹配版则只 upgrade, 否则先 download(重试 1 次) 再 upgrade, 最后复核
             状态不变 ⇒ 空输出（静默）; 升级/失败/恢复 ⇒ 单条飞书
@@ -53,6 +55,8 @@
 | cron 最小环境 | `env -i PATH=/usr/bin:/bin … --print-path` | 正常输出路径（manager 用绝对路径，不依赖 `~/.local/bin` 在 PATH） |
 | 两采集器解析 | 分别调 `_resolve_chromedriver` | 主采集 → 稳定路径；X 采集 → `(稳定路径, 'env:TWITTER_CHROMEDRIVER')`，**无版本不匹配告警** |
 | 告警侧修复 | `llm-radar-report-watch.py` | 告警正文中 chromedriver 假根因消失（只剩真实原因） |
+| 前置守卫·有回退路径 | 稳定路径覆盖为 154 后 `env -u CHROMEDRIVER ./llm-radar-run.sh --help` | `[run] chromedriver: …/script-miner/cache/chromedriver/chromedriver`（回退到兼容路径，**不**触发 ensure） |
+| 前置守卫·全不可用 | 同上但 `CHROMEDRIVER_MANAGER=/nonexistent/mgr` | 打印 `[run] chromedriver 未就绪 ⇒ 尝试自动跟随（ensure）`，采集照常继续（不阻断） |
 
 测试：`tests/test_chromedriver_bootstrap.py`（13 例：ready 判定 / usable_path / ensure noop·upgrade·download /
 watch 静默·去重·恢复 / CLI 退出码）+ 既有套件 ⇒ 全量 **343 passed, 2 deselected**。

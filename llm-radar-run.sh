@@ -65,6 +65,12 @@ fi
 # 这里只问「哪个驱动已被验证兼容」，拿到就注入 $CHROMEDRIVER（collector 候选序第一位）。
 if [ -z "${CHROMEDRIVER:-}" ] && [ -f "$SCRIPT_DIR/scripts/chromedriver_bootstrap.py" ]; then
     _drv="$($PYTHON "$SCRIPT_DIR/scripts/chromedriver_bootstrap.py" --print-path 2>/dev/null || true)"
+    if [ -z "$_drv" ]; then
+        # 采集前置守卫（不等每小时 :05 的 cron）：仅在不就绪时触发, 通常只需 iCloud upgrade 几秒
+        echo "[run] chromedriver 未就绪 ⇒ 尝试自动跟随（ensure）"
+        $PYTHON "$SCRIPT_DIR/scripts/chromedriver_bootstrap.py" --ensure >/dev/null 2>&1 || true
+        _drv="$($PYTHON "$SCRIPT_DIR/scripts/chromedriver_bootstrap.py" --print-path 2>/dev/null || true)"
+    fi
     if [ -n "$_drv" ]; then
         export CHROMEDRIVER="$_drv"
         export TWITTER_CHROMEDRIVER="${TWITTER_CHROMEDRIVER:-$_drv}"

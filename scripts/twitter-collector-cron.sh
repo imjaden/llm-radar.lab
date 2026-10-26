@@ -304,6 +304,11 @@ fi
 # ── chromedriver 版本守卫（Chrome 自动升级后自动跟随; 无 chromedriver-manager 的平台自动跳过）──
 if [ -z "${TWITTER_CHROMEDRIVER:-}" ] && [ -f "scripts/chromedriver_bootstrap.py" ]; then
   _drv="$(python3 scripts/chromedriver_bootstrap.py --print-path 2>/dev/null || true)"
+  if [ -z "$_drv" ]; then
+    echo "[twitter-cron] chromedriver 未就绪 ⇒ 尝试自动跟随（ensure）"
+    python3 scripts/chromedriver_bootstrap.py --ensure >/dev/null 2>&1 || true
+    _drv="$(python3 scripts/chromedriver_bootstrap.py --print-path 2>/dev/null || true)"
+  fi
   if [ -n "$_drv" ]; then
     export TWITTER_CHROMEDRIVER="$_drv"
     echo "[twitter-cron] chromedriver: $_drv"
