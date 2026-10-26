@@ -491,6 +491,15 @@ review_history:
     findings_open: 1
     tracking: '2026-10-24 CL151 Q-1/Q-2 闭环 delta 复审 (9662e3f/799ca8e/a9a83a0) — SEC-1 LR-SEC-023 已闭合 + DOC-2 已闭合; 新增 RIG-1 端口两侧不同源 / DOC-3 文档自相矛盾 / TST-2 两处零覆盖, 均本批修复; RIG-2 归属判定用 was_running 非 started (🟢 记录) + OBS-5 10.21s 实测 (🟢); SEC-2 LR-SEC-024 仍待用户接受; 变异 14 组: 自带 8/10 命中, 新 4 钉全红; 全量 329 passed / 2 deselected'
     report: documents/reviews/llm-radar-cl151-ensure-proxy-review-v1.0-20261024.md
+  - date: 2026-10-26
+    reviewer: Security Reviewer
+    review_level: L2
+    verdict: CONDITIONAL
+    score: 74
+    findings_total: 9
+    findings_open: 2
+    tracking: '2026-10-26 chromedriver 自动跟随 + CL151 收尾 (b8b4b3c/9a50cee/135a3eb + 评审中并发追加 b9207f6; 修正 fb653c6/4b54e10 push 0 0) — 1 🔴 SIG-1 指纹盲区 (指纹只含 verdict/chrome/good ⇒ 稳定路径被覆盖成旧驱动时三项不变, 升级成功与失败消息全被去重, watch 实测 ("",1) 飞书零告警) 已修 (加 ready+action / upgraded 事件不去重 / since 落盘); 🟡 RIG-1 稳定路径未注册 ⇒ rc=3(noop) 误判 upgrade_failed 且指令无效 已修 stable_unmanaged+add --path; 🟡 SEC-1 三入口(:05/:20/:40)并发 ensure ⇒ copy2 非原子覆盖稳定路径 已修 flock; 🟡 ENV-1 CL151 只收口 int, collector 两处模块级 float(os.environ) 空串即 import 期 ValueError 实测 已修 _env_float; 🟡 RIG-2 永久性 download 失败也重试 已修; 🟡 CLI-1 --check 双调 manager 且 rc 用全局 verdict 已修; 🟢 DOC-1 SKILL/flclash docstring notify 残留 已修. 未闭合: 告警侧 driver_facts 在 ops profile 不入 git ⇒ 回退分支变异无从变红 (M3 绿); 采集前置 ensure 最坏 990s 无 deadline; X 采集对注入路径零版本复核. 数据验证: collector.log 25269 行 / 53 条不匹配 / 窗口起点 24070(10-21 13:40) / 首命中 24104(10-21 17:40) / 末条 10-23 11:40 全中; 变异 8 组全红; 全量 370 passed / 2 deselected (343+27).'
+    report: documents/reviews/llm-radar-chromedriver-guard-review-v1.0-20261026.md
 
 # ------------------------------------------------------------------
 # 注记 (2026-09-08 docs@sync): 以下 8 份 review 报告存在但未在 review_history 注册

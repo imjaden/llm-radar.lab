@@ -1657,3 +1657,46 @@
 - 注：`documents/handoff/cl151-ensure-proxy-receipt-20261024.md` 评审期间出现**并发未提交改动**（ops 侧在改 SC1–SC5 状态表），本批按路径提交、未触碰该文件。
 
 ---
+
+## 2026-10-26 — chromedriver 自动跟随 + CL151 收尾 (b8b4b3c → 4b54e10)
+
+- **review者**: review (Security Reviewer, L2)
+- **范围**: `b8b4b3c` feat 守卫脚本+采集注入 / `9a50cee` fix FlClash notify 删除+env int 解析 / `135a3eb` docs /
+  **`b9207f6`** 采集前置 `--ensure`（评审开始后由并发 ops 会话追加并推送）/ `fb653c6`+`4b54e10` 本批修正
+- **Tracking**: LR-CDG-001（🔴 SIG-1 指纹盲区）✅ **已闭合**; LR-CDG-002 RIG-1（rc=3 误判/未注册稳定路径）✅ 已闭合;
+  LR-CDG-003 SEC-1（三入口并发 copy2 非原子）✅ 已闭合; LR-CDG-004 ENV-1（模块级 float(os.environ)）✅ 已闭合;
+  LR-CDG-005 RIG-2（永久性 download 也重试）✅ 已闭合; LR-CDG-006 CLI-1（--check 双调 + rc 用全局 verdict）✅ 已闭合;
+  DOC-1 🟢 已修; LR-CDG-007 采集前置 ensure 无 deadline / LR-CDG-008 X 采集零版本复核 ⬜ 待决策; findings_open 2
+- **状态**: ⏳ CONDITIONAL PASS — 74/100（🔴 已在本批修正，待复审，预期 ~90）
+- **报告**: documents/reviews/llm-radar-chromedriver-guard-review-v1.0-20261026.md
+- **实现 prompt**: ⬜ 无需生成（非 PASS 首次评审；修正已随 `fb653c6`/`4b54e10` 落地并 push，`origin/main...HEAD` = 0 0）
+
+### 发现摘要
+
+| # | Severity | Title | Status |
+|---|----------|-------|--------|
+| LR-CDG-001 / SIG-1 | 🔴 | `watch()` 指纹只含 `verdict\|chrome\|good`；manager 的 `verdict=compatible` 只要任一注册路径兼容 ⇒ **稳定路径被覆盖成旧驱动（本设计核心场景）时三项全不变**，升级成功与失败消息都被去重吞掉（实测 `('',1)`，飞书零告警） | ✅ 闭合（`fb653c6`：指纹含 `ready`+`action`；`upgraded` 事件永不去重；补 3 钉） |
+| LR-CDG-002 / RIG-1 | 🟡 | 稳定路径存在但**未注册**给 manager ⇒ `stable_compatible` 永假、`upgrade --all` 只覆盖受管路径返回 `rc=3(noop)` ⇒ 旧实现报 `upgrade_failed` 且指令（download && upgrade）无效 | ✅ 闭合（`rc=3` 归入非失败 + `stable_unmanaged` 消息给 `add --path`） |
+| LR-CDG-003 / SEC-1 | 🟡 | `:05` 守卫 / `:20` X 采集 / `:40` 主采集三入口并发 `ensure()`；manager `upgrade` 是 `shutil.copy2` 覆盖同一稳定路径（非原子）⇒ 可 exec 半二进制（正是本方案要消灭的失败态）；守卫最坏 990s 可跨到 `:21:30` 与 `:20` 重叠 | ✅ 闭合（`flock` 非阻塞；`busy` 立即跳过不排队） |
+| LR-CDG-004 / ENV-1 | 🟡 | CL151「env 安全解析」只收口 int：collector 两处**模块级** `float(os.environ)`，`LLM_RADAR_FLCLASH_READY_TIMEOUT=''` ⇒ import 期 `ValueError` ⇒ 整轮采集失败（实测） | ✅ 闭合（`_env_float` + `tests/test_env_parsing.py` 19 例） |
+| LR-CDG-005 / RIG-2 | 🟡 | `download` 对永久性失败（无可用下载地址/读不到 Chrome）也重试 ⇒ 白等 300s + 多打 API | ✅ 闭合（永久特征短路，网络抖动仍重试 1 次） |
+| LR-CDG-006 / CLI-1 | 🟡 | `--check` 调两次 manager（2×0.86s 且打印与 rc 非同一次快照），rc 用**全局 verdict** ⇒ 稳定路径旧了仍返回 0 | ✅ 闭合（单次调用 + `rc=_ready()`） |
+| DOC-1 | 🟢 | `skills/x-twitter-collector/SKILL.md` 与 `flclash_proxy.py` docstring 仍写已删除的 `notify` 子命令 | ✅ 已修（`4b54e10`） |
+| LR-CDG-007 | 🟡 | 采集前置 `ensure` 无总预算（check 90 + download 300×2 + upgrade 300 ≈ 990s 挡在采集之前），且采集路径新增「下载+覆盖驱动」写面 | ⬜ 待决策（建议 `--ensure --deadline`） |
+| LR-CDG-008 | 🟡 | X 采集 `_resolve_chromedriver()` 命中 `TWITTER_CHROMEDRIVER` 即返回，不做主版本复核（主采集仍 `--version` 比对） | ⬜ 记录（建议 print-path 带版本） |
+
+### 数据验证要点
+
+- 请求 §1 三个数字**逐项复算命中**：`wc -l` = 25269；`grep -c` 不匹配 = 53（末条 `24594:2026-10-23 11:40`）；
+  `awk NR==24070` = `2026-10-21 13:40:01`、`sed -n 24104p` = `2026-10-21 17:40:05 … 154 与本机 Chrome 155`。
+- 告警修法探针（合成日志，未动生产数据）：有 24h 内命中 ⇒ 取**最近**一条并带 `最近一次 10-26 06:10`；只有 9 天前 ⇒ `None + log:stale`。
+- 平台：`--check` = compatible / `156.0.8078.47` / `stable_compatible=true`（rc=0）；`--print-path` → 稳定指针；
+  `--ensure` = `noop`；guard `--watch` 静默 rc=0；单次 `--print-path` 实测 **0.86/0.86/0.88s**（文档写 0.4s，低报）。
+- 变异（8 组全红）：M1 `_ready`→verdict（7 failed）、M2 裸 `upgrade`、M4 指纹退回三项、M5 `--check` rc 用 verdict、
+  M6 `rc=3` 当失败、M7 去 flock、M8 去 `upgraded` 事件分支；**M3 告警回退分支改回正序扫 ⇒ 无从变红**
+  （`driver_facts()` 在 ops profile 不入本仓，`tests/` 零引用）。
+- 复跑：bootstrap **21 passed**、env 新文件 **19 passed**、全量 **370 passed / 2 deselected**（343+27）；
+  跑后 `git checkout -- data/snapshot.json overview.json timestamp.json` 已还原。
+- 治理：`origin/main == HEAD == 4b54e10`、`rev-list --left-right --count` = `0 0`、无 force/amend、`AGENTS.md` 未动、crontab 未改。
+- 并发注记 G-1：评审中 `b9207f6`（采集前置 `--ensure`）由另一 ops 会话追加并推送，已纳入审计（SEC-1 的并发窗口正由它放大）。
+
