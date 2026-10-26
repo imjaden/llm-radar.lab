@@ -23,7 +23,7 @@
 #   TWITTER_CDP_PORT                调试端口 (默认 9222)
 #   TWITTER_PROFILE_DIR             user-data-dir (默认 ~/chrome-twitter-cdp)
 #   TWITTER_CHROME_BIN              Chrome 可执行文件 (默认 macOS 标准路径)
-#   TWITTER_CHROME_LOG              拉起 Chrome 的 stdout/stderr (默认 /tmp/twitter-chrome.log)
+#   TWITTER_CHROME_LOG              拉起 Chrome 的 stdout/stderr (默认 ~/Library/Logs/llm-radar/twitter-chrome.log)
 #   TWITTER_CHROME_SHUTDOWN_TIMEOUT 优雅退出等待秒数, 超时 SIGKILL (默认 15)
 #   TWITTER_CHROME_READY_TRIES      启动后就绪轮询次数, 每次 2s (默认 15 = ≤30s)
 #   TWITTER_WINDOW_POS              采集 Chrome 窗口左上角 x,y (默认 -1900,-297 = 本机副屏左上)
@@ -37,7 +37,8 @@ PROJ_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 PORT="${TWITTER_CDP_PORT:-9222}"
 PROFILE="${TWITTER_PROFILE_DIR:-$HOME/chrome-twitter-cdp}"
 CHROME="${TWITTER_CHROME_BIN:-/Applications/Google Chrome.app/Contents/MacOS/Google Chrome}"
-CHROME_LOG="${TWITTER_CHROME_LOG:-/tmp/twitter-chrome.log}"
+CHROME_LOG="${TWITTER_CHROME_LOG:-$HOME/Library/Logs/llm-radar/twitter-chrome.log}"
+mkdir -p "$(dirname "$CHROME_LOG")" 2>/dev/null || true   # LR-SEC-021: 不再用可预测的 /tmp 路径
 SHUTDOWN_TIMEOUT="${TWITTER_CHROME_SHUTDOWN_TIMEOUT:-15}"
 READY_TRIES="${TWITTER_CHROME_READY_TRIES:-15}"
 WIN_POS="${TWITTER_WINDOW_POS:--1900,-297}"

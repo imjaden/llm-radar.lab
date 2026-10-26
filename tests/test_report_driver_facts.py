@@ -96,3 +96,39 @@ def test_fingerprint_carries_driver_sig(rf):
     fp = json.loads(rf.fingerprint(['stale'], {'degraded': [], 'consecutive_fails': 0,
                                                'driver_sig': 'bad:156.0.8078.47:154.0.8037.92'}))
     assert fp['v'] == 'bad:156.0.8078.47:154.0.8037.92', '版本状态必须进指纹, 否则状态变化不重报'
+
+
+# ---------- SEC-2 / LR-SEC-024: 代理三态可见性 ----------
+def _stub_flclash(monkeypatch, running, port_open):
+    import types
+    m = types.ModuleType('flclash_proxy')
+    m.is_running = lambda: running
+    m.is_port_listening = lambda *a, **k: port_open
+    monkeypatch.setitem(sys.modules, 'flclash_proxy', m)
+
+
+def test_proxy_state_three_states(rf, monkeypatch):
+    _stub_flclash(monkeypatch, False, False)
+    assert rf.proxy_state() == '未运行（按需启动）'
+
+    _stub_flclash(monkeypatch, True, True)
+    assert '7890 可用' in rf.proxy_state()
+
+    _stub_flclash(monkeypatch, True, False)
+    state = rf.proxy_state()
+    assert state.startswith('在运行但 7890 不可达'), 'Gatekeeper 待确认的唯一信号, 必须能报出这一态'
+
+
+def test_digest_contains_proxy_line(rf, monkeypatch):
+    _stub_flclash(monkeypatch, True, True)
+    lines = [ln for ln in rf.build_digest().splitlines() if ln.startswith('- 代理：')]
+    assert len(lines) == 1 and '7890 可用' in lines[0]
+
+
+def test_alert_surfaces_proxy_anomaly(rf, monkeypatch):
+    _stub_flclash(monkeypatch, True, False)
+    msg = rf.build_alert({'age': 9.0, 'gen': '2026-10-26T00:00:00Z'},
+                         {'driver_mismatch': None, 'degraded': [], 'consecutive_fails': 0,
+                          'first_fail': ''}, ['stale'])
+    assert '代理异常' in msg and msg.index('代理异常') < msg.index('数据陈旧'), \
+        '代理异常应排在根因首位'
