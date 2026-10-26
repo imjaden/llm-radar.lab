@@ -78,6 +78,15 @@ def _flclash_port():
         return None
 
 
+def _env_port(name, default):
+    """端口 env 安全解析（CL151 §3 坑位: 空串/非数字/越界不得 traceback）。"""
+    try:
+        n = int(str(os.environ.get(name, '') or default).strip())
+    except (TypeError, ValueError):
+        return default
+    return n if 0 < n < 65536 else default
+
+
 def _ensure_proxy_ready(timeout=None):
     """确保代理就绪（CL151: 采集入口与 CDP 断连重连两处都调）。
 
@@ -1057,7 +1066,7 @@ def main(argv=None):
 
     cdp_port = None
     if mode == 'attach':
-        cdp_port = int(os.environ.get('TWITTER_CDP_PORT', '9222'))
+        cdp_port = _env_port('TWITTER_CDP_PORT', 9222)
         print(f'[twitter-collector] attach 模式: CDP 127.0.0.1:{cdp_port}')
     rc = cmd_collect(enabled, profile_dir, cdp_port=cdp_port)
     if rc == 2:      # 登录墙: stderr 已有提示, 再补一条本地异常通知 (best-effort, 不影响退出码)

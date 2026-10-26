@@ -229,18 +229,18 @@ def test_release_noop_when_not_running(fp, monkeypatch):
     assert fp.rec.calls == []
 
 
-# ===== notify =====
+# ===== 通知面: CL151 R3 —— 采集侧不得反向发 FlClash 通知 =====
 
-def test_notify_non_darwin_and_failure_silent(fp, monkeypatch):
-    monkeypatch.setattr(fp, '_is_darwin', lambda: False)
-    assert fp.notify_required() is False
-    monkeypatch.setattr(fp, '_is_darwin', lambda: True)
-
-    def boom(argv, timeout=30):
-        raise OSError('osascript 不可用')
-
-    monkeypatch.setattr(fp, '_run', boom)
-    assert fp.notify_required() is False, '通知失败必须静默 (best-effort)'
+def test_no_notify_surface_left(fp):
+    """CL151 R3 钉子: 模块不得再暴露任何通知入口（历史 `notify` 子命令已删）。
+    「代理未就绪」是跳过, 不是异常; FlClash 侧只有 daily-checker 的「超时重启」一条通知。
+    """
+    assert not hasattr(fp, 'notify_required'), 'notify_required 残留'
+    assert not hasattr(fp, 'NOTIFY_CMD'), 'NOTIFY_CMD 残留（可被误触发）'
+    r = subprocess.run([sys.executable, str(HELPER), 'notify'], capture_output=True, text=True)
+    assert r.returncode != 0, '`notify` 子命令仍可用: ' + r.stdout + r.stderr
+    src = HELPER.read_text(encoding='utf-8')
+    assert 'display notification' not in src, '源码里仍有本地通知文案'
 
 
 # ===== CLI 契约 =====
@@ -258,8 +258,9 @@ def test_cli_pids_and_help_contract():
     assert all(tok.isdigit() for tok in r.stdout.split())
     h = subprocess.run([sys.executable, str(HELPER), '--help'], capture_output=True, text=True)
     assert h.returncode == 0
-    for cmd in ('is-running', 'pids', 'ensure', 'release', 'notify'):
+    for cmd in ('is-running', 'pids', 'ensure', 'release'):
         assert cmd in h.stdout
+    assert 'notify' not in h.stdout, 'CL151 R3: 不得再有 notify 子命令'
 
 
 # ===== 与声明层真源对齐 =====

@@ -35,7 +35,16 @@ import urllib.request
 from datetime import datetime, timedelta
 
 # ===== 阈值常量（默认 12h，可用 LLM_RADAR_STALE_HOURS 覆盖）=====
-STALE_HOURS = int(os.environ.get('LLM_RADAR_STALE_HOURS', '12'))
+def _env_int(name, default, lo=None):
+    """env 整数安全解析（CL151 §3 坑位: 空串/非数字不得在 import 期 traceback）。"""
+    try:
+        n = int(str(os.environ.get(name, '') or default).strip())
+    except (TypeError, ValueError):
+        return default
+    return default if (lo is not None and n < lo) else n
+
+
+STALE_HOURS = _env_int('LLM_RADAR_STALE_HOURS', 12, lo=1)
 
 # 线上健康检查端点（自有域名，HTTPS）
 ENDPOINT = 'https://llm-radar.lab.jaden.tech/timestamp.json'

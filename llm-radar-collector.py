@@ -52,9 +52,20 @@ from flclash_proxy import (  # noqa: E402  (须在 sys.path 注入之后)
 
 # 海外源就绪等待 (对齐声明层真源 macosx-service-policy.json: verify.wait=180s / ports=[7890])
 FLCLASH_READY_TIMEOUT = float(os.environ.get('LLM_RADAR_FLCLASH_READY_TIMEOUT', '180'))
+
+
+def _env_int(name, default, lo=None):
+    """env 整数安全解析（CL151 §3 坑位: 空串/非数字/越界不得在 import 期 traceback 打死进程）。"""
+    try:
+        n = int(str(os.environ.get(name, '') or default).strip())
+    except (TypeError, ValueError):
+        return default
+    return default if (lo is not None and n < lo) else n
+
+
 # 源降级: 连续失败 ≥ DEGRADED_FAILS → 本轮跳过; 但距上次真实尝试超过 DEGRADED_RETRY_HOURS 会放行重试一次。
 # (2026-10-09 实锤: 一次 chromedriver 环境故障让 qbitai 累计 18 次并被永久判「已降级」, 永不重试)
-DEGRADED_FAILS = int(os.environ.get('LLM_RADAR_DEGRADED_FAILS', '3'))
+DEGRADED_FAILS = _env_int('LLM_RADAR_DEGRADED_FAILS', 3, lo=1)
 DEGRADED_RETRY_HOURS = float(os.environ.get('LLM_RADAR_DEGRADED_RETRY_HOURS', '6'))
 
 
@@ -110,8 +121,8 @@ SKILLS_DIR = PROJECT_ROOT / 'skills'
 # STALE_HOURS 对齐 scripts/llm-radar-health.py 语义 (12h, 2026-09-03 从 7h 放宽:
 # 正常 cron 7h 节奏 + 跨夜空窗 10-14h 需余量, 避免跨夜必报误触发 heal);
 # CRITICAL_HOURS 独立常量 (48, 非 STALE*7 近似)
-STALE_HOURS = int(os.environ.get('LLM_RADAR_STALE_HOURS', '12'))       # warning 阈值
-CRITICAL_HOURS = int(os.environ.get('LLM_RADAR_CRITICAL_HOURS', '48'))  # critical 阈值
+STALE_HOURS = _env_int('LLM_RADAR_STALE_HOURS', 12, lo=1)       # warning 阈值
+CRITICAL_HOURS = _env_int('LLM_RADAR_CRITICAL_HOURS', 48, lo=1)  # critical 阈值
 
 # ===== News Sources =====
 SOURCES = {

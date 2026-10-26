@@ -21,7 +21,9 @@ CLI:
   python3 scripts/flclash_proxy.py pids                  # 空格分隔 pid (无则空行)
   python3 scripts/flclash_proxy.py ensure [--timeout 180] [--port 7890] [--json]   # 0=就绪 / 1=未就绪
   python3 scripts/flclash_proxy.py release [--grace 20] [--json]                   # 0=已释放 / 1=仍存活
-  python3 scripts/flclash_proxy.py notify                # best-effort 通知, 失败静默返回 1
+
+通知面: **本模块不发任何通知**（CL151 R3：FlClash 侧只有 daily-checker 的「超时重启」一条通知；
+采集侧「代理未就绪」只是跳过，不是异常）。历史上的 `notify` 子命令已于 2026-10-26 删除。
 
 stdout = 机器可读单值(status word / JSON); 动作细节走 stderr(人类可读, 便于 cron 日志留痕)。
 """
@@ -39,8 +41,6 @@ APP_NAME = 'FlClash'
 APP_PATH = '/Applications/FlClash.app'
 START_CMD = ('open', '-g', '-a', APP_NAME)   # -g: 不抢焦点 (CL151)
 STOP_CMD = ('osascript', '-e', 'quit app "FlClash"')
-NOTIFY_CMD = ('osascript', '-e',
-              'display notification "采集 X 数据需启动 flClash 应用" with title "llm-radar"')
 READY_PORT = 7890          # 对齐 policy services[FlClash].restart.verify.ports
 READY_TIMEOUT = 180.0      # 对齐 policy ...verify.wait
 STOP_GRACE = 20.0          # 对齐 policy ...restart.grace
@@ -172,17 +172,6 @@ def release(grace=STOP_GRACE):
             'reason': 'released' if not left else 'still_running', 'pids': left}
 
 
-def notify_required():
-    """macOS 本地通知(提示启动 FlClash); 非 Darwin 直接 False; 失败静默。"""
-    if not _is_darwin():
-        return False
-    try:
-        _run(NOTIFY_CMD, timeout=3)
-        return True
-    except Exception:
-        return False
-
-
 def main(argv=None):
     parser = argparse.ArgumentParser(description='FlClash 代理生命周期单一真源')
     sub = parser.add_subparsers(dest='cmd', required=True)
@@ -197,7 +186,6 @@ def main(argv=None):
     p_release = sub.add_parser('release', help='释放本应用 (优雅 → kill -TERM)')
     p_release.add_argument('--grace', type=float, default=STOP_GRACE)
     p_release.add_argument('--json', action='store_true')
-    sub.add_parser('notify', help='本地通知 (best-effort)')
 
     args = parser.parse_args(argv)
 
@@ -224,9 +212,6 @@ def main(argv=None):
         print(json.dumps(res, ensure_ascii=False) if args.json
               else ('released' if res['ok'] else 'still-running'))
         return 0 if res['ok'] else 1
-
-    if args.cmd == 'notify':
-        return 0 if notify_required() else 1
 
     return 2
 

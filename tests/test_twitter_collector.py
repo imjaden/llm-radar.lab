@@ -992,6 +992,14 @@ class TestProxyEnsureSkip:
         monkeypatch.setattr(tc, '_flclash_ensure_ready', boom)
         assert tc._ensure_proxy_ready() is False
 
+    def test_env_port_safe_parsing(self, tc, monkeypatch):
+        """CL151 §3 坑位: 空串/非数字/越界端口不得 traceback, 一律回退默认值。"""
+        for raw in ('', '   ', 'abc', '0', '70000', '-1'):
+            monkeypatch.setenv('TWITTER_CDP_PORT', raw)
+            assert tc._env_port('TWITTER_CDP_PORT', 9222) == 9222, f'raw={raw!r}'
+        monkeypatch.setenv('TWITTER_CDP_PORT', '9333')
+        assert tc._env_port('TWITTER_CDP_PORT', 9222) == 9333
+
     def test_no_ensure_mode_only_probes(self, tc, monkeypatch):
         """Q-2: TWITTER_PROXY_NO_ENSURE=1 ⇒ 只探测(进程 ∧ 端口), 绝不拉起。"""
         monkeypatch.setenv('TWITTER_PROXY_NO_ENSURE', '1')
