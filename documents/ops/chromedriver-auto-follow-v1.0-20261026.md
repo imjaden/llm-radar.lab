@@ -64,7 +64,9 @@ watch 静默·去重·恢复 / CLI 退出码）+ 既有套件 ⇒ 全量 **343 p
 ## 4. 运行时契约
 
 - 状态文件：`cache/records/chromedriver-guard.json`（`ts / ok / action / sig / since / summary / detail`）。
-- 退出码（供 cron 判失败）：`0` 就绪或已升级｜`1` 未就绪（失败已发消息）｜`2` manager 不可用。
+- 退出码：**`--watch` 恒 0**（Q-4：harness 对 rc≠0 另发引擎级通知，会与正文去重叠加成重复告警）；
+  其余子命令供本地/采集侧消费：`--print-path` / `--check` / `--ensure` 就绪 0、不就绪 1（`--check` 的 rc
+  是「采集是否真的可用」，不是 manager 的全局 verdict）。
 - 通知纪律：`sig` = `ready + verdict + chrome + good + action`（**不含 ready 会漏掉本设计的核心场景**：
   manager 的 `verdict=compatible` 只要任一注册路径兼容，稳定路径被覆盖成旧版时 `verdict/chrome/good`
   全不变 ⇒ 消息被去重吞掉）；同一 `sig` 不重复发；**真升级是事件，每次都发**（不去重）；
@@ -106,6 +108,15 @@ watch 静默·去重·恢复 / CLI 退出码）+ 既有套件 ⇒ 全量 **343 p
 3. **X 采集不看版本**：`_resolve_chromedriver()` 命中 `TWITTER_CHROMEDRIVER` 即返回（不做主版本校验），
    把版本正确性完全托付给 manager；主采集仍会 `--version` 复核。
 4. **日志轮转未做**：`collector.log` 25k 行无切割（告警已改权威源，故不再复报）。
+
+## 4.2 未闭合项闭环（2026-10-26 第二批，v1.2）
+
+| 项 | 问题 | 修法 | 证据 |
+|:---|:---|:---|:---|
+| LR-CDG-007（Q-2） | 采集前置 `ensure` 无总预算，最坏 ~990s 挡在采集前（check 90 + download 300×2 + upgrade 300） | `ensure(deadline=…)` + `--ensure --deadline 60`：预算按步分配（每步子进程 timeout = `min(基数, 剩余)`），耗尽 ⇒ `action='deadline'`、不动 manager，交回每小时的 cron；两处采集入口均用 60s | `test_ensure_deadline_short_circuits`（预算 0 时 manager 调用为空）+ `test_ensure_deadline_bounds_subprocess_timeout`（所有子进程 timeout ≤ 60） |
+| LR-CDG-008（Q-3） | X 采集命中 `TWITTER_CHROMEDRIVER` 即采用，零版本复核（主采集有 `--version` 复核） | 注入路径也实跑 `--version`：读不出主版本 ⇒ 不信任；与 CDP 目标主版本不符 ⇒ 告警并回退缓存扫描 | `test_env_override_rejected_on_major_mismatch`（154 vs 156 ⇒ 回退且 stderr 有 `主版本 154`）+ `test_env_override_unreadable_version_falls_back`；真机 `target_major=156 / driver_major=156 ⇒ env 采用` |
+| Q-4（rc 语义） | no_agent cron 对 rc≠0 会另发**引擎级**错误通知 ⇒ 与正文去重叠加成每小时重复响 | `--watch` 退出码**恒 0**（失败信息一律走正文）；ops 侧薄壳 `llm-radar-chromedriver-guard.py` 同样恒 0，并把真实 rc 打到 stderr；异常也兜底成一条正文（不再 traceback 静默死） | `test_watch_never_returns_nonzero_on_exception`；兄弟 watchdog `llm-radar-collect-watch` 同为恒 0，口径一致 |
+| 回退分支零钉子 | `driver_facts()` 在 ops profile（不入本仓 git）⇒ 变异无从变红 | 本仓新增 `tests/test_report_driver_facts.py`：注入一个 fake manager 输出与一段**含 9 天前命中**的日志窗口，断言「compatible 时不报」「回退只认 24h 内且取最新」「指纹含版本三元组」 | 见该测试文件（用 `importlib` 直接加载 ops 脚本，无需复制实现） |
 
 ## 5. 已知边界
 
