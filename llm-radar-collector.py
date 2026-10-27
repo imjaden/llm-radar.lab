@@ -137,6 +137,75 @@ SKILLS_DIR = PROJECT_ROOT / 'skills'
 STALE_HOURS = _env_int('LLM_RADAR_STALE_HOURS', 12, lo=1)       # warning 阈值
 CRITICAL_HOURS = _env_int('LLM_RADAR_CRITICAL_HOURS', 48, lo=1)  # critical 阈值
 
+# ===== Status 陈旧度「判定点」口径 (crossrepo-llm-radar-staleness / DAILY-CHECKER-CL191) =====
+# 问题: 夜间 22:00–08:00 用户合盖、采集不可能跑 ⇒ 纯绝对小时数必然在早晨误报
+#       (2026-10-27 07:42 报「昨日 19:33 采到, 12.2h 前」)。
+# 口径: 当日首次成功采集 + 宽限之前**不评陈旧**; 当天还没首采则以「当日应到时刻 + 宽限」为判定点。
+#       >CRITICAL_HOURS 例外 —— 超过 48h 无论几点都判 critical (不当安静)。
+FIRST_SLOT_TODAY = (os.environ.get('LLM_RADAR_FIRST_SLOT') or '09:40').strip() or '09:40'
+STALENESS_GRACE_MIN = _env_int('LLM_RADAR_STALENESS_GRACE_MIN', 30, lo=0)
+
+
+def _parse_hhmm(value):
+    """'09:40' → (9, 40)；非法/越界 → None。"""
+    try:
+        hh, mm = str(value).split(':')
+        h, m = int(hh), int(mm)
+    except (AttributeError, ValueError):
+        return None
+    return (h, m) if (0 <= h <= 23 and 0 <= m <= 59) else None
+
+
+def first_success_today(now, metrics, ts_data=None):
+    """当天（本地时区）首条成功采集时刻；没有则 None。
+
+    真源 = data/metrics.json 的 run_history（每次 run 追加, 保留 30 条）；
+    回退 = timestamp.json 的 last_run_at（须 status=success 且落在今天）。
+    """
+    today = now.date()
+    best = None
+    for item in (metrics or {}).get('run_history') or []:
+        if not isinstance(item, dict) or not item.get('success'):
+            continue
+        try:
+            dt = datetime.fromisoformat(str(item.get('time') or ''))
+        except (TypeError, ValueError):
+            continue
+        if dt.date() == today and (best is None or dt < best):
+            best = dt
+    if best is None and isinstance(ts_data, dict) and ts_data.get('last_run_status') == 'success':
+        try:
+            dt = datetime.fromisoformat(str(ts_data.get('last_run_at') or ''))
+        except (TypeError, ValueError):
+            dt = None
+        if dt is not None and dt.date() == today:
+            best = dt
+    return best
+
+
+def staleness_judge_point(now, first_ok=None):
+    """陈旧度判定点：已首采 ⇒ 首采+宽限；未首采 ⇒ 当日应到时刻+宽限。"""
+    if first_ok is not None:
+        return first_ok + timedelta(minutes=STALENESS_GRACE_MIN)
+    hh, mm = _parse_hhmm(FIRST_SLOT_TODAY) or (9, 40)
+    expect = now.replace(hour=hh, minute=mm, second=0, microsecond=0)
+    return expect + timedelta(minutes=STALENESS_GRACE_MIN)
+
+
+def staleness_verdict(now, last_dt, first_ok=None):
+    """→ (freshness, judged, judge_at)。judged=False ⇒ 陈旧度不生效, freshness 恒 'ok'。"""
+    judge_at = staleness_judge_point(now, first_ok)
+    if last_dt is None:
+        return 'critical', True, judge_at
+    age_hours = max(0.0, (now - last_dt).total_seconds() / 3600)   # 未来时间戳(时钟偏移)当 0 处理
+    if age_hours > CRITICAL_HOURS:
+        return 'critical', True, judge_at          # >48h 一律判, 不受判定点保护
+    if now < judge_at:
+        return 'ok', False, judge_at               # 未到判定点
+    if age_hours > STALE_HOURS:
+        return 'warning', True, judge_at
+    return 'ok', True, judge_at
+
 # ===== News Sources =====
 SOURCES = {
     'qbitai': {
@@ -2342,16 +2411,19 @@ hotspots 数组中每个元素格式：
         status = 'ok' if ahead == 0 and behind == 0 else 'warning'
         return ahead, behind, status
 
-    def status(self, json_mode=False):
+    def status(self, json_mode=False, now=None):
         """lr status [--json] — 数据新鲜度 + 质量门禁 + Git 分叉状态 (全只读)。
 
         数据源 (全部只读, 不触发采集副作用):
           - <project_root>/timestamp.json: last_run_at / last_run_status / entity_count
           - <project_root>/data/metrics.json: 全局 consecutive_fails (run 级, 非 source_health)
+            + run_history (当日首采时刻的来源)
           - git rev-list (本地 origin/main ref, 不 fetch)
           - <project_root>/data/snapshot.json: 各维度实体数
 
         四态评估: ok / warning / critical / info (info 仅用于 checks 附属项)。
+        陈旧度按「判定点」口径评估 (staleness_verdict): 当日首采+宽限 / 应到时刻+宽限之前不判,
+        超过 CRITICAL_HOURS 例外。`now` 仅测试注入。
         """
         project_root = self.project_root
         ts_path = project_root / 'timestamp.json'
@@ -2368,26 +2440,29 @@ hotspots 数组中每个元素格式：
         if not isinstance(snapshot, dict):
             snapshot = {}
 
-        now = datetime.now()
+        now = now or datetime.now()
         last_run_at = ts_data.get('last_run_at', '')
         quality = ts_data.get('last_run_status', '')
         consec_fails = metrics.get('consecutive_fails', 0)
 
-        # 新鲜度评估
+        # 新鲜度评估（判定点口径）
         age_hours = None
         freshness = 'ok'
+        first_ok = first_success_today(now, metrics, ts_data)
+        judge_at = staleness_judge_point(now, first_ok)
+        judged = True
         if not last_run_at:
             freshness = 'critical'
         else:
             try:
                 last_dt = datetime.fromisoformat(last_run_at)
-                age_hours = (now - last_dt).total_seconds() / 3600
-                if age_hours > CRITICAL_HOURS:
-                    freshness = 'critical'
-                elif age_hours > STALE_HOURS:
-                    freshness = 'warning'
             except (ValueError, TypeError):
+                last_dt = None
+            if last_dt is None:
                 freshness = 'critical'
+            else:
+                age_hours = max(0.0, (now - last_dt).total_seconds() / 3600)
+                freshness, judged, judge_at = staleness_verdict(now, last_dt, first_ok)
 
         # 质量门禁评估
         quality_status = 'ok' if quality == 'success' else ('warning' if quality == 'failed' else 'info')
@@ -2413,6 +2488,10 @@ hotspots 数组中每个元素格式：
             message = f'数据过期 {age_hours:.1f}h 前'
         elif consec_fails >= 3:
             message = f'连续失败 {consec_fails} 次'
+        elif not judged:
+            # 未到判定点: 不当偏旧报（跨夜合盖期间的事实, 见 STALENESS 口径）
+            prefix = f'今日首采 {first_ok:%H:%M}' if first_ok is not None else '今日待首采'
+            message = f'{prefix}・判定点 {judge_at:%H:%M}・最近 {age_hours:.1f}h 前'
         elif age_hours is not None and age_hours > STALE_HOURS:
             message = f'数据偏旧 {display_time} ({age_hours:.1f}h 前)'
         elif quality_status == 'warning':
