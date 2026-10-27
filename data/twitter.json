@@ -1,146 +1,7 @@
 {
-  "generated_at": "2026-10-26T18:26:05Z",
+  "generated_at": "2026-10-27T01:15:39Z",
   "retention": "30/24h",
   "targets": [
-    {
-      "name": "DHH",
-      "handle": "dhh",
-      "url": "https://x.com/dhh",
-      "tweets": [
-        {
-          "id": "2114698656142250471",
-          "text": "\"Positive energy by the gigawatt\" 😂\n\nI'm happy to be of service. We need more positivity in tech, and I'm atoning for my own history of providing too much of the opposite.\n\nComputers are amazing. AI is amazing. LIFE IS AMAZING!",
-          "forward": "by @dhh: Energizer bunny!\n\nYour effectiveness as an ambassador and communicator is off the charts.\n\nYou are truly an extraordinary high functioning human being.\n\nYou emit positive energy by the gigawatt.",
-          "posted_at": "2026-10-26T12:40:23Z",
-          "url": "https://x.com/dhh/status/2114698656142250471",
-          "views": 26156,
-          "replies": 64,
-          "retweets": 18,
-          "likes": 430,
-          "images": null
-        },
-        {
-          "id": "2113939231089570084",
-          "text": "Omarchy Meetup in one of my new favorite cities in the world! 🤘",
-          "forward": "by @dhh: 杭州首场 Omarchy Meetup · 11 月 15 日\n\n想改变世界？带上你正在做的东西，来认识同类。\n\n还有一个和 @dhh 一起的小惊喜，敬请期待。\n\nHangzhou’s first Omarchy meetup · Nov 15\n\nWant to change the world? Bring what you’re building. Meet your people.\n\nAnd a little surprise with @dhh . Stay",
-          "posted_at": "2026-10-24T10:22:42Z",
-          "url": "https://x.com/dhh/status/2113939231089570084",
-          "views": 31064,
-          "replies": 30,
-          "retweets": 10,
-          "likes": 231,
-          "images": null
-        },
-        {
-          "id": "2113938162254762166",
-          "text": "\"Yes, men dominate computing. There are many reasons for that; none of them justifies collective guilt. Turning the percentages into a struggle session is nonsense.\"",
-          "forward": null,
-          "posted_at": "2026-10-24T10:18:27Z",
-          "url": "https://x.com/dhh/status/2113938162254762166",
-          "views": 325386,
-          "replies": 166,
-          "retweets": 292,
-          "likes": 6327,
-          "images": null
-        },
-        {
-          "id": "2113925234558632408",
-          "text": "It was a joy to connect with the @alibaba_cloud team in Hangzhou. Their hospitality was next level, and we're going to work together on making the Omarchy China version perfect. No VPN necessary, all the major Chinese apps preinstalled, dedicated ISO. It's going to be great!",
-          "forward": null,
-          "posted_at": "2026-10-24T09:27:05Z",
-          "url": "https://x.com/dhh/status/2113925234558632408",
-          "views": 215029,
-          "replies": 192,
-          "retweets": 181,
-          "likes": 3634,
-          "images": null
-        },
-        {
-          "id": "2113855137353486631",
-          "text": "Omarchy on that wild Huawei Mate Fold! I just got it hooked up yesterday as just an external display for a laptop. The 18\" screen is glorious. Love to see this! Hopefully we can get a full install possible soon too.",
-          "forward": "by @dhh: I’ve managed to get it running in the Oseasy VM on an MateBook Fold, though it’s still in the early stages. x.com/blackanger/sta…",
-          "posted_at": "2026-10-24T04:48:32Z",
-          "url": "https://x.com/dhh/status/2113855137353486631",
-          "views": 44877,
-          "replies": 33,
-          "retweets": 20,
-          "likes": 503,
-          "images": null
-        },
-        {
-          "id": "2113852725158957327",
-          "text": "China has a Programmers' Day? No wonder they're thriving. The focus on engineering there is unbelievable. So many of the top companies are run by engineers. That's also why they're getting it with both AI and Omarchy so quickly. The West could do with fewer MBAs at the top!",
-          "forward": "by @dhh: Today is 10/24, Programmers' Day in China (1024 = 2¹⁰) 🎉 So I donated $1,024 to Omacom to support Omarchy. Fun fact: some countries celebrate on the 256th day of the year, and Omarchy's patron tier is literally \"256B\". Perfect fit, and I'm near the top of the list 😄\nIn the x.com/dhh/status/211…",
-          "posted_at": "2026-10-24T04:38:57Z",
-          "url": "https://x.com/dhh/status/2113852725158957327",
-          "views": 109151,
-          "replies": 107,
-          "retweets": 71,
-          "likes": 1196,
-          "images": null
-        },
-        {
-          "id": "2113847430168908018",
-          "text": "Completely agree. Bug reports by humans are terrible on average. Bug reports by agents are excellent on average. Let the clankers file!",
-          "forward": "by @dhh: I wish there was a way to *require* all bug reports to go through AI first.\n\nSome of you are not making it easy to fix those bugs. 🙃",
-          "posted_at": "2026-10-24T04:17:55Z",
-          "url": "https://x.com/dhh/status/2113847430168908018",
-          "views": 57460,
-          "replies": 133,
-          "retweets": 53,
-          "likes": 1498,
-          "images": null
-        },
-        {
-          "id": "2113837266980184129",
-          "text": "OMARCHY ON EVERYTHING!",
-          "forward": "by @dhh: first time trying @omarchy wish me luck @dhh",
-          "posted_at": "2026-10-24T03:37:32Z",
-          "url": "https://x.com/dhh/status/2113837266980184129",
-          "views": 32539,
-          "replies": 43,
-          "retweets": 33,
-          "likes": 952,
-          "images": null
-        },
-        {
-          "id": "2113835923678892374",
-          "text": "I've started so many glorious friendships and partnerships with a quick reply and an open mind. X is unbeatable.",
-          "forward": "by @dhh: Shenzhen speed indeed and it all started with a WeChat message and 1 tweet 😎 x.com/brutoshi_/stat…",
-          "posted_at": "2026-10-24T03:32:12Z",
-          "url": "https://x.com/dhh/status/2113835923678892374",
-          "views": 50399,
-          "replies": 36,
-          "retweets": 10,
-          "likes": 790,
-          "images": null
-        },
-        {
-          "id": "2113834980350554375",
-          "text": "Omarchy on Nvidia Shield! 🤘",
-          "forward": "by @dhh: @dhh Omarchy  on Nvidia Shield Tegra X1 with benchmarks 👇",
-          "posted_at": "2026-10-24T03:28:27Z",
-          "url": "https://x.com/dhh/status/2113834980350554375",
-          "views": 35015,
-          "replies": 16,
-          "retweets": 13,
-          "likes": 426,
-          "images": null
-        },
-        {
-          "id": "2102936073642869121",
-          "text": "It's pencils down, people. Writing code by hand is no longer an economically viable skill for most programmers at most companies. But the future of making software has never been brighter. Don't you dare black pill this beautiful moment!",
-          "forward": null,
-          "posted_at": "2026-09-24T01:40:05Z",
-          "url": "https://x.com/dhh/status/2102936073642869121",
-          "views": 3169493,
-          "replies": 417,
-          "retweets": 1498,
-          "likes": 9223,
-          "images": null
-        }
-      ]
-    },
     {
       "name": "Boris Cherny",
       "handle": "bcherny",
@@ -152,10 +13,10 @@
           "forward": "by @bcherny: We're donating Agent Skills to the Agentic AI Foundation ( @AgenticAIFdn ), the same foundation we donated MCP to.\n\nSince December 2025, 70+ agent platforms have integrated the standard, including ChatGPT, Cursor, GitHub Copilot, and VS Code. \n\nHere's what that means for you:",
           "posted_at": "2026-10-22T18:17:10Z",
           "url": "https://x.com/bcherny/status/2113333859907747871",
-          "views": 276890,
-          "replies": 259,
+          "views": 279160,
+          "replies": 261,
           "retweets": 127,
-          "likes": 2595,
+          "likes": 2599,
           "images": null
         },
         {
@@ -164,10 +25,126 @@
           "forward": null,
           "posted_at": "2026-10-16T18:13:42Z",
           "url": "https://x.com/bcherny/status/2111158659971699136",
-          "views": 464356,
+          "views": 465648,
           "replies": 201,
-          "retweets": 191,
-          "likes": 4698,
+          "retweets": 190,
+          "likes": 4700,
+          "images": null
+        },
+        {
+          "id": "2102854267782705648",
+          "text": "If you've noticed how fast https:// claude.ai and the Desktop app have become in the last few weeks, here's how we did it. \n\nLots of juicy learnings & techniques in the blog post for engineers working on speeding up your own apps.",
+          "forward": "by @bcherny: We made claude​.ai 3x faster in two weeks.\n\nHere’s how we use Claude to measure, debug and improve performance. Prompts and methods included. https:// claude.dev/blog/how-we-ma de-claude-ai-faster/ …",
+          "posted_at": "2026-09-23T20:15:01Z",
+          "url": "https://x.com/bcherny/status/2102854267782705648",
+          "views": 854068,
+          "replies": 237,
+          "retweets": 189,
+          "likes": 5276,
+          "images": null
+        },
+        {
+          "id": "2102543349102338309",
+          "text": "I used Opus 5.5 to formally verify the Claude Agent SDK using Lean. A couple short prompts = 16 PRs fixing various bugs and race conditions. Video attached.\n\nTLA+ also works well. I sometimes combine Lean and TLA+ to look for issues around data flow, concurrency, and state mgmt.",
+          "forward": null,
+          "posted_at": "2026-09-22T23:39:32Z",
+          "url": "https://x.com/bcherny/status/2102543349102338309",
+          "views": 2166969,
+          "replies": 489,
+          "retweets": 646,
+          "likes": 6298,
+          "images": null
+        },
+        {
+          "id": "2102543350436180277",
+          "text": "Opus made an infographic",
+          "forward": null,
+          "posted_at": "2026-09-22T23:39:32Z",
+          "url": "https://x.com/bcherny/status/2102543350436180277",
+          "views": 82197,
+          "replies": 14,
+          "retweets": 7,
+          "likes": 288,
+          "images": null
+        },
+        {
+          "id": "2102439069053747549",
+          "text": "Opus 5.5 is a really good model. It's been my daily driver the last few weeks.\n\nWe had Opus 5.5 and Fable 5.1 each port HAProxy from C to Rust. Both passed nearly all of HAProxy's tests, but Opus 5.5 finished in 9.5 hours compared to Fable 5.1's 12 hours, and for 51% less cost.",
+          "forward": "by @bcherny: Introducing Claude Opus 5.5, the first model in our new Claude 5.5 family.\n\nIt performs at the level of Claude Fable 5.1 for most tasks, and costs 40% less to run than Opus 5.",
+          "posted_at": "2026-09-22T16:45:10Z",
+          "url": "https://x.com/bcherny/status/2102439069053747549",
+          "views": 536249,
+          "replies": 378,
+          "retweets": 315,
+          "likes": 7652,
+          "images": [
+            "https://pbs.twimg.com/media/HS1aPgYWMAAP9sw.jpg"
+          ]
+        },
+        {
+          "id": "2100669598995816511",
+          "text": "Projects have changed not only how I interact with Claude but how I code.\n\nI stopped managing sessions. I just send thoughts as they come, Claude splits them into threads, and the project remembers how I work. It's where I do a ton of my coding now.\n\n[screenshot: my actual",
+          "forward": "by @bcherny: Today we're rolling out Projects in Claude Code on desktop and web.\n\nA project is one conversation with Claude. It splits the work into threads itself, runs them as parallel cloud sessions, passes context between them, and keeps going when you leave.\n\nIn beta for select users.",
+          "posted_at": "2026-09-17T19:33:55Z",
+          "url": "https://x.com/bcherny/status/2100669598995816511",
+          "views": 586375,
+          "replies": 332,
+          "retweets": 174,
+          "likes": 3128,
+          "images": null
+        },
+        {
+          "id": "2100639991244427490",
+          "text": "Projects are how I write a lot of my code these days. Really excited for everyone to try the new experience! Rolling out now",
+          "forward": "by @bcherny: Projects now run from one conversation, starting in Claude Code. You describe what needs doing, and Claude directs parallel threads that keep working after you close your laptop.\n\nIn beta today for select Pro and Max users in cloud sessions; coming to all Claude users soon.",
+          "posted_at": "2026-09-17T17:36:16Z",
+          "url": "https://x.com/bcherny/status/2100639991244427490",
+          "views": 422608,
+          "replies": 159,
+          "retweets": 79,
+          "likes": 2336,
+          "images": [
+            "https://pbs.twimg.com/media/HSbyf9bWAAAV6Bd.jpg"
+          ]
+        },
+        {
+          "id": "2100260544087535639",
+          "text": "Also today: Claude Docs, Claude Slides, and Claude Design are in every conversation.\n\nAsk Claude for a presentation and you get one you can open, edit, and export as PowerPoint or PDF. Same for a document or a design. There's no separate tool to navigate to. They're just in the",
+          "forward": "by @bcherny: You can also now make decks, docs, and designs in your conversation.\n\nDraft the one-pager in Claude Docs, turn it into a deck with Claude Slides, and mock up a matching visual in Claude Design, all from one place.",
+          "posted_at": "2026-09-16T16:28:29Z",
+          "url": "https://x.com/bcherny/status/2100260544087535639",
+          "views": 338707,
+          "replies": 145,
+          "retweets": 173,
+          "likes": 2583,
+          "images": [
+            "https://pbs.twimg.com/media/HSWePXcXQAAAj1F.jpg"
+          ]
+        },
+        {
+          "id": "2100259951398789487",
+          "text": "Claude Code showed that AI could do real work, not just answer questions. Developers hand Claude a feature, come back to shipped code. That's where much of the industry's serious engineering runs now.\n\nCowork proved knowledge workers could do the same: hand Claude the brief, come",
+          "forward": "by @bcherny: Claude Cowork and chat are merging into one Claude.\n\nAsk a quick question or hand over a report, and Claude takes it from there, even after you close your laptop. If something's unclear, Claude asks—you keep the final say.\n\nRolling out to Pro and Max over the next few weeks.",
+          "posted_at": "2026-09-16T16:26:08Z",
+          "url": "https://x.com/bcherny/status/2100259951398789487",
+          "views": 278120,
+          "replies": 181,
+          "retweets": 93,
+          "likes": 1598,
+          "images": [
+            "https://pbs.twimg.com/media/HSWeH9NXMAAJvUC.png"
+          ]
+        },
+        {
+          "id": "2099551291601248485",
+          "text": "Claude Mods are landing now. Someone already built a Tetris-in-Claude mod 🤯\n\nSee issue for the latest community update, technical details, and more cool demos https:// github.com/anthropics/cla ude-code/issues/91870#issuecomment-5666255143 …",
+          "forward": null,
+          "posted_at": "2026-09-14T17:30:10Z",
+          "url": "https://x.com/bcherny/status/2099551291601248485",
+          "views": 620245,
+          "replies": 313,
+          "retweets": 290,
+          "likes": 2730,
           "images": null
         }
       ]
@@ -178,27 +155,137 @@
       "url": "https://x.com/sama",
       "tweets": [
         {
+          "id": "2114818620782248024",
+          "text": "6.1 Terra is here! It is good at a lot of things, but we are especially excited for this new era of computer use.",
+          "forward": "by @sama: GPT-6.1 Terra: delivering fast and capable computer use at a lower price.\n\nGPT-6.1 Terra understands what’s on screen, takes action across apps, writes naturally, and is a more capable model for your whole workday with the efficiency to take on more of it.",
+          "posted_at": "2026-10-26T20:37:05Z",
+          "url": "https://x.com/sama/status/2114818620782248024",
+          "views": 326404,
+          "replies": 493,
+          "retweets": 277,
+          "likes": 4251,
+          "images": [
+            "https://pbs.twimg.com/media/HVk3m2pW0AERTJj.jpg"
+          ]
+        },
+        {
           "id": "2112652656602923366",
           "text": "I am very grateful Aleksander accepted our request to come take this on; the safety and security challenges in front of us as we confront superintelligence are immense, and he has an excellent set of skills to work on this.",
           "forward": "by @sama: Personal update: Turns out that what I thought was leaving OpenAI became more of a sabbatical.\n\nWhen I left a few months ago, I felt that the most important thing to focus on was making AI more useful to people. But we’ve since entered a different regime of AI progress. One in",
           "posted_at": "2026-10-20T21:10:19Z",
           "url": "https://x.com/sama/status/2112652656602923366",
-          "views": 1399456,
-          "replies": 751,
-          "retweets": 307,
-          "likes": 7055,
+          "views": 1407824,
+          "replies": 754,
+          "retweets": 310,
+          "likes": 7069,
           "images": null
         },
         {
-          "id": "2111139227761266699",
-          "text": "The back of the Navier-Stokes milestone shirt is the last line of the chain-of-thought from the solution:",
+          "id": "2105739098640298253",
+          "text": "You should be able to use your AI subscription wherever you need:",
+          "forward": "by @sama: I am going to try and answer a bunch of questions that people have raised about Sign in with ChatGPT in the next couple of days. Before that, I want to let you all in to why we shipped Sign in with ChatGPT (SIWC) in the first place. Clarify our intentions here before getting to",
+          "posted_at": "2026-10-01T19:18:18Z",
+          "url": "https://x.com/sama/status/2105739098640298253",
+          "views": 1253285,
+          "replies": 551,
+          "retweets": 251,
+          "likes": 5180,
+          "images": null
+        },
+        {
+          "id": "2105688354834756036",
+          "text": "Also, 6.1 Sol was our fastest-growing model ever, and was a bit slow under load. Should be much better now!",
           "forward": null,
-          "posted_at": "2026-10-16T16:56:29Z",
-          "url": "https://x.com/sama/status/2111139227761266699",
-          "views": 1038081,
-          "replies": 854,
-          "retweets": 649,
-          "likes": 11040,
+          "posted_at": "2026-10-01T15:56:40Z",
+          "url": "https://x.com/sama/status/2105688354834756036",
+          "views": 864359,
+          "replies": 923,
+          "retweets": 477,
+          "likes": 12204,
+          "images": null
+        },
+        {
+          "id": "2105687922234237364",
+          "text": "I think there is much more potential energy in Sign In With ChatGPT/Plugin Extensions than we realize",
+          "forward": null,
+          "posted_at": "2026-10-01T15:54:57Z",
+          "url": "https://x.com/sama/status/2105687922234237364",
+          "views": 224989,
+          "replies": 191,
+          "retweets": 103,
+          "likes": 1343,
+          "images": null
+        },
+        {
+          "id": "2105687689991483654",
+          "text": "DevDay was really fun, the builder energy was crazy\n\nStill wild to me to see people making whole startups in a day",
+          "forward": null,
+          "posted_at": "2026-10-01T15:54:01Z",
+          "url": "https://x.com/sama/status/2105687689991483654",
+          "views": 528541,
+          "replies": 560,
+          "retweets": 192,
+          "likes": 4724,
+          "images": null
+        },
+        {
+          "id": "2104995014208258235",
+          "text": "Dots are here!\n\nA new way to use AI that works 24/7 for you; get more of your time and attention back to work at a higher level.",
+          "forward": null,
+          "posted_at": "2026-09-29T18:01:34Z",
+          "url": "https://x.com/sama/status/2104995014208258235",
+          "views": 2186465,
+          "replies": 2121,
+          "retweets": 1722,
+          "likes": 14742,
+          "images": null
+        },
+        {
+          "id": "2104994601140711896",
+          "text": "Ultrafast is\n\nso fast\n\nI do not ever want to go back",
+          "forward": null,
+          "posted_at": "2026-09-29T17:59:56Z",
+          "url": "https://x.com/sama/status/2104994601140711896",
+          "views": 1235553,
+          "replies": 1336,
+          "retweets": 503,
+          "likes": 12030,
+          "images": null
+        },
+        {
+          "id": "2104994395980533804",
+          "text": "6.1 Sol at 1/5th of the price of Astra, and 95% cache read discount! Extremely capable model.",
+          "forward": "by @sama: Introducing 6.1 Sol, near Astra intelligence at one fifth of the price of Astra and 95% cache read discount. It is an absolute workhorse.\n\nCombined with ultrafast for 8X speeded available today for Astra and coming soon for 6.1 Sol.",
+          "posted_at": "2026-09-29T17:59:07Z",
+          "url": "https://x.com/sama/status/2104994395980533804",
+          "views": 814728,
+          "replies": 577,
+          "retweets": 346,
+          "likes": 8414,
+          "images": null
+        },
+        {
+          "id": "2104950376466362578",
+          "text": "DevDay livestream in 2 hours.\n\nWe built some great stuff for you!",
+          "forward": null,
+          "posted_at": "2026-09-29T15:04:12Z",
+          "url": "https://x.com/sama/status/2104950376466362578",
+          "views": 765597,
+          "replies": 903,
+          "retweets": 603,
+          "likes": 9471,
+          "images": null
+        },
+        {
+          "id": "2103567198690349362",
+          "text": "There is an extensive and ongoing review related to our agents’ use of internet access during training and evaluation. We’ve been publishing summaries at the link below and will continue to.\n\nWe have not been as fast as we would have liked but we are trying to balance our desire",
+          "forward": "by @sama: After the Hugging Face incident, we committed to conducting a much broader review of actions taken by our models during training and evaluation and to being transparent about our findings. This is an extensive review that is ongoing.\n\nThe vast majority of actions we’ve reviewed",
+          "posted_at": "2026-09-25T19:27:57Z",
+          "url": "https://x.com/sama/status/2103567198690349362",
+          "views": 2749971,
+          "replies": 1488,
+          "retweets": 829,
+          "likes": 7985,
           "images": null
         }
       ]
@@ -209,15 +296,15 @@
       "url": "https://x.com/claudeai",
       "tweets": [
         {
-          "id": "2113380126561800305",
-          "text": "New features and betas ship the same day they go live on the native Claude Platform. Fast mode for Opus 5.5, code execution, the Skills API, and more are available today.\n\nRead more:",
-          "forward": null,
-          "posted_at": "2026-10-22T21:21:01Z",
-          "url": "https://x.com/claudeai/status/2113380126561800305",
-          "views": 126014,
-          "replies": 35,
-          "retweets": 27,
-          "likes": 343,
+          "id": "2114780227465338985",
+          "text": "More than 25,000 nonprofits now use Claude. Most are small, local teams.\n\nWe’re expanding Claude for Nonprofits with a plugin built with around 30 of them, adding skills for fundraising, marketing, and hiring grounded in each team’s context and AI policy: https:// claude.com/resources/arti cles/expanding-claude-for-nonprofits …",
+          "forward": "by @claudeai: In partnership with @GivingTuesday , we're launching Claude for Nonprofits.\n\nIt has discounted plans, new integrations, and free training to help nonprofits spend less time on admin and more time on their missions: https:// anthropic.com/news/claude-fo r-nonprofits …",
+          "posted_at": "2026-10-26T18:04:31Z",
+          "url": "https://x.com/claudeai/status/2114780227465338985",
+          "views": 366127,
+          "replies": 230,
+          "retweets": 246,
+          "likes": 4351,
           "images": null
         },
         {
@@ -226,10 +313,34 @@
           "forward": null,
           "posted_at": "2026-10-22T21:21:00Z",
           "url": "https://x.com/claudeai/status/2113380122468454765",
-          "views": 746011,
-          "replies": 321,
-          "retweets": 522,
-          "likes": 6383,
+          "views": 755911,
+          "replies": 325,
+          "retweets": 526,
+          "likes": 6403,
+          "images": null
+        },
+        {
+          "id": "2101017902316982783",
+          "text": "A thread of our favorite things people built with Claude recently:",
+          "forward": "by @claudeai: I made a website with 25 mini rooms, each with Claude keeping people company.\n\nCreated with Claude Opus 5.",
+          "posted_at": "2026-09-18T18:37:57Z",
+          "url": "https://x.com/claudeai/status/2101017902316982783",
+          "views": 1553553,
+          "replies": 228,
+          "retweets": 442,
+          "likes": 8047,
+          "images": null
+        },
+        {
+          "id": "2101017903906607400",
+          "text": "jellyfishes in p5.js, made by claude opus 5 on TypingMind\n\none animal a day, until i've got enough sea creatures to build my own lil aquarium",
+          "forward": null,
+          "posted_at": "2026-09-18T18:37:57Z",
+          "url": "https://x.com/claudeai/status/2101017903906607400",
+          "views": 236689,
+          "replies": 25,
+          "retweets": 22,
+          "likes": 564,
           "images": null
         },
         {
@@ -238,38 +349,24 @@
           "forward": null,
           "posted_at": "2026-09-17T17:07:13Z",
           "url": "https://x.com/claudeai/status/2100632681180520861",
-          "views": 190541,
+          "views": 190609,
           "replies": 45,
           "retweets": 38,
           "likes": 819,
           "images": null
         },
         {
-          "id": "2100258492590207079",
-          "text": "You can also now make decks, docs, and designs in your conversation.\n\nDraft the one-pager in Claude Docs, turn it into a deck with Claude Slides, and mock up a matching visual in Claude Design, all from one place.",
+          "id": "2100632677904744716",
+          "text": "Projects now run from one conversation, starting in Claude Code. You describe what needs doing, and Claude directs parallel threads that keep working after you close your laptop.\n\nIn beta today for select Pro and Max users in cloud sessions; coming to all Claude users soon.",
           "forward": null,
-          "posted_at": "2026-09-16T16:20:20Z",
-          "url": "https://x.com/claudeai/status/2100258492590207079",
-          "views": 4371709,
-          "replies": 128,
-          "retweets": 560,
-          "likes": 4535,
+          "posted_at": "2026-09-17T17:07:12Z",
+          "url": "https://x.com/claudeai/status/2100632677904744716",
+          "views": 3548992,
+          "replies": 610,
+          "retweets": 1280,
+          "likes": 11624,
           "images": [
-            "https://pbs.twimg.com/media/HSWePXcXQAAAj1F.jpg"
-          ]
-        },
-        {
-          "id": "2100258490740539730",
-          "text": "Claude Cowork and chat are merging into one Claude.\n\nAsk a quick question or hand over a report, and Claude takes it from there, even after you close your laptop. If something's unclear, Claude asks—you keep the final say.\n\nRolling out to Pro and Max over the next few weeks.",
-          "forward": null,
-          "posted_at": "2026-09-16T16:20:19Z",
-          "url": "https://x.com/claudeai/status/2100258490740539730",
-          "views": 3346534,
-          "replies": 757,
-          "retweets": 1964,
-          "likes": 14484,
-          "images": [
-            "https://pbs.twimg.com/media/HSWeH9NXMAAJvUC.png"
+            "https://pbs.twimg.com/media/HSbyf9bWAAAV6Bd.jpg"
           ]
         }
       ]
@@ -280,15 +377,99 @@
       "url": "https://x.com/openclaw",
       "tweets": [
         {
-          "id": "2114590330276442521",
-          "text": "OpenClaw v2026.10.7 🦞\n\n🔧 Earlier update checks\n🧠 Claude CLI context fixes\n🎙️ macOS Talk reply fixes\n🐰 Bun startup fixes\n\n61 PRs · 54 contributors\nMore in the full notes 👇",
+          "id": "2114850737645879629",
+          "text": "GPT-6.1 Terra from @OpenAI is already available in OpenClaw.\n\nUse ChatGPT sign-in or your OpenAI API key, then select openai/gpt-6.1-terra. https:// openai.com/index/introduc ing-gpt-6-1-terra/ …",
           "forward": null,
-          "posted_at": "2026-10-26T05:29:56Z",
-          "url": "https://x.com/openclaw/status/2114590330276442521",
-          "views": 33115,
-          "replies": 29,
-          "retweets": 33,
-          "likes": 320,
+          "posted_at": "2026-10-26T22:44:42Z",
+          "url": "https://x.com/openclaw/status/2114850737645879629",
+          "views": 15562,
+          "replies": 21,
+          "retweets": 13,
+          "likes": 173,
+          "images": null
+        },
+        {
+          "id": "2113024625311686852",
+          "text": "Come build OpenClaw along side our team! \n\nWe're inviting people to join our Maintainers on our team server \n\nCome prompt along side us and work on things that will meaningfully improve OpenClaw! https:// openclaw.ai/blog/openclaw- focus-weeks …",
+          "forward": null,
+          "posted_at": "2026-10-21T21:48:23Z",
+          "url": "https://x.com/openclaw/status/2113024625311686852",
+          "views": 42811,
+          "replies": 38,
+          "retweets": 42,
+          "likes": 302,
+          "images": null
+        },
+        {
+          "id": "2112990698131849368",
+          "text": "You're building in the terminal\n\nOpenClaw users are building in the timeline\n\nWe are not the same\n\nWatch Roboclaw & @vincent_koc build here: https:// team.openclaw.ai/chat/roboclaw/ x-2112983910850363434-baseten-decision-models-e70fd350 … Here is the PR Roboclaw created: https:// github.com/openclaw/openc law/pull/179819 …",
+          "forward": null,
+          "posted_at": "2026-10-21T19:33:34Z",
+          "url": "https://x.com/openclaw/status/2112990698131849368",
+          "views": 27214,
+          "replies": 13,
+          "retweets": 13,
+          "likes": 147,
+          "images": null
+        },
+        {
+          "id": "2112974517387800888",
+          "text": "NVIDIA RTX Spark: Local AI, Unlocked | The ClawCast Episode 14",
+          "forward": null,
+          "posted_at": "2026-10-21T18:29:16Z",
+          "url": "https://x.com/openclaw/status/2112974517387800888",
+          "views": 24327,
+          "replies": 2,
+          "retweets": 10,
+          "likes": 79,
+          "images": null
+        },
+        {
+          "id": "2112961586617041042",
+          "text": "One OpenClaw can kill 20 subscriptions\n\n(and you can retain your data)",
+          "forward": "by @openclaw: I have a skill loaded in my @openclaw enterprise bot called 'Daily Meet Summary' that goes through all the Gemini transcription notes of all the meetings I had that day and gives me a one paragraph summary of each at the end of the day.\n\nA few come 'meeting transcript is garbled'",
+          "posted_at": "2026-10-21T17:37:53Z",
+          "url": "https://x.com/openclaw/status/2112961586617041042",
+          "views": 26566,
+          "replies": 16,
+          "retweets": 12,
+          "likes": 192,
+          "images": null
+        },
+        {
+          "id": "2112766676315820415",
+          "text": "OpenClaw🦞 @openclaw · Oct 21 OpenClaw🦞 @openclaw NVIDIA RTX Spark: Local AI, Unlocked | The ClawCast Episode 14 2 13 93 23K",
+          "forward": null,
+          "posted_at": "2026-10-21T04:43:23Z",
+          "url": "https://x.com/openclaw/status/2112766676315820415",
+          "views": 23218,
+          "replies": 2,
+          "retweets": 13,
+          "likes": 93,
+          "images": null
+        },
+        {
+          "id": "2112569427527172435",
+          "text": "MiniMax M3.1 Flash from @MiniMax_AI is now available in OpenClaw.\n\nRunning v2026.10.1 or newer? No OpenClaw update needed.",
+          "forward": null,
+          "posted_at": "2026-10-20T15:39:35Z",
+          "url": "https://x.com/openclaw/status/2112569427527172435",
+          "views": 33227,
+          "replies": 15,
+          "retweets": 22,
+          "likes": 363,
+          "images": null
+        },
+        {
+          "id": "2112260434116108528",
+          "text": "🦞 OpenClaw v2026.10.5 is out!\n\n🤖 Sidebar keeps your agents within reach\n↩️ Skill Workshop 2.0 gets Undo\n🔗 Public conversation links need no sign-in\n\n🎉 2,250 PRs and 637 contributors.\n\nJust the highlights. Much more in the full notes 👇",
+          "forward": null,
+          "posted_at": "2026-10-19T19:11:46Z",
+          "url": "https://x.com/openclaw/status/2112260434116108528",
+          "views": 52278,
+          "replies": 38,
+          "retweets": 70,
+          "likes": 509,
           "images": null
         },
         {
@@ -297,7 +478,7 @@
           "forward": null,
           "posted_at": "2026-10-16T20:21:35Z",
           "url": "https://x.com/openclaw/status/2111190844225306694",
-          "views": 37865,
+          "views": 37886,
           "replies": 31,
           "retweets": 33,
           "likes": 243,
@@ -309,34 +490,10 @@
           "forward": "by @openclaw: I love hearing from people like @ArkStabler who are using OpenClaw to help businesses grow\n\nBut I REALLY love hearing that he helps people like Donna become OpenClaw power users",
           "posted_at": "2026-10-16T16:50:20Z",
           "url": "https://x.com/openclaw/status/2111137678406381614",
-          "views": 77042,
+          "views": 77062,
           "replies": 27,
-          "retweets": 33,
+          "retweets": 32,
           "likes": 519,
-          "images": null
-        },
-        {
-          "id": "2110934479569379617",
-          "text": "OpenClaw v2026.10.4 patch release is out 🦞\n\n🔄 Update + recovery fixes\n💬 Chats unstuck after updates\n📨 Messaging + sign-in repairs\n🛠 More bug fixes and tweaks\n\n49 contributors. Thank you!",
-          "forward": null,
-          "posted_at": "2026-10-16T03:22:53Z",
-          "url": "https://x.com/openclaw/status/2110934479569379617",
-          "views": 32028,
-          "replies": 28,
-          "retweets": 34,
-          "likes": 284,
-          "images": null
-        },
-        {
-          "id": "2110828915866628236",
-          "text": "The world of personal agents keeps growing\n\nKeep track of it here",
-          "forward": "by @openclaw: Here's everything that happened in Personal AI Agents this week from OpenAI, SpaceXSI, Meta, Google, Anthropic, OpenClaw, Nous Research, Perplexity, Manus, Genspark, Lindy, Underdog, MacPaw, Persona, and more.\n\n(save for later + share with your team) 🧵\n\nDid I miss anything?",
-          "posted_at": "2026-10-15T20:23:25Z",
-          "url": "https://x.com/openclaw/status/2110828915866628236",
-          "views": 117824,
-          "replies": 22,
-          "retweets": 92,
-          "likes": 1092,
           "images": null
         },
         {
@@ -345,10 +502,10 @@
           "forward": null,
           "posted_at": "2026-07-08T23:37:42Z",
           "url": "https://x.com/openclaw/status/2075001411939815589",
-          "views": 249167,
+          "views": 249525,
           "replies": 83,
           "retweets": 138,
-          "likes": 1053,
+          "likes": 1054,
           "images": null
         }
       ]
@@ -359,27 +516,39 @@
       "url": "https://x.com/NousResearch",
       "tweets": [
         {
+          "id": "2114780096204857522",
+          "text": "Join us at @pangram HQ in NYC for an anti-slop hackathon!",
+          "forward": "by @NousResearch: What matters when you can generate anything? \n\nJoin us for a Non-Slop hackathon with @NousResearch and @reductoai at the Pangram HQ in NYC November 22\n\nGrab your spot now 👇",
+          "posted_at": "2026-10-26T18:04:00Z",
+          "url": "https://x.com/NousResearch/status/2114780096204857522",
+          "views": 18672,
+          "replies": 14,
+          "retweets": 4,
+          "likes": 157,
+          "images": null
+        },
+        {
           "id": "2114753914939863260",
           "text": "With the new Advanced Delegation modes plugin, Hermes Agent's orchestrator can now pick a different model or profile for each subagent from routes you set up. The right model or profile for every job. https:// hermes-agent.nousresearch.com/docs/plugins/a dvanced-delegation …",
           "forward": null,
           "posted_at": "2026-10-26T16:19:58Z",
           "url": "https://x.com/NousResearch/status/2114753914939863260",
-          "views": 26678,
-          "replies": 41,
-          "retweets": 45,
-          "likes": 519,
+          "views": 105779,
+          "replies": 92,
+          "retweets": 119,
+          "likes": 1243,
           "images": null
         },
         {
-          "id": "2114743313685176544",
-          "text": "Nous Research @NousResearch · 1h 31 50 968 27K",
-          "forward": null,
-          "posted_at": "2026-10-26T15:37:50Z",
-          "url": "https://x.com/NousResearch/status/2114743313685176544",
-          "views": 27308,
-          "replies": 31,
-          "retweets": 50,
-          "likes": 968,
+          "id": "2112950316018647125",
+          "text": "Krea 3 from @krea_ai is now available in Nous Portal\n\nFast mode does 2k edits in under 8 seconds, and Ultra is a higher quality tier outperforming Nano Banana Pro\n\nIt supports precise controls: draw a box to create a bounded editing region leaving the rest of an image unchanged,",
+          "forward": "by @NousResearch: today, Krea 3 makes it to the top of image arenas.\n\n- \"Fast\" pushes the pareto curve of speed and quality.\n- \"Ultra\" ranks top-4, only surpassed by OpenAI models.\n\nthe only company valued under $1T in the top-10!\n\nmore below 👇",
+          "posted_at": "2026-10-21T16:53:06Z",
+          "url": "https://x.com/NousResearch/status/2112950316018647125",
+          "views": 35408,
+          "replies": 19,
+          "retweets": 34,
+          "likes": 373,
           "images": null
         },
         {
@@ -388,7 +557,7 @@
           "forward": "by @NousResearch: sf friends and fans of @NousResearch !!!\n\ni will be giving out Nous research merch for FREE in Dolores Park, this Friday 10/23 from 3-7pm \n\ni'll also be DJing and hanging out, come get your Nous swag and chat open source models and Hermes Agent with the community ! 😎",
           "posted_at": "2026-10-19T19:11:32Z",
           "url": "https://x.com/NousResearch/status/2112260376469422586",
-          "views": 32955,
+          "views": 33055,
           "replies": 24,
           "retweets": 14,
           "likes": 292,
@@ -400,7 +569,7 @@
           "forward": null,
           "posted_at": "2026-10-18T23:56:48Z",
           "url": "https://x.com/NousResearch/status/2111969779128950802",
-          "views": 111677,
+          "views": 111776,
           "replies": 94,
           "retweets": 13,
           "likes": 764,
@@ -412,7 +581,7 @@
           "forward": null,
           "posted_at": "2026-10-16T23:50:59Z",
           "url": "https://x.com/NousResearch/status/2111243538440810641",
-          "views": 68693,
+          "views": 68794,
           "replies": 59,
           "retweets": 63,
           "likes": 1071,
@@ -424,10 +593,10 @@
           "forward": null,
           "posted_at": "2026-10-16T17:55:07Z",
           "url": "https://x.com/NousResearch/status/2111153981825155420",
-          "views": 13665,
+          "views": 13738,
           "replies": 3,
           "retweets": 3,
-          "likes": 64,
+          "likes": 65,
           "images": null
         },
         {
@@ -436,7 +605,7 @@
           "forward": null,
           "posted_at": "2026-10-16T16:21:01Z",
           "url": "https://x.com/NousResearch/status/2111130300638273550",
-          "views": 22257,
+          "views": 22353,
           "replies": 3,
           "retweets": 4,
           "likes": 75,
@@ -448,10 +617,10 @@
           "forward": null,
           "posted_at": "2026-10-16T16:21:00Z",
           "url": "https://x.com/NousResearch/status/2111130297907470840",
-          "views": 83909,
+          "views": 84009,
           "replies": 81,
           "retweets": 124,
-          "likes": 1382,
+          "likes": 1383,
           "images": null
         },
         {
@@ -460,7 +629,7 @@
           "forward": null,
           "posted_at": "2026-10-16T00:10:46Z",
           "url": "https://x.com/NousResearch/status/2110886131290259537",
-          "views": 74326,
+          "views": 74493,
           "replies": 84,
           "retweets": 160,
           "likes": 1621,
@@ -472,22 +641,10 @@
           "forward": "by @NousResearch: Meet NVIDIA Nemotron 3.5 Super VL\n\nOur new open model combines reasoning and tool use with text, image, document, and video understanding for long-running AI agents.\n\n120B total parameters with 12B active 🧵",
           "posted_at": "2026-10-15T17:32:59Z",
           "url": "https://x.com/NousResearch/status/2110786024024445201",
-          "views": 54540,
+          "views": 54630,
           "replies": 39,
           "retweets": 61,
           "likes": 782,
-          "images": null
-        },
-        {
-          "id": "2110722045411549645",
-          "text": "An agent for the projects that matter most",
-          "forward": "by @NousResearch: I was lamenting to my Hermes Agent about my 89 year old Grandfather being home alone when I'm not with him, I moved in last year after my grandmother died so he wasn't alone and I travel a fair amount for work, my @NousResearch Hermes Agent installed @home_assistant on its",
-          "posted_at": "2026-10-15T13:18:45Z",
-          "url": "https://x.com/NousResearch/status/2110722045411549645",
-          "views": 48576,
-          "replies": 15,
-          "retweets": 32,
-          "likes": 537,
           "images": null
         },
         {
@@ -496,77 +653,411 @@
           "forward": null,
           "posted_at": "2026-09-29T21:15:21Z",
           "url": "https://x.com/NousResearch/status/2105043777706754213",
-          "views": 896510,
-          "replies": 227,
-          "retweets": 209,
-          "likes": 2691,
+          "views": 898754,
+          "replies": 228,
+          "retweets": 210,
+          "likes": 2697,
           "images": null
         }
       ]
     },
     {
-      "name": "DeepSeek",
-      "handle": "deepseek_ai",
-      "url": "https://x.com/deepseek_ai",
+      "name": "Jeff Dean",
+      "handle": "JeffDean",
+      "url": "https://x.com/JeffDean",
       "tweets": [
         {
-          "id": "2112476496283775135",
-          "text": "🚀 Introducing DeepInfer, our in-house inference framework, now fully open source!\n\nPowering DeepSeek-V4.1-Flash at scale with high throughput and low latency. We’re sharing our production stack to help the community lower compute costs, reduce energy use, and make AI more",
-          "forward": null,
-          "posted_at": "2026-10-20T09:30:19Z",
-          "url": "https://x.com/deepseek_ai/status/2112476496283775135",
-          "views": 6734333,
-          "replies": 1641,
-          "retweets": 7217,
-          "likes": 43185,
+          "id": "2111147597159415874",
+          "text": "Have a glimpse at this!  Nice work, @AndrewDai and Elorian folks!",
+          "forward": "by @JeffDean: Spent years watching models ace a single image and completely whiff on anything that moves or changes angle. Today we’re fixing that.\n\nTry Glimpse now, our first visual thinking model with competitive frontier performance compared to Astra on key public visual reasoning",
+          "posted_at": "2026-10-16T17:29:45Z",
+          "url": "https://x.com/JeffDean/status/2111147597159415874",
+          "views": 105961,
+          "replies": 44,
+          "retweets": 57,
+          "likes": 829,
           "images": null
         },
         {
-          "id": "2112476498598957056",
-          "text": "⚡ Inside DeepInfer\n\n🔹 High-performance kernels & optimized inference engine\n🔹 Distributed inference & speculative decoding\n🔹 SWA Bounded Replay & structured outputs\n\nInference code for future DeepSeek models and ongoing optimizations will land here too.\n\n2/4",
+          "id": "2109841404239417415",
+          "text": "I've been a personal supporter (through our family foundation) of @Khipu_AI & @DeepIndaba , which are  fantastic events for AI researchers in Africa and South America. I've encouraged Google to support these in the past.  Discovery Loop ( @DiscoLoopAI ) is thrilled to support!",
+          "forward": "by @JeffDean: For the last 10 years we've been raising funds to bring AI to Africa ( @DeepIndaba ) and South America ( @Khipu_AI ). The efforts have been very successful, but this year we are finding it hard to raise money. If you work for an AI company, please share the following with the right",
+          "posted_at": "2026-10-13T02:59:24Z",
+          "url": "https://x.com/JeffDean/status/2109841404239417415",
+          "views": 69317,
+          "replies": 40,
+          "retweets": 49,
+          "likes": 717,
+          "images": null
+        },
+        {
+          "id": "2082974353868923021",
+          "text": "Thanks for an engaging conversation at @ChaseCenter last weekend, @sdianahu !  My first in a basketball arena!",
+          "forward": "by @JeffDean: In 2001, @JeffDean and Sanjay Ghemawat did the math and realized Google’s entire search index would fit in RAM — then shipped it in a few days, and search got fast. \n\nIn 2013, another napkin calculation showed that three minutes of daily speech recognition per user would require",
+          "posted_at": "2026-07-30T23:39:20Z",
+          "url": "https://x.com/JeffDean/status/2082974353868923021",
+          "views": 157256,
+          "replies": 16,
+          "retweets": 36,
+          "likes": 413,
+          "images": null
+        },
+        {
+          "id": "2079591562145870043",
+          "text": "A nice aspect of our new Gemini 3.6 Flash model is that it is much more token efficient than our 3.5 Flash model.   Here's a side-by-side demonstration of that.\n\nNice work by everyone who worked on this model and release!",
+          "forward": "by @JeffDean: We’re rolling out three new models to make AI agents faster, smarter, and cheaper at scale:\n\n🔵 Gemini 3.6 Flash: It uses fewer tokens than 3.5 Flash to deliver higher quality work at the exact same cost.\n\n🔵 Gemini 3.5 Flash-Lite: A fast, cost-effective option for everyday tasks",
+          "posted_at": "2026-07-21T15:37:20Z",
+          "url": "https://x.com/JeffDean/status/2079591562145870043",
+          "views": 212594,
+          "replies": 86,
+          "retweets": 94,
+          "likes": 1010,
+          "images": null
+        },
+        {
+          "id": "2079210091870388437",
+          "text": "Yesterday I was fortunate enough to go to my first-ever World Cup game, with my long-time colleagues/friends @OriolVinyalsML and @quocleix and their spouses).  We were sitting in the corner area and had a quite good view of the goal!\n\nI present to you a 43 second multi-part drama",
           "forward": null,
-          "posted_at": "2026-10-20T09:30:19Z",
-          "url": "https://x.com/deepseek_ai/status/2112476498598957056",
-          "views": 408144,
+          "posted_at": "2026-07-20T14:21:30Z",
+          "url": "https://x.com/JeffDean/status/2079210091870388437",
+          "views": 194700,
+          "replies": 59,
+          "retweets": 53,
+          "likes": 2103,
+          "images": null
+        },
+        {
+          "id": "2072098401022517513",
+          "text": "The video from the commencement speech I gave a couple of weeks ago at @uwcse is now up.  Congratulations again to all the graduates, and thanks for having me, @MBalazinska ! https:// youtu.be/Pvkmwh7Mito?si =cFWmlHCXroBAa7wB&t=198 … (video is of whole ceremony: my part starts around the 3 minute mark)",
+          "forward": "by @JeffDean: I enjoyed giving the commencement address at the University of Washington Allen School @uwcse graduation this evening.  So many happy students and their families and friends!\n\nCongratulations to all the graduates of the class of 2026! 🎓\n\nThanks for inviting me, @MBalazinska !",
+          "posted_at": "2026-06-30T23:22:11Z",
+          "url": "https://x.com/JeffDean/status/2072098401022517513",
+          "views": 99186,
+          "replies": 18,
+          "retweets": 12,
+          "likes": 203,
+          "images": [
+            "https://pbs.twimg.com/media/HKqzBQRaYAECi0k?format=jpg&name=small",
+            "https://pbs.twimg.com/media/HKqzBQGb0AAt8Dg?format=jpg&name=small"
+          ]
+        },
+        {
+          "id": "2067681662318924244",
+          "text": "My @Google colleagues @NormJouppi , Sridhar Lakshmanamurthy, Cliff Young, and David Patterson recently wrote a paper that will appear in the July/August 2026 edition of @ieeemicro titled \"Google's Training Supercomputers from TPU v2 to Ironwood: Architectural Stability, Scale,",
+          "forward": null,
+          "posted_at": "2026-06-18T18:51:38Z",
+          "url": "https://x.com/JeffDean/status/2067681662318924244",
+          "views": 133555,
+          "replies": 31,
+          "retweets": 170,
+          "likes": 1159,
+          "images": [
+            "https://pbs.twimg.com/media/HLHggdRawAApUmQ?format=jpg&name=small",
+            "https://pbs.twimg.com/media/HLHgxNibQAA6Ucy?format=jpg&name=small",
+            "https://pbs.twimg.com/media/HLHg8Xaa8AEXdvt?format=jpg&name=small",
+            "https://pbs.twimg.com/media/HLHhDxebUAA7yg6?format=jpg&name=small"
+          ]
+        },
+        {
+          "id": "2066726460426158381",
+          "text": "I really enjoyed this game today.  Vozinha and the whole Cape Verde team were amazing against Spain! https:// x.com/minwooshi8/sta /minwooshi8/status/2066584669580296313 …",
+          "forward": null,
+          "posted_at": "2026-06-16T03:36:00Z",
+          "url": "https://x.com/JeffDean/status/2066726460426158381",
+          "views": 33361,
+          "replies": 17,
+          "retweets": 3,
+          "likes": 182,
+          "images": null
+        },
+        {
+          "id": "2066590668663951573",
+          "text": "A good essay by @pgasawa and @profjoeyg on a more nuanced view of AI advances.",
+          "forward": "by @JeffDean: The AI community seems to increasingly be heading towards a polarized world when discussing safety and consolidated power. I see this discourse as a false dichotomy, so @profjoeyg and I wrote an essay on how we need to change the conversation (link below).",
+          "posted_at": "2026-06-15T18:36:25Z",
+          "url": "https://x.com/JeffDean/status/2066590668663951573",
+          "views": 49472,
+          "replies": 15,
+          "retweets": 17,
+          "likes": 98,
+          "images": [
+            "https://pbs.twimg.com/media/HK3ux5YbsAA2QEA?format=png&name=small"
+          ]
+        },
+        {
+          "id": "2065664161015808472",
+          "text": "Here are a few of the pieces of advice that I shared:",
+          "forward": null,
+          "posted_at": "2026-06-13T05:14:48Z",
+          "url": "https://x.com/JeffDean/status/2065664161015808472",
+          "views": 80322,
+          "replies": 23,
+          "retweets": 159,
+          "likes": 1074,
+          "images": [
+            "https://pbs.twimg.com/media/HKq2ZQfa0AAY6ki?format=jpg&name=small"
+          ]
+        },
+        {
+          "id": "2065661481979715775",
+          "text": "I enjoyed giving the commencement address at the University of Washington Allen School @uwcse graduation this evening.  So many happy students and their families and friends!\n\nCongratulations to all the graduates of the class of 2026! 🎓\n\nThanks for inviting me, @MBalazinska !",
+          "forward": null,
+          "posted_at": "2026-06-13T05:04:10Z",
+          "url": "https://x.com/JeffDean/status/2065661481979715775",
+          "views": 169918,
+          "replies": 21,
+          "retweets": 29,
+          "likes": 740,
+          "images": [
+            "https://pbs.twimg.com/media/HKqzBQRaYAECi0k?format=jpg&name=small",
+            "https://pbs.twimg.com/media/HKqzBQGb0AAt8Dg?format=jpg&name=small"
+          ]
+        },
+        {
+          "id": "2065649717573505188",
+          "text": "People replace their phones every ~4 yrs.  This means there are hundreds of millions of old phones discarded each year that are still perfectly usable as computing devices. @Google in collabration with @UCSD is exploring how to turn these old phones into cloud-computing “phone",
+          "forward": "by @JeffDean: Today on the blog, we discuss a pathway for the second life of phones through the exploration of “phone cluster computing”, which can directly reduce the environmental footprint of computing by avoiding the need for further raw material extraction. More → https:// goo.gle/4aJe5vO",
+          "posted_at": "2026-06-13T04:17:25Z",
+          "url": "https://x.com/JeffDean/status/2065649717573505188",
+          "views": 667369,
+          "replies": 159,
+          "retweets": 607,
+          "likes": 5277,
+          "images": null
+        },
+        {
+          "id": "2056793698294513774",
+          "text": "2/\nCheck out how Gemini 3.5 Flash instantly digests dense academic papers and autonomously codes a fully interactive, visual website explaining the intricacies of the research.  It's an incredible stress test that seamlessly merges massive long context, deep reasoning, complex",
+          "forward": null,
+          "posted_at": "2026-05-19T17:46:45Z",
+          "url": "https://x.com/JeffDean/status/2056793698294513774",
+          "views": 90106,
+          "replies": 5,
+          "retweets": 34,
+          "likes": 272,
+          "images": null
+        },
+        {
+          "id": "2055150652339478786",
+          "text": "Those early whole company @Google ski trips were fun!  I'm eighth from the left in the top row, wearing the white bathrobe (ninth if you count Susan's baby, Ari)",
+          "forward": "by @JeffDean: Don't just start a company\nStart a cult",
+          "posted_at": "2026-05-15T04:57:53Z",
+          "url": "https://x.com/JeffDean/status/2055150652339478786",
+          "views": 234056,
+          "replies": 53,
+          "retweets": 39,
+          "likes": 2000,
+          "images": [
+            "https://pbs.twimg.com/media/HIUCwQlbUAAR_KS?format=jpg&name=small"
+          ]
+        },
+        {
+          "id": "2054294479113515385",
+          "text": "Great to see @percyliang as a keynote speaker at #cais2026 !",
+          "forward": "by @JeffDean: 🎤 Keynote announcement: @percyliang (Percy Liang), Professor of Computer Science at @Stanford , founding director of the Center for Research on Foundation Models, and co-founder of @togethercompute , is keynoting #CAIS2026 .\n\nPercy's HELM framework set the standard for holistic",
+          "posted_at": "2026-05-12T20:15:45Z",
+          "url": "https://x.com/JeffDean/status/2054294479113515385",
+          "views": 50882,
+          "replies": 11,
+          "retweets": 19,
+          "likes": 226,
+          "images": [
+            "https://pbs.twimg.com/media/HIIvVO4bUAEQ_kd?format=jpg&name=small"
+          ]
+        },
+        {
+          "id": "2051881201926127702",
+          "text": "Bleh.  Talks.  But dishes also works.  The keynotes are like a multicourse tasting menu!",
+          "forward": null,
+          "posted_at": "2026-05-06T04:26:15Z",
+          "url": "https://x.com/JeffDean/status/2051881201926127702",
+          "views": 11707,
+          "replies": 2,
+          "retweets": 2,
+          "likes": 24,
+          "images": null
+        },
+        {
+          "id": "2051844281586131221",
+          "text": "Great to see my friend @andykonwinski as one of the keynote dishes at the first @CAISconf later this month!",
+          "forward": "by @JeffDean: 📢Keynote announcement: @andykonwinski (Andy Konwinski), co-founder of Databricks and Perplexity AI, founder of @LaudeInstitute , is keynoting #CAIS2026 .\n\nLaude's \"Ship Your Research\" mission funds open-source AI research through its Moonshots, Slingshots, and Open Frontier",
+          "posted_at": "2026-05-06T01:59:32Z",
+          "url": "https://x.com/JeffDean/status/2051844281586131221",
+          "views": 55602,
+          "replies": 12,
+          "retweets": 24,
+          "likes": 252,
+          "images": [
+            "https://pbs.twimg.com/media/HHmZCwubwAApOkm?format=jpg&name=small"
+          ]
+        },
+        {
+          "id": "2049221200321380805",
+          "text": "Google Translate is turning 20! 🎉. There are 20 fun facts and tips in the thread below.\n\nTranslate is one of my favorite Google products because it brings us all closer together!\n\nI've been involved with a couple of things over the years. The first was our deployment of the",
+          "forward": "by @JeffDean: 🧵 To celebrate Google Translate turning 20, we’re sharing 20 tips, features and fun facts you may not know about Translate. \n\n1️⃣ Google Translate was one of the initial Google Research experiments that kickstarted our machine learning work. \n\n2️⃣ The most common phrase on Google",
+          "posted_at": "2026-04-28T20:16:21Z",
+          "url": "https://x.com/JeffDean/status/2049221200321380805",
+          "views": 187749,
+          "replies": 31,
+          "retweets": 79,
+          "likes": 457,
+          "images": [
+            "https://pbs.twimg.com/media/HHAze-7WgAANd4E?format=jpg&name=small"
+          ]
+        },
+        {
+          "id": "2048759102390899142",
+          "text": "The video of my conversation with Amin Vahdat, @gilbert , and @djrosent at Cloud Next last week is now up. https:// youtu.be/BpnJYJmbXcM?si =vUY3hI_aDX8K6gco … Thanks for a great conversation!",
+          "forward": "by @JeffDean: I had a good time discussing yesterday's Google TPU v8t and v8i announcement at Cloud Next with Amin Vahdat along with @AcquiredFM hosts @gilbert and @djrosent .\n\nThe blog post announcement has lots of details about these new chips: https:// blog.google/innovation-and -ai/infrastructure-and-cloud/google-cloud/eighth-generation-tpu-agentic-era/ … Here's a thread of",
+          "posted_at": "2026-04-27T13:40:08Z",
+          "url": "https://x.com/JeffDean/status/2048759102390899142",
+          "views": 43375,
+          "replies": 11,
+          "retweets": 31,
+          "likes": 163,
+          "images": null
+        },
+        {
+          "id": "2047405389856297387",
+          "text": "First, let's talk about TPU 8t, which is designed for large-scale training and inference throughput.\n\nThe pod size is increased slightly to 9600 chips, and provides ~3X the FP4 performance per pod vs. Ironwood (8t has 121 exaflops/pod vs. 42.5 exaflops/pod for Ironwood).  In",
+          "forward": null,
+          "posted_at": "2026-04-23T20:00:58Z",
+          "url": "https://x.com/JeffDean/status/2047405389856297387",
+          "views": 18460,
+          "replies": 6,
+          "retweets": 7,
+          "likes": 130,
+          "images": [
+            "https://pbs.twimg.com/media/HGnXaiEa4AAVwQ3?format=jpg&name=small"
+          ]
+        },
+        {
+          "id": "2047403921912873257",
+          "text": "I had a good time discussing yesterday's Google TPU v8t and v8i announcement at Cloud Next with Amin Vahdat along with @AcquiredFM hosts @gilbert and @djrosent .\n\nThe blog post announcement has lots of details about these new chips: https:// blog.google/innovation-and -ai/infrastructure-and-cloud/google-cloud/eighth-generation-tpu-agentic-era/ … Here's a thread of",
+          "forward": null,
+          "posted_at": "2026-04-23T19:55:08Z",
+          "url": "https://x.com/JeffDean/status/2047403921912873257",
+          "views": 164439,
+          "replies": 19,
+          "retweets": 87,
+          "likes": 514,
+          "images": null
+        },
+        {
+          "id": "2047339995682529313",
+          "text": "It's been a delight to provide small amounts of advice and suggestions to people working on the Decoupled DiLoCo training system.  This approach enables graceful handling of failures in large scale training jobs, by allowing (N-1) / N units to proceed when one fails.\n\nThread ⬇️",
+          "forward": "by @JeffDean: The DiLoCo team at Google DeepMind and Google Research is proud to release Decoupled DiLoCo, the next frontier for resilient AI pre-training.\n\nDecoupled DiLoCo enables training with datacenters across the world, using heterogeneous hardware, and never halting the system despite",
+          "posted_at": "2026-04-23T15:41:07Z",
+          "url": "https://x.com/JeffDean/status/2047339995682529313",
+          "views": 111013,
+          "replies": 23,
+          "retweets": 76,
+          "likes": 678,
+          "images": null
+        },
+        {
+          "id": "2037200383270170735",
+          "text": "📢 Another exciting step forward today with the launch of Gemini 3.1 Flash Live.\n\nIt natively understands audio, making it much more capable of handling complex instructions. It leads on ComplexFuncBench, and on Scale AI’s AudioMultiChallenge, demonstrating skill in complex",
+          "forward": null,
+          "posted_at": "2026-03-26T16:09:55Z",
+          "url": "https://x.com/JeffDean/status/2037200383270170735",
+          "views": 27145,
+          "replies": 19,
+          "retweets": 37,
+          "likes": 349,
+          "images": [
+            "https://pbs.twimg.com/media/HEWW3-ia4AAUmwk?format=jpg&name=small"
+          ]
+        },
+        {
+          "id": "2034277966457495634",
+          "text": "Congratulations to Charles Bennett and Gilles Brassard for winning this year's @theofficialacm Turing Award! 🎉\n\nThey were recognized for their work on quantum information science & quantum cryptography.\n\nGoogle is proud to support the award to recognize groundbreaking CS work.",
+          "forward": "by @JeffDean: Congratulations to Charles H. Bennett ( @IBMResearch ) and Gilles Brassard ( @UMontreal ) on receiving the 2025 ACM A.M. Turing Award! \n\n🔗: https:// awards.acm.org/turing",
+          "posted_at": "2026-03-18T14:37:16Z",
+          "url": "https://x.com/JeffDean/status/2034277966457495634",
+          "views": 40546,
+          "replies": 18,
+          "retweets": 40,
+          "likes": 434,
+          "images": [
+            "https://pbs.twimg.com/media/HDrn8bAW8AAtP8e?format=jpg&name=small"
+          ]
+        },
+        {
+          "id": "2032948161795469637",
+          "text": "Love it.  We should all aspire to do the little things that help each other.",
+          "forward": "by @JeffDean: I think that is the best advertisement I’ve ever seen.",
+          "posted_at": "2026-03-14T22:33:06Z",
+          "url": "https://x.com/JeffDean/status/2032948161795469637",
+          "views": 83078,
           "replies": 28,
-          "retweets": 74,
-          "likes": 2511,
+          "retweets": 40,
+          "likes": 728,
           "images": null
         },
         {
-          "id": "1958417064789754323",
-          "text": "API Update ⚙️\n\n🔹 deepseek-chat → non-thinking mode\n🔹 deepseek-reasoner → thinking mode\n🧵 128K context for both\n🔌 Anthropic API format supported: https:// api-docs.deepseek.com/guides/anthrop ic_api … ✅ Strict Function Calling supported in Beta API: https:// api-docs.deepseek.com/guides/functio n_calling … 🚀 More API resources, smoother",
-          "forward": null,
-          "posted_at": "2025-08-21T06:33:08Z",
-          "url": "https://x.com/deepseek_ai/status/1958417064789754323",
-          "views": 137816,
-          "replies": 13,
-          "retweets": 61,
-          "likes": 792,
+          "id": "2032088057638502736",
+          "text": "I got a \"still under construction but getting close to done\" look when I was in London a little while ago, and this is going to be an amazing building.  I've had offices in many buildings in my time at Google (12?), and I find the ones that are \"better spaces\" make working and",
+          "forward": "by @JeffDean: We’re excited to unveil the name of our new London building: Platform 37. 📍\n\nThe name honors both the surrounding area’s transport heritage and \"Move 37\" – the critical moment where our AI system AlphaGo showed it could find novel solutions humans hadn't considered.",
+          "posted_at": "2026-03-12T13:35:21Z",
+          "url": "https://x.com/JeffDean/status/2032088057638502736",
+          "views": 71115,
+          "replies": 23,
+          "retweets": 30,
+          "likes": 607,
           "images": null
         },
         {
-          "id": "1928061589107900779",
-          "text": "🚀 DeepSeek-R1-0528 is here!\n\n🔹 Improved benchmark performance\n🔹 Enhanced front-end capabilities\n🔹 Reduced hallucinations\n🔹 Supports JSON output & function calling\n\n✅ Try it now: https:// chat.deepseek.com 🔌 No change to API usage — docs here: https:// api-docs.deepseek.com/guides/reasoni ng_model … 🔗",
+          "id": "2031889502424469660",
+          "text": "Excited to see this joint collaboration between @GoogleResearch , @NHSuk and @imperialcollege showing AI’s potential to detect 25% of the interval cancers previously missed by conventional methods. Additionally, the research found AI can reduce screening workloads, and give",
           "forward": null,
-          "posted_at": "2025-05-29T12:11:19Z",
-          "url": "https://x.com/deepseek_ai/status/1928061589107900779",
-          "views": 1495912,
-          "replies": 551,
-          "retweets": 1816,
-          "likes": 9579,
+          "posted_at": "2026-03-12T00:26:22Z",
+          "url": "https://x.com/JeffDean/status/2031889502424469660",
+          "views": 34541,
+          "replies": 20,
+          "retweets": 56,
+          "likes": 388,
+          "images": [
+            "https://pbs.twimg.com/media/HDK4DlGbQAAajXN?format=jpg&name=small",
+            "https://pbs.twimg.com/media/HDK4hFpbQAIZK6B?format=png&name=small"
+          ]
+        },
+        {
+          "id": "2030463719130702066",
+          "text": "You don't have many shots at a world championship.  Unless you're Italy!",
+          "forward": "by @JeffDean: Because of course Team Italy has a full coffee and espresso station in their dugout",
+          "posted_at": "2026-03-08T02:00:49Z",
+          "url": "https://x.com/JeffDean/status/2030463719130702066",
+          "views": 42562,
+          "replies": 9,
+          "retweets": 8,
+          "likes": 186,
           "images": null
         },
         {
-          "id": "1904526863604883661",
-          "text": "🚀 DeepSeek-V3-0324 is out now!\n\n🔹 Major boost in reasoning performance\n🔹 Stronger front-end development skills\n🔹 Smarter tool-use capabilities\n\n✅ For non-complex reasoning tasks, we recommend using V3 — just turn off “DeepThink”\n🔌 API usage remains unchanged\n📜 Models are",
+          "id": "2030301440678539725",
+          "text": "I'm looking forward to a great discussion with Bill Dally at @nvidia 's GTC event on March 18!",
+          "forward": "by @JeffDean: Two of the researchers who paved the way for the modern AI ecosystem on stage, together. 🤝 @JeffDean and Bill Dally are hosting a fireside chat at #NVIDIAGTC to dig into what it really takes to power the next frontier of AI—from agentic systems to ultra‑efficient,",
+          "posted_at": "2026-03-07T15:15:59Z",
+          "url": "https://x.com/JeffDean/status/2030301440678539725",
+          "views": 40009,
+          "replies": 14,
+          "retweets": 27,
+          "likes": 381,
+          "images": [
+            "https://pbs.twimg.com/media/HCwDXSdX0AA03fb?format=jpg&name=small"
+          ]
+        },
+        {
+          "id": "2030054307266187716",
+          "text": "We've been working on the Waxal dataset project since 2021, aiming to enhance the amount of data available for African languages.  This public speech dataset initially covers 27 Sub-Saharan African languages spoken by over 100 million speakers across more than 26 countries. 🌍 https:// x.com/GoogleResearch /GoogleResearch/status/2030012702668865784 …",
           "forward": null,
-          "posted_at": "2025-03-25T13:32:43Z",
-          "url": "https://x.com/deepseek_ai/status/1904526863604883661",
-          "views": 1570017,
-          "replies": 670,
-          "retweets": 2259,
-          "likes": 11557,
+          "posted_at": "2026-03-06T22:53:58Z",
+          "url": "https://x.com/JeffDean/status/2030054307266187716",
+          "views": 195036,
+          "replies": 70,
+          "retweets": 284,
+          "likes": 1615,
           "images": null
         }
       ]
@@ -582,11 +1073,13 @@
           "forward": "by @AndrewYNg: I have some big news to share. Workera is being acquired by Pearson!\n\nOver six years ago, I was teaching at Stanford and thinking about a simple question: what if we could understand everyone's skills as precisely as the best teachers understand their students?\n\nI believed it",
           "posted_at": "2026-09-29T16:11:18Z",
           "url": "https://x.com/AndrewYNg/status/2104967263757713432",
-          "views": 108376,
+          "views": 108758,
           "replies": 110,
           "retweets": 28,
           "likes": 261,
-          "images": null
+          "images": [
+            "https://pbs.twimg.com/media/HTZV3UNaEAAe2hw?format=jpg&name=small"
+          ]
         },
         {
           "id": "2102140576498065758",
@@ -594,34 +1087,10 @@
           "forward": null,
           "posted_at": "2026-09-21T20:59:03Z",
           "url": "https://x.com/AndrewYNg/status/2102140576498065758",
-          "views": 8010312,
+          "views": 8010600,
           "replies": 961,
-          "retweets": 2344,
-          "likes": 8853,
-          "images": null
-        },
-        {
-          "id": "2098459474608672916",
-          "text": "With AI Engineering skills, you actively shape the build: You influence what gets built, and drive the build loop. Here're key skills to do this.",
-          "forward": null,
-          "posted_at": "2026-09-11T17:11:40Z",
-          "url": "https://x.com/AndrewYNg/status/2098459474608672916",
-          "views": 887634,
-          "replies": 296,
-          "retweets": 796,
-          "likes": 4701,
-          "images": null
-        },
-        {
-          "id": "2095890279865721217",
-          "text": "The most important skills for using AI coding agents effectively. Presenting the AI Engineering Skills Map for using coding agents.",
-          "forward": null,
-          "posted_at": "2026-09-04T15:02:37Z",
-          "url": "https://x.com/AndrewYNg/status/2095890279865721217",
-          "views": 759495,
-          "replies": 313,
-          "retweets": 1273,
-          "likes": 7353,
+          "retweets": 2343,
+          "likes": 8854,
           "images": null
         },
         {
@@ -630,11 +1099,355 @@
           "forward": null,
           "posted_at": "2026-08-14T16:29:42Z",
           "url": "https://x.com/AndrewYNg/status/2088302050706686198",
-          "views": 6981701,
+          "views": 6982623,
           "replies": 565,
           "retweets": 4619,
-          "likes": 24564,
+          "likes": 24567,
+          "images": [
+            "https://pbs.twimg.com/media/HPsiabfXoAEz0wO?format=jpg&name=small"
+          ]
+        },
+        {
+          "id": "2080333504446108104",
+          "text": "Announcing OpenWorker! An open-source agent that doesn't just chat with you, but delivers finished work -- like hand you a polished document, send a slack message, or update a calendar entry.\n\nAsk it to prepare a customer brief, untangle your calendar, draft a report, or triage a",
+          "forward": null,
+          "posted_at": "2026-07-23T16:45:32Z",
+          "url": "https://x.com/AndrewYNg/status/2080333504446108104",
+          "views": 1172401,
+          "replies": 494,
+          "retweets": 1652,
+          "likes": 9714,
           "images": null
+        },
+        {
+          "id": "2078144569594761591",
+          "text": "New course: Build LLM applications that respond to user requests quickly by running on hardware designed for fast inference. This short course was built with @Cerebras and taught by @zhennydez , @duerr_seb , and @MilksandMatcha .\n\nWhen a model generates text, much of the time is",
+          "forward": null,
+          "posted_at": "2026-07-17T15:47:30Z",
+          "url": "https://x.com/AndrewYNg/status/2078144569594761591",
+          "views": 161257,
+          "replies": 101,
+          "retweets": 147,
+          "likes": 1246,
+          "images": null
+        },
+        {
+          "id": "2075271586400403567",
+          "text": "Adam Thierer had written the landmark book on \"Permissionless Innovation.\" We get the best ideas when we don't have to ask the government in advance for permission to invent. Protecting open source AI is now a critical part of ensuring this.",
+          "forward": "by @AndrewYNg: We stand at a critical crossroads in the debate over AI governance in the United States, and it feels like we are inching closer to a very serious battle over whether or not open source models will even be allowed in an environment where a new de facto licensing regime has been",
+          "posted_at": "2026-07-09T17:31:17Z",
+          "url": "https://x.com/AndrewYNg/status/2075271586400403567",
+          "views": 127597,
+          "replies": 81,
+          "retweets": 65,
+          "likes": 318,
+          "images": null
+        },
+        {
+          "id": "2071988145667928442",
+          "text": "“Loop engineering” is a hot buzzphrase after mentions of it by Boris Cherny (Claude Code’s creator) and Peter Steinberger (OpenClaw's creator) went viral on social media. Loops are now a key part of how we get AI agents to iterate at length to build software. In this letter, I’d",
+          "forward": null,
+          "posted_at": "2026-06-30T16:04:04Z",
+          "url": "https://x.com/AndrewYNg/status/2071988145667928442",
+          "views": 691746,
+          "replies": 415,
+          "retweets": 1833,
+          "likes": 8542,
+          "images": [
+            "https://pbs.twimg.com/media/HMEtxp3bsAARJdi?format=jpg&name=small"
+          ]
+        },
+        {
+          "id": "2068039709126017356",
+          "text": "Over the last two weeks, both the U.S. Government and Anthropic took significant actions that demonstrated their power to control access to AI by restricting what others can do with frontier models. This has been one of those moments that, once seen, will be hard to unsee, and it",
+          "forward": null,
+          "posted_at": "2026-06-19T18:34:23Z",
+          "url": "https://x.com/AndrewYNg/status/2068039709126017356",
+          "views": 183365,
+          "replies": 176,
+          "retweets": 345,
+          "likes": 1359,
+          "images": [
+            "https://pbs.twimg.com/media/HLMm79dbgAApRoV?format=jpg&name=small"
+          ]
+        },
+        {
+          "id": "2067653578945359898",
+          "text": "New course: Add voice to your AI agents and applications, built with @VocalBridge (disclosure: an AI Fund portfolio company) and taught by its CEO @_ashwyn .\n\nVoice applications historically required making a hard tradeoff: using fast voice-to-voice models that sacrifice",
+          "forward": null,
+          "posted_at": "2026-06-18T17:00:03Z",
+          "url": "https://x.com/AndrewYNg/status/2067653578945359898",
+          "views": 99595,
+          "replies": 58,
+          "retweets": 66,
+          "likes": 378,
+          "images": null
+        },
+        {
+          "id": "2062576164657664469",
+          "text": "New course on serving LLMs efficiently -- how do you serve models to many concurrent users at low latency and reasonable cost? This short course is built with @RedHat and taught by @cedricclyburn .\n\nEfficient LLM serving requires efficient memory management. A 70B-parameter model",
+          "forward": null,
+          "posted_at": "2026-06-04T16:44:13Z",
+          "url": "https://x.com/AndrewYNg/status/2062576164657664469",
+          "views": 138402,
+          "replies": 111,
+          "retweets": 156,
+          "likes": 1116,
+          "images": null
+        },
+        {
+          "id": "2061477558693384395",
+          "text": "One of the new, buzzy jobs in Silicon Valley is the AI Forward Deployed Engineer (FDE), an engineer who is embedded within a client organization to help customize solutions, such as building and tuning agentic workflows that suit the client’s particular needs. I’ve heard from",
+          "forward": null,
+          "posted_at": "2026-06-01T15:58:45Z",
+          "url": "https://x.com/AndrewYNg/status/2061477558693384395",
+          "views": 605444,
+          "replies": 328,
+          "retweets": 904,
+          "likes": 4584,
+          "images": [
+            "https://pbs.twimg.com/media/HJvWmCHagAAnTxQ?format=jpg&name=small"
+          ]
+        },
+        {
+          "id": "2059006941012295935",
+          "text": "Memorial Day. Today we honor those who gave everything to defend our democracy. Democracy isn't guaranteed; it's a precious inheritance that requires our constant care. 🇺🇸",
+          "forward": null,
+          "posted_at": "2026-05-25T20:21:23Z",
+          "url": "https://x.com/AndrewYNg/status/2059006941012295935",
+          "views": 83256,
+          "replies": 58,
+          "retweets": 27,
+          "likes": 457,
+          "images": null
+        },
+        {
+          "id": "2057907324380217821",
+          "text": "The new White House policy requiring green card applicants to apply from outside the US is a capricious attack on legal immigration. It will hurt families, leave us with fewer doctors, teachers and scientists, and hurt American competitiveness in AI.",
+          "forward": null,
+          "posted_at": "2026-05-22T19:31:54Z",
+          "url": "https://x.com/AndrewYNg/status/2057907324380217821",
+          "views": 1424756,
+          "replies": 2623,
+          "retweets": 1829,
+          "likes": 11842,
+          "images": null
+        },
+        {
+          "id": "2057874024672469493",
+          "text": "Harvard University just voted to limit the number of A grades given in undergraduate classes to about 20% of the class. I’m not in favor of this. It deeply runs counter to how I believe education should be. We should hold a high bar, but also work mightily to support the success",
+          "forward": null,
+          "posted_at": "2026-05-22T17:19:35Z",
+          "url": "https://x.com/AndrewYNg/status/2057874024672469493",
+          "views": 291299,
+          "replies": 190,
+          "retweets": 273,
+          "likes": 2159,
+          "images": null
+        },
+        {
+          "id": "2057146565500998024",
+          "text": "New course: Build AI agents that generate images and videos -- an under-explored frontier. A key to performance is having the agent evaluate its own output, and iterate to improve quality. This short course is built together with @googlecloudtech and taught by Katie Nguyen  and",
+          "forward": null,
+          "posted_at": "2026-05-20T17:08:55Z",
+          "url": "https://x.com/AndrewYNg/status/2057146565500998024",
+          "views": 142776,
+          "replies": 116,
+          "retweets": 169,
+          "likes": 1135,
+          "images": null
+        },
+        {
+          "id": "2054964560403300359",
+          "text": "New course: Transformers in Practice. You'll get a practical view of how transformer-based LLMs work, so you can reason about their behavior, diagnose problems like slow inference, and make smarter decisions about deployment. This course is built in partnership with @AMD and",
+          "forward": null,
+          "posted_at": "2026-05-14T16:38:25Z",
+          "url": "https://x.com/AndrewYNg/status/2054964560403300359",
+          "views": 126865,
+          "replies": 68,
+          "retweets": 153,
+          "likes": 847,
+          "images": null
+        },
+        {
+          "id": "2054236506756370865",
+          "text": "There will be no AI jobpocalypse.\n\nThe story that AI will lead to massive unemployment is stoking unnecessary fear. AI — like any other technology — does affect jobs, but telling overblown stories of large-scale unemployment is irresponsible and damaging. Let’s put a stop to it.",
+          "forward": null,
+          "posted_at": "2026-05-12T16:25:23Z",
+          "url": "https://x.com/AndrewYNg/status/2054236506756370865",
+          "views": 830340,
+          "replies": 588,
+          "retweets": 1475,
+          "likes": 5353,
+          "images": [
+            "https://pbs.twimg.com/media/HIIb1VGaUAAZoAB?format=jpg&name=small"
+          ]
+        },
+        {
+          "id": "2044449830605582629",
+          "text": "New course: Spec-Driven Development with Coding Agents, built in partnership with @jetbrains , and taught by @paulweveritt .\n\nVibe coding is fast, but often produces code that doesn't match what you asked for. This short course teaches you spec-driven development: write a detailed",
+          "forward": null,
+          "posted_at": "2026-04-15T16:16:38Z",
+          "url": "https://x.com/AndrewYNg/status/2044449830605582629",
+          "views": 467067,
+          "replies": 171,
+          "retweets": 477,
+          "likes": 2861,
+          "images": null
+        },
+        {
+          "id": "2044088884989177991",
+          "text": "I'm excited about voice as a UI layer for existing visual applications — where speech and screen update together. This goes well beyond voice-only use cases like call center automation.\n\nThe barrier has been a hard technical tradeoff: low-latency voice models lack reliability,",
+          "forward": null,
+          "posted_at": "2026-04-14T16:22:22Z",
+          "url": "https://x.com/AndrewYNg/status/2044088884989177991",
+          "views": 119984,
+          "replies": 101,
+          "retweets": 119,
+          "likes": 757,
+          "images": [
+            "https://pbs.twimg.com/media/HF4PXA_asAM29we?format=jpg&name=small"
+          ]
+        },
+        {
+          "id": "2043742105852621052",
+          "text": "As AI agents accelerate coding, what is the future of software engineering? Some trends are clear, such as the Product Management Bottleneck, referring to the idea that we are more constrained by deciding what to build rather than the actual building. But many implications, like",
+          "forward": null,
+          "posted_at": "2026-04-13T17:24:23Z",
+          "url": "https://x.com/AndrewYNg/status/2043742105852621052",
+          "views": 121629,
+          "replies": 149,
+          "retweets": 182,
+          "likes": 895,
+          "images": null
+        },
+        {
+          "id": "2039051446084153834",
+          "text": "The anti-AI coalition continues to maneuver to find arguments to slow down AI progress. If someone has a sincere concern about a specific effect of AI, for instance that it may lead to human extinction, I respect their intellectual honesty, even if I deeply disagree with their",
+          "forward": null,
+          "posted_at": "2026-03-31T18:45:23Z",
+          "url": "https://x.com/AndrewYNg/status/2039051446084153834",
+          "views": 86268,
+          "replies": 183,
+          "retweets": 97,
+          "likes": 454,
+          "images": [
+            "https://pbs.twimg.com/media/HEwo55_W8AAqin-?format=jpg&name=small"
+          ]
+        },
+        {
+          "id": "2034314027678192114",
+          "text": "New course: Agent Memory: Building Memory-Aware Agents, built in partnership with @Oracle and taught by @richmondalake and Nacho Martínez.\n\nMany agents work well within a single session but their memory resets once the session ends. Consider a research agent working on dozens of",
+          "forward": null,
+          "posted_at": "2026-03-18T17:00:34Z",
+          "url": "https://x.com/AndrewYNg/status/2034314027678192114",
+          "views": 162903,
+          "replies": 200,
+          "retweets": 264,
+          "likes": 1579,
+          "images": null
+        },
+        {
+          "id": "2033577583200354812",
+          "text": "Should there be a Stack Overflow for AI coding agents to share learnings with each other?\n\nLast week I announced Context Hub (chub), an open CLI tool that gives coding agents up-to-date API documentation. Since then, our GitHub repo has gained over 6K stars, and we've scaled from",
+          "forward": null,
+          "posted_at": "2026-03-16T16:14:12Z",
+          "url": "https://x.com/AndrewYNg/status/2033577583200354812",
+          "views": 646607,
+          "replies": 387,
+          "retweets": 868,
+          "likes": 4962,
+          "images": null
+        },
+        {
+          "id": "2031051809499054099",
+          "text": "I'm excited to announce Context Hub, an open tool that gives your coding agent the up-to-date API documentation it needs. Install it and prompt your agent to use it to fetch curated docs via a simple CLI. (See image.)\n\nWhy this matters: Coding agents often use outdated APIs and",
+          "forward": null,
+          "posted_at": "2026-03-09T16:57:41Z",
+          "url": "https://x.com/AndrewYNg/status/2031051809499054099",
+          "views": 410401,
+          "replies": 299,
+          "retweets": 799,
+          "likes": 5320,
+          "images": [
+            "https://pbs.twimg.com/media/HC-9yxMa8AA4pLz?format=jpg&name=small"
+          ]
+        },
+        {
+          "id": "2029269587670507833",
+          "text": "Apple just named its latest laptop Neo -- same name as my son! Should I buy one? \n\nIf I run Amazon Nova on an Apple Neo I hope to blow both of my kids' minds.",
+          "forward": null,
+          "posted_at": "2026-03-04T18:55:46Z",
+          "url": "https://x.com/AndrewYNg/status/2029269587670507833",
+          "views": 175903,
+          "replies": 153,
+          "retweets": 43,
+          "likes": 1960,
+          "images": null
+        },
+        {
+          "id": "2029266102178693378",
+          "text": "New course: Build and Train an LLM with JAX, built in partnership with @Google and taught by @chrisachard .\n\nJAX is the open-source library behind Google's Gemini, Veo, and other advanced models. This short course teaches you to build and train a 20-million parameter language",
+          "forward": null,
+          "posted_at": "2026-03-04T18:41:55Z",
+          "url": "https://x.com/AndrewYNg/status/2029266102178693378",
+          "views": 195114,
+          "replies": 72,
+          "retweets": 358,
+          "likes": 2299,
+          "images": null
+        },
+        {
+          "id": "2026478474681262576",
+          "text": "Impressive inference speed from Inception Labs’ diffusion LLMs. Diffusion LLMs are a fascinating alternative to conventional autoregressive LLMs. Well done @StefanoErmon and team!",
+          "forward": "by @AndrewYNg: Mercury 2 is live 🚀🚀\n\nThe world’s first reasoning diffusion LLM, delivering 5x faster performance than leading speed-optimized LLMs.\n\nWatching the team turn years of research into a real product never gets old, and I’m incredibly proud of what we’ve built.\n\nWe’re just getting",
+          "posted_at": "2026-02-25T02:04:53Z",
+          "url": "https://x.com/AndrewYNg/status/2026478474681262576",
+          "views": 200727,
+          "replies": 98,
+          "retweets": 167,
+          "likes": 1412,
+          "images": null
+        },
+        {
+          "id": "2025973459843715185",
+          "text": "Will AI create new job opportunities? My daughter Nova loves cats, and her favorite color is yellow. For her 7th birthday, we got a cat-themed cake in yellow by first using Gemini’s Nano Banana to design it, and then asking a baker to create it using delicious sponge cake and",
+          "forward": null,
+          "posted_at": "2026-02-23T16:38:08Z",
+          "url": "https://x.com/AndrewYNg/status/2025973459843715185",
+          "views": 105203,
+          "replies": 122,
+          "retweets": 110,
+          "likes": 798,
+          "images": [
+            "https://pbs.twimg.com/media/HB0inWhbIAA5Bj1?format=jpg&name=small"
+          ]
+        },
+        {
+          "id": "2022799922592903263",
+          "text": "To all my AI friends: Every time I see you, you raise my temperature parameter. \n\nHappy Valentine’s Day! ❤️",
+          "forward": null,
+          "posted_at": "2026-02-14T22:27:38Z",
+          "url": "https://x.com/AndrewYNg/status/2022799922592903263",
+          "views": 127321,
+          "replies": 111,
+          "retweets": 103,
+          "likes": 1962,
+          "images": null
+        },
+        {
+          "id": "2012232833109315965",
+          "text": "Andrew Ng @AndrewYNg · Jan 17 Article In defense of data centers Many people are fighting the growth of data centers because they could increase CO2 emissions, electricity prices, and water use. I’m going to stake out an unpopular view: These concerns are... 143 511 2.8K 387K",
+          "forward": null,
+          "posted_at": "2026-01-16T18:37:47Z",
+          "url": "https://x.com/AndrewYNg/status/2012232833109315965",
+          "views": 387092,
+          "replies": 143,
+          "retweets": 511,
+          "likes": 2821,
+          "images": [
+            "https://pbs.twimg.com/media/G-zicL8bcAAs6KT?format=jpg&name=small"
+          ]
         }
       ]
     },
@@ -649,10 +1462,10 @@
           "forward": "by @karpathy: Judging by my tl there is a growing gap in understanding of AI capability.\n\nThe first issue I think is around recency and tier of use. I think a lot of people tried the free tier of ChatGPT somewhere  last year and allowed it to inform their views on AI a little too much. This is x.com/staysaasy/stat…",
           "posted_at": "2026-10-11T19:12:37Z",
           "url": "https://x.com/karpathy/status/2109361546505966046",
-          "views": 6768904,
-          "replies": 2197,
-          "retweets": 8133,
-          "likes": 43833,
+          "views": 6773271,
+          "replies": 2198,
+          "retweets": 8134,
+          "likes": 43842,
           "images": null
         },
         {
@@ -661,14 +1474,370 @@
           "forward": "by @karpathy: results for all claudes",
           "posted_at": "2026-10-02T06:35:51Z",
           "url": "https://x.com/karpathy/status/2105909609487872075",
-          "views": 1493771,
+          "views": 1496328,
           "replies": 710,
-          "retweets": 1242,
-          "likes": 19200,
+          "retweets": 1243,
+          "likes": 19205,
+          "images": [
+            "https://pbs.twimg.com/media/HTAureBb0AA1BoW?format=png&name=small"
+          ]
+        },
+        {
+          "id": "2105819303471976479",
+          "text": "We'll be spending a lot more time trying to understand the outputs of language models. A few thoughts, tips & tricks:\n\nWriting. Something I've had success with: Ask your LLM to explain something in ASD-STE100, it's a controlled language specification originally developed for",
+          "forward": null,
+          "posted_at": "2026-10-02T00:37:00Z",
+          "url": "https://x.com/karpathy/status/2105819303471976479",
+          "views": 7996192,
+          "replies": 1675,
+          "retweets": 8193,
+          "likes": 56051,
+          "images": [
+            "https://pbs.twimg.com/media/HTlaHqgbwAAS1lv?format=png&name=small"
+          ]
+        },
+        {
+          "id": "2040806346556428585",
+          "text": "Surprised with how good the comments on github gists are. A lot more helpful, insightful, constructive, a lot less AI... Is it the user community? The markdown format? The (lack of) incentives?\n\nSuddenly feeling like I should gist more. @github consider competing with X (?)",
+          "forward": null,
+          "posted_at": "2026-04-05T14:58:44Z",
+          "url": "https://x.com/karpathy/status/2040806346556428585",
+          "views": 519517,
+          "replies": 184,
+          "retweets": 59,
+          "likes": 1229,
           "images": null
+        },
+        {
+          "id": "2040549459193704852",
+          "text": "Something I've been thinking about - I am bullish on people (empowered by AI) increasing the visibility, legibility and accountability of their governments.\n\nHistorically, it is the governments that act to make society legible (e.g. \"Seeing like a state\" is the common reference),",
+          "forward": "by @karpathy: The British Government is a complicated beast. Dozens of departments, hundreds of public bodies, more corporations than one can count...\n\nSuch is its complexity that there isn't an org chart for it.\n\nWell, there wasn't...\n\nIntroducing ⚙️Machinery of Government⚙️",
+          "posted_at": "2026-04-04T21:57:57Z",
+          "url": "https://x.com/karpathy/status/2040549459193704852",
+          "views": 1097689,
+          "replies": 410,
+          "retweets": 884,
+          "likes": 5956,
+          "images": [
+            "https://pbs.twimg.com/media/HFD4KSmWkAAdI3Z?format=jpg&name=small"
+          ]
+        },
+        {
+          "id": "2040470801506541998",
+          "text": "Wow, this tweet went very viral!\n\nI wanted share a possibly slightly improved version of the tweet in an \"idea file\". The idea of the idea file is that in this era of LLM agents, there is less of a point/need of sharing the specific code/app, you just share the idea, then the",
+          "forward": "by @karpathy: LLM Knowledge Bases\n\nSomething I'm finding very useful recently: using LLMs to build personal knowledge bases for various topics of research interest. In this way, a large fraction of my recent token throughput is going less into manipulating code, and more into manipulating",
+          "posted_at": "2026-04-04T16:45:23Z",
+          "url": "https://x.com/karpathy/status/2040470801506541998",
+          "views": 7339345,
+          "replies": 1128,
+          "retweets": 3515,
+          "likes": 26809,
+          "images": null
+        },
+        {
+          "id": "2039805659525644595",
+          "text": "LLM Knowledge Bases\n\nSomething I'm finding very useful recently: using LLMs to build personal knowledge bases for various topics of research interest. In this way, a large fraction of my recent token throughput is going less into manipulating code, and more into manipulating",
+          "forward": null,
+          "posted_at": "2026-04-02T20:42:21Z",
+          "url": "https://x.com/karpathy/status/2039805659525644595",
+          "views": 21996266,
+          "replies": 2940,
+          "retweets": 9616,
+          "likes": 61036,
+          "images": null
+        },
+        {
+          "id": "2038849654423798197",
+          "text": "New supply chain attack this time for npm axios, the most popular HTTP client library with 300M weekly downloads.\n\nScanning my system I found a use imported from googleworkspace/cli from a few days ago when I was experimenting with gmail/gcal cli. The installed version (luckily)",
+          "forward": "by @karpathy: 🚨 CRITICAL: Active supply chain attack on axios -- one of npm's most depended-on packages.\n\nThe latest axios@1.14.1 now pulls in plain-crypto-js@4.2.1, a package that did not exist before today. This is a live compromise.\n\nThis is textbook supply chain installer malware. axios",
+          "posted_at": "2026-03-31T05:23:32Z",
+          "url": "https://x.com/karpathy/status/2038849654423798197",
+          "views": 1635519,
+          "replies": 559,
+          "retweets": 1308,
+          "likes": 10421,
+          "images": null
+        },
+        {
+          "id": "2037921699824607591",
+          "text": "- Drafted a blog post\n- Used an LLM to meticulously improve the argument over 4 hours.\n- Wow, feeling great, it’s so convincing!\n- Fun idea let’s ask it to argue the opposite. \n- LLM demolishes the entire argument and convinces me that the opposite is in fact true.\n- lol\n\nThe",
+          "forward": null,
+          "posted_at": "2026-03-28T15:56:10Z",
+          "url": "https://x.com/karpathy/status/2037921699824607591",
+          "views": 3544231,
+          "replies": 1707,
+          "retweets": 3057,
+          "likes": 30932,
+          "images": null
+        },
+        {
+          "id": "2037200624450936940",
+          "text": "When I built menugen ~1 year ago, I observed that the hardest part by far was not the code itself, it was the plethora of services you have to assemble like IKEA furniture to make it real, the DevOps: services, payments, auth, database, security, domain names, etc...\n\nI am really",
+          "forward": "by @karpathy: When @karpathy built MenuGen ( https:// karpathy.bearblog.dev/vibe-coding-me nugen/ … ), he said:\n\n\"Vibe coding menugen was exhilarating and fun escapade as a local demo, but a bit of a painful slog as a deployed, real app. Building a modern app is a bit like assembling IKEA future. There are all these services,",
+          "posted_at": "2026-03-26T16:10:52Z",
+          "url": "https://x.com/karpathy/status/2037200624450936940",
+          "views": 2508393,
+          "replies": 621,
+          "retweets": 726,
+          "likes": 6353,
+          "images": null
+        },
+        {
+          "id": "2036841069636370467",
+          "text": "(I cycle through all LLMs over time and all of them seem to do this so it's not any particular implementation but something deeper, e.g. maybe during training, a lot of the information in the context window is relevant to the task, so the LLMs develop a bias to use what is given,",
+          "forward": null,
+          "posted_at": "2026-03-25T16:22:08Z",
+          "url": "https://x.com/karpathy/status/2036841069636370467",
+          "views": 330709,
+          "replies": 150,
+          "retweets": 56,
+          "likes": 1690,
+          "images": null
+        },
+        {
+          "id": "2036836816654147718",
+          "text": "One common issue with personalization in all LLMs is how distracting memory seems to be for the models. A single question from 2 months ago about some topic can keep coming up as some kind of a deep interest of mine with undue mentions in perpetuity. Some kind of trying too hard.",
+          "forward": null,
+          "posted_at": "2026-03-25T16:05:14Z",
+          "url": "https://x.com/karpathy/status/2036836816654147718",
+          "views": 2790637,
+          "replies": 1719,
+          "retweets": 1514,
+          "likes": 20891,
+          "images": null
+        },
+        {
+          "id": "2036487306585268612",
+          "text": "Software horror: litellm PyPI supply chain attack. \n\nSimple `pip install litellm` was enough to exfiltrate SSH keys, AWS/GCP/Azure creds, Kubernetes configs, git credentials, env vars (all your API keys), shell history, crypto wallets, SSL private keys, CI/CD secrets, database",
+          "forward": "by @karpathy: LiteLLM HAS BEEN COMPROMISED, DO NOT UPDATE. We just discovered that LiteLLM pypi release 1.82.8. It has been compromised, it contains litellm_init.pth with base64 encoded instructions to send all the credentials it can find to remote server + self-replicate. link below",
+          "posted_at": "2026-03-24T16:56:24Z",
+          "url": "https://x.com/karpathy/status/2036487306585268612",
+          "views": 66669262,
+          "replies": 1331,
+          "retweets": 6515,
+          "likes": 27496,
+          "images": null
+        },
+        {
+          "id": "2035158351357911527",
+          "text": "Thank you Sarah, my pleasure to come on the pod! And happy to do some more Q&A in the replies.",
+          "forward": "by @karpathy: Caught up with @karpathy for a new @NoPriorsPod : on the phase shift in engineering, AI psychosis, claws, AutoResearch, the opportunity for a SETI-at-Home like movement in AI, the model landscape, and second order effects 02:55 - What Capability Limits Remain? 06:15 - What",
+          "posted_at": "2026-03-21T00:55:37Z",
+          "url": "https://x.com/karpathy/status/2035158351357911527",
+          "views": 1192658,
+          "replies": 315,
+          "retweets": 435,
+          "likes": 5451,
+          "images": null
+        },
+        {
+          "id": "2034873049753997619",
+          "text": "Andy Weir showing some of the spreadsheets underlying the calculations in the book https:// youtube.com/watch?v=lYHCTE nYOr4 … i mean, it's not quality scifi if it doesn't come with a supplementary whitepaper",
+          "forward": null,
+          "posted_at": "2026-03-20T06:01:55Z",
+          "url": "https://x.com/karpathy/status/2034873049753997619",
+          "views": 256403,
+          "replies": 47,
+          "retweets": 77,
+          "likes": 1222,
+          "images": [
+            "https://pbs.twimg.com/media/HD1RM_XaoAAsHui?format=jpg&name=small"
+          ]
+        },
+        {
+          "id": "2034865693544604001",
+          "text": "Had to go see Project Hail Mary right away (it's based on the book of Andy Weir, of also The Martian fame). Both very pleased and relieved to say that 1) the movie sticks very close to the book in both content and tone and 2) is really well executed.\n\nThe book is one of my",
+          "forward": null,
+          "posted_at": "2026-03-20T05:32:41Z",
+          "url": "https://x.com/karpathy/status/2034865693544604001",
+          "views": 731810,
+          "replies": 357,
+          "retweets": 407,
+          "likes": 9075,
+          "images": null
+        },
+        {
+          "id": "2034325423358955981",
+          "text": "The signature is alluding to NVIDIA GTC 2015, where Jensen excitedly told an audience of, at the time, mostly gamers and scientific computing professionals that Deep Learning is The Next Big Thing, citing among other examples my PhD thesis (one of the first image captioning",
+          "forward": null,
+          "posted_at": "2026-03-18T17:45:51Z",
+          "url": "https://x.com/karpathy/status/2034325423358955981",
+          "views": 90603,
+          "replies": 28,
+          "retweets": 57,
+          "likes": 1250,
+          "images": [
+            "https://pbs.twimg.com/media/HDtfHzSa0AAJkVl?format=jpg&name=small"
+          ]
+        },
+        {
+          "id": "2034321875506196585",
+          "text": "Thank you Jensen and NVIDIA! She’s a real beauty! I was told I’d be getting a secret gift, with a hint that it requires 20 amps. (So I knew it had to be good). She’ll make for a beautiful, spacious home for my Dobby the House Elf claw, among lots of other tinkering, thank you!!",
+          "forward": "by @karpathy: 🙌 Andrej Karpathy’s lab has received the first DGX Station GB300 -- a Dell Pro Max with GB300.\n\n💚 We can't wait to see what you’ll create @karpathy !\n\n🔗 https:// blogs.nvidia.com/blog/gtc-2026- news/#dgx-station … @DellTech",
+          "posted_at": "2026-03-18T17:31:45Z",
+          "url": "https://x.com/karpathy/status/2034321875506196585",
+          "views": 1138300,
+          "replies": 517,
+          "retweets": 907,
+          "likes": 18992,
+          "images": [
+            "https://pbs.twimg.com/media/HDq6TL-XEAAK_Ws?format=jpg&name=small"
+          ]
+        },
+        {
+          "id": "2027501331125239822",
+          "text": "Cool chart showing the ratio of Tab complete requests to Agent requests in Cursor. With improving capability, every point in time has an optimal setup that keeps changing and evolving and the community average tracks the point. None -> Tab -> Agent -> Parallel agents -> Agent",
+          "forward": null,
+          "posted_at": "2026-02-27T21:49:21Z",
+          "url": "https://x.com/karpathy/status/2027501331125239822",
+          "views": 637021,
+          "replies": 207,
+          "retweets": 385,
+          "likes": 3831,
+          "images": [
+            "https://pbs.twimg.com/media/HCMha-2bEAA1itr?format=png&name=small"
+          ]
+        },
+        {
+          "id": "2026731645169185220",
+          "text": "It is hard to communicate how much programming has changed due to AI in the last 2 months: not gradually and over time in the \"progress as usual\" way, but specifically this last December. There are a number of asterisks but imo coding agents basically didn’t work before December",
+          "forward": null,
+          "posted_at": "2026-02-25T18:50:53Z",
+          "url": "https://x.com/karpathy/status/2026731645169185220",
+          "views": 5175430,
+          "replies": 1594,
+          "retweets": 5764,
+          "likes": 36816,
+          "images": null
+        },
+        {
+          "id": "2026452488434651264",
+          "text": "With the coming tsunami of demand for tokens, there are significant opportunities to orchestrate the underlying memory+compute *just right* for LLMs.\n\nThe fundamental and non-obvious constraint is that due to the chip fabrication process, you get two completely distinct pools of",
+          "forward": "by @karpathy: We’re building an LLM chip that delivers much higher throughput than any other chip while also achieving the lowest latency. We call it the MatX One.\n\nThe MatX One chip is based on a splittable systolic array, which has the energy and area efficiency that large systolic arrays",
+          "posted_at": "2026-02-25T00:21:37Z",
+          "url": "https://x.com/karpathy/status/2026452488434651264",
+          "views": 2570106,
+          "replies": 308,
+          "retweets": 542,
+          "likes": 7309,
+          "images": null
+        },
+        {
+          "id": "2026360908398862478",
+          "text": "CLIs are super exciting precisely because they are a \"legacy\" technology, which means AI agents can natively and easily use them, combine them, interact with them via the entire terminal toolkit.\n\nE.g ask your Claude/Codex agent to install this new Polymarket CLI and ask for any",
+          "forward": "by @karpathy: introducing polymarket cli - the fastest way for ai agents to access prediction markets\n\nbuilt with rust. your agent can query markets, place trades, and pull data - all from the terminal\n\nfast, lightweight, no overhead",
+          "posted_at": "2026-02-24T18:17:43Z",
+          "url": "https://x.com/karpathy/status/2026360908398862478",
+          "views": 2177218,
+          "replies": 658,
+          "retweets": 1455,
+          "likes": 11715,
+          "images": [
+            "https://pbs.twimg.com/media/HB8UIepawAAbVKf?format=jpg&name=small"
+          ]
+        },
+        {
+          "id": "2024997757757653224",
+          "text": "First there was chat, then there was code, now there is claw. Ez",
+          "forward": null,
+          "posted_at": "2026-02-21T00:01:02Z",
+          "url": "https://x.com/karpathy/status/2024997757757653224",
+          "views": 563284,
+          "replies": 163,
+          "retweets": 233,
+          "likes": 3515,
+          "images": null
+        },
+        {
+          "id": "2024987174077432126",
+          "text": "Bought a new Mac mini to properly tinker with claws over the weekend. The apple store person told me they are selling like hotcakes and everyone is confused :)\n\nI'm definitely a bit sus'd to run OpenClaw specifically - giving my private data/keys to 400K lines of vibe coded",
+          "forward": null,
+          "posted_at": "2026-02-20T23:18:59Z",
+          "url": "https://x.com/karpathy/status/2024987174077432126",
+          "views": 3433388,
+          "replies": 1016,
+          "retweets": 1667,
+          "likes": 17350,
+          "images": null
+        },
+        {
+          "id": "2024583544157458452",
+          "text": "Very interested in what the coming era of highly bespoke software might look like.\n\nExample from this morning - I've become a bit loosy goosy with my cardio recently so I decided to do a more srs, regimented experiment to try to lower my Resting Heart Rate from 50 -> 45, over",
+          "forward": null,
+          "posted_at": "2026-02-19T20:35:06Z",
+          "url": "https://x.com/karpathy/status/2024583544157458452",
+          "views": 1975711,
+          "replies": 896,
+          "retweets": 1430,
+          "likes": 11959,
+          "images": [
+            "https://pbs.twimg.com/media/HBjB6bhbUAA8_mZ?format=jpg&name=small"
+          ]
+        },
+        {
+          "id": "2023476423055601903",
+          "text": "I think it must be a very interesting time to be in programming languages and formal methods because LLMs change the whole constraints landscape of software completely. Hints of this can already be seen, e.g. in the rising momentum behind porting C to Rust or the growing interest",
+          "forward": "by @karpathy: New Engineering blog: We tasked Opus 4.6 using agent teams to build a C compiler. Then we (mostly) walked away. Two weeks later, it worked on the Linux kernel. \n\nHere's what it taught us about the future of autonomous software development. \n\nRead more: https:// anthropic.com/engineering/bu ilding-c-compiler …",
+          "posted_at": "2026-02-16T19:15:48Z",
+          "url": "https://x.com/karpathy/status/2023476423055601903",
+          "views": 1208558,
+          "replies": 682,
+          "retweets": 786,
+          "likes": 7967,
+          "images": null
+        },
+        {
+          "id": "2022041235188580788",
+          "text": "Congrats on the launch @simile_ai ! (and I am excited to be involved as a small angel.)\n\nSimile is working on a really interesting, imo under-explored dimension of LLMs. Usually, the LLMs you talk to have a single, specific, crafted personality. But in principle, the native,",
+          "forward": "by @karpathy: Introducing Simile.\n\nSimulating human behavior is one of the most consequential and technically difficult problems of our time. \n\nWe raised $100M from Index, Hanabi, A* BCV, @karpathy @drfeifei @adamdangelo @rauchg @scottbelsky among others.",
+          "posted_at": "2026-02-12T20:12:52Z",
+          "url": "https://x.com/karpathy/status/2022041235188580788",
+          "views": 989443,
+          "replies": 380,
+          "retweets": 633,
+          "likes": 8176,
+          "images": null
+        },
+        {
+          "id": "2021695367507529825",
+          "text": "The way it works is that the full LLM architecture and loss function is stripped entirely to the most atomic individual mathematical operations that make it up (+, *, **, log, exp), and then a tiny scalar-valued autograd engine (micrograd) calculates gradients. Adam for optim.",
+          "forward": null,
+          "posted_at": "2026-02-11T21:18:31Z",
+          "url": "https://x.com/karpathy/status/2021695367507529825",
+          "views": 386359,
+          "replies": 33,
+          "retweets": 60,
+          "likes": 2033,
+          "images": null
+        },
+        {
+          "id": "2021694437152157847",
+          "text": "New art project. \nTrain and inference GPT in 243 lines of pure, dependency-free Python. This is the *full* algorithmic content of what is needed. Everything else is just for efficiency. I cannot simplify this any further.",
+          "forward": null,
+          "posted_at": "2026-02-11T21:14:49Z",
+          "url": "https://x.com/karpathy/status/2021694437152157847",
+          "views": 5235262,
+          "replies": 636,
+          "retweets": 3649,
+          "likes": 24759,
+          "images": null
+        },
+        {
+          "id": "2021633574089416993",
+          "text": "On DeepWiki and increasing malleability of software.\n\nThis starts as partially a post on appreciation to DeepWiki, which I routinely find very useful and I think more people would find useful to know about. I went through a few iterations of use:\n\nTheir first feature was that it",
+          "forward": "by @karpathy: How to build a thriving open source community by writing code like bacteria do 🦠. Bacterial code (genomes) are:\n\n- small (each line of code costs energy)\n- modular (organized into groups of swappable operons)\n- self-contained (easily \"copy paste-able\" via horizontal gene",
+          "posted_at": "2026-02-11T17:12:58Z",
+          "url": "https://x.com/karpathy/status/2021633574089416993",
+          "views": 1127777,
+          "replies": 295,
+          "retweets": 899,
+          "likes": 7186,
+          "images": [
+            "https://pbs.twimg.com/media/GvIB64XWYAAg1B8?format=jpg&name=small"
+          ]
         }
       ]
     }
   ],
-  "last_error": "Jeff Dean: 验证挑战 (cf-challenge / Something went wrong)"
+  "last_error": "DHH: 验证挑战 (cf-challenge / Something went wrong); DeepSeek: 验证挑战 (cf-challenge / Something went wrong)"
 }
