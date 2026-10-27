@@ -70,3 +70,18 @@ critical: age > 48h（不受判定点保护） 或 snapshot 缺失 或 全局失
 - 生效面：`lr status` / `lr status --json`（wrapper `~/.local/bin/lr` 指向 `cache/system-command/llm-radar-wrapper.sh`，无需重装）
 - 环境变量（可选）：`LLM_RADAR_FIRST_SLOT`（应到时刻，默认 `09:40`）、`LLM_RADAR_STALENESS_GRACE_MIN`（默认 `30`）、
   `LLM_RADAR_STALE_HOURS`（默认 `12`）、`LLM_RADAR_CRITICAL_HOURS`（默认 `48`）
+
+## 追加（同日 12:0x）：线上新鲜度探针也同口径
+
+你们只依赖 `lr status`，但本仓还有第二个陈旧度出口会发飞书 —— `scripts/llm-radar-health.py`
+（cron `llm-radar-freshness`，10:00 / 15:00 / 21:00 跑；ops 侧是 execv wrapper 委派到本仓脚本，无需重装）。
+为避免「你们拿到 ok、我们自己的探针仍在 10:00 报过期」，它已改成同一判定点口径：
+
+- 差别只有一处：探针只拿得到线上 `timestamp.json`（没有 `run_history`），故用 `last_run_at` 近似
+  「今日成功时刻」⇒ 判定点只会**更晚**，即更宽松，不会多报；
+- 顺序不变：`>48h` 兜底 → 判定点前静默 → 判定点后按 12h 阈值；
+- message 末尾附 `[判定点 10:10 已过]` / `[>48h 兜底判定]` 便于区分触发原因；
+- 钉子 `tests/test_health_staleness.py` 10 例，其中 `test_parity_with_collector` 用 6×8×2=96 组输入
+  逐一对齐两处实现（防口径漂移）；
+- 真机复现：用线上 payload 把 `last_run_at` 替换为「昨日 19:33」⇒ `07:42` 静默、`10:11` 报
+  `数据过期 … > 12h [判定点 10:10 已过]`。
