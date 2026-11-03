@@ -22,7 +22,8 @@
 5. **wrapper 侧实测出一处真实缺陷**：`--json` 模式下 env 段中断的两个人读提示**写 stderr 全部丢失**（`err=0B`，连 trap 首行的 `echo >&2` 探针也是 0B，而 fd1 正常）⇒ 用户只看到一行信封。已实测出修法（`exec 3>&2` + `>&3`，err 恢复 81B），见 LR-CLI-002。
 6. **交接单里的"真实路径"验收命令按原样跑会误导人**：非交互 shell 的后台作业继承 `SIGINT=SIG_IGN`，同一命令 7/7 抽样 `rc=0`、零提示；加 `set -m` 后 7/7 `rc=130` + 两行提示 + 零 traceback。这条命令同时写在 handbook §六，必须修正，否则后续复核会把「守卫正常」误判成「守卫失效」（LR-CLI-005）。
 7. **仓门禁仍未绿**：`hm check cli . --strict` = `中断收敛: 7/8`（缺 `scripts/mcp-protocol-demo.py`）⇒ 整仓 CLI 检查仍 ❌。本批把 1/8 提到 7/8，属改善但不闭合（LR-CLI-001，下一批 2 行可收）。
-8. **安全面零新增攻击面**：`cli_interrupt` 不注册信号处理器、无 import 期副作用、无网络/文件写；新增行零凭据、零 `debug` 日志；`AGENTS.md` / `CLAUDE.md` / `.cli-registry.yaml` / crontab / `_verify()` 全部未动（§7）。
+8. **一处仓级口径事实（不单方面改判）**：受审笔 subject 含 CJK，与 CL008「subject 全英文」冲突 —— `hm check commit` 默认 ✅、`--strict` ❌（31 条新笔同病，含本仓 6 笔历史 review 笔）。本审按「默认门禁绿 + 仓级历史一致」维持 PASS，**是否执行 CL008 交用户裁定**（LR-CLI-009 / T-4）
+9. **安全面零新增攻击面**：`cli_interrupt` 不注册信号处理器、无 import 期副作用、无网络/文件写；新增行零凭据、零 `debug` 日志；`AGENTS.md` / `CLAUDE.md` / `.cli-registry.yaml` / crontab / `_verify()` 全部未动（§7）。
 
 ---
 
@@ -176,6 +177,7 @@ scripts/flclash_proxy.py 31a56c09c3646ea6572ced75a28d3ed104e016275c0e3c4aa87c215
 | **LR-CLI-006** | handbook 写「单元/行为钉（11 例）」，实测 **12 例** | `12 passed`；顺手改数字即可 |
 | **LR-CLI-007** | `emit()` 写 stdout/stderr 无 `OSError` 兜底 | `lr status \| head -1` 这类已关管道 + Ctrl-C ⇒ `BrokenPipeError` 覆盖中断文案；代码级判定，未专门构造信号竞争 |
 | **LR-CLI-008** | bash 侧手抄第二份文案（§11.2「禁手抄第二份」） | JSON 信封字面量与两行提示在 wrapper 内重复；人类模式首行多一个前导 `\n`（python 侧没有）⇒ 模板侧应改为调用 `python3 -c` 里的 `emit`，或至少逐字节对齐 |
+| **LR-CLI-009** | 受审笔 subject 含 CJK，与 CL008「subject 全英文」冲突（`hm check commit` 默认 ✅ / `--strict` ❌） | `hm check commit --strict` 把 `14dc48f` 计入「含中文字符 subject: 31 条（❌ 硬错误…新笔 31 条按治理裁定须英文, 违规记审计 CONDITIONAL）」；同清单含本仓 6 笔历史 review 笔 ⇒ 仓级口径从未执行 | 见 §9 T-4；本审不单方面改判（默认门禁绿 + 31 笔仓级历史），**是否执行 CL008 由用户裁定**；若执行，需 `git commit --amend` 改 subject（本审不做，改名会改已审 hash） |
 
 ---
 
@@ -222,6 +224,7 @@ scripts/flclash_proxy.py 31a56c09c3646ea6572ced75a28d3ed104e016275c0e3c4aa87c215
 | **T-1** | collector `import os`（首个 import）期间被中断时，护栏能否自举 | 探针进程里 `os` 已被 `site` 预载，无法构造"os 尚未 import"的入口态；CPython 在 import 失败时会把半初始化模块从 `sys.modules` 移除，理论上重入安全 | 用 `python3 -S -c` 起最小解释器（无 site），在 `os` import 前注入 trace 打断，看是否 `SystemExit=130` |
 | **T-2** | `emit()` 在 stdout 已关闭（`\| head -0`）时的行为 | 需要"关管道 + 精确信号时序"双竞争，本次未构造 | `lr status \| head -1` 配合 `set -m` + `kill -INT`，看是否出 `BrokenPipeError` 裸栈（对应 LR-CLI-007） |
 | **T-3** | `serve_forever()` 的 `rc=0`（优雅停止）是否会被 `hm check`/调度侧误判为"中断后成功" | 需要看 ops 侧调度器对 `rc` 的消费口径（cron 不判 rc；agent-loop 才判） | 查 `cron/scheduler.py` 对 `lr start` 的 rc 使用点 |
+| **T-4** | CL008「commit subject 全英文」是否对本仓强制 | 默认门禁 `hm check commit` = ✅；`--strict` 下 31 条新笔全红（含 6 笔历史 `audit@review:` 中文 subject），且 `auto-push` type 本身就在 type 清单外（208 条）⇒ strict 在本仓实际不可用 | 用户裁定：① 保持默认（中文 subject 继续）② 仓级切 strict（需先处理 auto-push 与 31 笔存量）③ 只管新笔（则本笔需 amend，会改已审 hash） |
 
 ---
 

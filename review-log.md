@@ -1741,7 +1741,7 @@
 
 - **review者**: Security Reviewer (review profile, L2)
 - **范围**: 本地 `ahead 1` 未 push 的 `14dc48f fix@cli: Ctrl-C 守卫覆盖 import 期并统一 exit 130 (CL007)`（10 文件 +304/−35）；基线 `db61a76`；规范真源 `cli-args-reference.md` v1.28 §11/§7（只读）
-- **Tracking**: 硬条 4/4 **达标**（§11.1-1/-2/-3/-4 各有独立取证）；变异 M1–M6 全红（M3 精确 9F/3P）+ 补充 M6b/M6c 鉴别力对照；新增 🟡 5 + 🟢 3（均下一批）; findings_open 5
+- **Tracking**: 硬条 4/4 **达标**（§11.1-1/-2/-3/-4 各有独立取证）；变异 M1–M6 全红（M3 精确 9F/3P）+ 补充 M6b/M6c 鉴别力对照；新增 🟡 6 + 🟢 3（均下一批）; findings_open 6
 - **状态**: ✅ **PASS — 91/100**（无 🔴；核心四条硬条实测闭环）；`authorized_for_push = YES`
 - **报告**: documents/reviews/llm-radar-cli-interrupt-guard-review-v1.0-20261103.md
 - **实现 prompt**: ✅ 已生成（下一批 7 项，见报告 §10）
@@ -1758,6 +1758,7 @@
 | LR-CLI-006 | 🟢 | handbook 写「11 例」，实测 12 例 | 📝 记录（改数字） |
 | LR-CLI-007 | 🟢 | `emit()` 写 stdout/stderr 无 `OSError` 兜底（`\| head` 关管道 + Ctrl-C ⇒ BrokenPipeError 覆盖文案） | 📝 记录（待确认 T-2） |
 | LR-CLI-008 | 🟢 | bash 侧手抄第二份文案（§11.2「禁手抄第二份」）；人类模式首行多前导 `\n` | 📝 记录（换模板时改调单源） |
+| LR-CLI-009 | 🟡 | 受审笔 subject 含 CJK 与 CL008「全英文」冲突：`hm check commit` 默认 ✅ / `--strict` ❌（31 条新笔同病，含 6 笔历史 review 笔） | ⬜ 待用户裁定（T-4：默认 / 仓级 strict / 只管新笔） |
 
 ### 数据验证要点
 
@@ -1767,3 +1768,4 @@
 - 变异：M1 1F / M2 1F / M3 **9F 3P**（3 绿为无 rc 断言的层）/ M4 1F / M5 1F / M6 1F（静态钉子仍绿）；M6b 静态绿、M6c 红；三文件 `sha256` 逐字节还原 + `py_compile rc=0`。
 - 门禁：`hm check cli . --strict` = `中断收敛 7/8`（基线 2/8）⇒ 净改善未闭合；`AGENTS.md`/`CLAUDE.md`/`.cli-registry.yaml`/crontab/`_verify()` 未动。
 - 测试脏产物：`git checkout -- timestamp.json overview.json data/snapshot.json` 已还原；`git status --short` 空。
+- 口径事实：`hm check commit`（默认）✅；`--strict` 把 `14dc48f` 计入 CL008 中文 subject 违规（31 条新笔同病）⇒ 本审维持 PASS、不单方面 amend 受审 hash，CL008 执行口径交用户裁定（T-4）。
