@@ -24,31 +24,40 @@ Dependency
 - beautifulsoup4 >= 4.12.0（HTML 解析）
 """
 
-import os
-import re
-import json
 import sys
-import time
-import shutil
-import subprocess
-import platform
-import socket
-import requests
-import html
-from pathlib import Path
-from datetime import datetime, timedelta
-from openai import OpenAI
-from prettytable import PrettyTable
 
-
-# FlClash 探测唯一真源 = scripts/flclash_proxy.py
-# 本文件在仓根, helper 在 scripts/ ⇒ 显式注入 scripts 路径 (勿在此重写 pgrep/osascript 逻辑)。
-sys.path.insert(0, str(Path(__file__).resolve().parent / 'scripts'))
-from flclash_proxy import (  # noqa: E402  (须在 sys.path 注入之后)
-    ensure_ready as _flclash_ensure_ready,
-    is_running as _flclash_is_running,
-    release as _flclash_release,
-)
+# §11.1-2 「护栏必须覆盖模块级 import」: 本文件既是入口又是库（3284 行, 无法把 import 搬进
+# __main__ 段），故 import 块自带 try；被 importlib 当库加载（tests/conftest.py）时**必须重抛**。
+try:
+    import os
+    import re
+    import json
+    import time
+    import shutil
+    import subprocess
+    import platform
+    import socket
+    import html
+    from pathlib import Path
+    from datetime import datetime, timedelta
+    # 重依赖惰性化 (§11.1-2, cli-args-reference): openai / prettytable 改到调用处 import
+    # ⇒ Ctrl-C 落在 import 期时也走 __main__ 守卫（cli_interrupt），不再吐裸栈。
+    # FlClash 探测唯一真源 = scripts/flclash_proxy.py
+    # 本文件在仓根, helper 在 scripts/ ⇒ 显式注入 scripts 路径 (勿在此重写 pgrep/osascript 逻辑)。
+    sys.path.insert(0, str(Path(__file__).resolve().parent / 'scripts'))
+    from flclash_proxy import (  # noqa: E402  (须在 sys.path 注入之后)
+        ensure_ready as _flclash_ensure_ready,
+        is_running as _flclash_is_running,
+        release as _flclash_release,
+    )
+except KeyboardInterrupt:
+    if __name__ != '__main__':
+        raise
+    # 入口期中断: 用最小依赖自举（此时 cli_interrupt 尚未导入），文案仍走单一真源
+    import os.path
+    sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), 'scripts'))
+    from cli_interrupt import emit
+    emit('lr', sys.argv)
 
 
 def _env_int(name, default, lo=None):
@@ -369,6 +378,7 @@ class LLMRadarCollector:
             self._print_err('API key 未配置')
             return None
         try:
+            from openai import OpenAI  # §11.1-2 惰性 import（0.4s 级重依赖，勿回模块级）
             client = OpenAI(api_key=self.api_key, base_url=self.base_url)
             resp = client.chat.completions.create(
                 model=model,
@@ -1506,6 +1516,7 @@ hotspots 数组中每个元素格式：
 
             title = h.get('title', '')
             try:
+                import requests  # §11.1-2 惰性 import（模块级已撤，勿加回）
                 resp = requests.get(url, timeout=15, headers={
                     'User-Agent': 'Mozilla/5.0 (compatible; LLMRadar/1.0)'
                 })
@@ -2638,6 +2649,7 @@ hotspots 数组中每个元素格式：
     # ===== Sources =====
     def list_sources(self):
         """列出所有新闻源"""
+        from prettytable import PrettyTable  # §11.1-2 惰性 import（仅 sources 子命令需要）
         table = PrettyTable()
         table.field_names = ["分类", "名称", "URL"]
         table.align = "l"
@@ -2817,6 +2829,7 @@ def _cdp_call(port, method, params=None, timeout=4):
     import struct
 
     try:
+        import requests  # §11.1-2 惰性 import（模块级已撤，勿加回）
         info = requests.get(f'http://127.0.0.1:{port}/json/version', timeout=timeout).json()
         ws_url = info['webSocketDebuggerUrl']
     except Exception as e:
@@ -3274,11 +3287,14 @@ def main():
 
 
 if __name__ == '__main__':
+    # 唯一捕获点 (§11.1-1)：Ctrl-C 一律交 cli_interrupt 收口（三行提示 + exit 130，§11.2）；
+    # 其它异常保留原「❌ 错误」单行收口（KeyboardInterrupt 是 BaseException，不会被下面吞掉）。
+    from cli_interrupt import emit
+
     try:
-        main()
+        sys.exit(main())
     except KeyboardInterrupt:
-        print('\n用户中断操作')
-        sys.exit(1)
+        emit('lr', sys.argv)
     except Exception as e:
         print(f'\n❌ 错误: {e}')
         sys.exit(1)

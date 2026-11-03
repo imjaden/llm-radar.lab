@@ -743,4 +743,10 @@ HTTPServer(('0.0.0.0',{args.port}),H).serve_forever()'''
     args = parser.parse_args()
     cmd_map = {'start': cmd_start, 'stop': cmd_stop, 'status': cmd_status,
                'restart': cmd_restart, 'help': cmd_help}
-    cmd_map[args.command](args)
+    # 唯一捕获点 (§11.1-1): dispatch 期 Ctrl-C → 三行提示 + exit 130。
+    # serve_forever 的 Ctrl-C 是「优雅停止」（§11.4 边界），仍由 run_http_server 自己收口。
+    try:
+        cmd_map[args.command](args)
+    except KeyboardInterrupt:
+        from cli_interrupt import emit
+        emit('python3 scripts/llm-radar-mcp-server.py', sys.argv)

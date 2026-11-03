@@ -137,4 +137,10 @@ def main():
     proc.wait()
 
 if __name__ == '__main__':
-    main()
+    # 唯一捕获点 (§11.1-1)：文案/退出码同源 cli_interrupt（§11.2），禁手抄第二份
+    from cli_interrupt import emit  # 入口段内 import ⇒ 被 importlib 加载时零副作用
+
+    try:
+        sys.exit(main())
+    except KeyboardInterrupt:
+        emit('python3 scripts/mcp_submit_update.py', sys.argv)

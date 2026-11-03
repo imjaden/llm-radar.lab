@@ -89,7 +89,38 @@ git checkout -- timestamp.json overview.json data/snapshot.json
 - 发现：**SEC-1** 🔴 cache/cli-registry/wrapper.sh.tmpl 与 .env 字节相同含 live DEEPSEEK_API_KEY（gitignored 未泄漏，审计中已删除）；**GOV-1** 🟡 wrapper .env 段为手工 patch，install.py --force 再生成即丢失（后续 P2：二选一 项目级模板覆盖 / AGENTS 记录补丁步骤）；**HYG-1** 🟡 orphan cache/system-command/lr-wrapper.sh 旧坏 wrapper（P3 可删）。
 - 终审：**PASS — 95/100 (A)**；「核心修复正确最小，根因经 4 项实测闭环」。
 
-## 六、已知坑
+## 六、Ctrl-C 中断行为（CL007, 2026-11-03）
+
+**契约**（真源 `skills-governance/cli-args-reference.md` §11 + §7，本仓实现单一真源 `scripts/cli_interrupt.py`）：
+
+- 提示两行（第 2 行「已完成 n/total」本仓无进度模型 ⇒ 整行省略）：
+  `⛔ 已中断 (Ctrl-C) — <指令> 未完成` / `   💡 重跑: <同一条可复制命令>`；**禁打印 traceback**。
+- 退出码 **130**（`128+SIGINT`），与 0 成功 / 1 通用失败 / 2 用法错误区分。
+- `--json` 模式：stdout 只有 `{"status": "error", "data": null, "error": "interrupted"}`，人类提示全走 stderr。
+  ⚠ 该信封与 `status --json` 成功态的七字段巡检信封**不同形**：按 `id`/`label` 解析的消费方在 rc=130 时取不到字段，须先判 rc。
+- 捕获点 = 各入口 `__main__` 段（唯一一处），文案/退出码只从 `cli_interrupt.emit()` 出，禁手抄第二份。
+
+**覆盖范围**（本批 7 个入口）：`llm-radar-collector.py` + `scripts/{twitter-collector,llm-radar-health,llm-radar-mcp-server,flclash_proxy,chromedriver_bootstrap,mcp_submit_update}.py`。
+`tasks/al-{init,scanner}.py`、`scripts/mcp-protocol-demo.py` 未纳入（前者由 agent-loop 调度、中断语义涉状态机，后者是 demo）——另批。
+
+**覆盖边界（实测，别承诺全窗口）**：
+
+1. `lr` / `llm-radar` 是 bash 包装层（`cache/system-command/llm-radar-wrapper.sh`）：env 段（conda activate + `.env`）占掉启动的大半，此期间 SIGINT 落在 **bash** 而非 Python。已加 `trap … INT → exit 130` 兜住（实测 0.05~0.38s 全部 PASS，改动前该段是「零输出 + rc=-2」）。wrapper 是 **gitignored 生成物**，`install.py --force` 重生成即丢（GOV-1）。
+2. 重依赖已全部惰性化（`openai` / `prettytable` / `requests` 移入调用处），模块级只剩 stdlib；collector 另在 import 块外套了一层 `try`（被 importlib 当库加载时**重抛**，符合 §11.1-1「清理后重抛」），故 import 期中断也走同一文案。
+3. **残余窗口（解释器启动段，无法由任何一侧覆盖）**：`execve` 之后、Python 首条字节码之前（site + 本文件 150KB 编译，约 20–40ms；位置随机器负载漂移）。此段 bash 的 trap 已随 `exec` 消失、Python 侧代码尚未开始执行 ⇒ 极端情况仍是 `rc=-2` 静默或 `line 0` 的裸栈。实测抽样 3 轮 × 20 点（0.05→1.00s，步长 0.05）= **59/60 = 98.3%**，唯一失败点在 0.40s 且无提示。要 100% 只能把 wrapper 改成「监督子进程 + kill 转发」，代价是 stdio 模式（MCP server）的 stdin 语义，本批不做。
+4. 中断发生在**子进程**（Selenium headless Chrome、`git`）时父进程只收自己的 `KeyboardInterrupt`，子进程可能继续存活（§11.4 边界），本批未做回收。
+5. `llm-radar-mcp-server.py` 的 `serve_forever()` 被 Ctrl-C 是**优雅停止**（打印「⏹️ 服务器已停止」并关闭），不套「未完成」文案；仅 dispatch 期中断走统一收口。
+
+**验证命令**（改动后必跑）：
+
+```bash
+# 单元/行为钉（11 例，含 6 个脚本入口矩阵 + 信封 + 静态回退钉子）
+python3 -m pytest tests/test_cli_interrupt.py -q -n0
+# 真实路径（人类模式）: 3s 后打断 qbitai 抓取 ⇒ 应见两行提示、rc=130、无 Traceback
+lr fetch qbitai & PID=$!; sleep 3; kill -INT $PID; wait $PID; echo "rc=$?"
+```
+
+## 七、已知坑
 
 1. **collector 无 argparse**：命令面在 main() 手工分发（L2665-2768）；改命令须同步 grouped help 文案与 test_cli 黑盒断言。不存在 `cron`/`verify` 子命令。
 2. **HELP 拦截必须全 args 扫描**：仅 args[0] 检查会被 `run --force help` 绕过（LR-SEC-011 教训）；现实现限定 fetch/run/commit/crontab 四个带参子命令。
@@ -100,7 +131,7 @@ git checkout -- timestamp.json overview.json data/snapshot.json
 7. **测试污染**：status fixture 已隔离（RIG-4），但 test_timestamp/test_isolation 仍写真实根文件——全量 pytest 后 git checkout 还原 3 文件。
 8. **conda env 名平台差异**：`.cli-registry.yaml` env.conda=py3.12 仅本 Mac；Linux 主机需 conda llm-radar env（O-5；yaml L9 注释已注）。
 
-## 七、参考文档
+## 八、参考文档
 
 归档说明：13 份素材均为过程文档，已随 docs@archive（2026-09-08）移入 archive 桶，档案 = `documents/archive/{solutions,reviews}-20260908/`。
 
