@@ -227,4 +227,11 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    # 唯一捕获点 (§11.1-1)：文案/退出码同源 cli_interrupt（§11.2）。
+    # 本文件是 demo，但 `hm check cli` 按「含 __main__ 段的 *.py」计入口（LR-CLI-001）。
+    from cli_interrupt import emit
+
+    try:
+        main()
+    except KeyboardInterrupt:
+        emit('python3 scripts/mcp-protocol-demo.py', sys.argv)

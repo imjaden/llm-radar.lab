@@ -15,6 +15,8 @@ KeyboardInterrupt —— 等价于「信号恰好落在该命令执行期」。�
 
 import json
 import os
+import re
+import shlex
 import subprocess
 import sys
 from pathlib import Path
@@ -33,6 +35,7 @@ ENTRIES = [
     'scripts/chromedriver_bootstrap.py',
     'scripts/mcp_submit_update.py',
     'scripts/llm-radar-mcp-server.py',
+    'scripts/mcp-protocol-demo.py',
 ]
 
 _HARNESS = r'''
@@ -91,12 +94,26 @@ def test_script_entry_routes_through_cli_interrupt(rel):
     assert 'Traceback' not in r.stdout + r.stderr, f'{rel}: 吐了裸栈'
 
 
+ENTRY_TAIL = "if __name__ == '__main__':"
+
+
+def _entry_slice(path):
+    """入口段切片：只判 __main__ 之后的代码，避免模块 body 里的同名注释充当钉子。"""
+    src = path.read_text(encoding='utf-8')
+    return src[src.index(ENTRY_TAIL):]
+
+
 def test_static_all_entries_declare_single_catch_point():
-    """静态回退钉子：入口段必须引用 cli_interrupt（防改回 print+exit(1) 的老形态）。"""
-    files = [COLLECTOR] + [ROOT / rel for rel in ENTRIES]
-    missing = [str(f.relative_to(ROOT)) for f in files
-               if 'cli_interrupt' not in f.read_text(encoding='utf-8')]
-    assert not missing, f'以下入口未走 cli_interrupt 单源收口: {missing}'
+    """静态回退钉子（LR-CLI-004 收紧）：入口段切片内必须有**代码行**
+    `except KeyboardInterrupt:` 且调用 `emit(` —— 只留注释不算达标（变异 M6b 须转红）。"""
+    bad = []
+    for f in [COLLECTOR] + [ROOT / rel for rel in ENTRIES]:
+        tail = _entry_slice(f)
+        has_except = re.search(r'^\s*except KeyboardInterrupt:\s*$', tail, re.M)
+        has_emit = re.search(r'^\s*emit\(', tail, re.M)
+        if not (has_except and has_emit):
+            bad.append(f'{f.relative_to(ROOT)} (except={bool(has_except)}, emit={bool(has_emit)})')
+    assert not bad, f'入口段缺代码级收口: {bad}'
 
 
 def test_static_collector_import_guard_reraises_for_library_use():
@@ -107,6 +124,22 @@ def test_static_collector_import_guard_reraises_for_library_use():
     assert src.count("if __name__ != '__main__':") == 1
     after = src.split("if __name__ != '__main__':", 1)[1].lstrip('\n ')
     assert after.startswith('raise'), '库加载路径必须重抛 KeyboardInterrupt'
+
+
+def test_rerun_line_shell_quotes_arguments(capsys):
+    """LR-CLI-003：重跑行必须做 shell 引用，含元字符的实参复粘后仍是同一条命令。"""
+    sys.path.insert(0, str(SCRIPTS))
+    try:
+        import cli_interrupt
+    finally:
+        sys.path.remove(str(SCRIPTS))
+
+    argv = ['lr', 'commit', 'wip; rm -rf /tmp/x']
+    with pytest.raises(SystemExit):
+        cli_interrupt.emit('lr', argv)
+    out, _ = capsys.readouterr()
+    assert shlex.join(argv) in out, f'重跑行未做 shell 引用: {out!r}'
+    assert 'lr commit wip; rm -rf /tmp/x' not in out, '朴拼形态出现 ⇒ 复粘会执行另一条命令'
 
 
 def test_emit_contract_json_and_human(capsys):

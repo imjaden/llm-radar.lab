@@ -22,6 +22,7 @@
 """
 
 import json
+import shlex
 import sys
 from typing import NoReturn
 
@@ -40,8 +41,12 @@ def _cmd_label(prog, argv):
 
 
 def _rerun_line(prog, argv):
-    """同一条可复制命令：原样拼回实参，不补参、不猜（§11.2 第 3 行）。"""
-    return ' '.join([prog] + list(argv[1:]))
+    """同一条可复制命令：做 shell 级引用（§11.2 第 3 行，LR-CLI-003）。
+
+    用 `shlex.join` 而不是朴素空格拼接 —— 含空格/`;`/引号的实参被复粘后必须仍是同一条命令，
+    否则中断提示会诱导用户执行另一条命令（`lr commit "wip; rm -rf /tmp/x"`）。
+    """
+    return shlex.join([prog] + list(argv[1:]))
 
 
 def emit(prog, argv, json_mode=None) -> NoReturn:

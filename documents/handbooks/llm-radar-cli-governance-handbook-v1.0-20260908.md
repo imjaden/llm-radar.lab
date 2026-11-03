@@ -100,8 +100,10 @@ git checkout -- timestamp.json overview.json data/snapshot.json
   ⚠ 该信封与 `status --json` 成功态的七字段巡检信封**不同形**：按 `id`/`label` 解析的消费方在 rc=130 时取不到字段，须先判 rc。
 - 捕获点 = 各入口 `__main__` 段（唯一一处），文案/退出码只从 `cli_interrupt.emit()` 出，禁手抄第二份。
 
-**覆盖范围**（本批 7 个入口）：`llm-radar-collector.py` + `scripts/{twitter-collector,llm-radar-health,llm-radar-mcp-server,flclash_proxy,chromedriver_bootstrap,mcp_submit_update}.py`。
-`tasks/al-{init,scanner}.py`、`scripts/mcp-protocol-demo.py` 未纳入（前者由 agent-loop 调度、中断语义涉状态机，后者是 demo）——另批。
+**覆盖范围**（8 个入口 = `hm check cli --strict` 口径 8/8）：`llm-radar-collector.py` +
+`scripts/{twitter-collector,llm-radar-health,llm-radar-mcp-server,flclash_proxy,chromedriver_bootstrap,mcp_submit_update,mcp-protocol-demo}.py`。
+`scripts/mcp-protocol-demo.py` 虽是 demo，但 `hm check cli` 按「含 `__main__` 段的 `*.py`」计入口 ⇒ 补守卫把门禁从 7/8 推到 8/8（LR-CLI-001）。
+`tasks/al-{init,scanner}.py` 仍未纳入（agent-loop 调度、中断语义涉状态机）——另批。
 
 **覆盖边界（实测，别承诺全窗口）**：
 
@@ -114,10 +116,12 @@ git checkout -- timestamp.json overview.json data/snapshot.json
 **验证命令**（改动后必跑）：
 
 ```bash
-# 单元/行为钉（11 例，含 6 个脚本入口矩阵 + 信封 + 静态回退钉子）
+# 单元/行为钉（14 例：7 入口矩阵 + 信封 + 静态回退钉子 + 重跑行 shell 引用）
 python3 -m pytest tests/test_cli_interrupt.py -q -n0
 # 真实路径（人类模式）: 3s 后打断 qbitai 抓取 ⇒ 应见两行提示、rc=130、无 Traceback
-lr fetch qbitai & PID=$!; sleep 3; kill -INT $PID; wait $PID; echo "rc=$?"
+# ⚠ 必须 `set -m` 开作业控制：非交互 shell 的后台作业继承 SIGINT=SIG_IGN，
+#   不加时 `kill -INT` 无效（实测 7/7 rc=0 且抓取跑完，2026-11-03 review LR-CLI-005）
+set -m; lr fetch qbitai & PID=$!; sleep 3; kill -INT $PID; wait $PID; echo "rc=$?"
 ```
 
 ## 七、已知坑
