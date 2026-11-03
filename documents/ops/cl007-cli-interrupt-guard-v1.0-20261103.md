@@ -12,6 +12,7 @@ profile: dev
 
 > 任务书（只读）：`hermes-manager/documents/handoff/20261103-to-llm-radar-cli-interrupt-guard-prompt.md` §1-§4
 > 规范真源（只读）：`hermes-manager/skills-governance/cli-args-reference.md` §11（v1.28）+ §7（信封）
+> 全文（canonical，568 行）：`documents/solutions/llm-radar-cl007-cli-interrupt-guard-design-v1.0-20261103.md`；本文件是摘要版
 > 改动范围：仅 `~/CodeSpace/llm-radar.lab`；本文件为步骤 1/6（只出方案，不改任何 `.py`、不 commit、不 push）
 
 ## 0. 结论先行 + 取证时点（必须读）
