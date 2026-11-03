@@ -1769,3 +1769,41 @@
 - 门禁：`hm check cli . --strict` = `中断收敛 7/8`（基线 2/8）⇒ 净改善未闭合；`AGENTS.md`/`CLAUDE.md`/`.cli-registry.yaml`/crontab/`_verify()` 未动。
 - 测试脏产物：`git checkout -- timestamp.json overview.json data/snapshot.json` 已还原；`git status --short` 空。
 - 口径事实：`hm check commit`（默认）✅；`--strict` 把 `14dc48f` 计入 CL008 中文 subject 违规（31 条新笔同病）⇒ 本审维持 PASS、不单方面 amend 受审 hash，CL008 执行口径交用户裁定（T-4）。
+
+## 2026-11-03 — CL007 CLI 中断收敛 delta 复审 (9b777b6)
+
+- **review者**: Security Reviewer (review profile, L2)
+- **范围**: 本地 `ahead 1` 的 `9b777b6 fix@cli: CL007 复核轮 — demo 入口补守卫 + 重跑行 shell 引用 + 钉紧静态判据`（4 tracked +61/−12 + 1 gitignored wrapper）；基线 `df00d9c`（= push 前 `origin/main`）；只处置上轮 §10 的 5 条 + 2 条附带，未扩域（`tasks/al-*.py` 未触）
+- **Tracking**: 5 项 ✅ 闭合（001/002/003/005/006）+ 1 项 🟡 部分（004）；无 🔴；新增 🟡4 + 🟢2，全部下一批；findings_open 6
+- **状态**: ✅ **PASS — 92/100**；`authorized_for_push = YES`
+- **报告**: documents/reviews/llm-radar-cli-interrupt-guard-review-v1.0-20261103.md（§12 追加，前 §1–§11 未改）
+
+### 发现摘要
+
+| # | Severity | Title | Status |
+|---|----------|-------|--------|
+| LR-CLI-001 | 🟡→✅ | demo 入口补守卫：`hm check cli` 中断收敛 **7/8 → 8/8**（基线 worktree 实测 ❌ 缺 `mcp-protocol-demo.py`）；D1 只留注释 ⇒ 2 failed | ✅ 闭合 |
+| LR-CLI-002 | 🟡→✅ | wrapper `exec 3>&2` + 提示走 `>&3`：实测 58B 信封 / **80B 两行提示**；D4 变异（→`>&2`）0B | ✅ 闭合（**申报的 59B 不可复现**，实为 80B） |
+| LR-CLI-003 | 🟡→✅ | `_rerun_line` 改 `shlex.join`：D2 ⇒ 1 failed/13 passed；12 组对抗 argv 在 bash+zsh 复粘 **48/48** 等价 | ✅ 闭合 |
+| LR-CLI-004 | 🟡→🟡 | 静态钉收紧到 `__main__` 切片 + 行锚定：D1 红、报错串精确、sha256 还原；但 X1（吞中断+死 `emit(` ⇒ 绿）、X2/X3（合法写法被误杀）⇒ 应改 AST | 🟡 部分（N2） |
+| LR-CLI-005 | 🟡→✅ | handbook §六 补 `set -m` + SIGINT=SIG_IGN 原因注；`set -m` 下 6/6 命中 trap 均 130+提示 | ✅ 闭合 |
+| LR-CLI-006 | 🟢→✅ | 14 例 / 8 入口与实际一致（`14 passed`） | ✅ 闭合 |
+| LR-CLI-008 | 🟢→🟢 | 引号风格差异**接受**：语义等价已证（48/48）；附条件 = 规范写「语义等价 + 各自 shell-quote」，并注明 `printf %q` 的 `$'...'` 非 POSIX | 🟢 接受（R1） |
+| LR-CLI-009 | 🟡 | 用户裁定维持现状；实测 `hm check commit`（默认）✅ rc=0，同笔中文 subject 仅入 warning | 🟢 维持（不动 hash） |
+| **SEC-1** | 🟡 | wrapper 修复只存在于 gitignored 生成物，仓内**无 tracked 模板/补丁片段**（上轮 Q2 附加约束② 未落地）⇒ `install.py --force` 重生成即静默退回 fd2 缺陷 | ⬜ 下一批（最高优先） |
+| **N1** | 🟡 | `ENTRIES` 与自动发现集未对齐：D3 删掉 demo ⇒ 13 passed + 静态钉绿 + `hm check` 仍 8/8（两层同时失明） | ⬜ 下一批 |
+| **N2** | 🟡 | 静态钉是正则「共现」判定：X1 假阴性、X2/X3 误杀 ⇒ 改 AST（`Try`/handler/`Call(emit)`） | ⬜ 下一批 |
+| **N4** | 🟡 | 交接单数字口径：`test_cli+gitflow` 实为 **62**（非 64，基线同 62 非回归）、stderr 实为 **80B**（非 59B） | ⬜ 下一批 |
+| **N5** | 🟢 | demo 无 `terminate`/`finally`：脚本化 `kill -INT <pid>` 打断 ⇒ `Popen` 起的 mcp-server 留活（终端 Ctrl-C 打整个 pgroup 则不会；静态判定，未端到端构造） | ⬜ 下一批 |
+| **N6** | 🟢 | `hm check cli . --strict` 整体 ❌ 系既有 ⚠️ 项（help 打印规范 / tool 检查点）在 strict 下升红，基线同 ❌ ⇒「8/8」是行级判据 | ⬜ 下一批（文档） |
+
+### 数据验证要点
+
+- 复跑：`test_cli_interrupt.py` **14 passed**、全量 **429 passed / 2 deselected**（93.38s；基线 427 ⇒ +2 = 新钉 1 + demo 参数例 1，零回归）、`test_cli.py + test_gitflow.py` **62 passed**（申报期望 64 为笔误）、`cl007_guard_matrix.py` **6/6 PASS**；`py_compile` 三文件 rc=0。
+- 门禁：`hm check cli` 中断收敛 baseline worktree `❌ 7/8（缺 mcp-protocol-demo.py）` → HEAD `✅ 8/8`；`--strict` **整体仍 ❌**（既有 ⚠️ 升红，与本笔无关）。
+- wrapper 侧（**按「trap 是否真命中」分类，不只看 rc**）：现状 `>&3` ⇒ stdout 58B / stderr **80B**（命中 trap 的 7 例全同）；D4 `>&2` ⇒ stderr **0B**（命中 trap 的 7 例全同），信封 58B 不变。
+- **机制修正（本审新增）**：缺陷条件不是「trap 恒不可写 fd2」，而是「信号落在 `2>/dev/null` 作用域内的长执行段」时 trap 在重定向仍生效的上下文运行。构造法：`_hold 2>/dev/null`（bash 函数内 `sleep 0.05` 循环）⇒ fd3 变体 2/2 = 80B、fd2 变体 2/2 = 0B（trap 均命中）。因此 D4 **只在 env 段窗口内红**，0.6s 窗口会「假绿 80B」（那时 `load_environment` 已结束）；外部命令 `sleep 4 2>/dev/null` 因 bash 延后 trap 至子进程结束而无法复现。
+- 变异（在 `git worktree --detach 9b777b6` 副本执行，主工作树零改动）：D1 2F / D2 1F / D3 13P 全绿（⇒ N1）/ D4 6/6 0B；追加 X1 静态绿+行为红、X2 静态红、X3 静态红而行为绿；6 组变异后逐一 `git checkout --` 并复核 sha256 同值（`704b664c…` / `7adfcd37…` / `74722feb…`）。
+- 预存窗口：launch→`trap … INT` 安装 **8.8–15.0ms**（n=6；当前负载 8.4 冷启离群 **348.2ms**），此窗口内 bash 按默认处置 `rc=130` 但零提示，属调度噪声（与 Q3 已接受的启动段同类；handbook 示例用 `sleep 3` 不会触到）。
+- 安全：新增行凭据扫描零命中；`AGENTS.md`/`CLAUDE.md`/`.cli-registry.yaml`/crontab/`_verify()` 未动；`exec 3>&2` 在 `2>&-` 下不硬失败（rc=130、信封 58B 完好）。
+- 收尾：`timestamp.json` / `overview.json` / `data/snapshot.json` 已 `git checkout` 还原；并发他线落下的未跟踪文件 `documents/ops/cl007-cli-interrupt-guard-v1.0-20261103.md` 未纳入本笔。

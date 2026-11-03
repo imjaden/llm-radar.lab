@@ -249,3 +249,157 @@ scripts/flclash_proxy.py 31a56c09c3646ea6572ced75a28d3ed104e016275c0e3c4aa87c215
 - 变异还原：3 个被改文件 `sha256` 与基线逐字节一致（§5），`py_compile` 全部 `rc=0`。
 - 测试脏产物：`timestamp.json` / `overview.json` / `data/snapshot.json` 已 `git checkout` 还原。
 - 结论：**PASS**，`authorized_for_push = YES`（用户本轮已授权）。
+
+---
+
+## 12. delta 复核（9b777b6）
+
+### 12.1 受审区间与隔离手法
+
+| 项 | 值 |
+|:--|:--|
+| 受审 commit | `9b777b6 fix@cli: CL007 复核轮 — demo 入口补守卫 + 重跑行 shell 引用 + 钉紧静态判据（LR-CLI-001/003/004/005/006）` |
+| 基线 | `df00d9c`（= push 前 `origin/main`） |
+| 文件 | 4 tracked（handbook / `scripts/cli_interrupt.py` / `scripts/mcp-protocol-demo.py` / `tests/test_cli_interrupt.py`，+61/−12）+ 1 gitignored（`cache/system-command/llm-radar-wrapper.sh`） |
+| 历史形态 | 线性、parent = `df00d9c`；无 force / 无 rebase / 无 amend |
+
+**隔离手法（本审与上轮不同）**：全部变异在 `git worktree add --detach … 9b777b6` 的副本里执行，主工作树零改动。原因是评审期有**并发他线**在同一仓跑 `pytest tests/` 并落未跟踪文件（见 §12.3 末尾），在主干上临时改源码会让两条线的取证互相污染。副本基线 sha256 前 16 位：`mcp-protocol-demo.py 704b664c304d30d9`、`cli_interrupt.py 7adfcd37b77b3b09`、`test_cli_interrupt.py 74722feb46067c3b`；6 组变异后逐一 `git checkout -- .` 复原，**每次复原后复核三值同前**（`restored-clean`）。
+
+### 12.2 逐条处置裁定
+
+| 编号 | 申报处置 | 本审实测 | 裁定 |
+|:--|:--|:--|:--:|
+| **LR-CLI-001** | demo 入口补守卫 | 基线 worktree：`❌ 中断收敛: 7/8 …（缺: mcp-protocol-demo.py）`；HEAD：`✅ 中断收敛: 8/8`；D1（只留注释）⇒ **2 failed**（静态钉 + demo 行为例） | ✅ **闭合** |
+| **LR-CLI-002** | `exec 3>&2` + 提示走 `>&3` | 6/6 命中 trap 的运行：stdout **58B 单行信封**、stderr **80B 两行提示**；D4（`>&3`→`>&2`）6/6 命中 trap 的运行 stderr **0B**、信封 58B 不变 | ✅ **闭合**（机制修正见 §12.5） |
+| **LR-CLI-003** | `_rerun_line` 改 `shlex.join`；wrapper 侧 `printf %q` | D2（退回 `' '.join`）⇒ **1 failed / 13 passed**（仅新钉红，无连带）；12 组对抗 argv 复粘 **48/48** 解析回原 argv | ✅ **闭合** |
+| **LR-CLI-004** | 静态钉改「`__main__` 切片 + 行锚定」 | D1 红 ✓、报错串 `scripts/mcp-protocol-demo.py (except=False, emit=False)` ✓、还原后 sha256 同值 ✓；但追加变异 X1–X3 暴露新缺口 | 🟡 **部分**（下一批） |
+| **LR-CLI-005** | handbook §六 补 `set -m` + 原因注 | 文档含 `set -m; lr fetch qbitai & …`；`set -m` 下 6/6 命中 trap 均 `rc=130` + 两行提示；示例用 `sleep 3`，远在 trap 安装窗之外 | ✅ **闭合** |
+| **LR-CLI-006** | 11 例 → 14 例、入口 7 → 8 | `14 passed`；handbook §六「14 例 / 8 个入口」与实际一致 | ✅ **闭合** |
+| **LR-CLI-008** | 前导 `\n` 去掉、`lr` 前缀补齐，引号风格仍不同 | 简单 argv 两侧逐字节同形（`lr status`）；需引用的 argv 形式不同但 **48/48 复粘等价** | 🟢 **接受**（§12.6 R1） |
+| **LR-CLI-009** | 用户裁定维持现状 | `hm check commit`（默认）**✅ rc=0**，同笔中文 subject 仅入 warning 清单 | 🟢 维持（不动 hash） |
+
+**⚠ 两点口径提醒（不影响裁定）**
+
+1. `hm check cli . --strict` **整体仍 ❌**——由 2 组**既有** ⚠️ 项在 strict 下升红：`help 打印规范`（collector 自绘 `===` 分隔线 / remove 无 ⚠️ 标注 / 两处 `--json` 行缺适用标注）与 `tool 指令检查点`（`scripts/hm-tool.py`、`hermes-manager.py` 不存在）。基线 `df00d9c` 同为 ❌ ⇒ 与本笔无关。因此「8/8」是**行级**判据，不能写成「门禁绿」（§12.6 R3）。
+2. 申报的「stderr **59B** 两行提示」不可复现：实测 `--json` 两行 = **80B**（47+33），人类模式 = **73B**（47+26），`fetch qbitai` 对 = 78B。任何组合都不是 59（§12.6 R2）。
+
+### 12.3 数据验证（命令原样 + 实测）
+
+```bash
+cd /Users/jadenli/CodeSpace/llm-radar.lab
+PY=/opt/homebrew/Caskroom/miniconda/base/envs/py3.12/bin/python
+
+$PY -m pytest tests/test_cli_interrupt.py -q -n0
+# -> 14 passed in 0.87s                                   ✅ 与申报一致
+
+$PY -m pytest tests/ -m "not selenium" --ignore=tests/test_cli.py --ignore=tests/test_selenium.py -q -n0
+# -> 429 passed, 2 deselected, 2 warnings in 93.38s       ✅ 基线 427 ⇒ +2（新钉 1 + demo 参数例 1），零回归
+
+$PY -m pytest tests/test_cli.py tests/test_gitflow.py -q -n0
+# -> 62 passed in 1.94s                                   ✗ 申报期望 64（见 R2；基线同为 62，非回归）
+
+hm check cli . --strict 2>&1 | grep 中断收敛
+# -> ✅ 中断收敛: 8/8 入口含 KeyboardInterrupt 守卫        ✅（基线 worktree: ❌ 7/8, 缺 mcp-protocol-demo.py）
+
+python3 cache/scratch/cl007_guard_matrix.py
+# -> 合计 6/6 PASS（未含 demo，与申报一致）
+
+# wrapper 侧（set -m 开作业控制；逐次分类是否真的命中 trap）
+set -m; lr status --json & PID=$!; sleep 0.28; kill -INT $PID; wait $PID; echo "rc=$?"
+# -> rc=130, stdout 58B 单行信封, stderr 80B 两行提示（6/6 命中 trap 的样本全同）
+```
+
+**wrapper 侧实测矩阵（本审重做，按「trap 是否真的命中」分类，而不是只看 rc）**
+
+| 变体 | delay | 命中 trap 的样本 | stdout | stderr |
+|:--|:--|:--:|:--|:--|
+| 现状（`>&3`） | 0.20 / 0.28 / 0.30 | 5/6 | 58B 信封 | **80B 两行** |
+| D4 变异（`>&2`） | 0.20 / 0.28 / 0.30 | 5/6 | 58B 信封 | **0B** |
+| 现状（`>&3`） | 0.60 | 2/2（另 2 例命令已完成 `rc=0/1032`） | 58B | 80B |
+| D4 变异（`>&2`） | 0.60 | 2/2 | 58B | **80B（假绿）** |
+
+⚠ 最后一行是方法学要点：**D4 只在 env 段窗口内才红**，0.6s 之后信号已出 `2>/dev/null` 作用域，变异会「假绿」——见 §12.5。
+⚠ 未命中 trap 的样本（6 例中 1 例）是「信号早于 `trap … INT` 安装」：实测 launch→trap 安装 **8.8–15.0ms**（`n=6`；当前负载 8.4 时冷启离群 **348.2ms**），此时 bash 按默认处置退出 `rc=130` 但零提示。属调度噪声，与 Q3 已接受的「启动段」同类，且 handbook 示例用 `sleep 3` 不会触到。
+
+**收尾**：`git checkout -- timestamp.json overview.json data/snapshot.json` 已还原；`git status --short` 现仅剩并发他线落下的未跟踪文件 `documents/ops/cl007-cli-interrupt-guard-v1.0-20261103.md`（dev 设计稿，18:46 写入，**非本审产物，未纳入本笔**）。
+
+### 12.4 变异复核（D1–D4 + 本审追加 X1–X3）
+
+| # | 变异 | 申报期望 | 实测 | 判定 |
+|:--|:--|:--|:--|:--:|
+| D1 | demo 入口守卫退成「只留注释」 | 静态钉红 | **2 failed**：`test_static_…`（`except=False, emit=False`）+ `test_script_entry_routes_…[scripts/mcp-protocol-demo.py]` | ✅ 达标（强于申报） |
+| D2 | `_rerun_line` 退回 `' '.join(...)` | 新钉红 | **1 failed / 13 passed** | ✅ 达标 |
+| D3 | demo 从 `ENTRIES` 删掉 | 计数 13、静态钉不覆盖 demo ⇒ 不达标 | **13 passed**、静态钉绿、**且 `hm check cli` 仍 `✅ 8/8`** | ⚠️ 同申报判断 ⇒ 新发现 **N1** |
+| D4 | wrapper `>&3` → `>&2` | `err_bytes` 回 0 | env 段窗口 6/6 命中 trap 样本全 **0B**；0.6s 窗口**假绿 80B** | ✅ 达标（有窗口前提） |
+| X1 | `except KeyboardInterrupt: pass` + `if False: emit(...)` | —（本审追加） | 静态钉 **绿**、行为例 **红** | ⚠️ 静态钉只判「共现」，不判结构 ⇒ **N2** |
+| X2 | `except KeyboardInterrupt:  # 唯一捕获点`（合法写法） | — | 静态钉 **红**（行为例绿） | ⚠️ 误杀 ⇒ **N2** |
+| X3 | `cli_interrupt.emit(...)`（模块限定，合法写法） | — | 静态钉 **红**（行为例 7 passed 绿） | ⚠️ 误杀 ⇒ **N2** |
+
+X1 的残余风险有界：行为例仍能抓住吞中断，**但前提是入口在 `ENTRIES` 里**——与 D3/N1 叠加时两层同时失明。
+
+### 12.5 LR-CLI-002 机制定位（本审修正）
+
+上一轮的表述是「trap 上下文里 fd2 不可写」，据此只能观察到「有时 0B、有时 81B」的间歇现象。本审用**构造法**定位到确切条件：
+
+```bash
+# 唯一改动：在 main() 首行插入一个 shell 函数调用，并把 fd2 重定向掉
+function _hold() { local i=0; while [ "$i" -lt 100 ]; do sleep 0.05; i=$((i+1)); done; }
+function main() { _hold 2>/dev/null; load_environment; … }
+```
+
+| 变体 | delay 0.6（信号落在 `_hold` 内） | 命中 trap | stdout | stderr |
+|:--|:--|:--:|:--|:--|
+| 提示写 `>&3` | 2/2 轮 | 2/2 | 58B | **80B** |
+| 提示写 `>&2`（D4） | 2/2 轮 | 2/2 | 58B | **0B** |
+
+**结论**：缺陷条件是「**信号落在包在 `2>/dev/null`（或 `2>file`）作用域内的长执行段**时，trap 在该重定向仍生效的上下文里运行」。这不是「trap 恒不可写 fd2」——所以：
+
+- 同样的 D4 变异在 0.6s 窗口反而绿（那时 `load_environment` 已结束，fd2 恢复）；
+- wrapper 里唯一这类区域是第 83 行 `conda activate py3.12 2>/dev/null`，而 0.2–0.3s 的注入点正好落在它内部（conda 激活是 env 段最耗时的一步）。
+- 对本仓的硬约束：`exec 3>&2` 必须留在**任何重定向之前**（现状 line 36 < line 83 ✅）。今后 wrapper 若新增 `2>file` / `2>/dev/null` 包裹的长段，同款吞提示会复发——除非提示一律走 fd3。
+- 反向核对：外部命令（如 `sleep 4 2>/dev/null`）不会复现，因为 bash 会把 trap 延后到前台子进程结束后、重定向已撤销时才执行。这解释了为什么上一轮的抽样（每个 delay 各 3 轮）只看到 0B 或只看到 81B。
+
+### 12.6 口径裁定（R1–R3）
+
+**R1 · LR-CLI-008 引号风格差异 → 接受。**
+理由：① 语义等价已证（12 组对抗 argv，bash + zsh 复粘 **48/48** 回原 argv：`wip; rm -rf /tmp/x`、`a b`、`it's`、`` $HOME`id` ``、`x"y`、`a|b&c>d`、空串、制表、换行、`*?[]~#!`、`-rf`）；② 简单 argv 两侧逐字节同形，仅「需引用的 argv」形式不同；③ 为消掉形式差异而在**信号处理器内**起 python 子进程，代价（信号语义、~20–40ms 启动、失败路径）远大于收益，且与 Q3 已否决的「监督子进程」同向。
+附条件（文档级，下一批）：① 规范写明「同源 = **语义**等价 + 各自语言 shell-quote」，别写成「逐字节同源」；② 记录 `printf %q` 对控制字符产出 `$'...'`（bash/zsh 认、POSIX sh 不认）——本仓用户体系为 bash/zsh，可用，但不得当作可移植输出承诺。
+
+**R2 · 判据数字 → 交接单需更正。**
+`test_cli.py + test_gitflow.py` 期望值应为 **62**（申报 64 错）：基线 `df00d9c` 实测同为 62，本报告 §4 上一轮亦记 62 ⇒ **非回归**。「stderr 59B」应为 **80B**（`--json`）/ 73B（人类）。建议此后交接单里的每个数字都附产生它的命令，避免被下一轮当作回归基线。
+
+**R3 · `hm check cli . --strict` 整体 ❌ → 与本笔无关。**
+既有 ⚠️ 项（help 打印规范 4 条、tool 指令检查点 2 条）在 strict 下升红，基线同 ❌。建议下一批把「8/8 = 行级判据，不等于门禁绿」写进 handbook，否则下一位 reviewer 会把「8/8 ✅」误读为整仓通过。
+
+### 12.7 结论
+
+- 处置闭合力：**5 项 ✅ 闭合**（001/002/003/005/006）+ **1 项 🟡 部分**（004，判据已生效但鉴别力仍未到 AST 级）。
+- 安全面：**无 🔴**；无凭据、无新增攻击面、无 debug 日志、保护文件未动；LR-CLI-003 的修复本身就消除了一条「复粘执行另一条命令」的注入面（🟢 改善）。
+- 回归面：全量 **429 = 基线 427 + 2 新例**；`test_cli+gitflow` 62 不变；`py_compile` rc=0；变异 6 组全部 `restored-clean`。
+- 未闭项：**6 条**（🟡 4：SEC-1 / N1 / N2 / N4；🟢 2：N5 / N6），全部下一批，无一阻断。
+- **评分：92/100**（前轮 91：+3 项实测闭合与机制定位，−1 静态钉仍非 AST 级，−1 数字口径偏差）。
+- **结论：PASS**；`authorized_for_push = YES`（用户本轮已授权；无 force / 无 rebase / 无 amend）。
+
+### 12.8 下一批清单（按优先级）
+
+| 序 | 编号 | 项 | 级别 | 验收 |
+|:--|:--|:--|:--:|:--|
+| 1 | **SEC-1** | wrapper 修复只存在于 gitignored 生成物；仓内**无 tracked 模板/补丁片段**（前轮 Q2 附加约束② 未落地）⇒ `install.py --force` 重生成即静默退回 fd2 缺陷，评审无法从源码复算 | 🟡 | 仓内出现 tracked 片段（patch/代码块）+ 一条 shell 级钉子（`set -m` + `kill -INT` + 断言 `58/80`）；跨仓模板带 fd3 |
+| 2 | **N1** | `ENTRIES` 与自动发现集（`git grep -l "__main__" -- '*.py'` 去 tests）**未对齐**：删掉 demo 后 13 passed、静态钉绿、`hm check` 仍 8/8（D3） | 🟡 | `ENTRIES` 由发现集派生，或加一条集合相等断言（改一处即红） |
+| 3 | **N2** | 静态钉是正则共现判定：X1 吞中断 + 死 `emit(` ⇒ 绿；X2/X3 两种**合法**写法 ⇒ 误杀 | 🟡 | 改 AST：`ast.walk` 找 `Try` 且 handler 为 `Name('KeyboardInterrupt')` 且其 body 内含 `Call(func=emit)`；X1 红、X2/X3 绿 |
+| 4 | **N4** | 交接单数字口径：`62`（非 64）、`80B`（非 59B） | 🟡 | 数字附来源命令；R2 写进 handbook §六 |
+| 5 | **N5** | demo 无 `terminate`/`finally`：脚本化 `kill -INT <pid>`（handbook 自己的形态）打断 demo ⇒ 已 `Popen` 起的 `llm-radar-mcp-server.py` 留活（终端 Ctrl-C 打整个前台 pgroup 则不会） | 🟢 | `main()` 内 `try/finally: proc.terminate()`（本审为静态判定：文件内零 `terminate`/`kill`/`finally`，未端到端构造） |
+| 6 | **N6** | `hm check cli . --strict` 整体 ❌ 的既有 ⚠️ 项（help 打印规范 / tool 检查点）与本笔无关，但口径未写明 | 🟢 | handbook 注明「8/8 = 行级」；既有 ⚠️ 另批 |
+
+### 12.9 本批安全复核明细（delta 面）
+
+| 项 | 结论 | 证据 |
+|:--|:--:|:--|
+| 复粘执行面（LR-CLI-003） | 🟢 **改善** | 48/48 对抗 argv 复粘等价；提示仅打印、不自动执行，风险通道 = 用户复粘 |
+| 新增攻击面 | 🟢 零 | demo 守卫只在 `__main__` 段 import 本地模块 + 调 `emit`；无网络/文件/子进程新增 |
+| 凭据/密钥 | 🟢 无 | 新增行扫 `sk-…` / `api_key=` / `secret` / `password` / `PRIVATE KEY` 零命中 |
+| 日志规范 | 🟢 合规 | 无新增 `debug` 级日志 |
+| 受保护文件 | 🟢 未动 | `AGENTS.md` / `CLAUDE.md` / `.cli-registry.yaml` / crontab / `_verify()`（`git show --stat` 核对） |
+| fd 面（本次新增） | 🟢 无回归 | 调用方 `2>&-` 关 stderr 时 `exec 3>&2` 不硬失败：实测 `rc=130`、信封 58B 完好；fd3 由 exec 后的 python 继承，属调用方自己的 stderr，无凭据流 |
+| 供应链/可复现（**SEC-1**） | 🟡 | `git ls-files \| grep -i wrapper` 仅命中一份归档审计文档 ⇒ 修复不可从源码重建（详见 §12.8-1） |
+| 预存 `eval "$(rbenv init -)"`（line 89） | 🟢 记录 | 既有表面（执行命令替换输出），本笔未改，不属本批 |
