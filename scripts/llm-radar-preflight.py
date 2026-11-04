@@ -249,17 +249,51 @@ def check_mcp_key(_ctx):
                    'MCP 写入面未启用（本机 .env 无该键; 属关闭状态, 不是故障）')
 
 
-def check_disk(_ctx):
+def _df_facts(path):
+    """解析 `df -k <path>` 的 used/avail（1K 块）。
+
+    为什么不用 shutil.disk_usage: APFS 上它把**同容器其他卷**也算进 used（实测同一时刻
+    527.5 GiB vs df 496.5 GiB，偏 3–6 个点），会让 90% 阈值在 86% 就误报。
+    口径与 `df` 的 Capacity 列一致 = used/(used+avail)（那是用户在 Finder/df 里看到的值）。
+    """
     try:
-        usage = shutil.disk_usage(str(PROJECT_ROOT))
-    except OSError as e:
-        return _result('disk', 'skip', 'unknown', str(e)[:80])
-    pct = usage.used / usage.total * 100
+        r = subprocess.run(['df', '-k', str(path)], capture_output=True, text=True, timeout=10)
+        if r.returncode != 0:
+            return None
+        lines = r.stdout.strip().splitlines()
+        if len(lines) < 2:
+            return None
+        parts = lines[1].split()
+        if len(parts) < 4:
+            return None
+        total, used, avail = int(parts[1]), int(parts[2]), int(parts[3])
+        if total <= 0:
+            return None
+        denom = (used + avail) or total
+        return {'total_gib': total / 1048576, 'used_gib': used / 1048576,
+                'avail_gib': avail / 1048576, 'pct': used / denom * 100,
+                'mount': parts[-1]}
+    except Exception:  # noqa: BLE001
+        return None
+
+
+def check_disk(_ctx):
+    facts = _df_facts(PROJECT_ROOT)
+    if facts is None:                     # 回退: shutil（偏差更大, 但至少给个结论）
+        try:
+            usage = shutil.disk_usage(str(PROJECT_ROOT))
+        except OSError as e:
+            return _result('disk', 'skip', 'unknown', str(e)[:80])
+        facts = {'total_gib': usage.total / 1048576, 'used_gib': usage.used / 1048576,
+                 'avail_gib': usage.free / 1048576,
+                 'pct': usage.used / max(usage.total, 1) * 100, 'mount': 'shutil'}
+    pct = facts['pct']
+    detail = (f"used {facts['used_gib']:.1f}/{facts['total_gib']:.1f} GiB, "
+              f"avail {facts['avail_gib']:.1f} GiB ({facts['mount']})")
     if pct >= DISK_LIMIT_PCT:
-        return _result('disk', 'fail', f'{pct:.0f}%',
-                       f'剩余 {usage.free / 1e9:.1f} GB（阈值 {DISK_LIMIT_PCT}%）',
-                       '清理 cache/logs 归档或扩容')
-    return _result('disk', 'ok', f'{pct:.0f}%', f'剩余 {usage.free / 1e9:.1f} GB')
+        return _result('disk', 'fail', f'{pct:.1f}%', detail,
+                       '清理 cache/logs 归档或扩容（du 只作同层比较, 判容量用 df）')
+    return _result('disk', 'ok', f'{pct:.1f}%', detail)
 
 
 CHECKS = {

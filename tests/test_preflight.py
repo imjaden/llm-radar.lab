@@ -124,11 +124,49 @@ class TestMisc:
     def test_mcp_key_absent_is_info_not_fail(self, pf, no_key):
         assert pf.check_mcp_key({})['status'] == 'info'
 
-    def test_disk_threshold(self, pf, monkeypatch):
-        usage = type('U', (), {'total': 100, 'used': 95, 'free': 5})
+    def test_df_facts_uses_capacity_column_semantics(self, pf, monkeypatch):
+        """pct = used/(used+avail)（= df 的 Capacity 列），不是 used/total。"""
+        fake = ("Filesystem 1024-blocks Used Available Capacity iused ifree %iused Mounted on\n"
+                "/dev/disk3s5 971298980 520646964 418217056 56% 6262183 4182170560 0% /System/Volumes/Data\n")
+        monkeypatch.setattr(pf.subprocess, 'run',
+                            lambda *a, **k: type('R', (), {'returncode': 0, 'stdout': fake, 'stderr': ''}))
+        f = pf._df_facts('/System/Volumes/Data')
+        assert f['mount'] == '/System/Volumes/Data'
+        assert round(f['used_gib'], 1) == 496.5
+        assert round(f['avail_gib'], 1) == 398.8
+        assert round(f['pct'], 1) == 55.5          # 520646964/(520646964+418217056)
+        # 判别力: 与 used/total(53.6%) 必须不同, 否则口径改没改都"过"
+        assert round(f['pct'], 1) != round(520646964 / 971298980 * 100, 1)
+
+    def test_df_facts_none_when_df_fails(self, pf, monkeypatch):
+        monkeypatch.setattr(pf.subprocess, 'run',
+                            lambda *a, **k: type('R', (), {'returncode': 2, 'stdout': '', 'stderr': 'x'}))
+        assert pf._df_facts('/') is None
+
+    def test_disk_uses_df_not_shutil(self, pf, monkeypatch):
+        """判别力: 两个数据源给出不同 pct 时, 必须取 df（shutil 会多算同容器其他卷）。"""
+        monkeypatch.setattr(pf, '_df_facts', lambda p: {
+            'total_gib': 926.3, 'used_gib': 496.5, 'avail_gib': 398.9, 'pct': 55.5, 'mount': '/System/Volumes/Data'})
+        monkeypatch.setattr(pf.shutil, 'disk_usage',
+                            lambda *a, **k: (_ for _ in ()).throw(AssertionError('不应走 shutil')))
+        r = pf.check_disk({})
+        assert (r['status'], r['value']) == ('ok', '55.5%')
+        assert '/System/Volumes/Data' in r['detail']
+
+    def test_disk_threshold_fail(self, pf, monkeypatch):
+        monkeypatch.setattr(pf, '_df_facts', lambda p: {
+            'total_gib': 926.0, 'used_gib': 880.0, 'avail_gib': 46.0, 'pct': 95.0, 'mount': '/data'})
+        r = pf.check_disk({})
+        assert (r['status'], r['value']) == ('fail', '95.0%')
+        assert 'df' in r['remedy']
+
+    def test_disk_falls_back_to_shutil(self, pf, monkeypatch):
+        monkeypatch.setattr(pf, '_df_facts', lambda p: None)
+        usage = type('U', (), {'total': 100 * 1048576, 'used': 40 * 1048576, 'free': 60 * 1048576})
         monkeypatch.setattr(pf.shutil, 'disk_usage', lambda *a, **k: usage)
         r = pf.check_disk({})
-        assert (r['status'], r['value']) == ('fail', '95%')
+        assert (r['status'], r['value']) == ('ok', '40.0%')
+        assert 'shutil' in r['detail']
 
     def test_driver_uses_stable_compatible_not_verdict(self, pf, monkeypatch):
         """manager verdict=compatible 但稳定路径不兼容 ⇒ 必须 fail（采集器只吃稳定路径）。"""
