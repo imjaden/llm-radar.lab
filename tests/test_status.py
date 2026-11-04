@@ -61,10 +61,12 @@ def _write_timestamp(tmp_path, hours_ago=1, status='success', last_run_at=None, 
     (tmp_path / 'timestamp.json').write_text(json.dumps(ts), encoding='utf-8')
 
 
-def _write_metrics(data_dir, consec_fails=0, run_history=None):
+def _write_metrics(data_dir, consec_fails=0, run_history=None, last_error=None):
     payload = {'consecutive_fails': consec_fails}
     if run_history is not None:
         payload['run_history'] = run_history
+    if last_error is not None:
+        payload['last_error'] = last_error
     (data_dir / 'metrics.json').write_text(json.dumps(payload), encoding='utf-8')
 
 
@@ -105,7 +107,7 @@ class TestStatusOk:
         c, mod = status_env
         result = _run_status(c, mod)
         labels = [ch['label'] for ch in result['checks']]
-        assert labels == ['数据日期', '实体数', '质量门禁', 'Git 同步', '热点数']
+        assert labels == ['数据日期', '实体数', '质量门禁', 'Git 同步', '热点数', '外部依赖']
         # 实体数: 5 providers + 3 people = 8
         entity_check = result['checks'][1]
         assert entity_check['value'] == '8 (5/3/0/0/0)'
@@ -365,6 +367,78 @@ class TestStalenessJudgePoint:
         result = _run_status(c, mod, now=_at(10, 0))
         assert result['status'] == 'ok'
         assert '-' not in result['message'], result['message']
+
+
+class TestExternalDependencyCheck:
+    """S2: `外部依赖` check 必须能在「连败 <3 次、数据还没变陈旧」时就点出凭据失效。
+
+    反例判据(判别力): 同样的数据状态下, 去掉 metrics.last_error ⇒ 结论回到 ok/连败文案,
+    证明该 check 不是靠别的东西顺带变红的。
+    """
+
+    def _with_error(self, c, kind, at=None, fails=1):
+        _write_metrics(c.project_root / 'data', consec_fails=fails,
+                       run_history=[{'time': (NOW - timedelta(hours=1)).isoformat(), 'success': True}],
+                       last_error={'kind': kind, 'at': at or (NOW - timedelta(minutes=10)).strftime('%Y-%m-%d %H:%M:%S'),
+                                   'detail': 'redacted'})
+
+    def test_auth_failure_is_critical_without_3_fails(self, status_env):
+        c, mod = status_env
+        self._with_error(c, 'auth', fails=1)
+        result = _run_status(c, mod)
+        assert result['status'] == 'critical'
+        assert result['message'].startswith('DeepSeek 鉴权失败'), result['message']
+        dep = result['checks'][-1]
+        assert (dep['label'], dep['value'], dep['status']) == ('外部依赖', 'auth fail', 'critical')
+        assert not EMOJI_RE.search(result['message'])
+
+    def test_auth_missing_reports_no_key(self, status_env):
+        c, mod = status_env
+        self._with_error(c, 'auth_missing', fails=1)
+        result = _run_status(c, mod)
+        assert result['status'] == 'critical'
+        assert 'DEEPSEEK_API_KEY 未配置' in result['message']
+        assert result['checks'][-1]['value'] == 'no key'
+
+    def test_missing_key_in_process_is_not_a_fault(self, status_env):
+        """判别力反例: daily-checker 用无 key 的最小 env 调 `lr status`, 不得因此判红。
+
+        只有「最近一轮 run 留下 auth_missing 留痕」才算配置缺失。
+        """
+        c, mod = status_env
+        c.api_key = ''
+        result = _run_status(c, mod)
+        assert result['status'] == 'ok', result['message']
+        assert result['checks'][-1] == {'label': '外部依赖', 'value': 'ok', 'status': 'ok'}
+
+    def test_model_failure_is_warning(self, status_env):
+        c, mod = status_env
+        self._with_error(c, 'model', fails=1)
+        result = _run_status(c, mod)
+        assert result['status'] == 'warning'
+        assert result['message'].startswith('DeepSeek 模型不可用')
+        assert result['checks'][-1]['status'] == 'warning'
+
+    def test_network_failure_is_warning(self, status_env):
+        c, mod = status_env
+        self._with_error(c, 'network', fails=1)
+        result = _run_status(c, mod)
+        assert result['status'] == 'warning'
+        assert result['checks'][-1]['value'] == 'network fail'
+
+    def test_non_dependency_kind_keeps_dep_ok(self, status_env):
+        """fetch/parse 类失败不冒充「外部依赖」故障（避免把抓取问题说成 key 问题）。"""
+        c, mod = status_env
+        self._with_error(c, 'fetch', fails=1)
+        result = _run_status(c, mod)
+        assert result['checks'][-1] == {'label': '外部依赖', 'value': 'ok', 'status': 'ok'}
+
+    def test_no_last_error_is_ok(self, status_env):
+        """判别力反例: 同一份健康数据里没有 last_error ⇒ 外部依赖 ok、主状态 ok。"""
+        c, mod = status_env
+        result = _run_status(c, mod)
+        assert result['checks'][-1] == {'label': '外部依赖', 'value': 'ok', 'status': 'ok'}
+        assert result['status'] == 'ok'
 
 
 class TestRunForceThrottle:

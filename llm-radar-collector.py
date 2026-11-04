@@ -341,6 +341,9 @@ class LLMRadarCollector:
         self._quality_warnings = []
         self.fetch_skipped = {}       # 本轮被跳过的源: key → 'degraded' / 'no_flclash'（跳过 ≠ 失败）
         self._flclash_owned = False   # 本轮由本采集器拉起的 FlClash（仅此情形采集后释放）
+        # 本轮失败的结构化留痕: {'kind','at','detail'}；run() 开头清空，_observe 落 metrics。
+        # 目的: 401 / 400 model / 超时 / 解析失败不再坍缩成同一个 consecutive_fails 标量。
+        self._last_error = None
 
     def _load_api_key(self):
         """从环境变量加载 DeepSeek API key"""
@@ -350,6 +353,40 @@ class LLMRadarCollector:
         else:
             self._print_err('DEEPSEEK_API_KEY 未配置，请在 .env 文件或环境变量中设置')
         return key
+
+    # ===== 失败分类留痕（S1）=====
+    # 只回答「哪一类外部依赖失效」，不做重试/降级决策（重试策略仍由各调用点负责）。
+    _ERR_KINDS = ('auth', 'auth_missing', 'model', 'quota', 'network', 'parse', 'empty',
+                  'fetch', 'merge', 'other')
+
+    @staticmethod
+    def _classify_llm_error(exc):
+        """把 LLM 调用异常归到稳定类别（供 metrics / status 消费，勿在文案里塞异常原文）。"""
+        code = getattr(exc, 'status_code', None)
+        s = str(exc).lower()
+        if code in (401, 403) or 'authentication' in s or 'invalid api key' in s:
+            return 'auth'
+        if (code == 400 and 'model' in s) or 'model_not_found' in s or 'does not exist' in s:
+            return 'model'
+        if code in (402, 429) or 'insufficient balance' in s or 'rate limit' in s or 'quota' in s:
+            return 'quota'
+        if any(k in s for k in ('timeout', 'timed out', 'connection', 'connect error',
+                                'ssl', 'proxy', 'temporary failure', 'name or service')):
+            return 'network'
+        return 'other'
+
+    def _note_error(self, kind, detail=''):
+        """记录本轮失败类别（kind 必须在 _ERR_KINDS 内；detail 截断 + 脱敏后落 metrics）。"""
+        kind = kind if kind in self._ERR_KINDS else 'other'
+        text = str(detail or '')
+        if self.api_key:
+            text = text.replace(self.api_key, 'sk-***')
+        self._last_error = {
+            'kind': kind,
+            'at': self._ts(),
+            'detail': text.replace('\n', ' ')[:120],
+        }
+        return self._last_error
 
     def _ts(self):
         """返回当前时间戳字符串，用于日志前缀"""
@@ -376,6 +413,7 @@ class LLMRadarCollector:
         """
         if not self.api_key:
             self._print_err('API key 未配置')
+            self._note_error('auth_missing', 'DEEPSEEK_API_KEY 未配置')
             return None
         try:
             from openai import OpenAI  # §11.1-2 惰性 import（0.4s 级重依赖，勿回模块级）
@@ -393,6 +431,7 @@ class LLMRadarCollector:
             return {"content": msg.content, "prompt_tokens": resp.usage.prompt_tokens, "completion_tokens": resp.usage.completion_tokens} if resp.usage else {"content": msg.content}
         except Exception as e:
             self._print_err(f'DeepSeek API 调用失败: {e}')
+            self._note_error(self._classify_llm_error(e), f'{type(e).__name__}: {e}')
             return None
 
     # ===== Git 同步与推送 =====
@@ -1283,6 +1322,7 @@ class LLMRadarCollector:
         """使用 LLM 从新闻中提取实体"""
         if not self.api_key:
             self._print_err('API key 未配置，无法提取实体')
+            self._note_error('auth_missing', 'DEEPSEEK_API_KEY 未配置，无法提取实体')
             return None
 
         # 合并所有源的内容
@@ -1394,6 +1434,9 @@ hotspots 数组中每个元素格式：
                     self._print_ok(f'重试成功，耗时 {round(time.time() - start_time, 1)}s')
                     return retry_entities
             self._print_err(f'实体提取失败（已重试 3 次）')
+            if not self._last_error:   # 已有 auth/model/network 根因时不覆盖（根因优先）
+                self._note_error('empty' if not content else 'parse',
+                                 f'LLM 输出 {len(content or "")} 字符，JSON 解析失败')
             self._print_info(f'LLM 输出前 500 字符: {content[:500]}')
             return None
 
@@ -2246,8 +2289,12 @@ hotspots 数组中每个元素格式：
         if run_result:
             metrics['last_success_time'] = now_iso
             metrics['consecutive_fails'] = 0
+            metrics.pop('last_error', None)          # 成功即清根因留痕
         else:
             metrics['consecutive_fails'] = metrics.get('consecutive_fails', 0) + 1
+            # 失败类别留痕（S1）: 让 status / 告警能点出 401 / model / 超时，而不是只有一个连败计数
+            metrics['last_error'] = getattr(self, '_last_error', None) or {
+                'kind': 'other', 'at': now_iso, 'detail': '未分类失败（无 LLM/抓取错误留痕）'}
 
         # 源成功率（跳过 ≠ 失败: 降级/无代理被跳过的源既不计数也不改 consecutive_fails）
         if fetch_results:
@@ -2319,6 +2366,7 @@ hotspots 数组中每个元素格式：
     # ===== Run =====
     def run(self, source_keys=None, force=False):
         """完整流程：Think → Act → Verify → Observe"""
+        self._last_error = None   # 每轮清空，避免上一轮的失败类别串到本轮
         self._print_info('=== LLM Radar 数据采集 ===')
         self._print_info(f'时间: {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}')
         self._print_info(f'数据目录: {self.data_dir}')
@@ -2350,6 +2398,7 @@ hotspots 数组中每个元素格式：
 
         if not fetch_results:
             self._print_err('所有新闻源抓取失败')
+            self._note_error('fetch', '所有新闻源抓取失败')
             self._observe(False, fetch_results=source_results)
             return False
         print()
@@ -2385,6 +2434,7 @@ hotspots 数组中每个元素格式：
         snapshot = self.merge_entities(entities, quality_ok=quality_ok)
         if not snapshot:
             self._print_err('合并失败')
+            self._note_error('merge', '合并快照失败')
             self._observe(False, fetch_results=source_results, entities=entities)
             return False
 
@@ -2456,6 +2506,33 @@ hotspots 数组中每个元素格式：
         quality = ts_data.get('last_run_status', '')
         consec_fails = metrics.get('consecutive_fails', 0)
 
+        # 外部依赖健康（S1/S2）: 凭据类是一次性确定的失败, 不能等「连败 3 次」或「陈旧 6.5h」才暴露。
+        # 事实源 = metrics.last_error（_observe 写入, 成功即清）, 不在 status 里重新探网。
+        raw_err = metrics.get('last_error')
+        last_err = raw_err if isinstance(raw_err, dict) else {}
+        err_kind = str(last_err.get('kind') or '').strip()
+        err_at = str(last_err.get('at') or '')
+        err_when = err_at[5:16] if len(err_at) >= 16 else ''
+        dep_value, dep_status, dep_reason = 'ok', 'ok', ''
+        # 注意: 不要用「本进程 self.api_key 是否为空」判故障 —— `lr status` 由 daily-checker 以
+        # 「无 key 的最小 env」调用（key 只在 run 时需要）, 那样会天天假红。事实源只认
+        # 最近一轮 run 的留痕（auth_missing 表示那轮真的没读到 key）。
+        if err_kind == 'auth_missing':
+            dep_value, dep_status = 'no key', 'critical'
+            dep_reason = 'DEEPSEEK_API_KEY 未配置（.env 缺失）'
+        elif err_kind == 'auth':
+            dep_value, dep_status = 'auth fail', 'critical'
+            dep_reason = 'DeepSeek 鉴权失败'
+        elif err_kind == 'model':
+            dep_value, dep_status = 'model fail', 'warning'
+            dep_reason = 'DeepSeek 模型不可用'
+        elif err_kind == 'quota':
+            dep_value, dep_status = 'quota fail', 'warning'
+            dep_reason = 'DeepSeek 额度/限流'
+        elif err_kind == 'network':
+            dep_value, dep_status = 'network fail', 'warning'
+            dep_reason = 'DeepSeek 网络不可达'
+
         # 新鲜度评估（判定点口径）
         age_hours = None
         freshness = 'ok'
@@ -2482,19 +2559,22 @@ hotspots 数组中每个元素格式：
         ahead, behind, git_status = self._git_divergence()
 
         # 四态评估: critical > warning > ok
-        if not snapshot or freshness == 'critical' or consec_fails >= 3:
+        if not snapshot or freshness == 'critical' or consec_fails >= 3 or dep_status == 'critical':
             status_str, icon = 'critical', '🔴'
-        elif freshness == 'warning' or quality_status == 'warning' or git_status == 'warning':
+        elif (freshness == 'warning' or quality_status == 'warning' or git_status == 'warning'
+              or dep_status == 'warning'):
             status_str, icon = 'warning', '🟡'
         else:
             status_str, icon = 'ok', '🟢'
 
-        # message (无 emoji)
+        # message (无 emoji)；外部依赖失效是根因, 排在「陈旧/连败」之前
         display_time = last_run_at[:19].replace('T', ' ') if last_run_at else ''
         if not snapshot:
             message = '快照缺失 (data/snapshot.json)'
         elif not last_run_at:
             message = '数据缺失 (timestamp.json 无 last_run_at)'
+        elif dep_status in ('critical', 'warning'):
+            message = f'{dep_reason}（{err_when}）' if err_when else dep_reason
         elif age_hours is not None and age_hours > CRITICAL_HOURS:
             message = f'数据过期 {age_hours:.1f}h 前'
         elif consec_fails >= 3:
@@ -2534,6 +2614,8 @@ hotspots 数组中每个元素格式：
             {'label': '质量门禁', 'value': quality or 'n/a', 'status': quality_status},
             {'label': 'Git 同步', 'value': git_value, 'status': git_status},
             {'label': '热点数', 'value': hotspot_value, 'status': hotspot_status},
+            # S2: 追加在末尾（既有 5 项的索引语义被 test_status 断言钉住, 勿插队）
+            {'label': '外部依赖', 'value': dep_value, 'status': dep_status},
         ]
 
         actions = [
