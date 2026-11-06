@@ -417,19 +417,32 @@ class TestEnsureForUrl:
         assert (res['ok'], res['state'], res['started']) == (True, 'direct_ok', False)
 
     def test_slow_direct_success_via_retry(self, fp, monkeypatch, reach):
+        """代理没跑时: 5s 首探失败 → 8s 复探成功 ⇒ 判直连可达, 不得起代理。"""
         calls = reach([_fail('timeout'), _ok()])
+        monkeypatch.setattr(fp, 'is_port_listening', lambda *a, **k: False)
         monkeypatch.setattr(fp, 'ensure_ready',
                             lambda **kw: (_ for _ in ()).throw(AssertionError('复探成功就不该起代理')))
         res = fp.ensure_for_url('https://x.com/', probe_timeout=5, retry_timeout=8, settle=0)
         assert res['state'] == 'direct_ok'
         assert [c['timeout'] for c in calls] == [5, 8]
 
+    def test_no_retry_while_proxy_is_listening(self, fp, monkeypatch, reach):
+        """代理在跑时直连失败是预期: 不再花 8s 复探（否则每次 lr chrome 都白等）。"""
+        calls = reach([_fail('timeout'), _ok()])
+        monkeypatch.setattr(fp, 'is_port_listening', lambda *a, **k: True)
+        monkeypatch.setattr(fp, 'ensure_ready',
+                            lambda **kw: {'ok': True, 'started': False, 'reason': 'already_running'})
+        res = fp.ensure_for_url('https://x.com/', probe_timeout=5, retry_timeout=8, settle=0)
+        assert res['state'] == 'proxy_ok'
+        assert 8 not in [c['timeout'] for c in calls], '代理在跑时不得复探直连(8s)'
+        assert calls[1]['proxy'] is not None, '第二个动作应是经代理探测'
+
     def test_starts_proxy_then_reachable(self, fp, monkeypatch, reach):
         calls = reach([_fail(), _ok()])
         # 端口设为未监听 ⇒ 复探走 prefer='proxy' 的直连兜底分支, 序列可预测
         monkeypatch.setattr(fp, 'is_port_listening', lambda *a, **k: False)
         ens = self._ensure_recorder(fp, monkeypatch, {'ok': True, 'started': True, 'reason': 'started'})
-        res = fp.ensure_for_url('https://x.com/', settle=0)
+        res = fp.ensure_for_url('https://x.com/', retry_timeout=0, settle=0)
         assert (res['ok'], res['state'], res['started']) == (True, 'proxy_started', True)
         assert len(ens) == 1
         assert [c['proxy'] for c in calls] == [None, None]

@@ -222,7 +222,7 @@ def ensure_ready(timeout=READY_TIMEOUT, port=READY_PORT, running_grace=RUNNING_P
             'pids': pids, 'port': port}
 
 
-def ensure_for_url(url=None, ensure=True, probe_timeout=None, retry_timeout=None,
+def ensure_for_url(url=None, ensure=True, probe_timeout=None, retry_timeout=REACH_RETRY_TIMEOUT,
                    ensure_timeout=READY_TIMEOUT, port=READY_PORT, settle=REACH_SETTLE):
     """访问某 URL 前的「网络门」: 直连可达就绝不起代理; 否则按需 ensure + 复探。
 
@@ -236,9 +236,13 @@ def ensure_for_url(url=None, ensure=True, probe_timeout=None, retry_timeout=None
         ensure_disabled ensure=False 且直连不可达（只探测, 不动环境）
     """
     started_at = time.time()
-    first = probe_url(url, probe_timeout)
-    if not first['ok'] and (retry_timeout or 0) > 0:
-        # 直连「慢但通」的复探: 避免 5s 阈值把慢链路误判成不可达而多起一个代理
+    proxy_up = is_port_listening(port)
+    # 代理已在跑 ⇒ 直连探测用短预算（2s 足够区分「TUN 直通」与「被墙」, 省掉 3s 等待）;
+    # 代理没跑时用完整预算, 给「慢但通」的直连留机会。
+    first = probe_url(url, probe_timeout if probe_timeout is not None else (2.0 if proxy_up else REACH_TIMEOUT))
+    # 代理已在跑 ⇒ 直连失败是**预期**（系统代理模式下 IPv4 仍被墙），不再花 8s 复探;
+    # 代理没跑时才有必要做「慢但通」复探, 避免 5s 阈值把慢链路误判成不可达而多起一个代理。
+    if not first['ok'] and (retry_timeout or 0) > 0 and not proxy_up:
         again = probe_url(url, retry_timeout)
         if again['ok']:
             first = again
@@ -351,7 +355,7 @@ def main(argv=None):
     if args.cmd == 'reach':
         res = ensure_for_url(args.url, ensure=not args.no_ensure,
                              probe_timeout=args.timeout,
-                             retry_timeout=None if args.no_ensure else REACH_RETRY_TIMEOUT)
+                             retry_timeout=0 if args.no_ensure else REACH_RETRY_TIMEOUT)
         if args.json:
             print(json.dumps(res, ensure_ascii=False))
         else:

@@ -30,6 +30,7 @@ import sys
 # import 块走 KeyboardInterrupt 分支时静态检查会判「可能未绑定」, 显式占位可消掉该噪音。
 _flclash_probe_best = None
 _flclash_ensure_for_url = None
+_flclash_retry_timeout = 0.0
 
 # §11.1-2 「护栏必须覆盖模块级 import」: 本文件既是入口又是库（3284 行, 无法把 import 搬进
 # __main__ 段），故 import 块自带 try；被 importlib 当库加载（tests/conftest.py）时**必须重抛**。
@@ -55,6 +56,7 @@ try:
         ensure_for_url as _flclash_ensure_for_url,
         is_running as _flclash_is_running,
         probe_best as _flclash_probe_best,
+        REACH_RETRY_TIMEOUT as _flclash_retry_timeout,
         release as _flclash_release,
     )
 except KeyboardInterrupt:
@@ -3013,6 +3015,8 @@ def _x_network_gate(ensure=True, probe_timeout=None, retry_timeout=None):
     """
     if _flclash_ensure_for_url is None:          # import 期中断/加载失败: 不猜, 直接判不可用
         return False, '网络: 探测不可用（flclash_proxy 未加载）', {}
+    if retry_timeout is None:                    # 默认给「慢但通」复探预算; 关掉代理时不浪费这一轮
+        retry_timeout = _flclash_retry_timeout if ensure else 0
     try:
         res = _flclash_ensure_for_url(ensure=ensure, probe_timeout=probe_timeout,
                                       retry_timeout=retry_timeout)
