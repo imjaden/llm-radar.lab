@@ -200,25 +200,70 @@ class TestStatusStates:
         assert result['icon'] == '🟡'
         assert '质量门禁失败' in result['message']
 
-    def test_warning_git_divergence(self, status_env, tmp_path):
-        """非 0/0 分叉 → warning (本地 ref, 不 fetch)"""
-        c, mod = status_env
-        # 构造真实 git 仓库: 2 commits, origin/main 停在 HEAD~1 → ahead=1
+    def _init_repo(self, tmp_path):
         subprocess.run(['git', 'init', '-q', '-b', 'main'], cwd=tmp_path, check=True)
         subprocess.run(['git', 'config', 'user.name', 'test'], cwd=tmp_path, check=True)
         subprocess.run(['git', 'config', 'user.email', 'test@test'], cwd=tmp_path, check=True)
-        (tmp_path / 'f.txt').write_text('x')
+
+    def _commit(self, tmp_path, name, msg):
+        (tmp_path / name).write_text(msg)
         subprocess.run(['git', 'add', '-A'], cwd=tmp_path, check=True)
-        subprocess.run(['git', 'commit', '-qm', 'c1'], cwd=tmp_path, check=True)
-        (tmp_path / 'f2.txt').write_text('y')
-        subprocess.run(['git', 'add', '-A'], cwd=tmp_path, check=True)
-        subprocess.run(['git', 'commit', '-qm', 'c2'], cwd=tmp_path, check=True)
-        subprocess.run(['git', 'update-ref', 'refs/remotes/origin/main', 'HEAD~1'], cwd=tmp_path, check=True)
+        subprocess.run(['git', 'commit', '-qm', msg], cwd=tmp_path, check=True)
+        return subprocess.run(['git', 'rev-parse', 'HEAD'], cwd=tmp_path, check=True,
+                              capture_output=True, text=True).stdout.strip()
+
+    def test_git_ahead_only_is_pending_push_not_warning(self, status_env, tmp_path):
+        """仅本地领先 = 待推（正常中间态）⇒ 不得把整体状态升级成 warning。
+
+        2026-11-06 踩过: 刚 commit 未推时 lr status 恒 `Git 分叉 1 ahead`，把「等 auto-push」
+        误报成故障；真分叉/落后才该 warning。
+        """
+        c, mod = status_env
+        self._init_repo(tmp_path)
+        self._commit(tmp_path, 'f.txt', 'c1')
+        self._commit(tmp_path, 'f2.txt', 'c2')
+        subprocess.run(['git', 'update-ref', 'refs/remotes/origin/main', 'HEAD~1'],
+                       cwd=tmp_path, check=True)
+
+        result = c.status()
+        assert result['status'] == 'ok', '仅待推不得升级主状态'
+        git_check = [ch for ch in result['checks'] if ch['label'] == 'Git 同步'][0]
+        assert git_check['value'] == '1 ahead / 0 behind（待推）'
+        assert git_check['status'] == 'info'
+
+    def test_git_behind_only_is_warning(self, status_env, tmp_path):
+        """落后远端 ⇒ warning，文案点出「待同步」而不是「分叉」。"""
+        c, mod = status_env
+        self._init_repo(tmp_path)
+        self._commit(tmp_path, 'f.txt', 'c1')
+        head2 = self._commit(tmp_path, 'f2.txt', 'c2')
+        subprocess.run(['git', 'reset', '--hard', 'HEAD~1'], cwd=tmp_path, check=True)
+        subprocess.run(['git', 'update-ref', 'refs/remotes/origin/main', head2],
+                       cwd=tmp_path, check=True)
 
         result = c.status()
         assert result['status'] == 'warning'
+        assert 'Git 落后远端 1 笔' in result['message']
         git_check = [ch for ch in result['checks'] if ch['label'] == 'Git 同步'][0]
-        assert git_check['value'] == '1 ahead / 0 behind'
+        assert git_check['value'] == '0 ahead / 1 behind'
+
+    def test_git_pure_fork_is_warning(self, status_env, tmp_path):
+        """双向各有提交 = 真分叉 ⇒ warning + 双计数。"""
+        c, mod = status_env
+        self._init_repo(tmp_path)
+        self._commit(tmp_path, 'f.txt', 'c1')
+        subprocess.run(['git', 'checkout', '-q', '-b', 'other'], cwd=tmp_path, check=True)
+        other_head = self._commit(tmp_path, 'f2.txt', 'c2')
+        subprocess.run(['git', 'checkout', '-q', 'main'], cwd=tmp_path, check=True)
+        self._commit(tmp_path, 'f3.txt', 'c3')
+        subprocess.run(['git', 'update-ref', 'refs/remotes/origin/main', other_head],
+                       cwd=tmp_path, check=True)
+
+        result = c.status()
+        assert result['status'] == 'warning'
+        assert 'Git 分叉 1 ahead / 1 behind' in result['message']
+        git_check = [ch for ch in result['checks'] if ch['label'] == 'Git 同步'][0]
+        assert git_check['value'] == '1 ahead / 1 behind'
         assert git_check['status'] == 'warning'
 
     def test_git_no_fetch(self, status_env):

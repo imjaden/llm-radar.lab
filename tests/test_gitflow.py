@@ -370,6 +370,7 @@ class TestConvergeFork:
             ('rev-parse', 'HEAD'): _proc(0, stdout='a\n'),
             ('rev-parse', 'origin/main'): _proc(0, stdout='b\n'),
             ('merge-base', '--is-ancestor', 'HEAD', 'origin/main'): _proc(1),
+            ('merge-base', '--is-ancestor', 'origin/main', 'HEAD'): _proc(1),   # 真分叉
             ('status', '--porcelain'): _proc(0, stdout=' M data/snapshot.json\n'),
         })
         monkeypatch.setattr(collector, '_git_run', fake)
@@ -716,3 +717,64 @@ class TestAutoPushScope:
         assert set(mcp_paths) <= set(auto_paths), \
             f'MCP 提交路径 {mcp_paths} 超出数据产物白名单 {auto_paths}'
         assert "'add', '-A'" not in mcp_src, 'mcp_submit_update.py 不得再用 git add -A'
+
+
+class TestAheadIsNotFork:
+    """「仅本地领先」≠「分叉」: 收敛路径不得被 ahead 触发（2026-11-06 修复）。
+
+    旧行为: merge-base --is-ancestor HEAD origin/main 返回非 0 就判分叉 → merge --no-ff
+    得到 "Already up to date." → commit 无事可做 → 每轮打 `远端分叉，尝试自动收敛...`
+    + `收敛 merge commit 失败: `（stderr 为空）。真分叉与仅领先必须分开。
+    """
+
+    def _enable(self, collector):
+        collector._skip_push = False
+
+    def _routes(self, ahead_only=False):
+        def fake_git(*args, timeout=60):
+            if args[0] == 'fetch':
+                return _proc(0)
+            if args[0] == 'merge-base':
+                is_ahead_check = args[-1] == 'HEAD' and args[-2] == 'origin/main'
+                if is_ahead_check:
+                    return _proc(0 if ahead_only else 1)
+                return _proc(1)          # HEAD 不在 origin/main 里
+            if args[0] == 'rev-list':
+                return _proc(0, stdout='3\n')
+            return _proc(0)
+        return fake_git
+
+    def test_sync_remote_ahead_only_skips_converge(self, collector, monkeypatch):
+        calls, converged = [], []
+        monkeypatch.setattr(collector, '_git_run', lambda *a, **k: (calls.append(a), self._routes(ahead_only=True)(*a, **k))[1])
+        monkeypatch.setattr(collector, '_abort_rebase', lambda: None)
+        monkeypatch.setattr(collector, '_converge_fork', lambda: converged.append(1) or True)
+        collector._sync_remote()
+        assert converged == [], '仅领先不得触发收敛'
+        assert not any(c[0] == 'merge' for c in calls), '仅领先不得 merge'
+
+    def test_sync_remote_real_fork_still_converges(self, collector, monkeypatch):
+        converged = []
+        monkeypatch.setattr(collector, '_git_run', self._routes(ahead_only=False))
+        monkeypatch.setattr(collector, '_abort_rebase', lambda: None)
+        monkeypatch.setattr(collector, '_converge_fork', lambda: converged.append(1) or True)
+        collector._sync_remote()
+        assert converged == [1], '真分叉必须收敛'
+
+    def test_converge_fork_ahead_only_is_noop(self, collector, monkeypatch):
+        """_converge_fork 自身也守: 其他调用方（push 恢复路径）传进来时不得做空 merge。"""
+        self._enable(collector)
+        calls = []
+
+        def fake_git(*args, timeout=60):
+            calls.append(args)
+            if args[0] == 'rev-parse':
+                return _proc(0, stdout='aaa\n' if args[1] == 'HEAD' else 'bbb\n')
+            if args[0] == 'merge-base':
+                return _proc(0 if args[-1] == 'HEAD' else 1)
+            return _proc(0)
+
+        monkeypatch.setattr(collector, '_git_run', fake_git)
+        assert collector._converge_fork() is True
+        assert not any(c[0] == 'merge' for c in calls), '仅领先不得发起 merge'
+        assert not any(c[0] == 'commit' for c in calls)

@@ -499,10 +499,19 @@ class LLMRadarCollector:
                 else:
                     self._print_warn(f'fast-forward 合并失败，跳过: {(m.stderr or "").strip()[:100]}')
             else:
-                # 分叉：自动收敛（双保险之一）；失败才本地优先（数据新鲜度优先仅作兜底）
-                self._print_warn('远端分叉，尝试自动收敛...')
-                if not self._converge_fork():
-                    self._print_warn('收敛失败，本地优先（下轮 run/push 再试）')
+                # HEAD 不在 origin/main 里, 有两种完全不同的情况, 不能都当分叉:
+                #   a) origin/main 是 HEAD 的祖先 ⇒ **仅本地领先**（上次 push 未完成/主动攒批）,
+                #      属正常中间态, 交给 _auto_push; 收敛在这里只会做一次空 merge 然后报
+                #      「收敛 merge commit 失败: 」(无 stderr) 的假告警。
+                #   b) 双向各有提交 ⇒ 真分叉, 才走语义并集收敛。
+                ahead_only = self._git_run('merge-base', '--is-ancestor', 'origin/main', 'HEAD')
+                if ahead_only.returncode == 0:
+                    n = (self._git_run('rev-list', '--count', 'origin/main..HEAD').stdout or '').strip()
+                    self._print_info(f'本地领先 origin/main {n or "?"} 笔（待 auto-push 推送，非分叉）')
+                else:
+                    self._print_warn('远端分叉，尝试自动收敛...')
+                    if not self._converge_fork():
+                        self._print_warn('收敛失败，本地优先（下轮 run/push 再试）')
         except Exception as e:
             self._print_warn(f'远端同步异常，跳过: {e}')
 
@@ -826,6 +835,12 @@ class LLMRadarCollector:
                     return True
                 self._print_warn(f'收敛 ff 失败: {(m.stderr or "").strip()[:100]}')
                 return False
+            # 仅本地领先（远端无新提交）≠ 分叉: merge --no-ff 会得到 "Already up to date."
+            # 然后 commit 无事可做 → 假告警。直接返回「无需收敛」。
+            ahead_only = self._git_run('merge-base', '--is-ancestor', 'origin/main', 'HEAD')
+            if ahead_only.returncode == 0:
+                self._print_info('仅本地领先（远端无新提交），无需收敛')
+                return True
             # 分叉：脏工作区守护
             st = self._git_run('status', '--porcelain')
             if st.returncode == 0 and st.stdout.strip():
@@ -2464,10 +2479,15 @@ hotspots 数组中每个元素格式：
             return {}
 
     def _git_divergence(self):
-        """本地 origin/main ref 分叉检测 (不 fetch, 纯只读)。
+        """本地 origin/main ref 同步态检测 (不 fetch, 纯只读)。
 
-        返回 (ahead, behind, status); status ∈ ok / warning / info。
-        非 git 仓库或无本地 ref (rev-list 失败) → (None, None, 'info'), 不升级整体状态。
+        返回 (ahead, behind, status); status ∈ ok / pending_push / warning / info。
+          ok            双向 0（已同步）
+          pending_push  仅本地领先（ahead>0, behind=0）⇒ **正常中间态**（待 auto-push / 主动攒批），
+                        不算故障、不升级整体状态 —— 旧实现把它等同分叉, 导致 `lr status` 在
+                        「刚 commit 还没推」时恒 warning（2026-11-06 踩过）。
+          warning       落后（behind>0）或双向分叉（ahead>0 且 behind>0）
+          info          非 git 仓库 / 无本地 ref (rev-list 失败), 不升级整体状态
         """
         ahead_r = self._git_run('rev-list', '--count', 'origin/main..HEAD')
         behind_r = self._git_run('rev-list', '--count', 'HEAD..origin/main')
@@ -2478,7 +2498,12 @@ hotspots 数组中每个元素格式：
             behind = int((behind_r.stdout or '').strip())
         except (ValueError, TypeError):
             return None, None, 'info'
-        status = 'ok' if ahead == 0 and behind == 0 else 'warning'
+        if ahead == 0 and behind == 0:
+            status = 'ok'
+        elif behind == 0:
+            status = 'pending_push'      # 仅本地领先: 待推, 不是故障
+        else:
+            status = 'warning'           # 落后 / 双向分叉: 都需要处理
         return ahead, behind, status
 
     def status(self, json_mode=False, now=None):
@@ -2598,7 +2623,8 @@ hotspots 数组中每个元素格式：
             detail = (ts_data.get('last_run_detail') or 'failed')[:80]
             message = f'质量门禁失败: {detail}'
         elif git_status == 'warning':
-            message = f'Git 分叉 {ahead} ahead / {behind} behind'
+            message = (f'Git 分叉 {ahead} ahead / {behind} behind' if ahead
+                       else f'Git 落后远端 {behind} 笔（待同步）')
         else:
             message = f'数据新鲜 {display_time} ({age_hours:.1f}h 前)' if age_hours is not None else '数据新鲜'
 
@@ -2610,7 +2636,12 @@ hotspots 数组中每个元素格式：
             entity_value = f'{sum(dim_counts)} ({"/".join(str(c) for c in dim_counts)})'
         else:
             entity_value = 'n/a'
-        git_value = f'{ahead} ahead / {behind} behind' if git_status != 'info' else 'n/a'
+        if git_status == 'info':
+            git_value, git_check_status = 'n/a', 'info'
+        elif git_status == 'pending_push':
+            git_value, git_check_status = f'{ahead} ahead / 0 behind（待推）', 'info'
+        else:
+            git_value, git_check_status = f'{ahead} ahead / {behind} behind', git_status
 
         # 热点数 (LLM-RADAR-CL005: 仅 checks 附加 warning, 不影响主 status)
         hotspot_count = dim_counts[4] if snapshot else 0
@@ -2621,7 +2652,7 @@ hotspots 数组中每个元素格式：
             {'label': '数据日期', 'value': display_time or 'n/a', 'status': freshness},
             {'label': '实体数', 'value': entity_value, 'status': 'info'},
             {'label': '质量门禁', 'value': quality or 'n/a', 'status': quality_status},
-            {'label': 'Git 同步', 'value': git_value, 'status': git_status},
+            {'label': 'Git 同步', 'value': git_value, 'status': git_check_status},
             {'label': '热点数', 'value': hotspot_value, 'status': hotspot_status},
             # S2: 追加在末尾（既有 5 项的索引语义被 test_status 断言钉住, 勿插队）
             {'label': '外部依赖', 'value': dep_value, 'status': dep_status},
