@@ -39,6 +39,15 @@ from datetime import datetime
 from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
+
+# x.com 可达性真源（同目录 flclash_proxy）: 只读探测, 不拉起代理
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+try:
+    from flclash_proxy import probe_best as _probe_best     # noqa: E402
+    from flclash_proxy import REACH_TIMEOUT as _REACH_TIMEOUT
+except Exception:                                            # noqa: BLE001
+    _probe_best = None
+    _REACH_TIMEOUT = 5.0
 RECORD_DIR = PROJECT_ROOT / 'cache' / 'records'
 RECORD = RECORD_DIR / 'preflight.log'
 CACHE_FILE = RECORD_DIR / 'preflight-cache.json'
@@ -50,7 +59,8 @@ PROXY_PORT = int(os.environ.get('TWITTER_FLCLASH_PORT') or 7890)
 HTTP_TIMEOUT = float(os.environ.get('LLM_RADAR_PREFLIGHT_TIMEOUT') or 5)
 DISK_LIMIT_PCT = 90
 
-CHECK_NAMES = ('key_auth', 'model', 'x_login', 'cdp_page', 'flclash', 'driver', 'mcp_key', 'disk')
+CHECK_NAMES = ('key_auth', 'model', 'x_login', 'cdp_page', 'x_reach', 'flclash', 'driver',
+               'mcp_key', 'disk')
 
 
 # ---------- 基础 ----------
@@ -241,6 +251,22 @@ def check_driver(_ctx):
                    'chromedriver-manager upgrade --all --json')
 
 
+def check_x_reach(_ctx):
+    """x.com 是否可达（直连或经 7890）。只探测, **不拉起代理**（preflight 必须只读）。"""
+    if _probe_best is None:
+        return _result('x_reach', 'skip', 'unknown', 'flclash_proxy 未加载')
+    try:
+        probe = _probe_best(timeout=min(float(_REACH_TIMEOUT), 3.0))
+    except Exception as e:                                   # noqa: BLE001
+        return _result('x_reach', 'skip', 'unknown', f'{type(e).__name__}: {str(e)[:80]}')
+    if probe.get('ok'):
+        where = '经代理' if probe.get('via') == 'proxy' else '直连'
+        return _result('x_reach', 'ok', where, f"x.com {probe.get('elapsed')}s 可达（{where}）")
+    return _result('x_reach', 'warn', f"unreachable {probe.get('class')}",
+                   probe.get('detail', ''),
+                   '先看 FlClash: python3 scripts/flclash_proxy.py reach；X 采集会按设计跳过')
+
+
 def check_mcp_key(_ctx):
     key = (os.environ.get('LLM_RADAR_MCP_KEY') or '').strip()
     if key:
@@ -301,6 +327,7 @@ CHECKS = {
     'model': check_model,
     'x_login': check_x_login,
     'cdp_page': check_cdp_page,
+    'x_reach': check_x_reach,
     'flclash': check_flclash,
     'driver': check_driver,
     'mcp_key': check_mcp_key,

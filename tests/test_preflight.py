@@ -227,3 +227,34 @@ class TestEntry:
         text = pf.render_text({'generated_at': 'x', 'ok': False, 'fails': ['key_auth'], 'checks': [
             pf._result('key_auth', 'fail', 'auth 401', 'invalid', '换 key')]})
         assert '修复: 换 key' in text
+
+
+class TestXReach:
+    """x.com 可达性项: 只读探测（preflight 不得拉起代理）。"""
+
+    def test_direct_ok(self, pf, monkeypatch):
+        monkeypatch.setattr(pf, '_probe_best', lambda timeout=None: {
+            'ok': True, 'class': 'http_ok', 'via': 'direct', 'elapsed': 0.4, 'detail': ''})
+        r = pf.check_x_reach({})
+        assert (r['status'], r['value']) == ('ok', '直连')
+        assert '0.4s' in r['detail']
+
+    def test_via_proxy_is_ok_but_labelled(self, pf, monkeypatch):
+        monkeypatch.setattr(pf, '_probe_best', lambda timeout=None: {
+            'ok': True, 'class': 'http_ok', 'via': 'proxy', 'elapsed': 0.9, 'detail': ''})
+        r = pf.check_x_reach({})
+        assert (r['status'], r['value']) == ('ok', '经代理')
+
+    def test_unreachable_is_warn_with_remedy(self, pf, monkeypatch):
+        monkeypatch.setattr(pf, '_probe_best', lambda timeout=None: {
+            'ok': False, 'class': 'timeout', 'via': 'direct', 'elapsed': 5.0, 'detail': 'boom'})
+        r = pf.check_x_reach({})
+        assert r['status'] == 'warn'
+        assert 'unreachable timeout' in r['value'] and 'flclash_proxy' in r['remedy']
+
+    def test_missing_helper_is_skip_not_ok(self, pf, monkeypatch):
+        monkeypatch.setattr(pf, '_probe_best', None)
+        assert pf.check_x_reach({})['status'] == 'skip'
+
+    def test_registered_in_check_list(self, pf):
+        assert 'x_reach' in pf.CHECK_NAMES
