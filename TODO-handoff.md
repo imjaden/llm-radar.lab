@@ -1,4 +1,14 @@
 # TODO-HANDOFF — llm-radar CL007 后续待执行清单
+<!-- generated: 2026-11-06 · source: cache/draft/TODO-20261106.md · sha256:7ae5c25a -->
+## 一、已登记待执行（来源: live draft cache/draft/TODO-20261106.md）
+
+| 编号 | 标题 | 状态（派生摘要·全文见 draft） | kind | priority | 方案文档 |
+|:--|:--|:--|:--|:--|:--|
+| LLM-RADAR-CL007 | CLI 中断收敛（KeyboardInterrupt 守卫） | READY | queued | normal | llm-radar-cl007-cli-interrupt-guard-design-v1.0-20261103.md |
+| LLM-RADAR-CL008 | X 登录巡检落 cron（llm-radar-twitter-login-local） | 待办 | queued | normal | - |
+| LLM-RADAR-CL009 | 飞书告警接入（外部依赖失效 → 统一通知） | 挂起 | queued | low | - |
+| LLM-RADAR-CL010 | documents/README.md 索引漂移（hm check readme 4/5） | 待办 | queued | low | - |
+<!-- generated end -->
 
 > 交接时间：2026-11-03 19:00 CST · 交接人：ops 会话 · 目标仓：`~/CodeSpace/llm-radar.lab`（main）
 > 状态锚（交接时）：`HEAD = 9f17634` / `origin/main = dfbdc85` / ahead 1；
@@ -27,6 +37,13 @@
 | 用户裁定 | **LR-CLI-009 维持现状**：本笔 subject 含中文，与 CL008「subject 全英文」冲突 ⇒ 豁免期内不动，**禁 amend**（会改已审 hash） | `hm check commit` 默认 ✅ |
 
 ## 2. 待执行（本仓，按优先级；括号内 = 评审编号）
+
+> **早处理：2026-11-06 ops 会话一批（已 push、未过 review）** —— 明早优先补审，按「小批复核」口径打包一笔、
+> 不重开全量评审。commit 清单（时间序）：`576851e` lr chrome 网络门 · `571e40b` preflight `x_reach` ·
+> `05d628b`→`0667668` 网络门复探裁剪（后者为前者的修正+文案）· `93c301d` 网络门用例钉端口前提 ·
+> `af85df6` ahead≠分叉（`_sync_remote`/`_converge_fork`/`_git_divergence`）· `c26fae5` status 用例固定判定时刻 ·
+> `902e838` auto-push 独立通道（`_push_ahead_on_skip`）· `c82e4a9` GOV-1 收口（`_load_dotenv` 入 `main()`）。
+> 证据：`gh run list` 对应 `c82e4a9` 起全 `success`（`af85df6` 首跑红，已由 `c26fae5` 修正）。
 
 **P1　handbook 注明「8/8 = 行级判据」（N6，🟢，10m）**
 落点：`documents/handbooks/llm-radar-cli-governance-handbook-v1.0-20260908.md` §六。
@@ -87,6 +104,11 @@ python3 cache/scratch/cl007_a4_probe.py                                # 3× rc=
 set -m; lr status --json & PID=$!; sleep 0.25; kill -INT $PID; wait $PID; echo "rc=$?"   # 130 + 58B/80B
 git checkout -- timestamp.json overview.json data/snapshot.json        # 跑完必做：还原测试脏产物
 ```
+
+> **2026-11-06 实测覆盖（本会话新增测试后）**：全量 `540 passed, 2 deselected`；
+> `tests/test_cli.py` 24 passed；`tests/test_gitflow.py + tests/test_status.py` 78 passed；
+> 新增 `tests/test_push_on_skip.py` 9 passed、`tests/test_collector_dotenv.py` 6 passed。
+> 上面三条命令的历史数字（429 / 62 / 14）是 CL007 基线，未改口径，仅作对照。
 
 ## 5. 文件索引
 
