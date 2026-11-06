@@ -225,7 +225,7 @@ class TestStatusStates:
         subprocess.run(['git', 'update-ref', 'refs/remotes/origin/main', 'HEAD~1'],
                        cwd=tmp_path, check=True)
 
-        result = c.status()
+        result = c.status(now=NOW)   # 固定判定时刻: 墙上时钟会让「未到判定点」抢走 message
         assert result['status'] == 'ok', '仅待推不得升级主状态'
         git_check = [ch for ch in result['checks'] if ch['label'] == 'Git 同步'][0]
         assert git_check['value'] == '1 ahead / 0 behind（待推）'
@@ -241,7 +241,7 @@ class TestStatusStates:
         subprocess.run(['git', 'update-ref', 'refs/remotes/origin/main', head2],
                        cwd=tmp_path, check=True)
 
-        result = c.status()
+        result = c.status(now=NOW)   # 固定判定时刻: 墙上时钟会让「未到判定点」抢走 message
         assert result['status'] == 'warning'
         assert 'Git 落后远端 1 笔' in result['message']
         git_check = [ch for ch in result['checks'] if ch['label'] == 'Git 同步'][0]
@@ -259,7 +259,7 @@ class TestStatusStates:
         subprocess.run(['git', 'update-ref', 'refs/remotes/origin/main', other_head],
                        cwd=tmp_path, check=True)
 
-        result = c.status()
+        result = c.status(now=NOW)   # 固定判定时刻: 墙上时钟会让「未到判定点」抢走 message
         assert result['status'] == 'warning'
         assert 'Git 分叉 1 ahead / 1 behind' in result['message']
         git_check = [ch for ch in result['checks'] if ch['label'] == 'Git 同步'][0]
