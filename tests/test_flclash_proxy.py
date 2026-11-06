@@ -309,3 +309,208 @@ def test_running_port_grace_is_declared_and_bounded(fpreal):
     assert grace > 0, grace
     assert grace >= fpreal.POLL_INTERVAL * 3, (grace, fpreal.POLL_INTERVAL)
     assert grace < fpreal.READY_TIMEOUT / 4, (grace, fpreal.READY_TIMEOUT)
+
+
+# ===== x.com 可达性门 (probe_url / ensure_for_url, 2026-11-04) =====
+
+class _Resp:
+    def __init__(self, status=200):
+        self.status = status
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *exc):
+        return False
+
+
+@pytest.fixture
+def reach(monkeypatch, fp):
+    """把 probe_url 换成脚本化序列: 传入若干 dict, 依次返回。"""
+    def install(seq, proxy_seq=None):
+        """脚本化 probe_url; 经代理的那次单独用 proxy_seq（默认与 seq 同源、但强制失败）。"""
+        calls = []
+
+        def fake(url=None, timeout=None, proxy=None):
+            calls.append({'url': url or fp.REACH_URL, 'timeout': timeout, 'proxy': proxy})
+            if proxy:
+                item = (proxy_seq or [{'ok': False, 'class': 'timeout'}])[0]
+            else:
+                item = seq[min(sum(1 for c in calls if not c['proxy']) - 1, len(seq) - 1)]
+            d = dict(item)
+            d.setdefault('url', url or fp.REACH_URL)
+            d.setdefault('elapsed', 0.1)
+            d.setdefault('via', 'proxy' if proxy else 'direct')
+            d.setdefault('status', 200 if d.get('ok') else None)
+            return d
+        monkeypatch.setattr(fp, 'probe_url', fake)
+        return calls
+    return install
+
+
+def _ok():
+    return {'ok': True, 'class': 'http_ok'}
+
+
+def _fail(cls='timeout'):
+    return {'ok': False, 'class': cls, 'detail': 'boom'}
+
+
+class TestProbeUrl:
+    def test_http_error_counts_as_reachable(self, fp, monkeypatch):
+        """403/401 也代表链路可达（Cloudflare 挑战常见）——不能判不可达。"""
+        def boom(req, timeout=None):
+            raise fp.urllib.error.HTTPError(req.full_url, 403, 'Forbidden', {}, None)
+        monkeypatch.setattr(fp.urllib.request, 'build_opener',
+                            lambda *h: type('O', (), {'open': staticmethod(boom)}))
+        r = fp.probe_url('https://x.com/', timeout=1)
+        assert (r['ok'], r['class'], r['status']) == (True, 'http_ok', 403)
+
+    @pytest.mark.parametrize('kind,cls', [
+        ('timeout', 'timeout'),
+        ('dns', 'dns'),
+        ('reset', 'connect'),
+        ('ssl', 'tls'),
+        ('other', 'other'),
+    ])
+    def test_error_classification(self, fp, monkeypatch, kind, cls):
+        exc = {
+            'timeout': TimeoutError('timed out'),
+            'dns': fp.socket.gaierror(8, 'nodename nor servname provided'),
+            'reset': ConnectionResetError('connection reset by peer'),
+            'ssl': fp.ssl.SSLError('certificate verify failed'),
+            'other': RuntimeError('weird'),
+        }[kind]
+
+        def boom(req, timeout=None):
+            raise exc
+        monkeypatch.setattr(fp.urllib.request, 'build_opener',
+                            lambda *h: type('O', (), {'open': staticmethod(boom)}))
+        r = fp.probe_url('https://x.com/', timeout=1)
+        assert (r['ok'], r['class']) == (False, cls)
+
+    def test_probe_ignores_env_proxy(self, fp, monkeypatch):
+        """判的是「直连能不能通」: shell 里有 http_proxy 也不能让它带偏。"""
+        seen = {}
+
+        def fake_build(*handlers):
+            seen['proxies'] = handlers[0].proxies if handlers else None
+            return type('O', (), {'open': staticmethod(lambda req, timeout=None: _Resp(200))})
+        monkeypatch.setattr(fp.urllib.request, 'build_opener', fake_build)
+        monkeypatch.setenv('https_proxy', 'http://127.0.0.1:7890')
+        assert fp.probe_url('https://x.com/', timeout=1)['ok'] is True
+        assert seen['proxies'] == {}
+
+
+class TestEnsureForUrl:
+    def _ensure_recorder(self, fp, monkeypatch, result):
+        calls = []
+        monkeypatch.setattr(fp, 'ensure_ready', lambda **kw: calls.append(kw) or result)
+        return calls
+
+    def test_direct_ok_never_touches_flclash(self, fp, monkeypatch, reach):
+        """核心护栏: 直连可达 ⇒ 绝不起代理（VPN/TUN 场景）。"""
+        reach([_ok()])
+        monkeypatch.setattr(fp, 'ensure_ready',
+                            lambda **kw: (_ for _ in ()).throw(AssertionError('不得调用 ensure_ready')))
+        res = fp.ensure_for_url('https://x.com/', settle=0)
+        assert (res['ok'], res['state'], res['started']) == (True, 'direct_ok', False)
+
+    def test_slow_direct_success_via_retry(self, fp, monkeypatch, reach):
+        calls = reach([_fail('timeout'), _ok()])
+        monkeypatch.setattr(fp, 'ensure_ready',
+                            lambda **kw: (_ for _ in ()).throw(AssertionError('复探成功就不该起代理')))
+        res = fp.ensure_for_url('https://x.com/', probe_timeout=5, retry_timeout=8, settle=0)
+        assert res['state'] == 'direct_ok'
+        assert [c['timeout'] for c in calls] == [5, 8]
+
+    def test_starts_proxy_then_reachable(self, fp, monkeypatch, reach):
+        calls = reach([_fail(), _ok()])
+        # 端口设为未监听 ⇒ 复探走 prefer='proxy' 的直连兜底分支, 序列可预测
+        monkeypatch.setattr(fp, 'is_port_listening', lambda *a, **k: False)
+        ens = self._ensure_recorder(fp, monkeypatch, {'ok': True, 'started': True, 'reason': 'started'})
+        res = fp.ensure_for_url('https://x.com/', settle=0)
+        assert (res['ok'], res['state'], res['started']) == (True, 'proxy_started', True)
+        assert len(ens) == 1
+        assert [c['proxy'] for c in calls] == [None, None]
+
+    def test_already_running_proxy_is_not_claimed(self, fp, monkeypatch, reach):
+        reach([_fail(), _ok()])
+        self._ensure_recorder(fp, monkeypatch, {'ok': True, 'started': False, 'reason': 'already_running'})
+        res = fp.ensure_for_url('https://x.com/', settle=0)
+        assert (res['state'], res['started']) == ('proxy_ok', False)
+
+    def test_port_closed_is_reported_distinctly(self, fp, monkeypatch, reach):
+        reach([_fail('connect'), _fail('connect')])
+        self._ensure_recorder(fp, monkeypatch, {'ok': False, 'started': False, 'reason': 'port_closed'})
+        res = fp.ensure_for_url('https://x.com/', settle=0)
+        assert (res['ok'], res['state']) == (False, 'port_closed')
+
+    def test_proxy_up_but_upstream_dead_is_unreachable(self, fp, monkeypatch, reach):
+        reach([_fail(), _fail('timeout')])
+        self._ensure_recorder(fp, monkeypatch, {'ok': True, 'started': True, 'reason': 'started'})
+        res = fp.ensure_for_url('https://x.com/', settle=0)
+        assert (res['ok'], res['state']) == (False, 'unreachable')
+
+    def test_ensure_disabled_only_probes(self, fp, monkeypatch, reach):
+        calls = reach([_fail('timeout')])
+        monkeypatch.setattr(fp, 'ensure_ready',
+                            lambda **kw: (_ for _ in ()).throw(AssertionError('--no-ensure 不得拉起')))
+        res = fp.ensure_for_url('https://x.com/', ensure=False, retry_timeout=None, settle=0)
+        assert (res['ok'], res['state'], res['started']) == (False, 'ensure_disabled', False)
+        assert len(calls) == 1
+
+    def test_cli_reach_exit_codes(self, fp, monkeypatch, capsys):
+        monkeypatch.setattr(fp, 'ensure_for_url', lambda *a, **k: {
+            'ok': True, 'state': 'direct_ok', 'started': False, 'probe': {'class': 'http_ok', 'elapsed': 0.1}})
+        assert fp.main(['reach']) == 0
+        assert capsys.readouterr().out.strip() == 'direct_ok'
+        monkeypatch.setattr(fp, 'ensure_for_url', lambda *a, **k: {
+            'ok': False, 'state': 'port_closed', 'started': False, 'probe': {'class': 'connect', 'elapsed': 0.1}})
+        assert fp.main(['reach']) == 1
+        assert 'port_closed' in capsys.readouterr().out
+
+
+class TestProbeBest:
+    """复探语义: 「直连不通 + 代理通」必须判可达（FlClash 多为系统代理模式）。"""
+
+    def test_direct_ok_short_circuits(self, fp, monkeypatch, reach):
+        """直连可达时不得再走代理（多探一次会掩盖「直连其实通」这个事实）。"""
+        calls = reach([_ok()])
+        monkeypatch.setattr(fp, 'is_port_listening', lambda *a, **k: True)
+        r = fp.probe_best('https://x.com/', timeout=1)
+        assert r['ok'] and r['via'] == 'direct'
+        assert len(calls) == 1 and all(c['proxy'] is None for c in calls)
+
+    def test_falls_back_to_proxy_when_port_listening(self, fp, monkeypatch):
+        seen = []
+
+        def fake_probe(url=None, timeout=None, proxy=None):
+            seen.append(proxy)
+            ok = proxy is not None
+            return {'ok': ok, 'class': 'http_ok' if ok else 'timeout', 'via': 'proxy' if proxy else 'direct',
+                    'elapsed': 0.1, 'status': 200 if ok else None, 'detail': ''}
+        monkeypatch.setattr(fp, 'probe_url', fake_probe)
+        monkeypatch.setattr(fp, 'is_port_listening', lambda *a, **k: True)
+        r = fp.probe_best('https://x.com/', timeout=1)
+        assert r['ok'] and r['via'] == 'proxy'
+        assert seen == [None, 'http://127.0.0.1:7890']
+
+    def test_port_closed_returns_direct_failure(self, fp, monkeypatch):
+        monkeypatch.setattr(fp, 'probe_url', lambda url=None, timeout=None, proxy=None: {
+            'ok': False, 'class': 'timeout', 'via': 'direct', 'elapsed': 0.1, 'detail': ''})
+        monkeypatch.setattr(fp, 'is_port_listening', lambda *a, **k: False)
+        r = fp.probe_best('https://x.com/', timeout=1)
+        assert r['ok'] is False and r['via'] == 'direct'
+
+    def test_environment_proxy_is_ignored_for_direct_probe(self, fp, monkeypatch):
+        """direct 探测必须显式清空环境代理（否则 shell 里带 http_proxy 就永远判通）。"""
+        seen = {}
+
+        def fake_build(*handlers):
+            seen['proxies'] = handlers[0].proxies
+            return type('O', (), {'open': staticmethod(lambda req, timeout=None: _Resp(200))})
+        monkeypatch.setattr(fp.urllib.request, 'build_opener', fake_build)
+        monkeypatch.setenv('http_proxy', 'http://127.0.0.1:7890')
+        fp.probe_url('https://x.com/', timeout=1)
+        assert seen['proxies'] == {}

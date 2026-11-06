@@ -26,6 +26,11 @@ Dependency
 
 import sys
 
+# 「x.com 可达性门」依赖真源里的两个函数; 先置 None 再在 import 块里覆盖 ——
+# import 块走 KeyboardInterrupt 分支时静态检查会判「可能未绑定」, 显式占位可消掉该噪音。
+_flclash_probe_best = None
+_flclash_ensure_for_url = None
+
 # §11.1-2 「护栏必须覆盖模块级 import」: 本文件既是入口又是库（3284 行, 无法把 import 搬进
 # __main__ 段），故 import 块自带 try；被 importlib 当库加载（tests/conftest.py）时**必须重抛**。
 try:
@@ -47,7 +52,9 @@ try:
     sys.path.insert(0, str(Path(__file__).resolve().parent / 'scripts'))
     from flclash_proxy import (  # noqa: E402  (须在 sys.path 注入之后)
         ensure_ready as _flclash_ensure_ready,
+        ensure_for_url as _flclash_ensure_for_url,
         is_running as _flclash_is_running,
+        probe_best as _flclash_probe_best,
         release as _flclash_release,
     )
 except KeyboardInterrupt:
@@ -2993,6 +3000,54 @@ def _chrome_state(port):
 
 
 
+def _x_proxy_ensure_disabled():
+    """`--no-ensure` / `TWITTER_PROXY_NO_ENSURE=1`: 只探测, 不拉起代理。"""
+    return str(os.environ.get('TWITTER_PROXY_NO_ENSURE', '')).strip().lower() in ('1', 'true', 'yes')
+
+
+def _x_network_gate(ensure=True, probe_timeout=None, retry_timeout=None):
+    """访问 x.com 前的网络门: 直连可达就绝不起代理; 不通则按需拉起 FlClash 并复探。
+
+    返回 (ok, 单行文案, res)。判据真源 = scripts/flclash_proxy.py
+    （「进程在」与「能通」分开判, 别在此重写探测）。
+    """
+    if _flclash_ensure_for_url is None:          # import 期中断/加载失败: 不猜, 直接判不可用
+        return False, '网络: 探测不可用（flclash_proxy 未加载）', {}
+    try:
+        res = _flclash_ensure_for_url(ensure=ensure, probe_timeout=probe_timeout,
+                                      retry_timeout=retry_timeout)
+    except Exception as e:                       # noqa: BLE001  探测异常不得打死 chrome 子命令
+        return False, f'网络: 探测异常 ({type(e).__name__}: {str(e)[:80]})', {}
+    state = res.get('state')
+    probe = res.get('probe') or {}
+    cls, cost = probe.get('class'), probe.get('elapsed', 0)
+    via = probe.get('via')
+    if state == 'direct_ok':
+        return True, f'网络: x.com 直连可达 ({cost:.1f}s)', res
+    if state == 'proxy_ok':
+        where = '经 FlClash' if via == 'proxy' else '直连'
+        return True, f'网络: FlClash 已在运行 → {where}可达 x.com ({res.get("elapsed", 0):.1f}s)', res
+    if state == 'proxy_started':
+        return True, f'网络: 直连不通 → 已拉起 FlClash ({res.get("elapsed", 0):.1f}s) → x.com 可达', res
+    if state == 'ensure_disabled':
+        return False, f'网络: x.com 不可达 ({cls}, {cost:.1f}s; 已禁用自动拉起代理)', res
+    if state == 'port_closed':
+        return False, '网络: x.com 不可达（FlClash 进程在但 7890 不通: 可能代理被暂停或改了端口）', res
+    return False, f'网络: x.com 经代理仍不可达 ({cls}, {cost:.1f}s)', res
+
+
+def _x_probe_only(timeout=2.0):
+    """只探测不动环境（`--status` 用: 状态查询必须有零副作用）。"""
+    if _flclash_probe_best is None:
+        return {'ok': None, 'class': 'probe_error', 'elapsed': 0.0, 'detail': 'flclash_proxy 未加载',
+                'via': 'unknown'}
+    try:
+        # probe_best: 直连不通时再看一眼 7890 —— 否则 `--status` 会把「代理好好的」误报成不可达
+        return _flclash_probe_best(timeout=timeout)
+    except Exception as e:                       # noqa: BLE001
+        return {'ok': None, 'class': 'probe_error', 'elapsed': 0.0, 'detail': str(e)[:80]}
+
+
 def _cmd_chrome(args):
     """lr chrome — 手工启动/检查 chrome-twitter-cdp 调试 Chrome (人工登录用)。
 
@@ -3003,19 +3058,42 @@ def _cmd_chrome(args):
     --profile D  user-data-dir (默认 TWITTER_PROFILE_DIR 或 ~/chrome-twitter-cdp)
     --secondary  摆到副屏小窗 (坐标同 cron: TWITTER_WINDOW_POS/SIZE, 默认 -1900,-297 / 880x1000)
     --timeout N  --wait 的超时秒数
+    --no-ensure  只探测 x.com 可达性, 不自动拉起 FlClash（等价 TWITTER_PROXY_NO_ENSURE=1）
+
+    网络门: 起窗前先判 x.com 是否可达; 不通则按需拉起 FlClash 再复探, 仍不通 ⇒ exit 2
+    （与「登录超时」的 exit 1 区分, 不再白等 600s）。
     """
     port = int(_chrome_arg(args, '--port') or os.environ.get('TWITTER_CDP_PORT') or 9222)
     profile = _chrome_profile_dir(args)
     timeout = int(_chrome_arg(args, '--timeout') or 600)
+    no_ensure = ('--no-ensure' in args) or _x_proxy_ensure_disabled()
 
     if '--status' in args:
         ready, logged, note = _chrome_state(port)
         print(f'CDP 127.0.0.1:{port}: {"就绪" if ready else "未就绪"}')
         print(f'登录态: {"已登录 (auth_token 在)" if logged else "未登录"} ({note})')
         print(f'profile: {profile}')
+        # 网络行只探测（零副作用）: `--status` 不得顺手拉起代理
+        probe = _x_probe_only(timeout=2.0)
+        if probe.get('ok') and probe.get('via') == 'proxy':
+            print(f'网络: 直连不通 → 经 FlClash 可达 ({probe.get("elapsed", 0):.1f}s)')
+        elif probe.get('ok'):
+            print(f'网络: x.com 直连可达 ({probe.get("elapsed", 0):.1f}s)')
+        else:
+            print(f'网络: x.com 不可达 ({probe.get("class")}) — 可 `lr chrome` 自动拉起 FlClash')
         if not ready:
             print('提示: 先 `lr chrome` 起调试 Chrome（或 `lr chrome --wait` 起窗并等登录）')
         return 0 if (ready and logged) else 1
+
+    # 网络门（起窗前）: 直连可达则不碰代理; 不通则拉起 FlClash 后复探
+    net_ok, net_line, net_res = _x_network_gate(ensure=not no_ensure)
+    print(net_line)
+    if not net_ok:
+        print('❌ x.com 不可达, 起窗也会停在空白页 ⇒ 不进入登录等待', file=sys.stderr)
+        print('   排查: lr chrome --status | python3 scripts/flclash_proxy.py reach --json', file=sys.stderr)
+        return 2
+    if net_res.get('started'):
+        print('   FlClash 由本次命令拉起（未释放）; 用完可 `python3 scripts/flclash_proxy.py release`')
 
     launched = False
     if _cdp_ready(port):
@@ -3052,6 +3130,14 @@ def _cmd_chrome(args):
     if '--wait' not in args:
         return 0
 
+    # 进等待前再快速复判（用户可能隔了一段时间才回来）; 仍走同一真源, 不另写探测
+    wait_ok, wait_line, _ = _x_network_gate(ensure=not no_ensure, probe_timeout=2.0, retry_timeout=0)
+    if wait_line != net_line:
+        print(wait_line)
+    if not wait_ok:
+        print(f'❌ 等待前复判: x.com 仍不可达 ⇒ 不进入 {timeout}s 登录等待', file=sys.stderr)
+        return 2
+
     print(f'⏳ 等待登录 (轮询 auth_token, ≤{timeout}s) …', flush=True)
     deadline = time.time() + timeout
     while time.time() < deadline:
@@ -3086,8 +3172,9 @@ def print_grouped_help():
     print('          重置源连续失败计数')
     print('  selenium-check')
     print('          检查 Chrome/ChromeDriver 环境')
-    print('  chrome [--wait|--status] [--port N] [--profile DIR] [--secondary]')
+    print('  chrome [--wait|--status] [--port N] [--profile DIR] [--secondary] [--no-ensure]')
     print('          手工启动/检查调试 Chrome (chrome-twitter-cdp), 人工登录 X 用')
+    print('          起窗前先判 x.com 可达, 不通则按需拉起 FlClash; 仍不通 exit 2 不白等')
     print()
     print('【数据管理】')
     print('  status [--json]')

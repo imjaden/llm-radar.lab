@@ -31,11 +31,15 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import platform
 import socket
+import ssl
 import subprocess
 import sys
 import time
+import urllib.error
+import urllib.request
 
 APP_NAME = 'FlClash'
 APP_PATH = '/Applications/FlClash.app'
@@ -50,6 +54,15 @@ TERM_WAIT = 3.0
 # Q-1 (CL151 review SEC-1/LR-SEC-023): 「进程在」≠「代理通」。已在运行但端口未 LISTEN 时
 # （代理暂停 / 端口改配 / 上轮 open 后端口尚未起的窗口）先给这么长的短预算, 仍不通 ⇒ not_ready。
 RUNNING_PORT_GRACE = 10.0
+
+# ── x.com 可达性预判（2026-11-04）────────────────────────────────────────────
+# 场景: `lr chrome --wait` 等需要在「等待登录 600s」之前先判网络, 不通就按需拉起 FlClash。
+# 判据: 拿到**任意 HTTP 响应**即链路可达（含 401/403/302 —— Cloudflare 挑战也算通）;
+#       连接层失败/超时/TLS reset 才算不可达。纯 TCP 443 会假通（阻断常发生在 TLS 阶段）。
+REACH_URL = os.environ.get('LLM_RADAR_X_PROBE_URL') or 'https://x.com/robots.txt'
+REACH_TIMEOUT = 5.0          # 首探
+REACH_RETRY_TIMEOUT = 8.0    # 直连「慢但通」的复探预算（防 5s 误判成不可达而多起代理）
+REACH_SETTLE = 0.6           # 端口 LISTEN 后给上游握手的宽限
 
 
 def _run(argv, timeout=30):
@@ -97,6 +110,80 @@ def is_port_listening(port=READY_PORT, host='127.0.0.1', timeout=PROBE_TIMEOUT):
         return False
 
 
+def _classify_probe_error(exc):
+    """探测异常 → 稳定分类（供文案/日志, 不要把异常原文当判据）。"""
+    text = f'{type(exc).__name__}: {exc}'.lower()
+    if isinstance(exc, socket.gaierror) or 'name or service not known' in text or 'nodename' in text:
+        return 'dns'
+    if isinstance(exc, (socket.timeout, TimeoutError)) or 'timed out' in text or 'timeout' in text:
+        return 'timeout'
+    if isinstance(exc, ssl.SSLError) or 'ssl' in text or 'certificate' in text:
+        return 'tls'
+    if 'reset' in text or 'refused' in text or 'unreachable' in text or 'broken pipe' in text:
+        return 'connect'
+    return 'other'
+
+
+def probe_url(url=None, timeout=None, proxy=None):
+    """探测 URL 链路可达性（只读, 不拉起任何东西）。
+
+    返回 {'ok', 'class', 'status', 'elapsed', 'url', 'via', 'detail'}
+      ok=True  ⇔ 拿到任意 HTTP 响应（2xx/3xx/401/403 都算通）
+      ok=False ⇒ class ∈ dns/timeout/tls/connect/other
+      via      = 'direct'（默认, 强制忽略环境代理）/ 'proxy'（显式经 proxy 探测）
+    为什么分两种: 「直连能不能通」决定**要不要起代理**（VPN/TUN 场景直连就通, 起了反而添乱）;
+    而 FlClash 多以系统代理模式工作, 起来后 IPv4 直连仍被墙 ⇒ 复探必须能走 `127.0.0.1:7890`。
+    """
+    target = url or REACH_URL
+    tmo = float(timeout or REACH_TIMEOUT)
+    start = time.time()
+    handlers = urllib.request.ProxyHandler(
+        {} if not proxy else {'http': proxy, 'https': proxy})
+    opener = urllib.request.build_opener(handlers)
+    req = urllib.request.Request(target, method='GET',
+                                 headers={'User-Agent': 'LLMRadarReach/1.0 (+preflight)'})
+    via = 'proxy' if proxy else 'direct'
+    try:
+        with opener.open(req, timeout=tmo) as resp:
+            return {'ok': True, 'class': 'http_ok', 'status': getattr(resp, 'status', None),
+                    'elapsed': round(time.time() - start, 2), 'url': target, 'via': via,
+                    'detail': ''}
+    except urllib.error.HTTPError as e:          # 有响应头 ⇒ 链路可达
+        return {'ok': True, 'class': 'http_ok', 'status': e.code,
+                'elapsed': round(time.time() - start, 2), 'url': target, 'via': via,
+                'detail': ''}
+    except Exception as e:                       # noqa: BLE001  连接层失败才算不可达
+        return {'ok': False, 'class': _classify_probe_error(e), 'status': None,
+                'elapsed': round(time.time() - start, 2), 'url': target, 'via': via,
+                'detail': f'{type(e).__name__}: {e}'[:150]}
+
+
+def proxy_url(port=READY_PORT, host='127.0.0.1'):
+    return f'http://{host}:{port}'
+
+
+def probe_best(url=None, timeout=None, port=READY_PORT, prefer='direct'):
+    """按 `prefer` 决定先直连还是先经代理, 另一条路作兜底; 返回「最好」的那份结果。
+
+    典型本机事实（2026-11-04 实测）: 直连 x.com 6s 超时 HTTP 000; 经 7890 0.8s 200。
+    所以只探直连会把「代理已被 FlClash 带起来」误报成不可达。
+    `prefer='proxy'` 用于「代理刚被确认就绪」之后: 先走 7890（快且准）, 直连只在 TUN 模式下才是好路径。
+    """
+    port_open = is_port_listening(port)
+    order = []
+    if prefer == 'proxy' and port_open:
+        order = [proxy_url(port), None]
+    else:
+        order = [None] + ([proxy_url(port)] if port_open else [])
+    fallback = None
+    for proxy in order:
+        got = probe_url(url, timeout, proxy=proxy)
+        if got['ok']:
+            return got
+        fallback = fallback or got
+    return fallback or probe_url(url, timeout)
+
+
 def ensure_ready(timeout=READY_TIMEOUT, port=READY_PORT, running_grace=RUNNING_PORT_GRACE):
     """未运行 → `open -g -a FlClash` + 轮询等端口 LISTEN; 已在运行 → 先验端口, 通则复用、不通则短预算等待后判 not_ready。"""
     if not _is_darwin():
@@ -133,6 +220,49 @@ def ensure_ready(timeout=READY_TIMEOUT, port=READY_PORT, running_grace=RUNNING_P
         _warn(f'[flclash] ❌ {timeout:g}s 内 {port} 未 LISTEN')
     return {'ok': ready, 'started': True, 'reason': 'started' if ready else 'not_ready',
             'pids': pids, 'port': port}
+
+
+def ensure_for_url(url=None, ensure=True, probe_timeout=None, retry_timeout=None,
+                   ensure_timeout=READY_TIMEOUT, port=READY_PORT, settle=REACH_SETTLE):
+    """访问某 URL 前的「网络门」: 直连可达就绝不起代理; 否则按需 ensure + 复探。
+
+    返回 {'ok', 'state', 'started', 'probe', 'first_probe', 'ensure', 'url', 'elapsed'}
+      state:
+        direct_ok      直连可达（**未**触碰 FlClash —— VPN/TUN 场景的关键护栏）
+        proxy_ok       FlClash 原本在跑且复探可达（不归属本次）
+        proxy_started  本轮拉起 FlClash 且复探可达（调用方负责决定是否释放）
+        port_closed    进程在但 7890 不通（沿用 Q-1 语义）
+        unreachable    代理也没救回来
+        ensure_disabled ensure=False 且直连不可达（只探测, 不动环境）
+    """
+    started_at = time.time()
+    first = probe_url(url, probe_timeout)
+    if not first['ok'] and (retry_timeout or 0) > 0:
+        # 直连「慢但通」的复探: 避免 5s 阈值把慢链路误判成不可达而多起一个代理
+        again = probe_url(url, retry_timeout)
+        if again['ok']:
+            first = again
+    if first['ok']:
+        return {'ok': True, 'state': 'direct_ok', 'started': False, 'probe': first,
+                'first_probe': first, 'ensure': None, 'url': first['url'],
+                'elapsed': round(time.time() - started_at, 2)}
+
+    if not ensure:
+        return {'ok': False, 'state': 'ensure_disabled', 'started': False, 'probe': first,
+                'first_probe': first, 'ensure': None, 'url': first['url'],
+                'elapsed': round(time.time() - started_at, 2)}
+
+    ens = ensure_ready(timeout=ensure_timeout, port=port)
+    if settle > 0:
+        time.sleep(settle)
+    # 复探走 probe_best(prefer='proxy'): FlClash 多为系统代理模式, 起来后 IPv4 直连仍被墙,
+    # 先走 7890 既准又省一轮直连超时（实测省 ~5s）
+    second = probe_best(url, probe_timeout, port=port, prefer='proxy')
+    state = ('proxy_started' if ens.get('started') else 'proxy_ok') if second['ok'] else (
+        'port_closed' if ens.get('reason') == 'port_closed' else 'unreachable')
+    return {'ok': bool(second['ok']), 'state': state, 'started': bool(ens.get('started')),
+            'probe': second, 'first_probe': first, 'ensure': ens, 'url': second['url'],
+            'elapsed': round(time.time() - started_at, 2)}
 
 
 def release(grace=STOP_GRACE):
@@ -186,6 +316,11 @@ def main(argv=None):
     p_release = sub.add_parser('release', help='释放本应用 (优雅 → kill -TERM)')
     p_release.add_argument('--grace', type=float, default=STOP_GRACE)
     p_release.add_argument('--json', action='store_true')
+    p_reach = sub.add_parser('reach', help='URL 可达性门 (直连优先, 不通按需拉起代理)')
+    p_reach.add_argument('--url', default=None)
+    p_reach.add_argument('--timeout', type=float, default=None, help=f'首探超时 (默认 {REACH_TIMEOUT:g}s)')
+    p_reach.add_argument('--no-ensure', action='store_true', help='只探测, 不拉起代理')
+    p_reach.add_argument('--json', action='store_true')
 
     args = parser.parse_args(argv)
 
@@ -211,6 +346,17 @@ def main(argv=None):
         res = release(args.grace)
         print(json.dumps(res, ensure_ascii=False) if args.json
               else ('released' if res['ok'] else 'still-running'))
+        return 0 if res['ok'] else 1
+
+    if args.cmd == 'reach':
+        res = ensure_for_url(args.url, ensure=not args.no_ensure,
+                             probe_timeout=args.timeout,
+                             retry_timeout=None if args.no_ensure else REACH_RETRY_TIMEOUT)
+        if args.json:
+            print(json.dumps(res, ensure_ascii=False))
+        else:
+            probe = res['probe']
+            print(res['state'] if res['ok'] else f"{res['state']} ({probe['class']})")
         return 0 if res['ok'] else 1
 
     return 2
