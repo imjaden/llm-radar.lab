@@ -3030,7 +3030,7 @@ def _x_network_gate(ensure=True, probe_timeout=None, retry_timeout=None):
         return True, f'网络: x.com 直连可达 ({cost:.1f}s)', res
     if state == 'proxy_ok':
         where = '经 FlClash' if via == 'proxy' else '直连'
-        return True, f'网络: FlClash 已在运行 → {where}可达 x.com ({res.get("elapsed", 0):.1f}s)', res
+        return True, f'网络: FlClash 已在运行 → {where} 可达 x.com ({res.get("elapsed", 0):.1f}s)', res
     if state == 'proxy_started':
         return True, f'网络: 直连不通 → 已拉起 FlClash ({res.get("elapsed", 0):.1f}s) → x.com 可达', res
     if state == 'ensure_disabled':
