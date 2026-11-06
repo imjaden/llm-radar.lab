@@ -565,6 +565,27 @@ class LLMRadarCollector:
         except Exception as dl_err:
             self._print_warn(f'dead letter 写入失败: {dl_err}')
 
+    def _push_ahead_on_skip(self):
+        """采集被 6h 防抖跳过时, 单独把「本地已提交未推送」的 commit 推上去。
+
+        动机(2026-11-06 实测): auto-push 挂在 run() 的采集尾巴上, 采集被防抖跳过 ⇒
+        手工/半自动产生的 commit 会被压在本地最多 6h, 期间 `lr status` 恒「待推」。
+        这里只推**已提交**的内容: 不产数据、不动工作区; 落后/真分叉不在这里处理
+        （交给下一轮采集的 _sync_remote / _converge_fork）。
+        返回 True 表示尝试过推送。
+        """
+        if getattr(self, '_skip_push', False):
+            return False
+        ahead, behind, state = self._git_divergence()
+        if state != 'pending_push' or not ahead:
+            return False
+        subjects = (self._git_run('log', '--oneline', '-3', 'origin/main..HEAD').stdout or '').strip()
+        self._print_info(f'采集被跳过, 但本地有 {ahead} 笔待推提交 → 单独推送')
+        for line in subjects.splitlines()[:3]:
+            self._print_info(f'  · {line[:100]}')
+        self._push_with_recovery([], f'采集跳过通道: 推送本地待推 {ahead} 笔')
+        return True
+
     def _push_with_recovery(self, changelog, msg):
         """push 冲突自愈：push rejected → pull --rebase 重试（成功即普通 push，无 force）
         → rebase 冲突走 _converge_fork 语义并集收敛 → 仍失败 dead-letter + 人工提示。
@@ -2401,6 +2422,9 @@ hotspots 数组中每个元素格式：
 
         # [Think] 采集策略决策
         if not self._think(force=force):
+            # 6h 防抖: 本轮不采集。但「已提交未推送」不该跟着压 6h ⇒ 独立推送通道
+            # （只推已提交内容, 不产数据; 采集本身仍由下一轮窗口负责）
+            self._push_ahead_on_skip()
             return False
 
         # Step 1: Fetch
