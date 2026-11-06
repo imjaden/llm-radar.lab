@@ -449,18 +449,22 @@ class TestEnsureForUrl:
 
     def test_already_running_proxy_is_not_claimed(self, fp, monkeypatch, reach):
         reach([_fail(), _ok()])
+        # 前提钉死: 「代理已在跑」⇒ 端口在监听。不钉会在 CI(无 7890)下走 8s 复探直连 → direct_ok
+        monkeypatch.setattr(fp, 'is_port_listening', lambda *a, **k: True)
         self._ensure_recorder(fp, monkeypatch, {'ok': True, 'started': False, 'reason': 'already_running'})
         res = fp.ensure_for_url('https://x.com/', settle=0)
         assert (res['state'], res['started']) == ('proxy_ok', False)
 
     def test_port_closed_is_reported_distinctly(self, fp, monkeypatch, reach):
         reach([_fail('connect'), _fail('connect')])
+        monkeypatch.setattr(fp, 'is_port_listening', lambda *a, **k: False)
         self._ensure_recorder(fp, monkeypatch, {'ok': False, 'started': False, 'reason': 'port_closed'})
         res = fp.ensure_for_url('https://x.com/', settle=0)
         assert (res['ok'], res['state']) == (False, 'port_closed')
 
     def test_proxy_up_but_upstream_dead_is_unreachable(self, fp, monkeypatch, reach):
         reach([_fail(), _fail('timeout')])
+        monkeypatch.setattr(fp, 'is_port_listening', lambda *a, **k: True)
         self._ensure_recorder(fp, monkeypatch, {'ok': True, 'started': True, 'reason': 'started'})
         res = fp.ensure_for_url('https://x.com/', settle=0)
         assert (res['ok'], res['state']) == (False, 'unreachable')
