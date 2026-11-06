@@ -67,7 +67,9 @@ lr run help / lr crontab help     # 单命令用法 (positional help 拦截, exi
 - 空入参 → 打印分组帮助 exit=0 (原 exit=1)。
 - `lr status` 阈值: STALE_HOURS=12 (LLM_RADAR_STALE_HOURS 可配) / CRITICAL_HOURS=48 (LLM_RADAR_CRITICAL_HOURS 可配)。
 - 数据源全只读: timestamp.json (项目根) + data/metrics.json 全局 `consecutive_fails` + git rev-list 本地 ref (不 fetch) + snapshot.json。
-- wrapper: `~/.local/bin/{llm-radar,lr}` → symlink 至 gitignored `cache/system-command/llm-radar-wrapper.sh`（生成物，exec 前 `set -a; source .env; set +a` 加载项目 .env）。仓库内无 wrapper 模板：曾标 `cache/cli-registry/wrapper.sh.tmpl` 为 fork 模板，实为 .env 误副本，已删 (CL005 SEC-1, 2026-09-02)；.env 段为手工 patch，install.py 再生成即丢失 (GOV-1, P2 未闭)。
+- wrapper: `~/.local/bin/{llm-radar,lr}` → symlink 至 gitignored `cache/system-command/llm-radar-wrapper.sh`（生成物，exec 前 `set -a; source .env; set +a` 加载项目 .env）。仓库内无 wrapper 模板：曾标 `cache/cli-registry/wrapper.sh.tmpl` 为 fork 模板，实为 .env 误副本，已删 (CL005 SEC-1, 2026-09-02)；.env 段为手工 patch，install.py 再生成即丢失 —— **GOV-1 已于 2026-11-06 收口**：
+  `llm-radar-collector.py::_load_dotenv()` 在 `main()` 入口统一加载项目 `.env`（不覆盖既有 env），
+  任何入口（`lr` / 直跑 python / cron）都能拿到 key ⇒ wrapper 那段降级为冗余保险，重生成不再致命。
 - Linux 主机部署: `.cli-registry.yaml` 的 `env.conda` 需从 `py3.12` 改为 `llm-radar`。
 
 ## §3 X 采集 crontab (Mac 本机, x-hotspot 设计 §6)

@@ -3402,8 +3402,39 @@ def _cmd_prompt(args):
             print()
 
 
+def _load_dotenv(env_path=None):
+    """把项目 .env 读进 os.environ（幂等、不覆盖既有值）。返回是否读到了文件。
+
+    为什么下沉到进程内（GOV-1 收口）: wrapper 是 gitignored 生成物, `install.py --force`
+    重生成会丢掉手工补的 `.env` 段 ⇒ `lr run` 报「DEEPSEEK_API_KEY 未配置」, 与「key 失效」
+    形似但根因完全不同（2026-11-04 踩过）。cron 走 llm-radar-run.sh 有 `source .env`,
+    交互入口没有。在 main() 入口统一加载后, wrapper 那段降级为冗余保险, 不再是唯一依赖。
+    """
+    # 用 PROJECT_ROOT 拼接: 绝对路径右操作数会整体替换（pathlib 语义）, 无需显式 Path()
+    path = PROJECT_ROOT / (env_path if env_path else '.env')
+    try:
+        raw_lines = path.read_text(encoding='utf-8').splitlines()
+    except Exception:                       # 文件缺失/不可读: 保持既有 env 不变
+        return False
+    for raw in raw_lines:
+        line = raw.strip()
+        if not line or line.startswith('#') or '=' not in line:
+            continue
+        if line.startswith('export '):
+            line = line[len('export '):].lstrip()
+        key, _, value = line.partition('=')
+        key = key.strip()
+        if not key or key in os.environ:     # 已有 env 优先（cron / wrapper / 调用方）
+            continue
+        os.environ[key] = value.strip().strip('"').strip("'")
+    return True
+
+
 def main():
     """主函数"""
+    # GOV-1: 任何入口都先加载项目 .env（不覆盖既有 env）, 不再依赖 wrapper 的手工补丁段
+    _load_dotenv()
+
     if len(sys.argv) < 2:
         print_grouped_help()
         sys.exit(0)
