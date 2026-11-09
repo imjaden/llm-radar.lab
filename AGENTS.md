@@ -35,3 +35,4 @@ Compact single-project dashboard. One Python collector, one Vanilla JS frontend,
 - 结构: `llm-radar-collector.py` 唯一采集器（~1330 LOC）；`scripts/twitter-collector.py` X 热点采集器；`index.html` / `changelog.html` 无 build step；主数据 `data/snapshot.json` + `data/twitter.json`。
 - 命令: `python3 llm-radar-collector.py run|fetch|merge|auto-push|prompt` / `lr status` / `./llm-radar-run.sh` / `python3 -m http.server 8080`。
 - 详参: details 文档（上述 §1-§14）+ `documents/README.md`（知识底座索引，6 份主题手册）。
+- 回话规范：`~/CodeSpace/hermes-manager/skills-governance/message-feedback-spec.md`（优先于本文件：回话形状——首行 ⏱ 时间锚、结论先行、四段式、四类停问、降噪——以该规范为准；本文件只补本仓事实与纪律）。
