@@ -219,6 +219,27 @@ def test_discovery_covers_new_entries():
     assert not undiscovered, f'发现集漏项: {undiscovered}'
 
 
+def test_demo_cleans_child_process_in_finally():
+    """CL007 P6: demo 的 MCP Server 子进程必须在 `finally` 里收掉。
+
+    旧实现把 `proc.stdin.close()/wait()` 写在正常路径末尾 ⇒ Ctrl-C 或断言失败时子进程常驻
+    （持有 stdio 管道），下一轮再跑就叠进程。这里用 AST 判: main() 内存在
+    `try ... finally`，且 finally 体内有 `proc.terminate` / `proc.kill` 兜底。
+    """
+    tree = ast.parse((SCRIPTS / 'mcp-protocol-demo.py').read_text(encoding='utf-8'))
+    main_fn = next(n for n in tree.body if isinstance(n, ast.FunctionDef) and n.name == 'main')
+    tries = [n for n in ast.walk(main_fn) if isinstance(n, ast.Try)]
+    assert tries, 'main() 内应有一个 try/finally 包裹子进程生命周期'
+    fin = [n for n in tries if n.finalbody]
+    assert fin, '缺 finally ⇒ 中断路径会残留 MCP Server 子进程'
+    names = set()
+    for stmt in ast.walk(ast.Module(body=fin[0].finalbody, type_ignores=[])):
+        if isinstance(stmt, ast.Attribute):
+            names.add(stmt.attr)
+    assert {'terminate', 'kill'} <= names, f'finally 内需 terminate/kill 兜底, 实际: {sorted(names)}'
+    assert 'wait' in names, 'finally 内需 wait 回收'
+
+
 def test_preflight_entry_is_covered():
     """回归钉子：2026-11-04 新增的 preflight 入口必须既被发现、也有守卫。"""
     assert 'scripts/llm-radar-preflight.py' in ENTRIES

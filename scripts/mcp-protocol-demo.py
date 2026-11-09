@@ -197,32 +197,46 @@ def main():
         env={**os.environ, 'LLM_RADAR_MCP_KEY': API_KEY},
     )
 
-    # 初始化
-    init_resp = send_request(proc, 'initialize', {
+    try:
+        # 初始化
+        init_resp = send_request(proc, 'initialize', {
         'protocolVersion': '2025-03-26',
         'capabilities': {},
         'clientInfo': {'name': 'mcp-test-client', 'version': '1.0'},
     })
-    assert init_resp and 'result' in init_resp, f'初始化失败: {init_resp}'
-    print(f'  Server: {init_resp["result"]["serverInfo"]["name"]} v{init_resp["result"]["serverInfo"]["version"]}')
-    print(f'  Protocol: {init_resp["result"]["protocolVersion"]}')
+        assert init_resp and 'result' in init_resp, f'初始化失败: {init_resp}'
+        print(f'  Server: {init_resp["result"]["serverInfo"]["name"]} v{init_resp["result"]["serverInfo"]["version"]}')
+        print(f'  Protocol: {init_resp["result"]["protocolVersion"]}')
 
-    # List tools
-    list_resp = send_request(proc, 'tools/list')
-    assert list_resp and 'result' in list_resp
-    tools = [t['name'] for t in list_resp['result']['tools']]
-    print(f'  Tools: {", ".join(tools)}')
+        # List tools
+        list_resp = send_request(proc, 'tools/list')
+        assert list_resp and 'result' in list_resp
+        tools = [t['name'] for t in list_resp['result']['tools']]
+        print(f'  Tools: {", ".join(tools)}')
 
-    # 运行测试
-    run_test('TC1: health_check', lambda: test_health_check(proc))
-    run_test('TC2: submit_entities (有效数据)', lambda: test_submit_valid(proc))
-    run_test('TC3: submit_entities (低置信度)', lambda: test_submit_low_confidence(proc))
-    run_test('TC4: submit_entities (空提交)', lambda: test_submit_empty(proc))
-    run_test('TC5: submit_entities (错误 Key)', lambda: test_submit_wrong_key(proc))
+        # 运行测试
+        run_test('TC1: health_check', lambda: test_health_check(proc))
+        run_test('TC2: submit_entities (有效数据)', lambda: test_submit_valid(proc))
+        run_test('TC3: submit_entities (低置信度)', lambda: test_submit_low_confidence(proc))
+        run_test('TC4: submit_entities (空提交)', lambda: test_submit_empty(proc))
+        run_test('TC5: submit_entities (错误 Key)', lambda: test_submit_wrong_key(proc))
+    finally:
+        # CL007 P6: 收尾必须走 finally —— 否则 Ctrl-C / 断言失败时 MCP Server 子进程常驻
+        # （旧实现把关闭写在正常路径末尾，中断路径直接漏掉，残留进程持有 stdio 管道）。
+        try:
+            if proc.stdin and not proc.stdin.closed:
+                proc.stdin.close()
+        except Exception:
+            pass
+        try:
+            proc.wait(timeout=5)
+        except subprocess.TimeoutExpired:
+            proc.terminate()
+            try:
+                proc.wait(timeout=5)
+            except subprocess.TimeoutExpired:
+                proc.kill()
 
-    # 关闭服务器
-    proc.stdin.close()
-    proc.wait(timeout=5)
     print(f'\n=== 测试完成 (exit code: {proc.returncode}) ===')
 
 

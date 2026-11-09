@@ -103,6 +103,7 @@ git checkout -- timestamp.json overview.json data/snapshot.json
 **覆盖范围**（8 个入口 = `hm check cli --strict` 口径 8/8）：`llm-radar-collector.py` +
 `scripts/{twitter-collector,llm-radar-health,llm-radar-mcp-server,flclash_proxy,chromedriver_bootstrap,mcp_submit_update,mcp-protocol-demo}.py`。
 `scripts/mcp-protocol-demo.py` 虽是 demo，但 `hm check cli` 按「含 `__main__` 段的 `*.py`」计入口 ⇒ 补守卫把门禁从 7/8 推到 8/8（LR-CLI-001）。
+**口径说明（P1）**：`n/n` 是**按入口文件逐个**判定「`__main__` 段内是否存在真实 `try/except KeyboardInterrupt` + `emit(` 收口」，即**行级判据**，不是代码行覆盖、也不是分支覆盖 —— 同一个入口里写了多段收口仍只计 1；反之少了收口即整条红。口径随入口数量走：2026-11-04 新增 `scripts/llm-radar-preflight.py`（含 `__main__`）后，当前口径为 **9/9**；`tests/test_cli_interrupt.py` 的入口清单已改为 **git 发现集派生**，新增入口自动纳入，不再手抄。
 `tasks/al-{init,scanner}.py` 仍未纳入（agent-loop 调度、中断语义涉状态机）——另批。
 
 **覆盖边界（实测，别承诺全窗口）**：
