@@ -1,5 +1,5 @@
 # TODO-HANDOFF — llm-radar CL007 后续待执行清单
-<!-- generated: 2026-11-09 · source: cache/draft/TODO-20261109.md · sha256:10ad9cf0 -->
+<!-- generated: 2026-11-09 · source: cache/draft/TODO-20261109.md · sha256:4dc6bf21 -->
 > 派生: 待执行 **1** 条 · 最近闭环 **CL13** · 差异知会 无（未找到含「差异知会」的设计文档）
 > （本行由 `hm loop entry-page` 自动统计，人工段勿复述这些数字；`hm check handoff` 校验人工段声明与实数一致）
 ## 一、已登记待执行（来源: live draft cache/draft/TODO-20261109.md）
@@ -37,48 +37,25 @@
 
 ## 2. 待执行（本仓，按优先级；括号内 = 评审编号）
 
-> **早处理：2026-11-06 ops 会话一批（已 push、未过 review）** —— 明早优先补审，按「小批复核」口径打包一笔、
-> 不重开全量评审。commit 清单（时间序）：`576851e` lr chrome 网络门 · `571e40b` preflight `x_reach` ·
-> `05d628b`→`0667668` 网络门复探裁剪（后者为前者的修正+文案）· `93c301d` 网络门用例钉端口前提 ·
-> `af85df6` ahead≠分叉（`_sync_remote`/`_converge_fork`/`_git_divergence`）· `c26fae5` status 用例固定判定时刻 ·
-> `902e838` auto-push 独立通道（`_push_ahead_on_skip`）· `c82e4a9` GOV-1 收口（`_load_dotenv` 入 `main()`）。
-> 证据：`gh run list` 对应 `c82e4a9` 起全 `success`（`af85df6` 首跑红，已由 `c26fae5` 修正）。
+> **时点快照（2026-11-09 21:45 收工）**：本仓队列仅剩 **CL009（挂起）**，卡在旧裁定「暂不做飞书」；
+> CL007 面内 P1–P6、CL008、CL010、CL011、CL012、CL013 均已于本日闭环（明细见 draft 完成节与机器段）。
+> 待审计 commit：**无**（截至 `1f03d99` 全部已推）。明早首跑：
+> `pytest -q -n0 -k "cli_interrupt or collect_interval or twitter_merge"`，全量留清晨。
 
-**P1　handbook 注明「8/8 = 行级判据」（N6，🟢，10m）**
-落点：`documents/handbooks/llm-radar-cli-governance-handbook-v1.0-20260908.md` §六。
-要求：写明「`hm check cli . --strict` 整体仍 ❌，由既有 `help 打印规范`（4 条）与 `tool 指令检查点`（2 条）⚠️ 项升红，
-基线 `df00d9c` 同 ❌ ⇒ 8/8 只是**该行**判据，不等于整仓门禁绿」。判据：§六 出现该语义；既有 ⚠️ 项另批不修。
+**S1　CL009 飞书告警按根因分流（挂起，需裁定）**
+范围：把 `metrics.last_error` 接进 `llm-radar-collect-report.py` 的 `alert_reasons()`，401/auth_missing 不再给
+`lr reset-health && lr run --force`；按 kind 分流修复指令。
+前置：用户解除「暂不做飞书」裁定；建议先让 `CL008` 探针（`15 */6`）攒够信号再定阈值。
 
-**P2　数字口径订正 + 交接单数字附来源（N4，🟡，10m）**
-要求：handbook §六 与后续 `cache/review-prep/*` 交接单里，每个数字后附产生它的命令。已知两处订正：
-`tests/test_cli.py + tests/test_gitflow.py` = **62 passed**（不是 64，基线同 62）；
-wrapper `--json` 中断 stderr = **80B**（人类模式 73B，`fetch qbitai` 对 78B），不是 59B。
+**S2　观察项（无需裁定，看一行日志即可）**
+21:40 槽位与 21:30 手动补跑间隔仅 10 分钟，按新容差判据应**跳过**（预期行为，非回归）。
+明早若在 `cache/logs/llm-radar-collector/collector.log` 见到「跳过（距上次成功采集仅 N 分钟，…容差 10min）」，
+即证明 CL013 判据在真实 cron 链路上生效。
 
-**P3　仓内 tracked 模板片段 + shell 级钉子（SEC-1，🟡，25m）**
-问题：wrapper 的 fd3 修复只存在于 **gitignored 生成物**，`install.py --force` 重生成即静默退回「json 模式零提示」，
-评审无法从源码复算。
-要求：① 仓内落一段 **tracked** 的模板片段（patch 或 handbook 代码块，含 `exec 3>&2` 位置必须在**任何** `2>file` 之前）；
-② 一条 **shell 级**钉子（脚本：`set -m` + `kill -INT` + 断言 stdout 58B / stderr 80B），放 `tests/` 或 `scripts/`；
-③ 跨仓模板回填已出件，见 §3 OB-1。
-
-**P4　`ENTRIES` 与自动发现集对齐（N1，🟡，15m）**
-问题：`tests/test_cli_interrupt.py` 的 `ENTRIES` 是手写清单；删掉 demo 后 13 passed、静态钉绿、`hm check` 仍 8/8 ⇒ 两层同时失明。
-要求：`ENTRIES` 由发现集派生（`git grep -l "__main__" -- '*.py'`，去 `tests/`、`cache/`、`tasks/`），或加一条
-「集合相等」断言（改一处即红）。判据：删 demo 后**转红**。
-
-**P5　静态钉改 AST 判定（N2，🟡，25m）**
-问题：现为「`__main__` 切片 + 行锚正则共现」⇒ 吞中断 + 死 `emit(` 仍绿（X1）；合法写法 `except KeyboardInterrupt:  # 注释`（X2）
-与 `cli_interrupt.emit(...)`（X3）被误杀。
-要求：`ast.walk` 找 `Try`，handler 为 `Name('KeyboardInterrupt')` 且其 `body` 内含 `Call`（func 名为 `emit` 或属性 `.emit`）。
-判据：X1 红、X2/X3 绿、M6b（只留注释）红。
-
-**P6　demo 子进程收尾（N5，🟢，10m）**
-问题：`scripts/mcp-protocol-demo.py` 用 `Popen` 起 MCP server 后在 `main()` 内无 `finally`；被脚本化
-`kill -INT <pid>`（handbook 自己的形态）打断会留活子进程（终端 Ctrl-C 打整个 pgroup 则不会）。
-要求：`main()` 内 `try/finally: proc.terminate()`（必要时等待回收）。判据：注入中断后 `pgrep -f llm-radar-mcp-server` 计数 0。
-
-**P7（另批，不在 CL007 面）　`tasks/al-init.py` / `tasks/al-scanner.py` 未纳入守卫**
-理由：agent-loop 调度、中断语义涉状态机，需单独验证。若要开工，先补 `ENTRIES` 派生逻辑（P4）再纳。
+**已完成（2026-11-09 CL007 收口批，勿重做）**：P1 handbook「n/n = 按入口行级判据」+ 数字与来源表；
+P2 数字订正（64 / 59B / 62 → 实测 9/9、22/52/65 passed、58B/151B/287B/0B）；P3 wrapper tracked 模板片段 +
+shell 级钉子 `tests/test_wrapper_interrupt.py`；P4 入口清单改 git 发现集派生；P5 静态钉改 AST；
+P6 demo 子进程 `finally` 回收。附带修复：`--json` 模式日志污染 stdout（124B → 58B）。
 
 ## 3. 跨仓 / 已裁定（**本仓不做**）
 
