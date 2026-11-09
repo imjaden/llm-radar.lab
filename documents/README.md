@@ -25,6 +25,12 @@
 
 ## 保留原位（不归档，与手册并存）
 
+根级文件索引（documents 目录下的顶层 md 必须在此登记；`hm check readme .` 以本表首列的文件名判定索引完整性）：
+
+| 文件 | 用途 |
+|:--|:--|
+| `emoji-mapping-v1.0-20260713.md` | emoji 命名/替换约定真值（前端渲染与文档写作共用） |
+
 - 主题说明（现行参考/骨架，手册 §参考文档 列明漂移点）：
   [emoji-mapping-v1.0-20260713.md](emoji-mapping-v1.0-20260713.md)（根）、`pipeline/data-flow-v1.0-20260622.md`、
   `ops/linux-deployment-v1.0-20260701.md`、`ops/github-ci-issues-v1.0-20260704.md`、
