@@ -106,6 +106,35 @@ git checkout -- timestamp.json overview.json data/snapshot.json
 **口径说明（P1）**：`n/n` 是**按入口文件逐个**判定「`__main__` 段内是否存在真实 `try/except KeyboardInterrupt` + `emit(` 收口」，即**行级判据**，不是代码行覆盖、也不是分支覆盖 —— 同一个入口里写了多段收口仍只计 1；反之少了收口即整条红。口径随入口数量走：2026-11-04 新增 `scripts/llm-radar-preflight.py`（含 `__main__`）后，当前口径为 **9/9**；`tests/test_cli_interrupt.py` 的入口清单已改为 **git 发现集派生**，新增入口自动纳入，不再手抄。
 `tasks/al-{init,scanner}.py` 仍未纳入（agent-loop 调度、中断语义涉状态机）——另批。
 
+**wrapper 层收口（tracked 模板片段，SEC-1）**：`lr` / `llm-radar` 的 bash 包装层是 **gitignored 生成物**
+（`install.py --force` 重生成即丢），因此下面这段以**源码形态**入库，重装后按此回填，评审也据此复算：
+
+```bash
+# ① 必须在任何 `2>file` 重定向之前：把「真 stdout / 真 stderr」复制到高位 fd。
+#    一旦先出现 `2>file`，后续 trap 里的提示就会被写进那个文件 ⇒ json 模式「零提示」。
+exec 8>&1 9>&2
+
+cli_registry_interrupted() {
+    local _json=0 _a
+    for _a in "${CLI_REGISTRY_ARGV[@]}"; do [ "$_a" = "--json" ] && _json=1; done
+    if [ "$_json" = "1" ]; then
+        printf '⛔ 已中断 (Ctrl-C) — %s 未完成\n   💡 重跑: %s\n' "$1" "$1" >&9   # 真 stderr
+        exit 130
+    fi
+    printf '⛔ 已中断 (Ctrl-C) — %s 未完成\n   💡 重跑: %s\n' "$1" "$1"
+    exit 130
+}
+trap cli_registry_interrupted INT
+
+# … env 段（conda activate + .env）…
+
+# ② exec 目标前关掉高位 fd，避免被目标进程继承
+exec 8>&- 9>&-
+exec "$interpreter" "$TARGET_SCRIPT" "$@"
+```
+
+钉子：`tests/test_wrapper_interrupt.py`（shell 级，`set -m` + `kill -INT`；无 wrapper 的机器/CI 自动 skip）。
+
 **覆盖边界（实测，别承诺全窗口）**：
 
 1. `lr` / `llm-radar` 是 bash 包装层（`cache/system-command/llm-radar-wrapper.sh`）：env 段（conda activate + `.env`）占掉启动的大半，此期间 SIGINT 落在 **bash** 而非 Python。已加 `trap … INT → exit 130` 兜住（实测 0.05~0.38s 全部 PASS，改动前该段是「零输出 + rc=-2」）。wrapper 是 **gitignored 生成物**，`install.py --force` 重生成即丢（GOV-1）。
@@ -117,13 +146,30 @@ git checkout -- timestamp.json overview.json data/snapshot.json
 **验证命令**（改动后必跑）：
 
 ```bash
-# 单元/行为钉（14 例：7 入口矩阵 + 信封 + 静态回退钉子 + 重跑行 shell 引用）
+# 单元/行为钉（22 例：8 入口矩阵 + 信封 + 静态回退钉子 + 重跑行 shell 引用 + 发现集/AST 矩阵）
 python3 -m pytest tests/test_cli_interrupt.py -q -n0
+# shell 级 wrapper 钉子（3 例；无 ~/.local/bin/lr 的机器自动 skip）
+bash tests/../scripts/wrapper-interrupt-probe.sh --json 1.2   # 手工看 RESULT 行
 # 真实路径（人类模式）: 3s 后打断 qbitai 抓取 ⇒ 应见两行提示、rc=130、无 Traceback
 # ⚠ 必须 `set -m` 开作业控制：非交互 shell 的后台作业继承 SIGINT=SIG_IGN，
 #   不加时 `kill -INT` 无效（实测 7/7 rc=0 且抓取跑完，2026-11-03 review LR-CLI-005）
 set -m; lr fetch qbitai & PID=$!; sleep 3; kill -INT $PID; wait $PID; echo "rc=$?"
 ```
+
+**数字与来源（P2：每个数字后附产生它的命令；改动后重测再改本表）**：
+
+| 数字 | 产生它的命令 |
+|:--|:--|
+| 入口 **9/9** | `hm check cli . --strict \| grep 中断收敛` |
+| `test_cli_interrupt` **22 passed** | `pytest tests/test_cli_interrupt.py -q -n0` |
+| `test_cli_interrupt`+`test_preflight` **52 passed** | `pytest tests/test_cli_interrupt.py tests/test_preflight.py -q -n0` |
+| `test_cli` **24** / `test_gitflow` **41** / 合计 **65 passed** | `pytest tests/test_cli.py tests/test_gitflow.py -q -n0` |
+| wrapper `--json` 中断：stdout **58B**、stderr **≥80B**（2026-11-09 实测 151B，含 env banner） | `bash scripts/wrapper-interrupt-probe.sh --json 1.2` |
+| wrapper 人类模式中断：stdout **287B**、stderr **0B** | `bash scripts/wrapper-interrupt-probe.sh --human 1.2` |
+| 抽样 **59/60 = 98.3%**（解释器启动段残余窗口） | 2026-11-03 手工抽样 3 轮 × 20 点（0.05→1.00s，步长 0.05），**非用例**，不可当门禁 |
+
+> 历史订正：旧稿的「64 passed」「stderr 59B」均与命令输出不符，已按上表口径改写；
+> 「62 passed」是 P0 批新增 5 例前的旧值，现为 **65**（24+41）。凡引用数字必须能在本机复跑出来。
 
 ## 七、已知坑
 

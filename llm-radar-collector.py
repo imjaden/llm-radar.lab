@@ -401,17 +401,25 @@ class LLMRadarCollector:
         """返回当前时间戳字符串，用于日志前缀"""
         return datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
+    def _log_stream(self):
+        """日志流: `--json` 模式下 stdout 只许放信封 ⇒ 人类可读行一律走 stderr（§7 / §11.1-3）。
+
+        2026-11-09 实测: 未分流时 `lr fetch qbitai --json` 的 stdout = 124B（env banner 66B + 信封 58B），
+        按 stdout 解析 JSON 的消费方（1A / cron / hm check）会直接解析失败。
+        """
+        return sys.stderr if '--json' in sys.argv else sys.stdout
+
     def _print_ok(self, msg):
-        print(f'{self._ts()} ✅ {msg}')
+        print(f'{self._ts()} ✅ {msg}', file=self._log_stream())
 
     def _print_err(self, msg):
-        print(f'{self._ts()} ❌ {msg}')
+        print(f'{self._ts()} ❌ {msg}', file=self._log_stream())
 
     def _print_info(self, msg):
-        print(f'{self._ts()} ℹ️  {msg}')
+        print(f'{self._ts()} ℹ️  {msg}', file=self._log_stream())
 
     def _print_warn(self, msg):
-        print(f'{self._ts()} ⚠️  {msg}')
+        print(f'{self._ts()} ⚠️  {msg}', file=self._log_stream())
 
     def _call_deepseek(self, system_content, user_content, model="deepseek-chat", max_tokens=8192):
         """调用 DeepSeek API
