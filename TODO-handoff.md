@@ -1,6 +1,8 @@
 # TODO-HANDOFF — llm-radar CL007 后续待执行清单
-<!-- generated: 2026-11-06 · source: cache/draft/TODO-20261106.md · sha256:7ae5c25a -->
-## 一、已登记待执行（来源: live draft cache/draft/TODO-20261106.md）
+<!-- generated: 2026-11-09 · source: cache/draft/TODO-20261109.md · sha256:404c53ab -->
+> 派生: 待执行 **5** 条 · 最近闭环 **CL11** · 差异知会 无（未找到含「差异知会」的设计文档）
+> （本行由 `hm loop entry-page` 自动统计，人工段勿复述这些数字；`hm check handoff` 校验人工段声明与实数一致）
+## 一、已登记待执行（来源: live draft cache/draft/TODO-20261109.md）
 
 | 编号 | 标题 | 状态（派生摘要·全文见 draft） | kind | priority | 方案文档 |
 |:--|:--|:--|:--|:--|:--|
@@ -8,6 +10,7 @@
 | LLM-RADAR-CL008 | X 登录巡检落 cron（llm-radar-twitter-login-local） | 待办 | queued | normal | - |
 | LLM-RADAR-CL009 | 飞书告警接入（外部依赖失效 → 统一通知） | 挂起 | queued | low | - |
 | LLM-RADAR-CL010 | documents/README.md 索引漂移（hm check readme 4/5） | 待办 | queued | low | - |
+| LLM-RADAR-CL011 | AGENTS.md 增加回话规范指针（跨 profile 真值） | READY | queued | normal | - |
 <!-- generated end -->
 
 > 交接时间：2026-11-03 19:00 CST · 交接人：ops 会话 · 目标仓：`~/CodeSpace/llm-radar.lab`（main）
