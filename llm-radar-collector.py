@@ -78,16 +78,21 @@ def _env_int(name, default, lo=None):
     return default if (lo is not None and n < lo) else n
 
 
-def _env_float(name, default, gt=None):
+def _env_float(name, default, gt=None, ge=None):
     """env 浮点安全解析（与 `_env_int` 同口径; 2026-10-26 review 补齐 float 类未收口项）。
 
     gt: 必须**严格大于**该值（超时/小时数这类量 0 与负数都无意义 → 回退默认）。
+    ge: 必须**大于等于**该值（2026-11-09 新增：容差这类量允许 0，但不允许负数）。
     """
     try:
         n = float(str(os.environ.get(name, '') or default).strip())
     except (TypeError, ValueError):
         return default
-    return default if (gt is not None and n <= gt) else n
+    if gt is not None and n <= gt:
+        return default
+    if ge is not None and n < ge:
+        return default
+    return n
 
 
 # 海外源就绪等待 (对齐声明层真源 macosx-service-policy.json: verify.wait=180s / ports=[7890])
@@ -98,6 +103,10 @@ FLCLASH_READY_TIMEOUT = _env_float('LLM_RADAR_FLCLASH_READY_TIMEOUT', 180.0, gt=
 # (2026-10-09 实锤: 一次 chromedriver 环境故障让 qbitai 累计 18 次并被永久判「已降级」, 永不重试)
 DEGRADED_FAILS = _env_int('LLM_RADAR_DEGRADED_FAILS', 3, lo=1)
 DEGRADED_RETRY_HOURS = _env_float('LLM_RADAR_DEGRADED_RETRY_HOURS', 6.0, gt=0)
+# 采集最短间隔 + 容差（2026-11-09）：cron 在整点 :40 触发，上次成功常在 :4x ⇒ 严格 6h 判据会
+# 稳定跳过（实测 5.97h），节拍被拖到 7h。容差把「差几分钟」按到点处理，避免系统性少采。
+COLLECT_MIN_INTERVAL_HOURS = _env_float('LLM_RADAR_MIN_INTERVAL_HOURS', 6.0, gt=0)
+COLLECT_INTERVAL_TOLERANCE_MIN = _env_float('LLM_RADAR_INTERVAL_TOLERANCE_MIN', 10.0, ge=0)
 
 
 def _is_flclash_running():
@@ -2095,14 +2104,20 @@ hotspots 数组中每个元素格式：
 
         now = datetime.now()
 
-        # 1. 间隔检查：上次成功 < 6h 则跳过
+        # 1. 间隔检查：上次成功 < 最短间隔 则跳过
+        #    2026-11-09 修：cron 是整点 :40 触发，上一次成功往往在 :4x ⇒ 实测间隔恒为 5.97h，
+        #    旧判据（严格 < 6h）会稳定跳过，实际节拍被拖成 7h（每天少采 3 轮），且文案四舍五入显示
+        #    「仅 6.0h，跳过」更误导。改为**分钟粒度 + 容差**：容差内的"差几分钟"按到点处理。
         last_success = metrics.get('last_success_time')
         if last_success:
             try:
                 last_dt = datetime.fromisoformat(last_success)
-                hours_since = (now - last_dt).total_seconds() / 3600
-                if hours_since < 6:
-                    self._print_info(f'距上次成功采集仅 {hours_since:.1f}h，跳过（最短间隔 6h）')
+                minutes_since = (now - last_dt).total_seconds() / 60
+                threshold_min = COLLECT_MIN_INTERVAL_HOURS * 60 - COLLECT_INTERVAL_TOLERANCE_MIN
+                if minutes_since < threshold_min:
+                    self._print_info(
+                        f'距上次成功采集仅 {minutes_since:.0f} 分钟，跳过'
+                        f'（最短间隔 {COLLECT_MIN_INTERVAL_HOURS:.0f}h，容差 {COLLECT_INTERVAL_TOLERANCE_MIN:.0f}min）')
                     return False
             except:
                 pass
