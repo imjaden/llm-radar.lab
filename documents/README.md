@@ -2,7 +2,7 @@
 
 本目录是 llm-radar.lab 的**知识底座索引**：6 份主题手册为现行知识入口（机制/决策史/坑），
 保留原位主题说明与手册并存，一次性过程文档（design/review/audit/verify 等）按归档口径
-移入 `archive/{solutions,reviews,theme}-20260908/`。
+移入 `archive/solutions-20260908/`、`archive/reviews-20260908/`、`archive/theme-20260908/` 三个桶。
 
 ## 主题手册（documents/handbooks/，编制 2026-09-08，现行知识底座）
 
@@ -26,7 +26,7 @@
 ## 保留原位（不归档，与手册并存）
 
 - 主题说明（现行参考/骨架，手册 §参考文档 列明漂移点）：
-  `emoji-mapping-v1.0-20260713.md`（根）、`pipeline/data-flow-v1.0-20260622.md`、
+  [emoji-mapping-v1.0-20260713.md](emoji-mapping-v1.0-20260713.md)（根）、`pipeline/data-flow-v1.0-20260622.md`、
   `ops/linux-deployment-v1.0-20260701.md`、`ops/github-ci-issues-v1.0-20260704.md`、
   `ops/twitter-login-persistence-v1.0-20261023.md`（cron Chrome 读不到 keychain ⇒ X 登录态失效；LaunchAgent 常驻 GUI 会话修复 + 验收证据）、
   `ops/collect-report-notify-v1.0-20261023.md`（采集报告飞书日报/异常告警模板定稿 + 阈值去重 + cron 清单）、
@@ -41,13 +41,13 @@
 
 ## 归档口径（2026-09-08 docs@archive）
 
-一次性过程文档 76 份 → `documents/archive/{solutions,reviews,theme}-20260908/`：
+一次性过程文档 76 份 → 按 Q3/Q4/Q6/Q7 分入 `documents/archive/` 下三个桶（solutions / reviews / theme，均以 `-20260908` 结尾）：
 
 | 桶 | 计数 | 内容 |
 |---|---|---|
-| `archive/solutions-20260908/` | 14 | design 终版（impl-v1.0 按 Q3 迁 reviews 桶） |
-| `archive/reviews-20260908/` | 50 | review/rereview/impl-audit/ops-verify/ops-check/audit（含迁入的 git-flow-fix-impl-v1.0） |
-| `archive/theme-20260908/` | 12 | 主题子目录一次性批 + Q4/Q6/Q7 附注件 |
+| solutions 桶（archive 下，后缀 -20260908） | 14 | design 终版（impl-v1.0 按 Q3 迁 reviews 桶） |
+| reviews 桶（archive 下，后缀 -20260908） | 50 | review/rereview/impl-audit/ops-verify/ops-check/audit（含迁入的 git-flow-fix-impl-v1.0） |
+| theme 桶（archive 下，后缀 -20260908） | 12 | 主题子目录一次性批 + Q4/Q6/Q7 附注件 |
 
 Q3 改名（同批 docs@sync）：reviews 桶 4 份 `llm-radar-fork-converge-*` → `llm-radar-git-fork-converge-*`；
 `cl005-fork-merge-audit` → `cl005-git-fork-merge-audit`；`git-flow-fix-impl-v1.0` 由 solutions 迁 reviews 桶。
