@@ -4,7 +4,7 @@
 - 配置解析: data/ 路径 + 10 账号 + 缺字段容错 + max_tweets 默认 30
 - 条数窗口 (D1 1A): 三规则 (24h>30 全保留 / ≤30 补足 / 总<30 全保留) + 边界 (=30/=24h 整点)
 - forward 解析 (D2 2C): retweet/quote → "by @作者: 原文"; 非转发 None; 无外层文本 text None
-- 风控 (RIG-2): 单账号挑战→部分成功; 连续 2 账号挑战→提前终止
+- 风控 (RIG-2/CL012): 单账号挑战→部分成功; 连续挑战→退避后继续(不再提前终止丢账号)
 - DOM 解析: fixture HTML (文本/时间/指标/图片) + 缺失字段 null
 - twitter.json 写盘: schema 字段完整 (retention) + null 缺省 + UTC Z 时间格式
 - 退出码映射 (O-4): 登录墙 exit-2 / 挑战检测 / 全失败不写盘 / 部分成功写盘+last_error
@@ -610,6 +610,7 @@ class TestRiskControl:
 
     def _patch_collect(self, tc, monkeypatch, fetch_fn, tmp_path):
         calls = []
+        monkeypatch.setattr(tc, 'CHALLENGE_BACKOFF_SEC', 0.0, raising=False)  # CL012: 测试不真睡
 
         def fake_fetch(driver, target, **kw):
             calls.append(target['handle'])
@@ -621,6 +622,8 @@ class TestRiskControl:
         monkeypatch.setattr(tc, 'write_document',
                             lambda doc, path=None: written.update(doc))
         monkeypatch.setattr(tc, 'commit_and_push', lambda n: None)
+        # CL012: 合并语义一律从「无上轮文档」起步 ⇒ 用例与真实 twitter.json 解耦
+        monkeypatch.setattr(tc, '_load_previous_document', lambda path=None: None, raising=False)
         return calls, written
 
     def test_single_challenge_partial_success(self, tc, monkeypatch, tmp_path):
@@ -640,8 +643,12 @@ class TestRiskControl:
         # build_last_error 用 name (A0) 记录失败账号 + 原因
         assert 'A0' in written['last_error'] and '验证挑战' in written['last_error']
 
-    def test_two_consecutive_challenges_early_terminate(self, tc, monkeypatch, tmp_path):
-        """连续 2 账号挑战 → 提前终止本轮 (第三个不抓); 全部未抓成 → 不写盘 exit 1"""
+    def test_consecutive_challenges_do_not_early_terminate(self, tc, monkeypatch, tmp_path):
+        """CL012: 连续挑战不再提前终止 —— 余下账号照样抓; 全部失败仍不写盘 exit 1。
+
+        旧行为（RIG-2）在第 2 个挑战即 break，叠加覆盖式写盘会把其余账号数据整体削掉
+        （2026-11-09 实测 10 账号 300 条 → 1 账号 30 条）。
+        """
         targets = self._targets(3)
 
         def fetch_fn(t):
@@ -650,7 +657,7 @@ class TestRiskControl:
         calls, written = self._patch_collect(tc, monkeypatch, fetch_fn, tmp_path)
         code = tc.cmd_collect(targets, tmp_path)
         assert code == 1
-        assert calls == ['a0', 'a1']          # 第三个账号未抓
+        assert calls == ['a0', 'a1', 'a2']    # 全部抓完（无提前终止）
         assert written == {}                   # 全部失败不写盘
 
     def test_challenge_then_success_no_early_terminate(self, tc, monkeypatch, tmp_path):
@@ -668,8 +675,8 @@ class TestRiskControl:
         assert calls == ['a0', 'a1', 'a2']    # 全部抓完 (非连续不提前终止)
         assert len(written['targets']) == 1   # 仅 a1 成功
 
-    def test_partial_success_after_early_terminate(self, tc, monkeypatch, tmp_path):
-        """已抓账号写盘: 成功 1 个后连续 2 挑战 → 写盘成功账号, exit 0"""
+    def test_partial_success_keeps_collecting(self, tc, monkeypatch, tmp_path):
+        """CL012: 成功 1 个 + 其后连续挑战 → 继续抓完并写盘成功账号, exit 0"""
         targets = self._targets(3)
 
         def fetch_fn(t):
@@ -680,7 +687,7 @@ class TestRiskControl:
         calls, written = self._patch_collect(tc, monkeypatch, fetch_fn, tmp_path)
         code = tc.cmd_collect(targets, tmp_path)
         assert code == 0                       # 部分成功
-        assert calls == ['a0', 'a1', 'a2']     # a0 成功; a1/a2 挑战 → 连续 2 → 终止
+        assert calls == ['a0', 'a1', 'a2']     # 全抓完（旧行为在此终止于 a1）
         assert len(written['targets']) == 1
         assert 'A1' in written['last_error'] and 'A2' in written['last_error']
 
@@ -748,6 +755,7 @@ targets:
         monkeypatch.setattr(tc, 'write_document',
                             lambda doc, path=None: written.update(doc))
         monkeypatch.setattr(tc, 'commit_and_push', lambda n: None)
+        monkeypatch.setattr(tc, '_load_previous_document', lambda path=None: None, raising=False)
         assert tc.main(['--collect']) == 0
         assert written.get('targets') == []
         assert written.get('retention') == '30/24h'
@@ -761,6 +769,7 @@ targets:
         monkeypatch.setattr(tc, 'write_document',
                             lambda doc, path=None: written.update(doc))
         monkeypatch.setattr(tc, 'commit_and_push', lambda n: None)
+        monkeypatch.setattr(tc, '_load_previous_document', lambda path=None: None, raising=False)
         assert tc.main(['--collect']) == 0
         assert written.get('targets') == []
 
@@ -1121,6 +1130,8 @@ class TestAttachReconnect:
         monkeypatch.setattr(tc, 'write_document',
                             lambda doc, path=None: written.update(doc))
         monkeypatch.setattr(tc, 'commit_and_push', lambda n: None)
+        # CL012: 与真实 twitter.json 解耦（无上轮文档）
+        monkeypatch.setattr(tc, '_load_previous_document', lambda path=None: None, raising=False)
 
         def fake_fetch(driver, target, **kw):
             return [{'id': '1', 'text': 'ok'}]

@@ -152,6 +152,9 @@ SCROLLS = 3                # 滚动次数 (保守, 防反爬 §3.6)
 SCROLL_DELAY = 2.0         # 每次滚动间隔 (秒)
 WAIT_TIMEOUT = 30          # 等待主时间线超时 (秒)
 TOLERANCE_MINUTES = 5      # 24h 窗口过滤容差 (now+5min, 时钟偏差)
+CHALLENGE_BACKOFF_SEC = 2.0     # CL012: 每次验证挑战后的退避基数(×连击数, 上限见下)
+CHALLENGE_BACKOFF_CAP = 10.0    # CL012: 单次退避上限
+
 LOGIN_WAIT_SECONDS = 600   # --login 轮询上限 (10 分钟)
 
 COMMIT_MSG = 'auto-push@llm-radar: update twitter ({} changes)'
@@ -504,6 +507,48 @@ def target_doc(target, tweets):
     """成功 target → schema 中的 target 对象"""
     return {'name': target['name'], 'handle': target['handle'],
             'url': target['url'], 'tweets': tweets}
+
+
+def _load_previous_document(path=DATA_PATH):
+    """读上一轮 twitter.json（缺失/损坏 ⇒ None，调用方按"无历史"处理）。"""
+    try:
+        return json.loads(Path(path).read_text(encoding='utf-8'))
+    except (OSError, ValueError):
+        return None
+
+
+def merge_document(new_doc, old_doc):
+    """本轮结果 + 上轮文档 → 完整文档（CL012，防「部分成功削掉其它账号」）。
+
+    背景（2026-11-09 实测）：force 轮 9/10 账号遇 cf-challenge，旧实现只把
+    **成功** 的 target 写进 doc ⇒ twitter.json 从 10 账号/300 条掉到 1 账号/30 条，
+    且已 auto-push 到线上（当日已 revert）。
+
+    规则:
+      · 本轮抓到数据的 target → 用新数据（新 doc 为准）；
+      · 本轮失败的 target → 保留上轮 tweets，并标 `stale: True`（附加键，前端可忽略）；
+      · 上轮有、本轮缺的 target → 同上保留（顺序沿用上轮，避免前端顺序抖动）；
+      · 上轮没有的 target → 追加；
+      · 有保留项时写顶层 `stale_targets: [handle, ...]` 供排查。
+    """
+    if not old_doc:
+        return new_doc
+    new_by_handle = {t.get('handle'): t for t in (new_doc.get('targets') or []) if t.get('handle')}
+    merged, stale = [], []
+    for old_t in old_doc.get('targets') or []:
+        handle = old_t.get('handle')
+        if not handle:
+            continue
+        if handle in new_by_handle:
+            merged.append(new_by_handle.pop(handle))
+        elif old_t.get('tweets'):
+            merged.append({**old_t, 'stale': True})
+            stale.append(handle)
+    merged.extend(new_by_handle.values())
+    out = {**new_doc, 'targets': merged}
+    if stale:
+        out['stale_targets'] = stale
+    return out
 
 
 def write_document(doc, path=DATA_PATH):
@@ -987,13 +1032,16 @@ def cmd_collect(targets, profile_dir, cdp_port=None):
                 print('[twitter-collector] ❌ 登录态失效', file=sys.stderr)
                 break
             except ChallengeError as e:
+                # CL012: 不因连续挑战提前终止 —— 旧行为会让「2 个账号被挡」直接丢掉其余 8 个账号，
+                # 再叠加覆盖式写盘 = 数据腰斩。这里改为跳过 + 递进退避（防风控升级但仍取完余下 target）。
                 challenge_streak += 1
                 print(f'[twitter-collector] ⚠️  {e}, 跳过该账号', file=sys.stderr)
                 results.append({'target': t, 'tweets': [], 'error': str(e)})
+                backoff = min(CHALLENGE_BACKOFF_CAP, CHALLENGE_BACKOFF_SEC * challenge_streak)
                 if challenge_streak >= 2:
-                    print('[twitter-collector] ⚠️  连续 2 账号遇验证挑战, 提前终止本轮'
-                          ' (防风控升级)', file=sys.stderr)
-                    break
+                    print(f'[twitter-collector] ⚠️  连续 {challenge_streak} 账号遇验证挑战, '
+                          f'退避 {backoff:.0f}s 后继续 (不丢余下账号)', file=sys.stderr)
+                time.sleep(backoff)
             except Exception as e:
                 challenge_streak = 0
                 print(f'[twitter-collector] ⚠️  抓取失败: {e}', file=sys.stderr)
@@ -1015,8 +1063,13 @@ def cmd_collect(targets, profile_dir, cdp_port=None):
         docs = [target_doc(r['target'], r['tweets']) for r in ok_results]
         total = sum(len(r['tweets']) for r in ok_results)
         doc = build_document(docs, last_error=last_error)
+        doc = merge_document(doc, _load_previous_document())
+        total = sum(len(t.get('tweets') or []) for t in doc.get('targets') or [])
         write_document(doc)
         print(f'[twitter-collector] ✅ 写盘 data/twitter.json ({total} 条推文)')
+        if doc.get('stale_targets'):
+            print('[twitter-collector] ♻️  本轮未取到，保留上轮数据: '
+                  + ', '.join(doc['stale_targets']))
         if last_error:
             print(f'[twitter-collector] ⚠️  last_error: {last_error}')
         commit_and_push(total)
