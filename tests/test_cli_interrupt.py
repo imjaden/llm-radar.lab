@@ -13,6 +13,7 @@ KeyboardInterrupt —— 等价于「信号恰好落在该命令执行期」。�
 会让用例随机红绿；这里只替换「信号何时到达」这一个变量，执行体与文案全走生产代码。
 """
 
+import ast
 import json
 import os
 import re
@@ -27,16 +28,32 @@ ROOT = Path(__file__).resolve().parent.parent
 COLLECTOR = ROOT / 'llm-radar-collector.py'
 SCRIPTS = ROOT / 'scripts'
 
-# 入口清单 = CL007 白名单（tasks/ 与 demo/scratch 不在本批, 见回执）
-ENTRIES = [
-    'scripts/twitter-collector.py',
-    'scripts/llm-radar-health.py',
-    'scripts/flclash_proxy.py',
-    'scripts/chromedriver_bootstrap.py',
-    'scripts/mcp_submit_update.py',
-    'scripts/llm-radar-mcp-server.py',
-    'scripts/mcp-protocol-demo.py',
-]
+# 入口清单 = **发现集派生**（CL007 P4）: 手写清单会漏掉新入口
+# （2026-11-04 新增 scripts/llm-radar-preflight.py 时，清单没跟上 ⇒ 该入口零覆盖、静态钉也失明）。
+# 规则: git 索引里的 *.py, 含 `__main__`, 排除 tests/ cache/ tasks/（非产品入口）。
+_ENTRY_EXCLUDE = {
+    'llm-radar-collector.py',        # 主采集器单独覆盖（COLLECTOR）
+    'scripts/cli_interrupt.py',      # 收口真源模块, 不是入口
+}
+
+
+def _discover_entries():
+    out = subprocess.run(['git', 'ls-files', '*.py'], cwd=ROOT,
+                         capture_output=True, text=True).stdout.splitlines()
+    found = []
+    for rel in out:
+        if rel.startswith(('tests/', 'cache/', 'tasks/')) or rel in _ENTRY_EXCLUDE:
+            continue
+        try:
+            src = (ROOT / rel).read_text(encoding='utf-8')
+        except OSError:
+            continue
+        if '__main__' in src:
+            found.append(rel)
+    return sorted(found)
+
+
+ENTRIES = _discover_entries()
 
 _HARNESS = r'''
 import os, runpy, sys
@@ -103,17 +120,109 @@ def _entry_slice(path):
     return src[src.index(ENTRY_TAIL):]
 
 
+def _call_name(node):
+    if isinstance(node, ast.Name):
+        return node.id
+    if isinstance(node, ast.Attribute):
+        return node.attr
+    return None
+
+
+def _has_interrupt_guard(path):
+    """AST 判定（CL007 P5）：模块级 `if __name__ == '__main__'` 段里存在
+
+        except KeyboardInterrupt:  <body 内含 emit(...) 调用>
+
+    为什么不用「切片 + 行锚正则」（旧实现）：
+      · X1 吞中断（`except KeyboardInterrupt: pass` 后面再来一句永不执行的 `emit(`）会假绿；
+      · X2 合法写法 `except KeyboardInterrupt:  # 注释`、X3 `cli_interrupt.emit(...)` 会被误杀。
+    """
+    try:
+        tree = ast.parse(path.read_text(encoding='utf-8'))
+    except SyntaxError:
+        return False
+
+    def is_main_guard(node):
+        if not isinstance(node, ast.If):
+            return False
+        test = node.test
+        return (isinstance(test, ast.Compare)
+                and isinstance(test.left, ast.Name) and test.left.id == '__name__'
+                and len(test.comparators) == 1
+                and isinstance(test.comparators[0], ast.Constant)
+                and test.comparators[0].value == '__main__')
+
+    for node in tree.body:
+        if not is_main_guard(node):
+            continue
+        for sub in ast.walk(ast.Module(body=node.body, type_ignores=[])):
+            if not isinstance(sub, ast.ExceptHandler):
+                continue
+            tp = sub.type
+            name = tp.id if isinstance(tp, ast.Name) else (tp.attr if isinstance(tp, ast.Attribute) else None)
+            if name != 'KeyboardInterrupt':
+                continue
+            for stmt in ast.walk(ast.Module(body=sub.body, type_ignores=[])):
+                if isinstance(stmt, ast.Call) and _call_name(stmt.func) == 'emit':
+                    return True
+    return False
+
+
 def test_static_all_entries_declare_single_catch_point():
-    """静态回退钉子（LR-CLI-004 收紧）：入口段切片内必须有**代码行**
-    `except KeyboardInterrupt:` 且调用 `emit(` —— 只留注释不算达标（变异 M6b 须转红）。"""
-    bad = []
-    for f in [COLLECTOR] + [ROOT / rel for rel in ENTRIES]:
-        tail = _entry_slice(f)
-        has_except = re.search(r'^\s*except KeyboardInterrupt:\s*$', tail, re.M)
-        has_emit = re.search(r'^\s*emit\(', tail, re.M)
-        if not (has_except and has_emit):
-            bad.append(f'{f.relative_to(ROOT)} (except={bool(has_except)}, emit={bool(has_emit)})')
+    """静态回退钉子（AST 版）：每个入口的 `__main__` 段都必须有真实收口（吞中断/死 emit 不算）。"""
+    bad = [str(f.relative_to(ROOT)) for f in [COLLECTOR] + [ROOT / rel for rel in ENTRIES]
+           if not _has_interrupt_guard(f)]
     assert not bad, f'入口段缺代码级收口: {bad}'
+
+
+@pytest.mark.parametrize('body,expect', [
+    # X1: 吞中断 + 后面的 emit 是死代码 ⇒ 必须判红
+    ("if __name__ == '__main__':\n"
+     "    try:\n        main()\n"
+     "    except KeyboardInterrupt:\n        pass\n"
+     "    emit('x', sys.argv)\n", False),
+    # X2: 合法写法 + 行尾注释 ⇒ 必须判绿
+    ("if __name__ == '__main__':\n"
+     "    try:\n        main()\n"
+     "    except KeyboardInterrupt:  # 注释\n"
+     "        emit('x', sys.argv)\n", True),
+    # X3: 模块限定调用 ⇒ 必须判绿
+    ("if __name__ == '__main__':\n"
+     "    try:\n        sys.exit(main())\n"
+     "    except KeyboardInterrupt:\n"
+     "        cli_interrupt.emit('x', sys.argv)\n", True),
+    # M6b: 只留注释、没有可执行收口 ⇒ 判红
+    ("if __name__ == '__main__':\n"
+     "    try:\n        main()\n"
+     "    except KeyboardInterrupt:\n        # emit('x', sys.argv)\n        pass\n", False),
+])
+def test_static_ast_matrix(tmp_path, body, expect):
+    f = tmp_path / 'entry.py'
+    f.write_text(body, encoding='utf-8')
+    assert _has_interrupt_guard(f) is expect
+
+
+def test_discovery_covers_new_entries():
+    """P4 判据：发现集必须覆盖当前全部 `__main__` 文件（新增入口自动纳入，不再靠手写清单）。"""
+    undiscovered = []
+    out = subprocess.run(['git', 'ls-files', '*.py'], cwd=ROOT,
+                         capture_output=True, text=True).stdout.splitlines()
+    for rel in out:
+        if rel.startswith(('tests/', 'cache/', 'tasks/')):
+            continue
+        try:
+            src = (ROOT / rel).read_text(encoding='utf-8')
+        except OSError:
+            continue
+        if '__main__' in src and rel not in ENTRIES and rel not in _ENTRY_EXCLUDE:
+            undiscovered.append(rel)
+    assert not undiscovered, f'发现集漏项: {undiscovered}'
+
+
+def test_preflight_entry_is_covered():
+    """回归钉子：2026-11-04 新增的 preflight 入口必须既被发现、也有守卫。"""
+    assert 'scripts/llm-radar-preflight.py' in ENTRIES
+    assert _has_interrupt_guard(ROOT / 'scripts/llm-radar-preflight.py')
 
 
 def test_static_collector_import_guard_reraises_for_library_use():
