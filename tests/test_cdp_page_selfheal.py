@@ -83,10 +83,16 @@ def test_page_put_failure_reported(monkeypatch):
     assert tc._ensure_cdp_page(9222, timeout=0) == (False, 0, 'failed')
 
 
-def test_cmd_collect_wires_selfheal_before_retry():
-    """接线钉子：只加 helper 不调用 = 事故照旧。"""
+def test_cmd_collect_wires_selfheal_before_attach():
+    """接线钉子：补页必须在 **attach 之前**（实测教训）。
+
+    第一版把补页放在 FetchError 分支里 ⇒ 太晚：start_driver 在显式 chromedriver 失败后会先回退
+    Selenium Manager（实测 stall 数分钟），补页那行根本没机会打印。
+    """
     src = SCRIPT.read_text(encoding='utf-8')
-    assert 'page target=0 ⇒ 补页' in src
+    assert src.count('page target=0 ⇒ 补页') >= 1
     i = src.index('page target=0 ⇒ 补页')
+    attach = src.index('driver = start_driver(profile_dir', i)
+    assert i < attach, '补页必须先于 start_driver（attach）'
     j = src.index('_ensure_proxy_ready()', i)
-    assert i < j, '补页必须发生在「确保代理 → 重试 attach」之前'
+    assert i < j, '补页也要先于「确保代理 → 重试 attach」'

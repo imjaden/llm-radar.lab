@@ -1045,6 +1045,14 @@ def cmd_collect(targets, profile_dir, cdp_port=None):
         return 1
     driver = None
     try:
+        # CL015: attach 前先确保 page target 存在。0 页时 chromedriver 必然报
+        # `unable to discover open page`，且 start_driver 会先回退 Selenium Manager（实测 stall 数分钟），
+        # 所以补页必须发生在 attach **之前**，而不是等 FetchError 分支。
+        if cdp_port:
+            page_n = _cdp_page_count(cdp_port)
+            if page_n == 0:
+                ok, n, act = _ensure_cdp_page(cdp_port)
+                print(f'[twitter-collector] ⚠️  page target=0 ⇒ 补页 {act}（page={n}）')
         try:
             driver = start_driver(profile_dir, headed=False, cdp_port=cdp_port)
         except FetchError as e:
