@@ -1,5 +1,5 @@
 # TODO-HANDOFF — llm-radar CL007 后续待执行清单
-<!-- generated: 2026-11-10 · source: cache/draft/TODO-20261110.md · sha256:4c1c9634 -->
+<!-- generated: 2026-11-10 · source: cache/draft/TODO-20261110.md · sha256:f38c1f39 -->
 > 派生: 待执行 **1** 条 · 最近闭环 **CL16** · 差异知会 无（未找到含「差异知会」的设计文档）
 > （本行由 `hm loop entry-page` 自动统计，人工段勿复述这些数字；`hm check handoff` 校验人工段声明与实数一致）
 ## 一、已登记待执行（来源: live draft cache/draft/TODO-20261110.md）
@@ -37,25 +37,30 @@
 
 ## 2. 待执行（本仓，按优先级；括号内 = 评审编号）
 
-> **时点快照（2026-11-09 21:45 收工）**：本仓队列仅剩 **CL009（挂起）**，卡在旧裁定「暂不做飞书」；
-> CL007 面内 P1–P6、CL008、CL010、CL011、CL012、CL013 均已于本日闭环（明细见 draft 完成节与机器段）。
-> 待审计 commit：**无**（截至 `1f03d99` 全部已推）。明早首跑：
-> `pytest -q -n0 -k "cli_interrupt or collect_interval or twitter_merge"`，全量留清晨。
+> **时点快照（2026-11-10 21:30 收工）**：队列只剩 **CL009（挂起）**，卡在旧裁定「暂不做飞书」。
+> 本日闭环 CL014（`lr chrome` 幂等 + page 兜底）、CL015（采集 attach 前补页自愈）、CL016（`--json` stdout 契约），
+> 三笔均已推、CI 绿；明细见 draft 完成节与机器段。
+> 待审计 commit：**无**。明早首跑：`pytest -q -n0 -k "chrome_page_target or cdp_page_selfheal or wrapper_interrupt"`，
+> 全量留清晨。
 
 **S1　CL009 飞书告警按根因分流（挂起，需裁定）**
 范围：把 `metrics.last_error` 接进 `llm-radar-collect-report.py` 的 `alert_reasons()`，401/auth_missing 不再给
-`lr reset-health && lr run --force`；按 kind 分流修复指令。
-前置：用户解除「暂不做飞书」裁定；建议先让 `CL008` 探针（`15 */6`）攒够信号再定阈值。
+`lr reset-health && lr run --force`，按 kind 分流修复指令。
+前置：用户解除「暂不做飞书」裁定；建议先让 CL008 探针攒够信号再定阈值。
 
-**S2　观察项（无需裁定，看一行日志即可）**
-21:40 槽位与 21:30 手动补跑间隔仅 10 分钟，按新容差判据应**跳过**（预期行为，非回归）。
-明早若在 `cache/logs/llm-radar-collector/collector.log` 见到「跳过（距上次成功采集仅 N 分钟，…容差 10min）」，
-即证明 CL013 判据在真实 cron 链路上生效。
+**S2　环境观察项（无需裁定，看日志即可）**
+`~/.wdm` 里最高 chromedriver 为 **156**，本机 Chrome 已 **157**：主采集仍 `6/6 源成功`（旧驱动可用），X 侧走稳定指针 157。
+复核命令：`grep "与本机 Chrome" cache/logs/llm-radar-collector/collector.log | tail -3`。
+若哪天出现 Selenium 源连败，第一嫌疑即此（修法：把 157 驱动按 wdm 布局补一份 → `reset-health` → `run --force`）。
+属环境动作，需用户点名。
 
-**已完成（2026-11-09 CL007 收口批，勿重做）**：P1 handbook「n/n = 按入口行级判据」+ 数字与来源表；
-P2 数字订正（64 / 59B / 62 → 实测 9/9、22/52/65 passed、58B/151B/287B/0B）；P3 wrapper tracked 模板片段 +
-shell 级钉子 `tests/test_wrapper_interrupt.py`；P4 入口清单改 git 发现集派生；P5 静态钉改 AST；
-P6 demo 子进程 `finally` 回收。附带修复：`--json` 模式日志污染 stdout（124B → 58B）。
+**S3　X 采集节奏（预期行为，勿当故障）**
+`twitter.json` 已更新到 `2026-11-10T11:02:09Z`（300 条），5h 节流下 19:20 / 20:20 两轮按设计跳过；
+下一轮实采在生成满 5h 后的首个 `:20`。判据：日志 `跳过: twitter.json 生成于 N h 前 (< 节流阈值 5h)`。
+
+**已完成（2026-11-10，勿重做）**：CL014 `lr chrome` 幂等 + page target 兜底（`--open` 别名，8 例钉子）；
+CL015 采集侧 attach **之前**判页并补页（真机 0 页 → 补页 → 300 条写盘 push，EXIT=0；位置教训：放 FetchError 分支太晚，
+会被 Selenium Manager stall 挡住）；CL016 chromedriver 告警改走时流闸（`--json` stdout 263B → 58B）+ 中断探针改取尾部抽样。
 
 ## 3. 跨仓 / 已裁定（**本仓不做**）
 
