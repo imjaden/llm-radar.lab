@@ -31,6 +31,7 @@ import sys
 import json
 import time
 import subprocess
+import urllib.request
 import platform
 from pathlib import Path
 from datetime import datetime, timedelta, timezone
@@ -85,6 +86,47 @@ def _env_port(name, default):
     except (TypeError, ValueError):
         return default
     return n if 0 < n < 65536 else default
+
+
+CDP_PAGE_URL = os.environ.get('TWITTER_CDP_PAGE_URL') or 'https://x.com/home'
+
+
+def _cdp_page_count(cdp_port, timeout=3.0):
+    """CDP /json/list 的 page target 数；不可达返回 None（与「0 个页面」区分）。"""
+    try:
+        with urllib.request.urlopen(f'http://127.0.0.1:{cdp_port}/json/list', timeout=timeout) as r:
+            targets = json.loads(r.read().decode())
+        return sum(1 for t in targets if t.get('type') == 'page')
+    except Exception:
+        return None
+
+
+def _ensure_cdp_page(cdp_port, url=None, timeout=10.0):
+    """0 page target 时补一个（attach 的硬前提）。返回 (ok, count, action)。
+
+    2026-11-10 事故：Chrome 自更新后以 --no-startup-window 自重启，页面数 0，而 chromedriver
+    attach 报 `unable to discover open page` ⇒ 连败 10 轮、twitter.json 停更 24.9h。
+    新版 Chrome 建页必须 PUT（GET 回 405）。
+    """
+    url = url or CDP_PAGE_URL
+    n = _cdp_page_count(cdp_port)
+    if n is None:
+        return False, 0, 'cdp_down'
+    if n:
+        return True, n, 'reuse'
+    try:
+        req = urllib.request.Request(f'http://127.0.0.1:{cdp_port}/json/new?{url}', method='PUT')
+        with urllib.request.urlopen(req, timeout=max(2, timeout)) as r:
+            r.read()
+    except Exception:
+        return False, 0, 'failed'
+    deadline = time.time() + timeout
+    while time.time() < deadline:
+        n = _cdp_page_count(cdp_port)
+        if n:
+            return True, n, 'created'
+        time.sleep(0.4)
+    return False, 0, 'failed'
 
 
 def _ensure_proxy_ready(timeout=None):
@@ -1007,6 +1049,12 @@ def cmd_collect(targets, profile_dir, cdp_port=None):
             driver = start_driver(profile_dir, headed=False, cdp_port=cdp_port)
         except FetchError as e:
             # CL151: CDP 断连重连点 —— 先确保代理就绪, 再重试一次 attach
+            # CL015: attach 失败且 page target=0 时先补一个页面（Chrome 自更新后会丢页面）
+            if cdp_port:
+                page_n = _cdp_page_count(cdp_port)
+                if page_n == 0:
+                    ok, n, act = _ensure_cdp_page(cdp_port)
+                    print(f'[twitter-collector] ⚠️  page target=0 ⇒ 补页 {act}（page={n}）')
             if not cdp_port or not _ensure_proxy_ready():
                 print(f'[twitter-collector] ❌ {e}', file=sys.stderr)
                 return 1
