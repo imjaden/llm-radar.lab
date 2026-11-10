@@ -2974,6 +2974,57 @@ def _cdp_ready(port, timeout=0.6):
         return False
 
 
+# attach 的硬前提: 浏览器里至少有一个 page target。2026-11-10 实测事故 —— Chrome 自更新后以
+# `--no-startup-window` 自重启, 绕过 launchd plist 的 URL 参数; KeepAlive 见端口仍在监听不判失败
+# ⇒ page 数 0, Selenium attach 报 `unable to discover open page` ⇒ X 采集连续 10 轮失败、
+# data/twitter.json 停更 24.9h。兜底动作 = PUT /json/new（Chrome 新版必须 PUT, GET 回 405）。
+CDP_PAGE_URL = (os.environ.get('TWITTER_CDP_PAGE_URL') or 'https://x.com/home')
+
+
+def _cdp_http(port, path, method='GET', timeout=3):
+    """CDP HTTP 端点（/json/list、/json/new、/json/close）最小封装（requests 惰性 import）。"""
+    import requests
+    r = requests.request(method, f'http://127.0.0.1:{port}{path}', timeout=timeout)
+    if r.status_code >= 400:
+        raise RuntimeError(f'CDP HTTP {r.status_code}: {path[:40]}')
+    return r.json() if r.content else None
+
+
+def _cdp_page_targets(port, timeout=3):
+    """page 类型 target 列表；CDP 不可达返回 None（与「0 个页面」区分开）。"""
+    try:
+        targets = _cdp_http(port, '/json/list', timeout=timeout) or []
+    except Exception:
+        return None
+    return [t for t in targets if t.get('type') == 'page']
+
+
+def _ensure_page_target(port, url=None, timeout=10, settle=0.4):
+    """确保浏览器里至少有一个 page target；返回 (ok, page_count, action)。
+
+    action ∈ reuse / created / cdp_down / failed —— 四个分支都各有钉子（tests/test_chrome_page_target.py）。
+    """
+    import time as _time   # 模块级 time 在 try 块内（§11.1-2 惰性化），函数内取本地引用避免静态告警
+
+    url = url or CDP_PAGE_URL
+    pages = _cdp_page_targets(port)
+    if pages is None:
+        return False, 0, 'cdp_down'
+    if pages:
+        return True, len(pages), 'reuse'
+    try:
+        _cdp_http(port, f'/json/new?{url}', method='PUT', timeout=max(2, timeout))
+    except Exception:
+        return False, 0, 'failed'
+    deadline = _time.time() + timeout
+    while _time.time() < deadline:
+        pages = _cdp_page_targets(port)
+        if pages:
+            return True, len(pages), 'created'
+        _time.sleep(settle)
+    return False, 0, 'failed'
+
+
 def _recv_exact(sock, n):
     buf = b''
     while len(buf) < n:
@@ -3141,6 +3192,7 @@ def _cmd_chrome(args):
     --secondary  摆到副屏小窗 (坐标同 cron: TWITTER_WINDOW_POS/SIZE, 默认 -1900,-297 / 880x1000)
     --timeout N  --wait 的超时秒数
     --no-ensure  只探测 x.com 可达性, 不自动拉起 FlClash（等价 TWITTER_PROXY_NO_ENSURE=1）
+    --open       同义别名（默认行为已是幂等「就绪即复用、缺页面补页面」, 加不加都行）
 
     网络门: 起窗前先判 x.com 是否可达; 不通则按需拉起 FlClash 再复探, 仍不通 ⇒ exit 2
     （与「登录超时」的 exit 1 区分, 不再白等 600s）。
@@ -3207,8 +3259,21 @@ def _cmd_chrome(args):
     print(f'   CDP:     http://127.0.0.1:{port}')
     print(f'   profile: {profile}')
     print(f'   日志:    {CHROME_LOG}')
+
+    # page target 兜底（幂等）: attach 只认 page target; Chrome 自更新后可能以 --no-startup-window
+    # 自重启 ⇒ 端口在、页面 0 ⇒ chromedriver 报 `unable to discover open page`（2026-11-10 事故）。
+    pages_ok, page_n, page_action = _ensure_page_target(port)
+    if page_action == 'created':
+        print(f'   页面:    已补 1 个 page target（此前 0 个）→ {CDP_PAGE_URL}')
+    elif page_action == 'reuse':
+        print(f'   页面:    {page_n} 个 page target（复用）')
+    else:
+        print(f'⚠️ 页面兜底失败 ({page_action}) — attach 会失败', file=sys.stderr)
+
     print('   下一步:  在窗口登录 x.com → 完成后 `lr chrome --wait` 自动确认; 或 Cmd+Q 退出')
 
+    if not pages_ok:
+        return 1
     if '--wait' not in args:
         return 0
 
@@ -3254,7 +3319,7 @@ def print_grouped_help():
     print('          重置源连续失败计数')
     print('  selenium-check')
     print('          检查 Chrome/ChromeDriver 环境')
-    print('  chrome [--wait|--status] [--port N] [--profile DIR] [--secondary] [--no-ensure]')
+    print('  chrome [--open|--wait|--status] [--port N] [--profile DIR] [--secondary] [--no-ensure]')
     print('          手工启动/检查调试 Chrome (chrome-twitter-cdp), 人工登录 X 用')
     print('          起窗前先判 x.com 可达, 不通则按需拉起 FlClash; 仍不通 exit 2 不白等')
     print()
@@ -3291,8 +3356,8 @@ def print_command_usage(command):
         'run': '用法: lr run [source] [--force]  — 采集+提取+合并+推送（6h 节流, --force 绕过）',
         'commit': '用法: lr commit [message]  — git add + commit',
         'crontab': '用法: lr crontab --add|--remove|--list|--update|--status [schedule]',
-        'chrome': '用法: lr chrome [--wait] [--status] [--port N] [--profile DIR] '
-                  '[--secondary] [--timeout N]  — 手工启动/检查调试 Chrome (人工登录用)',
+        'chrome': '用法: lr chrome [--open] [--wait] [--status] [--port N] [--profile DIR] '
+                  '[--secondary] [--timeout N]  — 起/复用调试 Chrome（缺页面自动补）, 人工登录用',
     }
     print(usages.get(command, f'用法: lr {command}'))
 

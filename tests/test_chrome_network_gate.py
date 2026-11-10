@@ -66,6 +66,13 @@ class TestGateFormatting:
 
 
 class TestCmdChromeGate:
+    @pytest.fixture(autouse=True)
+    def _stub_page_fallback(self, mod, monkeypatch):
+        """page 兜底单列在 tests/test_chrome_page_target.py；本类只测网络门，
+        默认桩成「已有页面复用」，否则无 CDP 的用例会因兜底失败拿到 rc=1。"""
+        monkeypatch.setattr(mod, '_ensure_page_target',
+                            lambda *a, **k: (True, 1, 'reuse'), raising=False)
+
     def test_unreachable_exits_2_and_does_not_launch(self, mod, monkeypatch, capsys):
         monkeypatch.setattr(mod, '_x_network_gate',
                             lambda **kw: (False, '网络: x.com 不可达 (timeout, 5.0s)', {}))
