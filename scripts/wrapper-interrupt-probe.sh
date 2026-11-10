@@ -34,5 +34,7 @@ RC=$?
 OUT_B=$(wc -c <"$TMP/out" | tr -d ' ')
 ERR_B=$(wc -c <"$TMP/err" | tr -d ' ')
 echo "RESULT rc=$RC stdout=${OUT_B}B stderr=${ERR_B}B mode=$MODE"
-echo "--- stdout ---"; head -c 400 "$TMP/out"; echo
-echo "--- stderr ---"; head -c 400 "$TMP/err"; echo
+# 抽样取**尾部**而不是头部：守卫的两行提示和 JSON 信封都在末尾，`head -c 400` 会被
+# 启动日志（如 chromedriver 版本告警 ~205B）挤掉，导致断言假红（2026-11-10 实测）。
+echo "--- stdout tail ---"; tail -c 400 "$TMP/out"; echo
+echo "--- stderr tail ---"; tail -c 400 "$TMP/err"; echo

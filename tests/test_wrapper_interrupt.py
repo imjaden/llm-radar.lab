@@ -63,3 +63,17 @@ def test_human_mode_hints_on_stdout():
     assert 'stderr=0B' in line, f'人类模式提示应走 stdout: {line}'
     assert '⛔ 已中断 (Ctrl-C)' in r.stdout and '💡 重跑' in r.stdout
     assert 'Traceback' not in r.stdout, '不得吐裸栈'
+
+
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+
+
+def test_driver_mismatch_warning_never_hits_stdout():
+    """`--json` 模式下任何人类可读行都不许进 stdout（2026-11-10 实测泄漏 205B）。
+
+    chromedriver 版本告警原先走裸 `print()` ⇒ `lr fetch --json` 的 stdout 变 263B
+    （信封 58B + 告警 205B），消费方解析失败。判据 = 该行必须走 `cls._log_stream()`。
+    """
+    src = (PROJECT_ROOT / 'llm-radar-collector.py').read_text(encoding='utf-8')
+    i = src.index('与本机 Chrome')
+    assert 'file=cls._log_stream()' in src[i:i + 240], '版本告警必须走时流闸'

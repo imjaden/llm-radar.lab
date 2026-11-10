@@ -410,7 +410,8 @@ class LLMRadarCollector:
         """返回当前时间戳字符串，用于日志前缀"""
         return datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
-    def _log_stream(self):
+    @staticmethod
+    def _log_stream():
         """日志流: `--json` 模式下 stdout 只许放信封 ⇒ 人类可读行一律走 stderr（§7 / §11.1-3）。
 
         2026-11-09 实测: 未分流时 `lr fetch qbitai --json` 的 stdout = 124B（env banner 66B + 信封 58B），
@@ -1093,8 +1094,10 @@ class LLMRadarCollector:
             if want is None or major == want:
                 return c
         major, c = probed[0]
+        # `--json` 模式不许污染 stdout（2026-11-10 实测: 这行把 `lr fetch --json` 的 stdout 顶到 263B,
+        # 信封 58B + 本行 205B ⇒ 消费方解析失败）。走同一时流闸。
         print(f'{datetime.now().strftime("%Y-%m-%d %H:%M:%S")} ⚠️  chromedriver 主版本 {major} '
-              f'与本机 Chrome {want} 不匹配, 仍尝试使用: {c}')
+              f'与本机 Chrome {want} 不匹配, 仍尝试使用: {c}', file=cls._log_stream())
         return c
 
     def _init_driver(self):
