@@ -1,5 +1,5 @@
 # TODO-HANDOFF — llm-radar CL007 后续待执行清单
-<!-- generated: 2026-11-12 · source: cache/draft/TODO-20261112.md · sha256:bd4a3c5a -->
+<!-- generated: 2026-11-12 · source: cache/draft/TODO-20261112.md · sha256:a3c2aa61 -->
 > 派生: 待执行 **0** 条 · 最近闭环 **CL17** · 差异知会 无（未找到含「差异知会」的设计文档）
 > （本行由 `hm loop entry-page` 自动统计，人工段勿复述这些数字；`hm check handoff` 校验人工段声明与实数一致）
 ## 一、已登记待执行（来源: live draft cache/draft/TODO-20261112.md）
@@ -40,6 +40,14 @@
 > `CL006` / `CL-SEC11` 停滞豁免（后者需先修 hermes-manager 的编号子串匹配，已修 `a07f3949`，未推）。
 > 待审计 commit：**无**。明早首跑：`pytest -q -n0 -k "alert_dispatch or chrome_agent_guard or chrome_page_target"`；
 > 全量留清晨（基线 **602 passed** / `test_cli` 24 / 门禁 `中断收敛 10/10` / `readme 2/2` / `handoff 0 行`）。
+
+
+**S0　流程约定（立即生效，等 hm 侧修好后可撤）**
+凡「直改源码型」条目，`hm loop verify` **之前**先落一对 retro 到 `cache/closed-loop/`
+（`{date}-llm-radar-ops-LLM-RADAR-CL0NN-retro.{json,md}`，含 `chain/commit/evidence/learnings/pending`），
+否则看板次日会标 `doc-missing`（判据：`[6/6]` + `retro_path` 空 ⇒ critical）。
+已补档：`CL007–CL017` 全部；`CL009`/`CL017` 另有 `documents/reviews/` 可读复盘。
+系统缺口转交件：`documents/handoff/20261112-to-hermes-manager-loop-verify-artifacts.md`。
 
 **S1　观察：wdm 里 chromedriver 156 ↔ 本机 Chrome 157**
 主采集仍 `6/6 源成功`（旧驱动可用），X 侧走稳定指针 157。复核：
