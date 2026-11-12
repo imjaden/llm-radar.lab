@@ -1,13 +1,12 @@
 # TODO-HANDOFF — llm-radar CL007 后续待执行清单
-<!-- generated: 2026-11-12 · source: cache/draft/TODO-20261112.md · sha256:e2358ad2 -->
-> 派生: 待执行 **2** 条 · 最近闭环 **CL17** · 差异知会 无（未找到含「差异知会」的设计文档）
+<!-- generated: 2026-11-12 · source: cache/draft/TODO-20261112.md · sha256:dc072ab2 -->
+> 派生: 待执行 **1** 条 · 最近闭环 **CL17** · 差异知会 无（未找到含「差异知会」的设计文档）
 > （本行由 `hm loop entry-page` 自动统计，人工段勿复述这些数字；`hm check handoff` 校验人工段声明与实数一致）
 ## 一、已登记待执行（来源: live draft cache/draft/TODO-20261112.md）
 
 | 编号 | 标题 | 状态（派生摘要·全文见 draft） | kind | priority | 方案文档 |
 |:--|:--|:--|:--|:--|:--|
 | LLM-RADAR-CL009 | 飞书告警接入（外部依赖失效 → 统一通知） | 挂起 | queued | P2 | - |
-| LLM-RADAR-CL017 | CDP Chrome 常驻守护幂等化（阻止 30s 一次的新页签循环） | READY | queued | P0 | - |
 <!-- generated end -->
 
 > 交接时间：2026-11-03 19:00 CST · 交接人：ops 会话 · 目标仓：`~/CodeSpace/llm-radar.lab`（main）
