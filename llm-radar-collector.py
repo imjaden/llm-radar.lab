@@ -2433,6 +2433,23 @@ hotspots 数组中每个元素格式：
 
         metrics_path.write_text(json.dumps(metrics, ensure_ascii=False, indent=2))
         self._print_info(f'指标已记录到 metrics.json')
+        self._dispatch_alerts(metrics)
+
+    def _dispatch_alerts(self, metrics):
+        """告警分流（CL009）: 跃迁式 + 去重，best-effort —— 发不出去也不改退出码。
+
+        事实源 = 刚写盘的 metrics + 仓根 timestamp.json + 巡检 sidecar `cache/state/x-health.json`，
+        因此这里不重新探网。`--json` 模式下人类行走 stderr（§7 契约）。
+        """
+        try:
+            import llm_radar_alert  # scripts/ 已在模块 import 块注入 sys.path
+            channel = os.environ.get('LLM_RADAR_ALERT_CHANNEL', 'local')
+            res = llm_radar_alert.check(channel=channel, quiet=True, metrics=metrics)
+            if res.get('messages'):
+                for m in res['messages']:
+                    print(f"[alert] {m['title']}: {m['text']}", file=self._log_stream())
+        except Exception as e:
+            print(f'[alert] 分流跳过（{type(e).__name__}: {e}）', file=self._log_stream())
 
     # ===== Run =====
     def run(self, source_keys=None, force=False):
