@@ -1,5 +1,5 @@
 # TODO-HANDOFF — llm-radar CL007 后续待执行清单
-<!-- generated: 2026-11-12 · source: cache/draft/TODO-20261112.md · sha256:25f9ec68 -->
+<!-- generated: 2026-11-12 · source: cache/draft/TODO-20261112.md · sha256:bd4a3c5a -->
 > 派生: 待执行 **0** 条 · 最近闭环 **CL17** · 差异知会 无（未找到含「差异知会」的设计文档）
 > （本行由 `hm loop entry-page` 自动统计，人工段勿复述这些数字；`hm check handoff` 校验人工段声明与实数一致）
 ## 一、已登记待执行（来源: live draft cache/draft/TODO-20261112.md）
@@ -35,30 +35,24 @@
 
 ## 2. 待执行（本仓，按优先级；括号内 = 评审编号）
 
-> **时点快照（2026-11-10 21:30 收工）**：队列只剩 **CL009（挂起）**，卡在旧裁定「暂不做飞书」。
-> 本日闭环 CL014（`lr chrome` 幂等 + page 兜底）、CL015（采集 attach 前补页自愈）、CL016（`--json` stdout 契约），
-> 三笔均已推、CI 绿；明细见 draft 完成节与机器段。
-> 待审计 commit：**无**。明早首跑：`pytest -q -n0 -k "chrome_page_target or cdp_page_selfheal or wrapper_interrupt"`，
-> 全量留清晨。
+> **时点快照（2026-11-12 11:10）**：本仓队列 **空**，停滞台账 **0 条**。
+> 11-12 闭环：`CL017`（launchd 页签循环 → guard 幂等，plist 已重载 `runs=1`）、`CL009`（跃迁式告警 + 本地通道）、
+> `CL006` / `CL-SEC11` 停滞豁免（后者需先修 hermes-manager 的编号子串匹配，已修 `a07f3949`，未推）。
+> 待审计 commit：**无**。明早首跑：`pytest -q -n0 -k "alert_dispatch or chrome_agent_guard or chrome_page_target"`；
+> 全量留清晨（基线 **602 passed** / `test_cli` 24 / 门禁 `中断收敛 10/10` / `readme 2/2` / `handoff 0 行`）。
 
-**S1　CL009 飞书告警按根因分流（挂起，需裁定）**
-范围：把 `metrics.last_error` 接进 `llm-radar-collect-report.py` 的 `alert_reasons()`，401/auth_missing 不再给
-`lr reset-health && lr run --force`，按 kind 分流修复指令。
-前置：用户解除「暂不做飞书」裁定；建议先让 CL008 探针攒够信号再定阈值。
+**S1　观察：wdm 里 chromedriver 156 ↔ 本机 Chrome 157**
+主采集仍 `6/6 源成功`（旧驱动可用），X 侧走稳定指针 157。复核：
+`grep "与本机 Chrome" cache/logs/llm-radar-collector/collector.log | tail -3`。
+若出现 Selenium 源连败，第一嫌疑即此；修法 = 把 157 驱动按 wdm 布局补一份 → `lr reset-health` → `run --force`。
+**属环境动作，需用户点名。**
 
-**S2　环境观察项（无需裁定，看日志即可）**
-`~/.wdm` 里最高 chromedriver 为 **156**，本机 Chrome 已 **157**：主采集仍 `6/6 源成功`（旧驱动可用），X 侧走稳定指针 157。
-复核命令：`grep "与本机 Chrome" cache/logs/llm-radar-collector/collector.log | tail -3`。
-若哪天出现 Selenium 源连败，第一嫌疑即此（修法：把 157 驱动按 wdm 布局补一份 → `reset-health` → `run --force`）。
-属环境动作，需用户点名。
+**S2　观察：X 采集 5h 节流（预期行为，勿当故障）**
+`twitter.json` 满 5h 才实采，`跳过: … 生成于 N h 前` 是正常路径；`lr status` 的「陈旧」阈值 6.5h 已 > 5h。
 
-**S3　X 采集节奏（预期行为，勿当故障）**
-`twitter.json` 已更新到 `2026-11-10T11:02:09Z`（300 条），5h 节流下 19:20 / 20:20 两轮按设计跳过；
-下一轮实采在生成满 5h 后的首个 `:20`。判据：日志 `跳过: twitter.json 生成于 N h 前 (< 节流阈值 5h)`。
-
-**已完成（2026-11-10，勿重做）**：CL014 `lr chrome` 幂等 + page target 兜底（`--open` 别名，8 例钉子）；
-CL015 采集侧 attach **之前**判页并补页（真机 0 页 → 补页 → 300 条写盘 push，EXIT=0；位置教训：放 FetchError 分支太晚，
-会被 Selenium Manager stall 挡住）；CL016 chromedriver 告警改走时流闸（`--json` stdout 263B → 58B）+ 中断探针改取尾部抽样。
+**S3　跨仓（不在本仓做）**
+`hermes-manager` 侧修复笔 `a07f3949`（段边界匹配）**未推**，等该仓会话放行；该仓工作树另有 4 个
+`web/*/index.html` 改动属其他会话 WIP，勿动。
 
 ## 3. 跨仓 / 已裁定（**本仓不做**）
 
