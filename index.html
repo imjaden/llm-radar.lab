@@ -357,8 +357,24 @@ const SOURCES = [
 ];
 
 // ===== Filters =====
+// 国别索引: country 只存在于 providers[], 但筛选发生在 llms/tools/people 上,
+// 这些实体只有 provider_id/employer_id。历史上 isCN() 直接读 entity.country ⇒ 恒 undefined,
+// 退化成「名字里有没有汉字」, 把 Qwen4-Max / Kimi K3.1 Pro 这类英文名国产模型判成海外 (O-9)。
+let PROV_COUNTRY = {};
+function buildCountryIndex() {
+  PROV_COUNTRY = {};
+  ((DATA && DATA.providers) || []).forEach(p => { if (p && p.id) PROV_COUNTRY[p.id] = p.country || ''; });
+}
+function entityCountry(entity) {
+  if (!entity) return '';
+  if (entity.country) return entity.country;
+  const ref = entity.provider_id || entity.employer_id || entity.provider;
+  return (ref && PROV_COUNTRY[ref]) || '';
+}
 function isCN(entity) {
-  if (entity.country === '中国') return true;
+  const country = entityCountry(entity);
+  if (country) return country === '中国';
+  // 兜底: 无国别可查时按汉字判断 (providers 自身 / 未建档实体)
   const name = (entity.name||'') + (entity.name_en||'') + (entity.id||'');
   return /\p{Script=Han}/u.test(name);
 }
@@ -443,7 +459,7 @@ async function refreshData() {
   saveState();
   try {
     const r = await fetch('data/snapshot.json', {cache:'no-cache'});
-    if (r.ok) { DATA = await r.json(); clearRenderCache(); }
+    if (r.ok) { DATA = await r.json(); buildCountryIndex(); clearRenderCache(); }
   } catch(e) {}
   restoreState();
   renderTab(activeTab);
@@ -1302,6 +1318,7 @@ async function init() {
     var r = await fetch('data/snapshot.json', {cache:'no-cache'});
     if(!r.ok) throw new Error('Not found');
     DATA = await r.json();
+    buildCountryIndex();
     snapshotReady = true;
   } catch(e) {
     document.getElementById('loading').classList.add('hidden');

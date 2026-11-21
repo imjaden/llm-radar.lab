@@ -108,8 +108,14 @@ function isCN(entity) {
    `doubao-seed-2-0-pro`、`mimo-v2.6-pro`、`glm-5.2` 这些具体版本没被抽成实体，自然不出现；
 2. **即便出现也会被误筛**：英文名的中国模型全部被判成「海外」，包括已上榜的 `Kimi K3.1 Pro`。
 
-**修法（两行内可验证，供你决策，我未改）**：把 `llms` 渲染前 join 一次 provider 国别，`isCN` 优先读
-`entity.country || provider.country`，汉字正则只作兜底；另加 `混元Hy4 flash` / `混元 Hy4 flash` 这类
-「空格差异重复实体」的归并（当前 62 条里有 1 组重复）。
+**已修（2026-11-21）**：`index.html` 新增 `buildCountryIndex()`（两个 snapshot 加载点各调一次）与
+`entityCountry()`（`entity.country` → `provider_id/employer_id` → 空），`isCN()` 改为「有国别就按国别判、
+没有才退回汉字正则」。实测「中国」筛选：`大模型` **7 → 28** 条、`工具` 14 条、`人物` 62 条、`厂商` 61 条，
+界面 0 JS 错误；`Qwen4-Max`（阿里）、`Kimi K3.1 Pro`（月之暗面）、`CloudRobo-WM1.2`（华为云）、
+`ERNIE-5.5-Flash-Base`（百度）等英文名国产模型回到中国榜。判据钉在 `tests/test_html.py::TestCountryFilter`
+（含 node 行为用例：英文名+中国厂商 → True、中文名+美国厂商 → False、无厂商 → 汉字兜底）。
+
+**仍待办**：`混元Hy4 flash` / `混元 Hy4 flash` 属「空格差异重复实体」，归并点在采集器的实体去重
+（`llm-radar-collector.py`），不在前端；62 条里现有一组重复，建议单独一笔处理。
 
 > 该缺陷属于 llm-radar 前端数据口径（`index.html` + `data/snapshot.json`），与本报告的模型榜单是两套数据源，互不影响。

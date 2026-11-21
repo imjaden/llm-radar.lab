@@ -1,6 +1,8 @@
 """Selenium tests: verify HTML pages load without JavaScript errors."""
 import json
 import re
+import shutil
+import subprocess
 import pytest
 from pathlib import Path
 
@@ -438,3 +440,53 @@ class TestPerfOptimize:
         assert 'const RENDER_CACHE = {}' in js
         assert "tab + '|' + (filterMode||'')" in js
         assert 'clearRenderCache()' in js
+
+
+class TestCountryFilter:
+    """O-9: 「中国」筛选按厂商国别判定, 不再靠「名字里有没有汉字」."""
+
+    def _content(self):
+        return (PROJECT_ROOT / 'index.html').read_text()
+
+    def _js_blocks(self):
+        return re.findall(r"<script(?![^>]*src=)[^>]*>(.*?)</script>", self._content(), re.S)
+
+    def test_country_index_rebuilt_on_every_snapshot_load(self):
+        """两个 snapshot 加载点都必须在 DATA 赋值后重建国别索引"""
+        js = '\n'.join(self._js_blocks())
+        assert 'function buildCountryIndex()' in js
+        assert js.count('buildCountryIndex();') >= 2, 'refreshData / init 两个加载点都要调用'
+
+    @pytest.mark.skipif(shutil.which('node') is None, reason='无 node ⇒ 跳过 JS 行为钉子')
+    def test_is_cn_uses_provider_country_not_han_regex(self):
+        """英文名国产模型算中国; 中文名外国厂商算海外; 无厂商时才退回汉字判据"""
+        js = '\n'.join(self._js_blocks())
+        start = js.find('let PROV_COUNTRY')
+        end = js.find('function filterItems(')
+        assert start > 0 and end > start, 'isCN / entityCountry 段缺失'
+        snippet = js[start:end]
+        harness = (
+            "let DATA = {providers:[{id:'alibaba',country:'中国'},{id:'anthropic',country:'美国'},"
+            "{id:'moonshot',country:'中国'}]};\n"
+            + snippet
+            + "\nbuildCountryIndex();\n"
+            + "console.log(JSON.stringify({\n"
+            + "  latin_cn: isCN({name:'Qwen4-Max', provider_id:'alibaba'}),\n"
+            + "  latin_cn_dash: isCN({id:'kimi-k3.1-pro', name:'Kimi K3.1 Pro', provider_id:'moonshot'}),\n"
+            + "  cn_named_us: isCN({name:'克劳德', provider_id:'anthropic'}),\n"
+            + "  no_provider: isCN({name:'驭物 Lion-ER-35B-A3B'}),\n"
+            + "  unknown_provider: isCN({name:'Lion-ER-35B-A3B', provider_id:'zzz-unknown'}),\n"
+            + "  provider_self: isCN({id:'alibaba', name:'阿里巴巴', country:'中国'}),\n"
+            + "  plain_ascii: isCN({name:'Claude Opus 5.5', provider_id:'anthropic'})\n"
+            + "}));\n"
+        )
+        r = subprocess.run(['node', '-e', harness], capture_output=True, text=True, timeout=60)
+        assert r.returncode == 0, f'node 执行失败: {r.stderr[-500:]}'
+        got = json.loads(r.stdout.strip().splitlines()[-1])
+        assert got['latin_cn'] is True, '中国厂商 + 英文名模型必须算中国 (Qwen4-Max)'
+        assert got['latin_cn_dash'] is True, 'id 含连字符 + 英文名 + 中国厂商必须算中国 (Kimi K3.1 Pro)'
+        assert got['cn_named_us'] is False, '美国厂商即使中文名也不该算中国'
+        assert got['no_provider'] is True, '无 provider_id 的实体回到汉字兜底'
+        assert got['unknown_provider'] is False, '厂商未建档且无汉字 ⇒ 不算中国'
+        assert got['provider_self'] is True
+        assert got['plain_ascii'] is False
