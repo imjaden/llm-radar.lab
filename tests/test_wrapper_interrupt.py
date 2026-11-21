@@ -31,8 +31,11 @@ pytestmark = pytest.mark.skipif(
 
 
 def _run(mode):
+    # errors='replace': 探针用 `tail -c` 按**字节**抽样，可能切在多字节 UTF-8 字符中间
+    # （2026-11-21 实测 0x8f 截断 ⇒ 严格解码崩，假红）。抽样窗口是判据的一部分，
+    # 不能让「切在字符中间」把断言结果变成异常。
     r = subprocess.run(['bash', str(PROBE), mode, '1.2'],
-                       capture_output=True, text=True, timeout=180)
+                       capture_output=True, text=True, errors='replace', timeout=180)
     assert r.returncode == 0, f'探针自身失败: {r.returncode} {r.stderr[-300:]}'
     line = next((ln for ln in r.stdout.splitlines() if ln.startswith('RESULT')), '')
     assert line, f'探针无 RESULT 行: {r.stdout[-300:]}'
