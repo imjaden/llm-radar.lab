@@ -1,0 +1,146 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "$comment": "中国境内可直连 provider（12）+ 本报告 Top 20 模型白名单。provider 的 api/npm 元数据由 models.dev catalog 提供，这里只给 apiKey 与模型名。",
+  "provider": {
+    "deepseek": {
+      "options": {
+        "apiKey": "{env:DEEPSEEK_API_KEY}"
+      },
+      "models": {
+        "deepseek-flash": {
+          "name": "DeepSeek V4.1 Flash 1017"
+        }
+      }
+    },
+    "alibaba-cn": {
+      "options": {
+        "apiKey": "{env:DASHSCOPE_API_KEY}"
+      },
+      "models": {
+        "qwen3.8-flash": {
+          "name": "Qwen3.8 Flash"
+        },
+        "glm-5.3": {
+          "name": "GLM-5.3"
+        },
+        "qwen3.8-max": {
+          "name": "Qwen3.8 Max"
+        },
+        "qwen3.5-397b-a17b": {
+          "name": "Qwen3.5 397B-A17B"
+        },
+        "qwen3.7-plus": {
+          "name": "Qwen3.7 Plus"
+        },
+        "qwen3.7-flash": {
+          "name": "Qwen3.7 Flash"
+        }
+      }
+    },
+    "moonshotai-cn": {
+      "options": {
+        "apiKey": "{env:MOONSHOT_API_KEY}"
+      },
+      "models": {
+        "kimi-k3.1-pro": {
+          "name": "Kimi K3.1 Pro [在用]"
+        },
+        "kimi-k2.7-code": {
+          "name": "Kimi K2.7 Code"
+        }
+      }
+    },
+    "zhipuai": {
+      "options": {
+        "apiKey": "{env:ZHIPU_API_KEY}"
+      },
+      "models": {
+        "glm-4.7-flashx": {
+          "name": "GLM-4.7-FlashX"
+        }
+      }
+    },
+    "minimax-cn": {
+      "options": {
+        "apiKey": "{env:MINIMAX_API_KEY}"
+      },
+      "models": {
+        "MiniMax-M3.1-Flash": {
+          "name": "MiniMax-M3.1-Flash [在用]"
+        },
+        "MiniMax-M3": {
+          "name": "MiniMax-M3"
+        }
+      }
+    },
+    "stepfun": {
+      "options": {
+        "apiKey": "{env:STEPFUN_API_KEY}"
+      },
+      "models": {
+        "step-5-preview": {
+          "name": "Step 5 Preview"
+        },
+        "step-3.5-flash": {
+          "name": "Step 3.5 Flash"
+        }
+      }
+    },
+    "volcengine": {
+      "options": {
+        "apiKey": "{env:ARK_API_KEY}"
+      },
+      "models": {
+        "glm-5-3-flash-260828": {
+          "name": "GLM-5.3-Flash"
+        },
+        "deepseek-v4-pro-ga-260813": {
+          "name": "DeepSeek V4 Pro 0813"
+        }
+      }
+    },
+    "tencent-tokenhub": {
+      "options": {
+        "apiKey": "{env:TENCENT_TOKENHUB_API_KEY}"
+      },
+      "models": {
+        "hy4": {
+          "name": "Hy4"
+        }
+      }
+    },
+    "siliconflow-cn": {
+      "options": {
+        "apiKey": "{env:SILICONFLOW_CN_API_KEY}"
+      },
+      "models": {
+        "Qwen/Qwen3.8-27B": {
+          "name": "Qwen3.8 27B"
+        }
+      }
+    },
+    "modelscope": {
+      "options": {
+        "apiKey": "{env:MODELSCOPE_API_KEY}"
+      }
+    },
+    "sensenova": {
+      "options": {
+        "apiKey": "{env:SENSENOVA_API_KEY}"
+      }
+    },
+    "xiaomi": {
+      "options": {
+        "apiKey": "{env:XIAOMI_API_KEY}"
+      },
+      "models": {
+        "mimo-v2.6-flash": {
+          "name": "MiMo-V2.6-Flash"
+        },
+        "mimo-v2.6-pro": {
+          "name": "MiMo-V2.6-Pro [在用]"
+        }
+      }
+    }
+  }
+}

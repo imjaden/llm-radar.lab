@@ -1,0 +1,297 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>中国境内可用推理模型 Top 20 · 性价比（20261121）</title>
+<style>
+:root{--bg:#0b1020;--panel:#131a2e;--line:#26314d;--fg:#e6ebf5;--dim:#8b98b5;--accent:#5cc8ff;--hot:#ff6b6b}
+*{box-sizing:border-box}
+body{margin:0;padding:32px 20px 64px;background:linear-gradient(180deg,#080c18,#0b1020 40%);color:var(--fg);
+font:14px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif}
+.wrap{max-width:1180px;margin:0 auto}
+h1{font-size:26px;margin:0 0 6px}
+.sub{color:var(--dim);font-size:13px;margin-bottom:22px}
+.kpi{display:flex;gap:12px;flex-wrap:wrap;margin:0 0 22px}
+.kpi div{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px 14px;font-size:12px;color:var(--dim)}
+.kpi b{display:block;color:var(--fg);font-size:18px;margin-top:2px}
+table{width:100%;border-collapse:collapse;background:var(--panel);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+th,td{padding:9px 10px;border-bottom:1px solid var(--line);text-align:left;font-size:13px}
+th{background:#0f1730;color:var(--dim);font-weight:600;font-size:12px;letter-spacing:.02em}
+tbody tr:hover{background:#16203a}
+tr.tB td.rk{color:#c9a227} tr.tC td.rk{color:var(--dim)}
+.rk{width:34px;color:var(--accent);font-weight:700}
+.nm b{font-weight:600}
+.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.strong{color:var(--accent);font-weight:700}
+.badge{font-size:10px;padding:1px 5px;border-radius:4px;vertical-align:middle;margin-left:4px}
+.badge.use{background:#1c3a2a;color:#6ee7a8;border:1px solid #2f6b4c}
+.badge.ow{background:#1c2a3a;color:#7dd3fc;border:1px solid #2c4a63}
+.note{margin-top:22px;padding:16px 18px;background:var(--panel);border:1px solid var(--line);border-radius:12px;color:var(--dim);font-size:12.5px}
+.note b{color:var(--fg)}
+code{background:#0a1020;border:1px solid var(--line);padding:1px 5px;border-radius:4px;font-size:12px}
+footer{margin-top:18px;color:#5d6a86;font-size:11.5px}
+</style></head><body><div class="wrap">
+<h1>中国境内可用 · 推理模型性价比 Top 20</h1>
+<div class="sub">口径：混合价 =（3×输入 + 输出）/4，USD/百万 token；性价比 = 能力分 ÷ 混合价。
+榜 A 用 Artificial Analysis 官方智能指数，榜 B 用自建合成分（9 子项百分位均值，标 *），榜 C 未测评测。</div>
+<div class="kpi">
+  <div>快照日期<b>2026-11-21</b></div>
+  <div>境内渠道<b>12</b></div>
+  <div>测试模型池<b>212</b></div>
+  <div>入榜<b>20</b></div>
+  <div>models.dev 快照<b>9afe118c19c8…</b></div>
+  <div>AA 快照<b>0c30587683ae…</b></div>
+</div>
+<table><thead><tr>
+  <th>#</th><th>模型</th><th>境内渠道</th><th>能力分</th><th>输入 $</th><th>输出 $</th><th>混合价</th><th>分/价</th><th>上下文</th>
+</tr></thead><tbody>
+<tr class="tA">
+  <td class="rk">1</td>
+  <td class="nm"><b>MiMo-V2.6-Flash</b>
+      
+       <span class="badge ow">开源</span></td>
+  <td>Xiaomi</td>
+  <td class="num">26.73</td>
+  <td class="num">$0.140</td>
+  <td class="num">$0.280</td>
+  <td class="num">$0.175</td>
+  <td class="num strong">152.7</td>
+  <td class="num">1048k</td>
+</tr><tr class="tA">
+  <td class="rk">2</td>
+  <td class="nm"><b>Qwen3.8 Flash</b>
+      
+      </td>
+  <td>Alibaba (China)</td>
+  <td class="num">28.58</td>
+  <td class="num">$0.119</td>
+  <td class="num">$0.401</td>
+  <td class="num">$0.189</td>
+  <td class="num strong">151.0</td>
+  <td class="num">1000k</td>
+</tr><tr class="tA">
+  <td class="rk">3</td>
+  <td class="nm"><b>GLM-5.3-Flash</b>
+      
+       <span class="badge ow">开源</span></td>
+  <td>Volcengine Ark</td>
+  <td class="num">27.80</td>
+  <td class="num">$0.119</td>
+  <td class="num">$0.416</td>
+  <td class="num">$0.193</td>
+  <td class="num strong">144.1</td>
+  <td class="num">1000k</td>
+</tr><tr class="tA">
+  <td class="rk">4</td>
+  <td class="nm"><b>DeepSeek V4.1 Flash 1017</b>
+      
+       <span class="badge ow">开源</span></td>
+  <td>DeepSeek</td>
+  <td class="num">32.59</td>
+  <td class="num">$0.150</td>
+  <td class="num">$0.600</td>
+  <td class="num">$0.263</td>
+  <td class="num strong">124.2</td>
+  <td class="num">1048k</td>
+</tr><tr class="tA">
+  <td class="rk">5</td>
+  <td class="nm"><b>MiniMax-M3.1-Flash</b>
+       <span class="badge use">在用</span>
+       <span class="badge ow">开源</span></td>
+  <td>MiniMax (minimax.cn)</td>
+  <td class="num">29.06</td>
+  <td class="num">$0.149</td>
+  <td class="num">$0.598</td>
+  <td class="num">$0.262</td>
+  <td class="num strong">111.1</td>
+  <td class="num">1000k</td>
+</tr><tr class="tA">
+  <td class="rk">6</td>
+  <td class="nm"><b>MiMo-V2.6-Pro</b>
+       <span class="badge use">在用</span>
+       <span class="badge ow">开源</span></td>
+  <td>Xiaomi</td>
+  <td class="num">29.89</td>
+  <td class="num">$0.435</td>
+  <td class="num">$0.870</td>
+  <td class="num">$0.544</td>
+  <td class="num strong">55.0</td>
+  <td class="num">1048k</td>
+</tr><tr class="tA">
+  <td class="rk">7</td>
+  <td class="nm"><b>MiniMax-M3</b>
+      
+       <span class="badge ow">开源</span></td>
+  <td>MiniMax (minimax.cn)</td>
+  <td class="num">18.88</td>
+  <td class="num">$0.314</td>
+  <td class="num">$1.255</td>
+  <td class="num">$0.549</td>
+  <td class="num strong">34.4</td>
+  <td class="num">1000k</td>
+</tr><tr class="tA">
+  <td class="rk">8</td>
+  <td class="nm"><b>Hy4</b>
+      
+      </td>
+  <td>Tencent TokenHub</td>
+  <td class="num">34.56</td>
+  <td class="num">$0.834</td>
+  <td class="num">$2.501</td>
+  <td class="num">$1.251</td>
+  <td class="num strong">27.6</td>
+  <td class="num">1048k</td>
+</tr><tr class="tA">
+  <td class="rk">9</td>
+  <td class="nm"><b>Qwen3.8 27B</b>
+      
+       <span class="badge ow">开源</span></td>
+  <td>SiliconFlow (China)</td>
+  <td class="num">20.11</td>
+  <td class="num">$0.450</td>
+  <td class="num">$1.799</td>
+  <td class="num">$0.787</td>
+  <td class="num strong">25.5</td>
+  <td class="num">262k</td>
+</tr><tr class="tA">
+  <td class="rk">10</td>
+  <td class="nm"><b>Step 5 Preview</b>
+      
+       <span class="badge ow">开源</span></td>
+  <td>StepFun (China)</td>
+  <td class="num">28.53</td>
+  <td class="num">$1.046</td>
+  <td class="num">$2.989</td>
+  <td class="num">$1.532</td>
+  <td class="num strong">18.6</td>
+  <td class="num">1000k</td>
+</tr><tr class="tA">
+  <td class="rk">11</td>
+  <td class="nm"><b>GLM-5.3</b>
+      
+       <span class="badge ow">开源</span></td>
+  <td>Alibaba (China)</td>
+  <td class="num">31.65</td>
+  <td class="num">$1.100</td>
+  <td class="num">$3.851</td>
+  <td class="num">$1.788</td>
+  <td class="num strong">17.7</td>
+  <td class="num">1000k</td>
+</tr><tr class="tA">
+  <td class="rk">12</td>
+  <td class="nm"><b>Qwen3.8 Max</b>
+      
+      </td>
+  <td>Alibaba (China)</td>
+  <td class="num">42.89</td>
+  <td class="num">$1.777</td>
+  <td class="num">$5.332</td>
+  <td class="num">$2.666</td>
+  <td class="num strong">16.1</td>
+  <td class="num">1000k</td>
+</tr><tr class="tA">
+  <td class="rk">13</td>
+  <td class="nm"><b>Kimi K3.1 Pro</b>
+       <span class="badge use">在用</span>
+       <span class="badge ow">开源</span></td>
+  <td>Moonshot AI (China)</td>
+  <td class="num">46.45</td>
+  <td class="num">$1.944</td>
+  <td class="num">$10.167</td>
+  <td class="num">$4.000</td>
+  <td class="num strong">11.6</td>
+  <td class="num">1048k</td>
+</tr><tr class="tA">
+  <td class="rk">14</td>
+  <td class="nm"><b>DeepSeek V4 Pro 0813</b>
+      
+       <span class="badge ow">开源</span></td>
+  <td>Volcengine Ark</td>
+  <td class="num">23.06</td>
+  <td class="num">$1.336</td>
+  <td class="num">$4.008</td>
+  <td class="num">$2.004</td>
+  <td class="num strong">11.5</td>
+  <td class="num">1000k</td>
+</tr><tr class="tB">
+  <td class="rk">15</td>
+  <td class="nm"><b>Qwen3.5 397B-A17B</b>
+      
+       <span class="badge ow">开源</span></td>
+  <td>Alibaba (China)</td>
+  <td class="num">50.0*</td>
+  <td class="num">$0.172</td>
+  <td class="num">$1.032</td>
+  <td class="num">$0.387</td>
+  <td class="num strong">129.2</td>
+  <td class="num">262k</td>
+</tr><tr class="tB">
+  <td class="rk">16</td>
+  <td class="nm"><b>Qwen3.7 Plus</b>
+      
+      </td>
+  <td>Alibaba (China)</td>
+  <td class="num">55.1*</td>
+  <td class="num">$0.276</td>
+  <td class="num">$1.101</td>
+  <td class="num">$0.482</td>
+  <td class="num strong">114.2</td>
+  <td class="num">1000k</td>
+</tr><tr class="tB">
+  <td class="rk">17</td>
+  <td class="nm"><b>Kimi K2.7 Code</b>
+      
+       <span class="badge ow">开源</span></td>
+  <td>Moonshot AI (China)</td>
+  <td class="num">57.7*</td>
+  <td class="num">$0.971</td>
+  <td class="num">$4.034</td>
+  <td class="num">$1.737</td>
+  <td class="num strong">33.2</td>
+  <td class="num">262k</td>
+</tr><tr class="tC">
+  <td class="rk">18</td>
+  <td class="nm"><b>Qwen3.7 Flash</b>
+      
+      </td>
+  <td>Alibaba (China)</td>
+  <td class="num">未测</td>
+  <td class="num">$0.030</td>
+  <td class="num">$0.118</td>
+  <td class="num">$0.052</td>
+  <td class="num strong">-</td>
+  <td class="num">1000k</td>
+</tr><tr class="tC">
+  <td class="rk">19</td>
+  <td class="nm"><b>Step 3.5 Flash</b>
+      
+       <span class="badge ow">开源</span></td>
+  <td>StepFun (China)</td>
+  <td class="num">未测</td>
+  <td class="num">$0.105</td>
+  <td class="num">$0.314</td>
+  <td class="num">$0.157</td>
+  <td class="num strong">-</td>
+  <td class="num">256k</td>
+</tr><tr class="tC">
+  <td class="rk">20</td>
+  <td class="nm"><b>GLM-4.7-FlashX</b>
+      
+       <span class="badge ow">开源</span></td>
+  <td>Zhipu AI</td>
+  <td class="num">未测</td>
+  <td class="num">$0.075</td>
+  <td class="num">$0.448</td>
+  <td class="num">$0.168</td>
+  <td class="num strong">-</td>
+  <td class="num">200k</td>
+</tr>
+</tbody></table>
+<div class="note">
+<b>怎么读：</b>「分/价」越高 = 单位成本换到的能力越多。榜 A 之间可直接横比；榜 B（*）与榜 C 与榜 A 不可直接比 ——
+它们的差别是「有没有官方指数」，不是能力差距。<br>
+<b>注意：</b>缓存读价未计入（DeepSeek 缓存读 $0.003/1M 会让真实账单低 30%–60%）；厂商包月 Token Plan 更便宜，未纳入。<br>
+<b>可复核：</b>生成脚本 <code>scripts/fetch-cn-reasoning-models.py</code>，数据
+<code>documents/reports/cn-reasoning-models-20261121.json</code>（含两个原始快照的 sha256）。
+</div>
+<footer>生成于 2026-11-21 · 来源 models.dev + artificialanalysis.ai</footer>
+</div></body></html>
